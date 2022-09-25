@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_nextjs',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'django_server.wsgi.application'
+
+ASGI_APPLICATION = 'django_server.asgi.application'
 
 
 # Database
