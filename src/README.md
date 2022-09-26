@@ -32,24 +32,28 @@ Set the following VSCode settings related to formatting:
 
 # Development
 
-To have Nextjs work with Django, we will need to have two servers running. One Nextjs
-server and the public facing Django server which will query the Nextjs server internally.
+Frontend:
 
-## Install and run Nextjs server
+- cd into frontend folder: `cd next-app`
+- install dependencies: `yarn install`
+  - if you don't have yarn, install it first: `npm install -g yarn`
+- run frontend server: `yarn run dev`
 
-1. Enter Nextjs directory: `cd src/next-app`
-2. Install npm dependencies: `npm install`
-3. Run development server: `npm run dev`
+You should now be able to see the site on localhost:3000
 
-This will run the Nextjs server on localhost:3000
+Backend:
 
-## Install and run Django server
+...
 
-1. Enter Django directory: `cd src/django_server`
-2. Install pip dependencies: `python -m pip install -r requirements.txt`
-3. Run development server: `python manage.py runserver`
+# Production
 
-This will run the Django server on localhost:8000.
+Frontend:
+
+...
+
+Backend:
+
+...
 
 # Resources
 
