@@ -2,8 +2,10 @@
 
 \usepackage{tabularx}
 \usepackage{booktabs}
-\usepackage{enumitem}
-\usepackage{longtable}
+
+\title{Problem Statement and Goals\\\progname}
+
+\author{\authname}
 
 \date{}
 
@@ -12,9 +14,7 @@
 
 \begin{document}
 
-\title{Problem Statement and Goals\\\progname}
-
-\author{\authname}
+\maketitle
 
 \begin{table}[hp]
 \caption{Revision History} \label{TblRevisionHistory}
@@ -22,156 +22,35 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Sept. 26th, 2022  & All Members & Initial document creation. \\
+Date1 & Name(s) & Description of changes\\
+Date2 & Name(s) & Description of changes\\
+... & ... & ...\\
 \bottomrule
 \end{tabularx}
 \end{table}
-    
-\newpage
-
-\maketitle
 
 \section{Problem Statement}
 
-\subsection{Problem and Importance of the Problem}
+\wss{You should check your problem statement with the
+\href{https://github.com/smiths/capTemplate/blob/main/docs/Checklists/ProbState-Checklist.pdf}
+{problem statement checklist}.}
+\wss{You can change the section headings, as long as you include the required information.}
 
-Both vehicle owners and auto service professionals alike encounter many challenges when attempting to coordinate with each other. Many vehicle owners struggle to find a reliable auto service professional. Due to a lack of transparency and the frequency of receiving inaccurate estimates, prospective vehicle owners are afraid of getting overcharged. In addition, booking an appointment is often difficult because shop owners cannot provide accurate estimates on availability and how long it might take to service a car. All of these challenges together become a major deterrent for seeking help from auto service professionals, hurting both customers and businesses in the process.
+\subsection{Problem}
 
 \subsection{Inputs and Outputs}
 
-For extra clarity, the inputs and outputs have been divided into two sections between the two audiences this platform will cater to, shop owners and vehicle owners. These inputs and outputs are outlined in Table \ref{tab:inputsOutputs}.
-
-\begin{center}
-\begin{longtable}{ | p{3cm} | p{4cm} | p{4cm} |}
-\caption{Inputs and Outputs}
-\label{tab:inputsOutputs}
-\\ \hline
-\textbf{User} & \textbf{Inputs} & \textbf{Outputs} \\ \hline
-\textbf{Shop Owners} & Information about car work orders from shop owners/technicians & Customer-viewable information on work orders \\ \hline
-& & Customer payment for work orders \\ \cline{2-3}
-& Quote responses from shop owners & Quote requests from customers \\ \cline{2-3}
-& Shop owner schedule/available times & Appointment requests from customers \\ \cline{2-3}
-& Responses to appointment requests & \\ \hline
-\textbf{Vehicle Owners} & Searches for auto service professionals & List of relevant auto service professionals based on search criteria \\ \cline{2-3}
-& Selections of car work orders & Information about car work orders from shop owners/technicians \\ \cline{2-3}
-& Customer payment for work orders & \\ \cline{2-3}
-& Quote requests from vehicle owners & Quote request responses from shop owners \\ \cline{2-3}
-& Appointment requests with auto service professionals & Shop availability \\ \cline{2-3}
-& & Appointment request responses from shop owners \\ \hline
-\end{longtable}
-\end{center}
+\wss{Characterize the problem in terms of ``high level'' inputs and outputs.  
+Use abstraction so that you can avoid details.}
 
 \subsection{Stakeholders}
 
-Main stakeholders:
-
-\begin{itemize}
-    \item \textbf{Shop owners} will rely on the application to facilitate connections with customers, which includes finding new customers as well as handling the brunt of administrative effort for booking appointments.
-    \item \textbf{Auto service professionals} will rely on the application to get them in touch with clients and advertise their services, which will allow them to focus their efforts on tasks that apply more directly to their skill set.
-    \item \textbf{Vehicle owners} will use the application to book appointments with and receive quotes from auto service professionals when their vehicle requires maintenance or repairs.
-    \item \textbf{Sayyara} is the client and will determine what features the application must have and what requirements it must meet in order to be considered a viable product.
-\end{itemize}
-
-\noindent Other stakeholders:
-\begin{itemize}
-    \item \textbf{Investors} will invest in the application and therefore have a vested interest in its success and how well it can fulfill its promised purpose.
-    \item \textbf{Developers} will be responsible for developing and maintaining the application, which includes maintaining its functionality as well as making improvements.
-\end{itemize}
 \subsection{Environment}
 
-\begin{itemize}
-    \item Hardware Environment: Mobile devices, both Android and IOS, as well as computers, with a network connection.
-    \item Software Environment: Progressive web applications (PWAs) run in the browser. On IOS devices, PWAs can only be installed using Safari. On Android, there are multiple browsers that support installation of a PWA, with Chrome being the default. Our back end will run on a cloud platform, such as Amazon Web Services (AWS) or Google Cloud Platform (GCP).
-\end{itemize}
+\wss{Hardware and software}
 
 \section{Goals}
 
-We created goals to highlight the main selling features of the product. These goals are outlined in Table \ref{tab:goals}.
-
-\begin{center}
-    \begin{longtable}{ | p{3cm} | p{4cm} | p{4.5cm} |}
-    \caption{Goals}
-    \label{tab:goals}
-    \\ \hline
-    \textbf{Goal} & \textbf{Description} & \textbf{Reasoning} \\ \hline
-    Multi-platform & 
-    The product should be able to run on different web browsers and mobile operating systems. &  
-    \begin{itemize}[noitemsep,nolistsep,leftmargin=*]
-        \item A product that is compatible with different devices and browsers maximizes the number of users that can access the product.
-        \item This can be verified by running the app on different devices and browsers.
-    \end{itemize}
-\\ \hline
-
-    Easy to use & 
-    The UI should be easy to use to allow users of all backgrounds to easily understand the app and navigate their way around the app.  &  
-    \begin{itemize}[noitemsep,nolistsep,leftmargin=*]
-        \item For the product to reach a mass audience, it is important for it to be intuitive and easy to use.
-        \item This can be verified by surveying a sample group of users to see how easily they can perform certain actions in the app.
-    \end{itemize}
-\\ \hline
-
-    Maintainable & 
-    The product should be easy to maintain with proper documentation, and high coding standards.  &  
-    \begin{itemize}[noitemsep,nolistsep,leftmargin=*]
-        \item To allow future developers to continue to maintain the app, it must use good programming practices and be properly documented.
-        \item This can be verified by surveying our supervisor to validate if the code is reasonably maintainable.
-    \end{itemize}
-\\ \hline
-
-    Efficient & 
-    The product should be efficient enough to work on older devices.  &  
-    \begin{itemize}[noitemsep,nolistsep,leftmargin=*]
-        \item A software that runs efficiently will enable people with older devices to use the app.
-        \item This can be verified testing the app on older/low-end devices.
-    \end{itemize}
-\\ \hline
-
-    Reliable Uptime & 
-    The product should have a reliable uptime.  &  
-    \begin{itemize}[noitemsep,nolistsep,leftmargin=*]
-        \item A software that provides stability and a reliable uptime will more easily gain the trust of its users.
-        \item This can be verified by using monitoring tools to ensure that any downtimes are within an acceptable range.
-    \end{itemize}
-    \\ \hline
-    \end{longtable}
-\end{center}
-
 \section{Stretch Goals}
-
-We created stretch goals to highlight some features that are not necessary for the final product to be viable but that we would like to implement if we have the time and resources. These stretch goals are outlined in Table \ref{tab:stretchGoals}.
-
-\begin{center}
-    \begin{longtable}{ | p{3cm} | p{4cm} | p{4.5cm} |}
-    \caption{Stretch Goals}
-    \label{tab:stretchGoals}
-    \\ \hline
-    \textbf{Stretch Goal} & \textbf{Description} & \textbf{Reasoning} \\ \hline
-    Real-time updates & 
-    The product should give real-time notifications to users about appointments and schedule changes. &  
-    The users will not have to reload the app to get information on any schedule changes.
-\\ \hline
-
-    Accessibility features & 
-    The product should have accessibility options (e.g., screen reader).  &  
-    A product with accessibility features will enable people with disabilities to use the product.
-\\ \hline
-
-    Customization & 
-    The product should provide options to customize the user interface (e.g., light/dark mode).  &  
-    The ability to customize the user interface can greatly enhance the user experience since different users have different preferences.
-\\ \hline
-
-    Generate Reports & 
-    The product should allow shop owners to generate aggregate reports on specific metrics (for e.g., the total work scheduled through the app, etc.)   &  
-    A product that can help shops track metrics of its customers will attract more shop owners to sign up.
-\\ \hline
-
-    Rate and review shops and mechanics & 
-    The product should allow users to view and add ratings/reviews for shops and mechanics.  &  
-    A product that displays ratings and reviews is more transparent and trustworthy, and makes it easier for the users to select a suitable shop.
-    \\ \hline
-    \end{longtable}
-\end{center}
-
 
 \end{document}
