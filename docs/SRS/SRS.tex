@@ -16,6 +16,10 @@
 \usepackage{caption}
 \usepackage{pdflscape}
 \usepackage{afterpage}
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{enumitem}
 
 \usepackage[round]{natbib}
 
@@ -69,6 +73,9 @@
 \newcounter{reqnum} %Requirement Number
 \newcommand{\rthereqnum}{P\thereqnum}
 \newcommand{\rref}[1]{R\ref{#1}}
+\newcounter{ucnum} %Use Case Number
+\newcommand{\rtheucnum}{P\theucnum}
+\newcommand{\ucref}[1]{R\ref{#1}}
 \newcounter{nfrnum} %NFR Number
 \newcommand{\rthenfrnum}{NFR\thenfrnum}
 \newcommand{\nfrref}[1]{NFR\ref{#1}}
@@ -127,7 +134,7 @@
 \begin{document}
 
 \title{Software Requirements Specification for \progname: subtitle describing software} 
-\author{Author Name(s)}
+\author{\authname}
 \date{\today}
 	
 \maketitle
@@ -145,10 +152,12 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
+5 October 2022 & 1.0 & First iteration of SRS\\
 Date 2 & 1.1 & Notes\\
 \bottomrule
 \end{tabularx}
+\\\\
+This SRS closely follows the Volere template provided by the course instructor, however it uses some parts of the initial template as well. However, it covers the same sections as both templates, so no big changes have actually occurred. Some of the subsections that were not relevant to the project were omitted from these templates.
 
 ~\newpage
 
@@ -158,68 +167,11 @@ This section records information for easy reference.
 
 \subsection{Table of Units}
 
-Throughout this document SI (Syst\`{e}me International d'Unit\'{e}s) is employed
-as the unit system.  In addition to the basic units, several derived units are
-used as described below.  For each unit, the symbol is given followed by a
-description of the unit and the SI name.
-~\newline
-
-\renewcommand{\arraystretch}{1.2}
-%\begin{table}[ht]
-  \noindent \begin{tabular}{l l l} 
-    \toprule		
-    \textbf{symbol} & \textbf{unit} & \textbf{SI}\\
-    \midrule 
-    \si{\metre} & length & metre\\
-    \si{\kilogram} & mass	& kilogram\\
-    \si{\second} & time & second\\
-    \si{\celsius} & temperature & centigrade\\
-    \si{\joule} & energy & joule\\
-    \si{\watt} & power & watt (W = \si{\joule\per\second})\\
-    \bottomrule
-  \end{tabular}
-  %	\caption{Provide a caption}
-%\end{table}
-
-\plt{Only include the units that your SRS actually uses.}
-
-\plt{Derived units, like newtons, pascal, etc, should show their derivation
-    (the units they are derived from) if their constituent units are in the
-    table of units (that is, if the units they are derived from are used in the
-    document).  For instance, the derivation of pascals as
-    $\si{\pascal}=\si{\newton\per\square\meter}$ is shown if newtons and m are
-    both in the table.  The derivations of newtons would not be shown if kg and
-    s are not both in the table.}
-
-\plt{The symbol for units named after people use capital letters, but the name
-  of the unit itself uses lower case.  For instance, pascals use the symbol Pa,
-  watts use the symbol W, teslas use the symbol T, newtons use the symbol N,
-  etc.  The one exception to this is degree Celsius.  Details on writing metric
-  units can be found on the 
-  \href{https://www.nist.gov/pml/weights-and-measures/writing-metric-units}
-  {NIST} web-page.}
+N/A
 
 \subsection{Table of Symbols}
 
-The table that follows summarizes the symbols used in this document along with
-their units.  The choice of symbols was made to be consistent with the heat
-transfer literature and with existing documentation for solar water heating
-systems.  The symbols are listed in alphabetical order.
-
-\renewcommand{\arraystretch}{1.2}
-%\noindent \begin{tabularx}{1.0\textwidth}{l l X}
-\noindent \begin{longtable*}{l l p{12cm}} \toprule
-\textbf{symbol} & \textbf{unit} & \textbf{description}\\
-\midrule 
-$A_C$ & \si[per-mode=symbol] {\square\metre} & coil surface area
-\\
-$A_\text{in}$ & \si[per-mode=symbol] {\square\metre} & surface area over 
-which heat is transferred in
-\\ 
-\bottomrule
-\end{longtable*}
-\plt{Use your problems actual symbols.  The si package is a good idea to use for
-  units.}
+N/A
 
 \subsection{Abbreviations and Acronyms}
 
@@ -229,267 +181,77 @@ which heat is transferred in
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   A & Assumption\\
-  DD & Data Definition\\
-  GD & General Definition\\
-  GS & Goal Statement\\
-  IM & Instance Model\\
-  LC & Likely Change\\
-  PS & Physical System Description\\
-  R & Requirement\\
+  FR & Functional Requirement\\
+  NFR & Non-Functional Requirement\\
   SRS & Software Requirements Specification\\
-  \progname{} & \plt{put an expanded version of your program name here (as appropriate)}\\
-  T & Theoretical Model\\
+  PWA & Progressive Web App\\
+  MVP & Minimal Viable Product\\
+  AWS & Amazon Web Services\\
+  URL & Uniform Resource Locator\\
   \bottomrule
 \end{tabular}\\
-
-\plt{Add any other abbreviations or acronyms that you add}
-
 \subsection{Mathematical Notation}
 
-\plt{This section is optional, but should be included for projects that make use
-  of notation to convey mathematical information.  For instance, if typographic
-  conventions (like bold face font) are used to distinguish matrices, this
-  should be stated here.  If symbols are used to show mathematical operations,
-  these should be summarized here.  In some cases the easiest way to summarize
-  the notation is to point to a text or other source that explains the
-  notation.}
-
-\plt{This section was added to the template because some students use very
-  domain specific notation.  This notation will not be readily understandable to
-  people outside of your domain.  It should be explained.}
+N/A
 
 \newpage
 
 \pagenumbering{arabic}
 
-\plt{This SRS template is based on \citet{SmithAndLai2005, SmithEtAl2007}.  It
-  will get you started.  You should not modify the section headings, without
-  first discussing the change with the course instructor.  Modification means
-  you are not following the template, which loses some of the advantage of a
-  template, especially standardization.  Although the bits shown below do not
-  include type information, you may need to add this information for your
-  problem.  If you are unsure, please can ask the instructor.}
-
-\plt{Feel free to change the appearance of the report by modifying the LaTeX
-  commands.}
-
-\plt{This template document assumes that a single program is being documented.
-  If you are documenting a family of models, you should start with a commonality
-  analysis.  A separate template is provided for this.  For program
-  families you should look at \cite{Smith2006, SmithMcCutchanAndCarette2017}.
-  Single family member programs are often programs based on a single physical
-  model.  General purpose tools are usually documented as a family.  Families of
-  physical models also come up.}
-
-\plt{The SRS is not generally written, or read, sequentially.  The SRS is a
-  reference document.  It is generally read in an ad hoc order, as the need
-  arises.  For writing an SRS, and for reading one for the first time, the
-  suggested order of sections is:
-\begin{itemize}
-\item Goal Statement
-\item Instance Models
-\item Requirements
-\item Introduction
-\item Specific System Description
-\end{itemize}
-}
-
-\plt{Guiding principles for the SRS document:
-\begin{itemize}
-\item Do not repeat the same information at the same abstraction level.  If
-  information is repeated, the repetition should be at a different abstraction
-  level.  For instance, there will be overlap between the scope section and the
-  assumptions, but the scope section will not go into as much detail as the
-  assumptions section.
-\end{itemize}
-}
-
-\plt{The template description comments should be disabled before submitting this
-  document for grading.}
-
-\plt{You can borrow any wording from the text given in the template.  It is part
-  of the template, and not considered an instance of academic integrity.  Of
-  course, you need to cite the source of the template.}
-
-\plt{When the documentation is done, it should be possible to trace back to the
-  source of every piece of information.  Some information will come from
-  external sources, like terminology.  Other information will be derived, like
-  General Definitions.}
-
-\plt{An SRS document should have the following qualities: unambiguous,
-  consistent, complete, validatable, abstract and traceable.}
-
-\plt{The overall goal of the SRS is that someone that meets the Characteristics
-  of the Intended Reader (Section~\ref{sec_IntendedReader}) can learn,
-  understand and verify the captured domain knowledge.  They should not have to
-  trust the authors of the SRS on any statements.  They should be able to
-  independently verify/derive every statement made.}
-
 \section{Introduction}
 
-\plt{The introduction section is written to introduce the problem.  It starts
-  general and focuses on the problem domain. The general advice is to start with
-a paragraph or two that describes the problem, followed by a ``roadmap''
-paragraph.  A roadmap orients the reader by telling them what sub-sections to
-expect in the Introduction section.}
+This section provides an overview of the rest of the document. It describes the purpose of this document, outlines the expected knowledge of the reader and provides a roadmap of the SRS.
 
 \subsection{Purpose of Document}
 
-\plt{This section summarizes the purpose of the SRS document.  It does not focus
-  on the problem itself.  The problem is described in the ``Problem
-  Description'' section (Section~\ref{Sec_pd}).  The purpose is for the document
-  in the context of the project itself, not in the context of this course.
-  Although the ``purpose'' of the document is to get a grade, you should not
-  mention this.  Instead, ``fake it'' as if this is a real project.  The purpose
-  section will be similar between projects.  The purpose of the document is the
-  purpose of the SRS, including communication, planning for the design stage,
-  etc.}
-
-\subsection{Scope of Requirements} 
-
-\plt{Modelling the real world requires simplification.  The full complexity of
-  the actual physics, chemistry, biology is too much for existing models, and
-  for existing computational solution techniques.  Rather than say what is in
-  the scope, it is usually easier to say what is not.  You can think of it as
-  the scope is initially everything, and then it is constrained to create the
-  actual scope.  For instance, the problem can be restricted to 2 dimensions, or
-  it can ignore the effect of temperature (or pressure) on the material
-  properties, etc.}  
-
-\plt{The scope section is related to the assumptions section
-  (Section~\ref{sec_assumpt}).  However, the scope and the assumptions are not
-  at the same level of abstraction.  The scope is at a high level.  The focus is
-  on the ``big picture'' assumptions.  The assumptions section lists, and
-  describes, all of the assumptions.}
+  The purpose of this document is to present a detailed description of \progname{} and outline the expectations of the program for functionality and performance. The document will describe the purpose of the system and its features and constraints. This SRS will also indicate conditions under which the system will be developed. This document is intended to be read by stakeholders and developers to achieve a better understanding of the system.
 
 \subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
 
-\plt{This section summarizes the skills and knowledge of the readers of the
-  SRS.  It does NOT have the same purpose as the ``User Characteristics''
-  section (Section~\ref{SecUserCharacteristics}).  The intended readers are the
-  people that will read, review and maintain the SRS.  They are the people that
-  will conceivably design the software that is intended to meet the
-  requirements.  The user, on the other hand, is the person that uses the
-  software that is built.  They may never read this SRS document.  Of course,
-  the same person could be a ``user'' and an ``intended reader.''}
-
-\plt{The intended reader characteristics should be written as unambiguously and
-  as specifically as possible.  Rather than say, the user should have an
-  understanding of physics, say what kind of physics and at what level.  For
-  instance, is high school physics adequate, or should the reader have had a
-  graduate course on advanced quantum mechanics?}
+  The intended audience for this document are developers and other stakeholders such as project managers, quality assurance and product experts. It is assumed that these readers have a basic understanding of Progressive Web App (PWA) development and server hosting. It is also assumed that the reader understands the process for car maintenance, including quotes, work orders and billing.
 
 \subsection{Organization of Document}
 
-\plt{This section provides a roadmap of the SRS document.  It will help the
-  reader orient themselves.  It will provide direction that will help them
-  select which sections they want to read, and in what order.  This section will
-  be similar between project.}
+  The document is divided into sections that each give an in-depth look into an aspect of the system. To begin, the \hyperref[sec:GSD]{General System Description} section describes the system and identifies how it will interact with its environment and users. This section will also summarize the attributes of the expected users. The following section, \hyperref[sec:SSD]{Specific System Description}, will describe the purpose of the system through the problem statement and explain necessary terminology for complete understanding of the problem and requirements. The \hyperref[sec:FuncReq]{Functional Requirements} section will outline the needs of the client and expectations of the software, in terms of functionality. This section will also describe the scope of work, formal requirements and the plan for how the team intends to implement the functional requirements. Following that, the \hyperref[sec:NFuncReq]{Nonfunctional Requirements} section will explain all quality features the team plans to implement in this project. The current environment for this system will be discussed in the \hyperref[sec:PI]{Project Issues} section, to present all factors that will contribute to the success or potential failure of \progname{}. Finally, the \hyperref[sec:refAppendix]{Reflection Appendix} details the skills and knowledge each team member requires in order to complete this project and the proposed action plan accepted by each member. 
 
-\section{General System Description}
+\section{General System Description} \label{sec:GSD}
 
 This section provides general information about the system.  It identifies the
 interfaces between the system and its environment, describes the user
-characteristics and lists the system constraints.  \plt{This text can likely be
-  borrowed verbatim.}
+characteristics and lists the system constraints.
 
-\plt{The purpose of this section is to provide general information about the
-  system so the specific requirements in the next section will be easier to
-  understand. The general system description section is designed to be
-  changeable independent of changes to the functional requirements documented in
-  the specific system description. The general system description provides a
-  context for a family of related models.  The general description can stay the
-  same, while specific details are changed between family members.}
+\subsection{System Context} \label{sec:SystemContext}
 
-\subsection{System Context}
-
-\plt{Your system context will include a figure that shows the abstract view of
-  the software.  Often in a scientific context, the program can be viewed
-  abstractly following the design pattern of Inputs $\rightarrow$ Calculations
-  $\rightarrow$ Outputs.  The system context will therefore often follow this
-  pattern.  The user provides inputs, the system does the calculations, and then
-  provides the outputs to the user.  The figure should not show all of the
-  inputs, just an abstract view of the main categories of inputs (like material
-  properties, geometry, etc.).  Likewise, the outputs should be presented from
-  an abstract point of view.  In some cases the diagram will show other external
-  entities, besides the user.  For instance, when the software product is a
-  library, the user will be another software program, not an actual end user.
-  If there are system constraints that the software must work with external
-  libraries, these libraries can also be shown on the System Context diagram.
-  They should only be named with a specific library name if this is required by
-  the system constraint.}
+The system context for this PWA is shown in Figure 1. This figure shows the relationship between the user inputs and the different parts of the software that the users interact with. The figure starts at the User box which shows the first stage of user input which is the user logging in as a customer, shop owner or shop employee. From this stage they are guided to the respective front end view of the PWA relevant to their access level and from these front end PWA views they have various interactions and user inputs that will interact with the database and have various outputs as shown by the arrows in the figure.
 
 \begin{figure}[h!]
 \begin{center}
- \includegraphics[width=0.6\textwidth]{SystemContextFigure}
-\caption{System Context}
+ \includegraphics[width=1\textwidth]{SystemContext}
+\caption{System context displaying user interactions with PWA views and database. }
 \label{Fig_SystemContext} 
 \end{center}
 \end{figure}
 
-\plt{For each of the entities in the system context diagram its responsibilities
-  should be listed.  Whenever possible the system should check for data quality,
-  but for some cases the user will need to assume that responsibility.  The list
-  of responsibilites should be about the inputs and outputs only, and they
-  should be abstract.  Details should not be presented here.  However, the
-  information should not be so abstract as to just say ``inputs'' and
-  ``outputs''.  A summarizing phrase can be used to characterize the inputs.
-  For instance, saying ``material properties'' provides some information, but it
-  stays away from the detail of listing every required properties.}
-
-\begin{itemize}
-\item User Responsibilities:
-\begin{itemize}
-\item 
-\end{itemize}
-\item \progname{} Responsibilities:
-\begin{itemize}
-\item Detect data type mismatch, such as a string of characters instead of a
-  floating point number
-\item 
-\end{itemize}
-\end{itemize}
-
 \subsection{User Characteristics} \label{SecUserCharacteristics}
 
-\plt{This section summarizes the knowledge/skills expected of the user.
-  Measuring usability, which is often a required non-function requirement,
-  requires knowledge of a typical user.  As mentioned above, the user is a
-  different role from the ``intended reader,'' as given in
-  Section~\ref{sec_IntendedReader}.  As in Section~\ref{sec_IntendedReader}, the
-  user characteristics should be specific an unambiguous.  For instance, ``The
-  end user of \progname{} should have an understanding of undergraduate Level 1
-  Calculus and Physics.''}
+The end users of the system can be of two types, a typical consumer and a typical shop owner or employee. The general consumer will not be expected to have any knowledge about auto motives, and as such it will not be required to use the software. In general, the typical consumer is expected to know how to use a mobile app or web page (which will be the output of this project, see \hyperref[constraints]{System Constraints}) without any instruction. Finally, general consumers are assumed to have no physical disabilities that may prevent them from using the system. 
+
+Shop owners/employees are expected to have all the same general knowledge as a typical consumer but with knowledge relating to the automotive industry in addition. In particular, this type of user will have knowledge about the terminology and processes used in the auto motive industry, and as such, they will not be explained to any potential users. Shop owners or employees are expected have the knowledge to be able to assist consumers in their understanding of auto motives to allow them to more effectively use the application.
 
 \subsection{System Constraints}
+\label{constraints}
 
-\plt{System constraints differ from other type of requirements because they
-  limit the developers' options in the system design and they identify how the
-  eventual system must fit into the world. This is the only place in the SRS
-  where design decisions can be specified.  That is, the quality requirement for
-  abstraction is relaxed here.  However, system constraints should only be
-  included if they are truly required.}
+This system has no constraints, barring one. The output of the project, as mandated by the supervisor of the project, will be a PWA (progressive web app). This means that the output of the project will take the form both of a web page that can be run in a browser, but also an application that will run on mobile devices. 
 
-\section{Specific System Description}
+\section{Specific System Description} \label{sec:SSD}
 
-This section first presents the problem description, which gives a high-level
-view of the problem to be solved.  This is followed by the solution characteristics
-specification, which presents the assumptions, theories, definitions and finally
-the instance models.  \plt{Add any project specific details that are relevant
-  for the section overview.}
+This section presents the problem description, which gives a high-level view of the problem to be solved. In addition, it contains a section detailing any terminology used in the document that may be unclear for readers.
 
 \subsection{Problem Description} \label{Sec_pd}
 
-\progname{} is intended to solve ... \plt{What problem does your program solve?
-The description here should be in the problem space, not the solution space.}
+\progname{} is intended to solve a typical issue that a consumer may run in to when attempting to service their vehicle: finding a reliable mechanic, and creating appointments with them. Consumers may have to phone many mechanics to find a mechanic that charges a reasonable price for services, and may not necessarily even be able to find a time slot that works for both the mechanic and them. \progname intends to solve these issues with coordination for both consumers and mechanics, making servicing vehicles easier for the both of them.
 
 \subsubsection{Terminology and  Definitions}
-
-\plt{This section is expressed in words, not with equations.  It provide the
-  meaning of the different words and phrases used in the domain of the problem.
-The terminology is used to introduce concepts from the world outside of the
-mathematical model  The terminology provides a real world connection to give the
-mathematical model meaning.}
 
 This subsection provides a list of terms that are used in the subsequent
 sections and their meaning, with the purpose of reducing ambiguity and making it
@@ -497,820 +259,753 @@ easier to correctly understand the requirements:
 
 \begin{itemize}
 
-\item 
-
-\end{itemize}
-
-\subsubsection{Physical System Description} \label{sec_phySystDescrip}
-
-\plt{The purpose of this section is to clearly and unambiguously state the
-  physical system that is to be modelled. Effective problem solving requires a
-  logical and organized approach. The statements on the physical system to be
-  studied should cover enough information to solve the problem. The physical
-  description involves element identification, where elements are defined as
-  independent and separable items of the physical system. Some example elements
-  include acceleration due to gravity, the mass of an object, and the size and
-  shape of an object. Each element should be identified and labelled, with their
-  interesting properties specified clearly. The physical description can also
-  include interactions of the elements, such as the following: i) the
-  interactions between the elements and their physical environment; ii) the
-  interactions between elements; and, iii) the initial or boundary conditions.}
-
-The physical system of \progname{}, as shown in Figure~?,
-includes the following elements:
-
-\begin{itemize}
-
-\item[PS1:] 
-
-\item[PS2:] ...
-
-\end{itemize}
-
-\plt{A figure here makes sense for most SRS documents}
-
-% \begin{figure}[h!]
-% \begin{center}
-% %\rotatebox{-90}
-% {
-%  \includegraphics[width=0.5\textwidth]{<FigureName>}
-% }
-% \caption{\label{<Label>} <Caption>}
-% \end{center}
-% \end{figure}
-
-\subsubsection{Goal Statements}
-
-\plt{The goal statements refine the ``Problem Description''
-  (Section~\ref{Sec_pd}).  A goal is a functional objective the system under
-  consideration should achieve. Goals provide criteria for sufficient
-  completeness of a requirements specification and for requirements
-  pertinence. Goals will be refined in Section “Instanced Models”
-  (Section~\ref{sec_instance}). Large and complex goals should be decomposed
-  into smaller sub-goals.  The goals are written abstractly, with a minimal
-  amount of technical language.  They should be understandable by non-domain
-  experts.}
-
-\noindent Given the \plt{inputs}, the goal statements are:
-
-\begin{itemize}
-
-\item[GS\refstepcounter{goalnum}\thegoalnum \label{G_meaningfulLabel}:] \plt{One
-    sentence description of the goal.  There may be more than one.  Each Goal
-    should have a meaningful label.}
+\item \label{term_cannedJob} Canned job: a job provided by a shop where the pricing and timing is already listed, so there is no need for a customer to request a quote or for the shop to send a quote to the customer.
 
 \end{itemize}
 
 \subsection{Solution Characteristics Specification}
 
-\plt{This section specifies the information in the solution domain of the system
-  to be developed. This section is intended to express what is required in
-  such a way that analysts and stakeholders get a clear picture, and the
-  latter will accept it. The purpose of this section is to reduce the problem
-  into one expressed in mathematical terms. Mathematical expertise is used to
-  extract the essentials from the underlying physical description of the
-  problem, and to collect and substantiate all physical data pertinent to the
-  problem.}
+This section covers the assumptions that may affect the requirements if changed in the future.
 
-\plt{This section presents the solution characteristics by successively refining
-  models.  It starts with the abstract/general Theoretical Models (TMs) and
-  refines them to the concrete/specific Instance Models (IMs).  If necessary
-  there are intermediate refinements to General Definitions (GDs).  All of these
-  refinements can potentially use Assumptions (A) and Data Definitions (DD).
-  TMs are refined to create new models, that are called GMs or IMs. DDs are not
-  refined; they are just used. GDs and IMs are derived, or refined, from other
-  models. DDs are not derived; they are just given. TMs are also just given, but
-  they are refined, not used.  If a potential DD includes a derivation, then
-  that means it is refining other models, which would make it a GD or an IM.}
+\subsubsection{Assumptions}
 
-\plt{The above makes a distinction between ``refined'' and ``used.'' A model is
-  refined to another model if it is changed by the refinement. When we change a
-  general 3D equation to a 2D equation, we are making a refinement, by applying
-  the assumption that the third dimension does not matter. If we use a
-  definition, like the definition of density, we aren't refining, or changing
-  that definition, we are just using it.}
-
-\plt{The same information can be a TM in one problem and a DD in another.  It is
-  about how the information is used.  In one problem the definition of
-  acceleration can be a TM, in another it would be a DD.}
-
-\plt{There is repetition between the information given in the different chunks
-  (TM, GDs etc) with other information in the document.  For instance, the
-  meaning of the symbols, the units etc are repeated.  This is so that the
-  chunks can stand on their own when being read by a reviewer/user.  It also
-  facilitates reuse of the models in a different context.}
-
-\noindent \plt{The relationships between the parts of the document are show in
-  the following figure.  In this diagram ``may ref'' has the same role as
-  ``uses'' above.  The figure adds ``Likely Changes,'' which are able to
-  reference (use) Assumptions.}
-
-\begin{figure}[H]
-  \includegraphics[scale=0.9]{RelationsBetweenTM_GD_IM_DD_A.pdf}
-\end{figure}
-
-The instance models that govern \progname{} are presented in
-Subsection~\ref{sec_instance}.  The information to understand the meaning of the
-instance models and their derivation is also presented, so that the instance
-models can be verified.
-
-\subsubsection{Assumptions} \label{sec_assumpt}
-
-\plt{The assumptions are a refinement of the scope.  The scope is general, where
-  the assumptions are specific.  All assumptions should be listed, even those
-  that domain experts know so well that they are rarely (if ever) written down.}
-\plt{The document should not take for granted that the reader knows which
-  assumptions have been made. In the case of unusual assumptions, it is
-  recommended that the documentation either include, or point to, an explanation
-  and justification for the assumption.}
-
-This section simplifies the original problem and helps in developing the
-theoretical model by filling in the missing information for the physical
-system. The numbers given in the square brackets refer to the theoretical model
-[T], general definition [GD], data definition [DD], instance model [IM], or
-likely change [LC], in which the respective assumption is used.
+Many assumptions about the users of the system are detailed under \hyperref[SecUserCharacteristics]{User Characteristics}, but the following assumptions are also made:
 
 \begin{itemize}
-
-\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_meaningfulLabel}:]
-  \plt{Short description of each assumption.  Each assumption
-    should have a meaningful label.  Use cross-references to identify the
-    appropriate traceability to T, GD, DD etc., using commands like dref, ddref
-    etc.  Each assumption should be atomic - that is, there should not be an
-    explicit (or implicit) ``and'' in the text of an assumption.}
-
+    \item The mobile hardware that a user has will support PWAs.
+    \item When using the application, the user will have a valid internet connection.
+    \item The servers that eventually host the system will be able to support the users of the system.
 \end{itemize}
 
-\subsubsection{Theoretical Models}\label{sec_theoretical}
+\noindent If there is a change in these assumptions, the functional requirements defined in the following section may be subject to change.
 
-\plt{Theoretical models are sets of abstract mathematical equations or axioms
-  for solving the problem described in Section ``Physical System Description''
-  (Section~\ref{sec_phySystDescrip}). Examples of theoretical models are
-  physical laws, constitutive equations, relevant conversion factors, etc.}
-
-This section focuses on the general equations and laws that \progname{} is based
-on.  \plt{Modify the examples below for your problem, and add additional models
-  as appropriate.}
-
-~\newline
-
-\noindent
-\deftheory
-% #2 refname of theory
-{T:COE}
-% #3 label
-{Conservation of thermal energy}
-% #4 equation
-{
-  $-{\bf \nabla \cdot q} + g$ = $\rho C \frac{\partial T}{\partial t}$
-}
-% #5 description
-{
-  The above equation gives the conservation of energy for transient heat transfer in a material
-  of specific heat capacity $C$ (\si{\joule\per\kilogram\per\celsius}) and density $\rho$ 
-  (\si{\kilogram\per\cubic\metre}), where $\bf q$ is the thermal flux vector (\si{\watt\per\square\metre}),
-  $g$ is the volumetric heat generation
-  (\si{\watt\per\cubic\metre}), $T$ is the temperature
-  (\si{\celsius}),  $t$ is time (\si{\second}), and $\nabla$ is
-  the gradient operator.  For this equation to apply, other forms
-  of energy, such as mechanical energy, are assumed to be negligible in the
-  system (\aref{A_OnlyThermalEnergy}).  In general, the material properties ($\rho$ and $C$) depend on temperature.
-}
-% #6 Notes
-{
-None.
-}
-% #7 Source
-{
-  \url{http://www.efunda.com/formulae/heat_transfer/conduction/overview_cond.cfm}
-}
-% #8 Referenced by
-{
-  \dref{ROCT}
-}
-% #9 Preconditions
-{
-None
-}
-% #1 derivation - not applicable by default
-{}
-
-\plt{``Ref.\ By'' is used repeatedly with the different types of information.
-  This stands for Referenced By.  It means that the models, definitions and
-  assumptions listed reference the current model, definition or assumption.
-  This information is given for traceability.  Ref. By provides a pointer in the
-  opposite direction to what we commonly do.  You still need to have a reference
-  in the other direction pointing to the current model, definition or
-  assumption.  As an example, if T1 is referenced by G2, that means that G2 will
-  explicitly include a reference to T1.}
-
-~\newline
-
-\subsubsection{General Definitions}\label{sec_gendef}
-
-\plt{General Definitions (GDs) are a refinement of one or more TMs, and/or of
-  other GDs.  The GDs are less abstract than the TMs.  Generally the reduction
-  in abstraction is possible through invoking (using/referencing) Assumptions.
-  For instance, the TM could be Newton's Law of Cooling stated abstracting.  The
-  GD could take the general law and apply it to get a 1D equation.}
-
-This section collects the laws and equations that will be used in building the
-instance models.
-
-\plt{Some projects may not have any content for this section, but the section
-  heading should be kept.}  \plt{Modify the examples below for your problem, and
-  add additional definitions as appropriate.}
-
-~\newline
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-\hline
-\rowcolor[gray]{0.9}
-Number& GD\refstepcounter{defnum}\thedefnum \label{NL}\\
-\hline
-Label &\bf Newton's law of cooling \\
-\hline
-% Units&$MLt^{-3}T^0$\\
-% \hline
-SI Units&\si{\watt\per\square\metre}\\
-\hline
-Equation&$ q(t) = h \Delta T(t)$  \\
-\hline
-Description &
-Newton's law of cooling describes convective cooling from a surface.  The law is
-stated as: the rate of heat loss from a body is proportional to the difference
-in temperatures between the body and its surroundings.
-\\
-& $q(t)$ is the thermal flux (\si{\watt\per\square\metre}).\\
-& $h$ is the heat transfer coefficient, assumed independent of $T$ (\aref{A_hcoeff})
-	(\si{\watt\per\square\metre\per\celsius}).\\
-&$\Delta T(t)$= $T(t) - T_{\text{env}}(t)$ is the time-dependent thermal gradient
-between the environment and the object (\si{\celsius}).
-\\
-\hline
-  Source & Citation here \\
-  \hline
-  Ref.\ By & \ddref{FluxCoil}, \ddref{FluxPCM}\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-\subsubsection*{Detailed derivation of simplified rate of change of temperature}
-
-\plt{This may be necessary when the necessary information does not fit in the
-  description field.}
-\plt{Derivations are important for justifying a given GD.  You want it to be
-  clear where the equation came from.}
-
-\subsubsection{Data Definitions}\label{sec_datadef}
-
-\plt{The Data Definitions are definitions of symbols and equations that are
-  given for the problem.  They are not derived; they are simply used by other
-  models.  For instance, if a problem depends on density, there may be a data
-  definition for the equation defining density.  The DDs are given information
-  that you can use in your other modules.}
-
-\plt{All Data Definitions should be used (referenced) by at least one other
-  model.}
-
-This section collects and defines all the data needed to build the instance
-models. The dimension of each quantity is also given.  \plt{Modify the examples
-  below for your problem, and add additional definitions as appropriate.}
-
-~\newline
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-\hline
-\rowcolor[gray]{0.9}
-Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{FluxCoil}\\
-\hline
-Label& \bf Heat flux out of coil\\
-\hline
-Symbol &$q_C$\\
-\hline
-% Units& $Mt^{-3}$\\
-% \hline
-  SI Units & \si{\watt\per\square\metre}\\
-  \hline
-  Equation&$q_C(t) = h_C (T_C - T_W(t))$, over area $A_C$\\
-  \hline
-  Description & 
-                $T_C$ is the temperature of the coil (\si{\celsius}).  $T_W$ is the temperature of the water (\si{\celsius}).  
-                The heat flux out of the coil, $q_C$ (\si{\watt\per\square\metre}), is found by
-                assuming that Newton's Law 
-                of Cooling applies (\aref{A_Newt_coil}).  This law (\dref{NL}) is used on the surface of
-                the coil, which has area $A_C$ (\si{\square\metre}) and heat 
-                transfer coefficient $h_C$
-                (\si{\watt\per\square\metre\per\celsius}).  This equation
-                assumes that the temperature of the coil is constant over time (\aref{A_tcoil}) and that it does not vary along the length
-                of the coil (\aref{A_tlcoil}).
-  \\
-  \hline
-  Sources& Citation here \\
-  \hline
-  Ref.\ By & \iref{ewat}\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-\subsubsection{Data Types}\label{sec_datatypes}
-
-\plt{This section is optional.  In many scientific computing programs it isn't
-  necessary, since the inputs and outpus are straightforward types, like reals,
-  integers, and sequences of reals and integers.  However, for some problems it
-  is very helpful to capture the type information.}
-
-\plt{The data types are not derived; they are simply stated and used by other
-  models.}
-
-\plt{All data types must be used by at least one of the models.}
-
-\plt{For the mathematical notation for expressing types, the recommendation is
-  to use the notation of~\citet{HoffmanAndStrooper1995}.}
-
-This section collects and defines all the data types needed to document the
-models. \plt{Modify the examples below for your problem, and add additional
-  definitions as appropriate.}
-
-~\newline
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-  \hline
-  \rowcolor[gray]{0.9}
-  Type Name & Name for Type\\
-  \hline
-  Type Def & mathematical definition of the type\\
-  \hline
-  Description & description here
-  \\
-  \hline
-  Sources & Citation here, if the type is borrowed from another source\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-\subsubsection{Instance Models} \label{sec_instance}    
-
-\plt{The motivation for this section is to reduce the problem defined in
-  ``Physical System Description'' (Section~\ref{sec_phySystDescrip}) to one
-  expressed in mathematical terms. The IMs are built by refining the TMs and/or
-  GDs.  This section should remain abstract.  The SRS should specify the
-  requirements without considering the implementation.}
-
-This section transforms the problem defined in Section~\ref{Sec_pd} into 
-one which is expressed in mathematical terms. It uses concrete symbols defined 
-in Section~\ref{sec_datadef} to replace the abstract symbols in the models 
-identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}.
-
-The goals \plt{reference your goals} are solved by \plt{reference your instance
-  models}.  \plt{other details, with cross-references where appropriate.}
-\plt{Modify the examples below for your problem, and add additional models as
-  appropriate.}
-
-~\newline
-
-%Instance Model 1
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-  \hline
-  \rowcolor[gray]{0.9}
-  Number& IM\refstepcounter{instnum}\theinstnum \label{ewat}\\
-  \hline
-  Label& \bf Energy balance on water to find $T_W$\\
-  \hline
-  Input&$m_W$, $C_W$, $h_C$, $A_C$, $h_P$, $A_P$, $t_\text{final}$, $T_C$, 
-  $T_\text{init}$, $T_P(t)$ from \iref{epcm}\\
-  & The input is constrained so that $T_\text{init} \leq T_C$ (\aref{A_charge})\\
-  \hline
-  Output&$T_W(t)$, $0\leq t \leq t_\text{final}$, such that\\
-  &$\frac{dT_W}{dt} = \frac{1}{\tau_W}[(T_C - T_W(t)) + {\eta}(T_P(t) - T_W(t))]$,\\
-  &$T_W(0) = T_P(0) = T_\text{init}$ (\aref{A_InitTemp}) and $T_P(t)$ from \iref{epcm} \\
-  \hline
-  Description&$T_W$ is the water temperature (\si{\celsius}).\\
-  &$T_P$ is the PCM temperature (\si{\celsius}).\\
-  &$T_C$ is the coil temperature (\si{\celsius}).\\
-  &$\tau_W = \frac{m_W C_W}{h_C A_C}$ is a constant (\si{\second}).\\
-  &$\eta = \frac{h_P A_P}{h_C A_C}$ is a constant (dimensionless).\\
-  & The above equation applies as long as the water is in liquid form,
-  $0<T_W<100^o\text{C}$, where $0^o\text{C}$ and $100^o\text{C}$ are the melting
-  and boiling points of water, respectively (\aref{A_OpRange}, \aref{A_Pressure}).
-  \\
-  \hline
-  Sources& Citation here \\
-  \hline
-  Ref.\ By & \iref{epcm}\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-%~\newline
-
-\subsubsection*{Derivation of ...}
-
-\plt{The derivation shows how the IM is derived from the TMs/GDs.  In cases
-  where the derivation cannot be described under the Description field, it will
-  be necessary to include this subsection.}
-
-\subsubsection{Input Data Constraints} \label{sec_DataConstraints}    
-
-Table~\ref{TblInputVar} shows the data constraints on the input output
-variables.  The column for physical constraints gives the physical limitations
-on the range of values that can be taken by the variable.  The column for
-software constraints restricts the range of inputs to reasonable values.  The
-software constraints will be helpful in the design stage for picking suitable
-algorithms.  The constraints are conservative, to give the user of the model the
-flexibility to experiment with unusual situations.  The column of typical values
-is intended to provide a feel for a common scenario.  The uncertainty column
-provides an estimate of the confidence with which the physical quantities can be
-measured.  This information would be part of the input if one were performing an
-uncertainty quantification exercise.
-
-The specification parameters in Table~\ref{TblInputVar} are listed in
-Table~\ref{TblSpecParams}.
-
-\begin{table}[!h]
-  \caption{Input Variables} \label{TblInputVar}
-  \renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l l l c} 
-  \toprule
-  \textbf{Var} & \textbf{Physical Constraints} & \textbf{Software Constraints} &
-                             \textbf{Typical Value} & \textbf{Uncertainty}\\
-  \midrule 
-  $L$ & $L > 0$ & $L_{\text{min}} \leq L \leq L_{\text{max}}$ & 1.5 \si[per-mode=symbol] {\metre} & 10\%
-  \\
-  \bottomrule
-\end{longtable*}
-\end{table}
-
-\noindent 
-\begin{description}
-\item[(*)] \plt{you might need to add some notes or clarifications}
-\end{description}
-
-\begin{table}[!h]
-\caption{Specification Parameter Values} \label{TblSpecParams}
-\renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l} 
-  \toprule
-  \textbf{Var} & \textbf{Value} \\
-  \midrule 
-  $L_\text{min}$ & 0.1 \si{\metre}\\
-  \bottomrule
-\end{longtable*}
-\end{table}
-
-\subsubsection{Properties of a Correct Solution} \label{sec_CorrectSolution}
-
-\noindent
-A correct solution must exhibit \plt{fill in the details}.  \plt{These
-  properties are in addition to the stated requirements.  There is no need to
-  repeat the requirements here.  These additional properties may not exist for
-  every problem.  Examples include conservation laws (like conservation of
-  energy or mass) and known constraints on outputs, which are usually summarized
-  in tabular form.  A sample table is shown in Table~\ref{TblOutputVar}}
-
-\begin{table}[!h]
-\caption{Output Variables} \label{TblOutputVar}
-\renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l} 
-  \toprule
-  \textbf{Var} & \textbf{Physical Constraints} \\
-  \midrule 
-  $T_W$ & $T_\text{init} \leq T_W \leq T_C$ (by~\aref{A_charge})
-  \\
-  \bottomrule
-\end{longtable*}
-\end{table}
-
-\plt{This section is not for test cases or techniques for verification and
-  validation.  Those topics will be addressed in the Verification and Validation
-  plan.}
-
-\section{Requirements}
-
-\plt{The requirements refine the goal statement.  They will make heavy use of
-  references to the instance models.}
+\section{Functional Requirements} \label{sec:FuncReq}
 
 This section provides the functional requirements, the business tasks that the
 software is expected to complete, and the nonfunctional requirements, the
 qualities that the software is expected to exhibit.
 
+\subsection{The Scope of the Work and the Product}
+
+\subsubsection{The Context of the Work}
+
+The system context is covered in Section \ref{sec:SystemContext}
+
+\subsubsection{Work Partitioning}
+
+The work partitioning is outlined in Table \ref{tab:WorkPartitioning}.
+
+\begin{center}
+\begin{longtable}{|p{4cm}|p{5cm}|p{6cm}|}
+\caption{Work Partitioning}
+\label{tab:WorkPartitioning} \\
+\hline
+ \textbf{Event} & \textbf{Input and Output} & \textbf{Summary} \\
+\hline
+Create account & User info (IN) & User creates account \\
+\hline
+User logs in & Username (IN) & User logs into the system \\
+ & Password (IN) & \\
+\hline
+Reset password & New password (IN) & User resets password \\
+\hline
+Enroll shop & Shop name (IN) & Shop owner enrolls store \\
+ & Shop address (IN) & \\
+ & Owner info (IN) & \\
+\hline
+Owner invites employee & Employee (IN) & Owner invites employee to create account \\
+& Employee invite (OUT) & \\
+\hline
+View all users & All users (OUT) & System admin views all mechanics and users \\
+\hline
+Send quote request & Quote request (IN) & Customer sends quote request to shop \\
+ & Quote from shop (OUT) & \\
+\hline
+Book appointment & Appointment request (IN) & Customer books appointment with shop \\
+ & Appointment acceptance/rejection (OUT) & \\
+\hline
+Create work order & Customer and quote info (IN) & Shop creates work order \\
+ & Work order (OUT) & \\
+\hline
+Assign work order & Employee (IN) & Shop owner assigns work order to employee \\
+ & Work order (IN) & \\
+\hline
+Cancel appointment & Appointment (IN) & Shop owner cancels appointment \\
+\hline
+Set shop availability & Shop available hours/days (IN) & Shop sets shop availability \\
+ & Shop schedule (OUT) & \\
+\hline
+\end{longtable}
+\end{center}
+
+\subsubsection{Individual Product Use Cases}
+
+\noindent \begin{itemize}
+
+\item[UC\refstepcounter{ucnum}\theucnum \label{UC_EnrollShop}. ]
+Name: Enroll Shop\\
+Trigger: Shop owner attempts to enroll shop\\
+Precondition: None\\
+Main Success Scenario:
+\begin{enumerate}
+    \item Shop owner enters required information
+\end{enumerate}
+Success Postcondition: Shop owner successfully enrolls shop\\
+Functional Requirement(s): FR\ref{R_EnrollShop}
+
+\item[UC\refstepcounter{ucnum}\theucnum \label{UC_CreateOwnerAccount}. ]
+Name: Create Owner Account\\
+Trigger: Shop owner attempts to create account\\
+Precondition: Shop owner enrolls shop\\
+Main Success Scenario:
+\begin{enumerate}
+    \item Shop owner enters required information
+\end{enumerate}
+Success Postcondition: Shop owner successfully creates account
+Functional Requirement(s): FR\ref{R_CreateOwnerAccount}
+
+\item[UC\refstepcounter{ucnum}\theucnum \label{UC_CreateEmployeeAccount}. ]
+Name: Create Employee Account\\
+Trigger: Shop employee attempts to create account\\
+Precondition: Shop owner invites employee to create account\\
+Main Success Scenario:
+\begin{enumerate}
+    \item Shop employee accepts invitation from shop owner
+    \item Shop employee enters required information
+\end{enumerate}
+Success Postcondition: Shop employee successfully creates account\\
+Functional Requirement(s): FR\ref{R_InviteEmployee}, FR\ref{R_CreateEmployeeAccount}, FR\ref{R_EditEmployee}
+
+\item[UC\refstepcounter{ucnum}\theucnum \label{UC_Login}. ]
+Name: Login\\
+Trigger: User attempts to login\\
+Precondition: User creates account\\
+Main Success Scenario:
+\begin{enumerate}
+    \item User enters username and password
+    \item System authenticates username and password
+\end{enumerate}
+Undesired Event Handling:
+\begin{enumerate}
+    \item System cannot authenticate username or password
+    \item User repeats Step 2 until successful authentication
+\end{enumerate}
+Success Postcondition: User successfully logs into account\\
+Functional Requirement(s): FR\ref{R_Login}
+
+\item[UC\refstepcounter{ucnum}\theucnum \label{UC_ViewAllUsers}. ]
+Name: View All Users\\
+Trigger: System admin attempts to view all mechanics and users\\
+Precondition: System admin authenticates admin status\\
+Success Postcondition: System admin successfully views all mechanics and users\\
+Functional Requirements(s): FR\ref{R_SeeAllUsers}
+
+\item[UC\refstepcounter{ucnum}\theucnum \label{UC_EditAccount}. ]
+Name: Edit Account\\
+Trigger: User attempts to edit account\\
+Precondition: User logs into account\\
+Main Success Scenario:
+\begin{enumerate}
+    \item User enters changes to account
+    \item User saves changes
+\end{enumerate}
+Success Postcondition: User changes to account become visible\\
+Functional Requirement(s): FR\ref{R_EditAccount}
+
+\item[UC\refstepcounter{ucnum}\theucnum \label{UC_DeleteAccount}. ]
+Name: Delete Account\\
+Trigger: User attempts to delete account\\
+Precondition: User is not a shop owner\\
+Success Postcondition: User account is no longer visible\\
+Functional Requirement(s): FR\ref{R_DeleteAccount}
+
+\item[UC\refstepcounter{ucnum}\theucnum \label{UC_ResetPassword}. ]
+Name: Reset Password\\
+Trigger: User attempts to reset password\\
+Precondition: User creates account\\
+Main Success Scenario:
+\begin{enumerate}
+    \item User enters contact information
+    \item System authenticates that user info exists in records
+    \item System allows user to reset password
+\end{enumerate}
+Undesired Event Handling:
+\begin{enumerate}
+    \item System unable to authenticate user
+    \item User repeats Step 1 until authentication succeeds
+\end{enumerate}
+Success Postcondition: User successfully resets password\\
+Functional Requirement(s): FR\ref{R_RestPassword}
+
+\item[UC\refstepcounter{ucnum}\theucnum \label{UC_CustomerBooksAppointment}. ]
+Name: Customer Books Appointment\\
+Trigger: Customer books appointment with shop\\
+Precondition: None\\
+Main Success Scenario:
+\begin{enumerate}
+    \item Customer searches for and selects shop
+    \item Customer sends quote request to shop
+    \item Shop owner or employee creates quote
+    \item Shop owner or employee sends quote to customer
+    \item Customer accepts quote
+    \item Shop owner or employee accepts appointment
+    \item System automatically creates work order
+\end{enumerate}
+Alternate Scenario:
+\begin{enumerate}
+    \item Customer searches for and selects shop
+    \item Customer books a canned job (see \ref{term_cannedJob})
+    \item Shop owner or employee accepts appointment
+    \item System automatically creates work order
+\end{enumerate}
+Undesired Event Handling:
+\begin{enumerate}
+    \item Customer rejects quote or shop rejects appointment
+    \item No appointment created
+\end{enumerate}
+Success Postcondition: Customer successfully books appointment\\
+Functional Requirement(s): FR\ref{R_CreateQuote}, FR\ref{R_SendQuote}, FR\ref{R_EmployeeAppointment}, FR\ref{R_ViewShop}, FR\ref{R_AutoCreateWorkOrder}, FR\ref{R_BookAppointment}, FR\ref{R_SubmitQuoteRequests}, FR\ref{R_SearchShop}
+
+\item[UC\refstepcounter{ucnum}\theucnum \label{UC_CancelAppointment}. ]
+Name: Shop Cancels Appointment\\
+Trigger: Shop owner attempts to cancel appointment\\
+Precondition: Customer or shop books appointment\\
+Main Success Scenario:
+\begin{enumerate}
+    \item Shop owner searches for upcoming work order, quote, or appointment
+    \item Shop owner views appointment
+    \item Shop owner cancels appointment
+    \item System automatically deletes work order
+\end{enumerate}
+Success Postcondition: Shop successfully cancels appointment\\
+Functional Requirement(s): FR\ref{R_OwnerAppointment}, FR\ref{R_ViewQuotes}, FR\ref{R_ViewWorkOrder}, FR\ref{R_AutoDeleteWorkOrder}
+
+\item[UC\refstepcounter{ucnum}\theucnum \label{UC_AssignWorkOrder}. ]
+Name: Assign Work Order\\
+Trigger: Shop owner attempts to assign work order to employee\\
+Precondition: Work order has been created\\
+Main Success Scenario:
+\begin{enumerate}
+    \item Shop owner searches for and selects employee
+\end{enumerate}
+Success Postcondition: Shop owner successfully assigns work order to employee\\
+Functional Requirement(s): FR\ref{R_ViewEmployee}, FR\ref{R_AssignWorkOrder}
+
+\item[UC\refstepcounter{ucnum}\theucnum \label{UC_SendWorkOrder}. ]
+Name: Send Work Order\\
+Trigger: Shop attempts to send work order to customer\\
+Precondition: Shop owner or employee creates work order\\
+Success Postcondition: Customer successfully receives work order\\
+Functional Requirement(s): FR\ref{R_CreateWorkOrder}, FR\ref{R_SendWorkOrder}
+
+\item[UC\refstepcounter{ucnum}\theucnum \label{UC_EditShopProfile}. ]
+Name: Edit Shop Profile\\
+Trigger: Shop owner attempts to edit shop profile\\
+Precondition: Shop owner enrolls shop and creates account\\
+Success Postcondition: Changes visible on shop profile\\
+Functional Requirement(s): FR\ref{R_EditShopProfile}
+
+\item[UC\refstepcounter{ucnum}\theucnum \label{UC_SetShopAvailability}. ]
+Name: Set Shop Availability\\
+Trigger: Shop owner or employee attempts to set shop availability\\
+Precondition: Shop owner or employee creates account\\
+Success Postcondition: Customers can view shop availability\\
+Functional Requirement(s): FR\ref{R_SetShopAvailability}
+
+\end{itemize}
+
 \subsection{Functional Requirements}
 
 \noindent \begin{itemize}
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs}:] \plt{Requirements
-    for the inputs that are supplied by the user.  This information has to be
-    explicit.}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_EnrollShop}.] The system will allow shop owners to enroll their shops.\\
+Use Case: UC\ref{UC_EnrollShop}
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs}:] \plt{It isn't
-    always required, but often echoing the inputs as part of the output is a
-    good idea.}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_CreateOwnerAccount}.] The system will allow shop owners to create individual accounts.\\
+Use Case: UC\ref{UC_CreateOwnerAccount}
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate}:] \plt{Calculation
-    related requirements.}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_InviteEmployee}.] The system will allow shop owners to invite employees to create individual accounts.\\
+Use Case: UC\ref{UC_CreateEmployeeAccount}
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_VerifyOutput}:]
-  \plt{Verification related requirements.}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_CreateEmployeeAccount}.] The system will allow shop employees to create individual accounts via employer invitation.\\
+Use Case: UC\ref{UC_CreateEmployeeAccount}
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Output}:] \plt{Output related
-    requirements.}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_SeeAllUsers}.] The system will allow system admin to see all mechanics and users.\\
+Use Case: UC\ref{UC_ViewAllUsers}
 
-\end{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_EditAccount}.] The system will allow any user to edit their own account.\\
+Use Case: UC\ref{UC_EditAccount}
 
-\plt{Every IM should map to at least one requirement, but not every requirement
-  has to map to a corresponding IM.}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_DeleteAccount}.] The system will allow shop employees to delete their own account.\\
+Use Case: UC\ref{UC_DeleteAccount}
 
-\subsection{Nonfunctional Requirements}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_Login}.] The system will allow shop owners and employees to login by entering a username and password.\\
+Use Case: UC\ref{UC_Login}
 
-\plt{List your nonfunctional requirements.  You may consider using a fit
-  criterion to make them verifiable.}
-\plt{The goal is for the nonfunctional requirements to be unambiguous, abstract
-  and verifiable.  This isn't easy to show succinctly, so a good strategy may be
-to give a ``high level'' view of the requirement, but allow for the details to
-be covered in the Verification and Validation document.}
-\plt{An absolute requirement on a quality of the system is rarely needed.  For
-  instance, an accuracy of 0.0101 \% is likely fine, even if the requirement is
-  for 0.01 \% accuracy.  Therefore, the emphasis will often be more on
-  describing now well the quality is achieved, through experimentation, and
-  possibly theory, rather than meeting some bar that was defined a priori.}
-\plt{You do not need an entry for correctness in your NFRs.  The purpose of the
-  SRS is to record the requirements that need to be satisfied for correctness.
-  Any statement of correctness would just be redundant. Rather than discuss
-  correctness, you can characterize how far away from the correct (true)
-  solution you are allowed to be.  This is discussed under accuracy.}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_RestPassword}.] The system will allow shop owners and employees to reset their password.\\
+Use Case: UC\ref{UC_ResetPassword}
 
-\noindent \begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_CreateQuote}.] The system will allow shop owners to create quotes.\\
+Use Case: UC\ref{UC_CustomerBooksAppointment}
 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accuracy}:]
-  \textbf{Accuracy} \plt{Characterize the accuracy by giving the context/use for
-    the software.  Maybe something like, ``The accuracy of the computed
-    solutions should meet the level needed for $<$engineering or scientific
-    application$>$.  The level of accuracy achieved by \progname{} shall be
-    described following the procedure given in Section~X of the Verification and
-    Validation Plan.''  A link to the VnV plan would be a nice extra.}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_SendQuote}.] The system will allow shop owners and employees to send quotes to customers.\\
+Use Case: UC\ref{UC_CustomerBooksAppointment}
 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:] \textbf{Usability}
-  \plt{Characterize the usability by giving the context/use for the software.
-    You should likely reference the user characteristics section.  The level of
-    usability achieved by the software shall be described following the
-    procedure given in Section~X of the Verification and Validation Plan.  A
-    link to the VnV plan would be a nice extra.}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_OwnerAppointment}.] The system will allow shop owners to accept, reject, and assign appointments.\\
+Use Case: UC\ref{UC_CancelAppointment}
 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability}:]
-  \textbf{Maintainability} \plt{The effort required to make any of the likely
-    changes listed for \progname{} should be less than FRACTION of the original
-    development time.  FRACTION is then a symbolic constant that can be defined
-    at the end of the report.}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_EditEmployee}.] The system will allow shop owners to add, remove, and view all employees.\\
+Use Case: UC\ref{UC_CreateEmployeeAccount}
 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability}:]
-  \textbf{Portability} \plt{This NFR is easier to write than the others.  The
-    systems that \progname{} should run on should be listed here.  When possible
-    the specific versions of the potential operating environments should be
-    given.  To make the NFR verifiable a statement could be made that the tests
-    from a given section of the VnV plan can be successfully run on all of the
-    possible operating environments.}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_ViewEmployee}.] The system will allow shop owners and employees to view, search for, and filter employees.\\
+Use Case: UC\ref{UC_AssignWorkOrder}
 
-\item Other NFRs that might be discussed include verifiability,
-  understandability and reusability.
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_CreateWorkOrder}.] The system will allow shop owners and employees to create work orders.\\
+Use Case: UC\ref{UC_SendWorkOrder}
 
-\end{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_SendWorkOrder}.] The system will allow shop owners to send work orders to customers.\\
+Use Case: UC\ref{UC_SendWorkOrder}
 
-\section{Likely Changes}    
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_EditShopProfile}.] The system will allow shop owners to edit their shop profile.\\
+Use Case: UC\ref{UC_EditShopProfile}
 
-\noindent \begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_EmployeeAppointment}.] The system will allow shop employees to accept and view appointments.\\
+Use Case: UC\ref{UC_CustomerBooksAppointment}
 
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
-    the likely changes, with a reference to the related assumption (aref), as appropriate.}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_SetShopAvailability}.] The system will allow shop employees to set shop availability.\\
+Use Case: UC\ref{UC_SetShopAvailability}
 
-\end{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_ViewShop}.] The system will allow any user to view shop profiles.\\
+Use Case: UC\ref{UC_CustomerBooksAppointment}
 
-\section{Unlikely Changes}    
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_ReworkRequest}.] The system will allow customers to submit rework requests.
 
-\noindent \begin{itemize}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_ViewQuotes}.] The system will allow shop owners and employees to view, search for, and filter quotes.\\
+Use Case: UC\ref{UC_CancelAppointment}
 
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
-    the unlikely changes.  The design can assume that the changes listed will
-    not occur.}
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_ViewWorkOrder}.] The system will allow shop owners and employees to view, search for, and filter past and upcoming work orders.\\
+Use Case: UC\ref{UC_CancelAppointment}
+
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_CustomerCommunication}.] The system will allow shop owners and employees to call and chat with customers.
+
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_AutoDeleteWorkOrder}.] The system will automatically delete a work order if the appointment is cancelled.\\
+Use Case: UC\ref{UC_CancelAppointment}
+
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_AutoCreateWorkOrder}.] The system will automatically create a work order if an appointment is created.\\
+Use Case: UC\ref{UC_CustomerBooksAppointment}
+
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_AssignWorkOrder}.] The system will allow shop owners and employees to assign work orders to employees.\\
+Use Case: UC\ref{UC_AssignWorkOrder}
+
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_BookAppointment}.] The system will allow customers to book appointments.\\
+Use Case: UC\ref{UC_CustomerBooksAppointment}
+
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_SubmitQuoteRequests}.] The system will allow customers to submit quote requests.\\
+Use Case: UC\ref{UC_CustomerBooksAppointment}
+
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_SearchShop}.] The system will allow customers to search for and filter shops.\\
+Use Case: UC\ref{UC_CustomerBooksAppointment}
+
+Note: These functional requirements were derived from a Confluence board \hyperref[1]{[1]} with all user features created by our supervisor.
 
 \end{itemize}
 
-\section{Traceability Matrices and Graphs}
+\subsection{Formalized Requirements}
 
-The purpose of the traceability matrices is to provide easy references on what
-has to be additionally modified if a certain component is changed.  Every time a
-component is changed, the items in the column of that component that are marked
-with an ``X'' may have to be modified as well.  Table~\ref{Table:trace} shows the
-dependencies of theoretical models, general definitions, data definitions, and
-instance models with each other. Table~\ref{Table:R_trace} shows the
-dependencies of instance models, requirements, and data constraints on each
-other. Table~\ref{Table:A_trace} shows the dependencies of theoretical models,
-general definitions, data definitions, instance models, and likely changes on
-the assumptions.
+The following Parnas table, \hyperref[tab:formal]{Table 2}, will formalize the utilization of the system between customers and shop owners/employees, one of the most important parts of the system. It will use the following variables to represent interactions, with abbreviations as neccesary:
 
-\plt{You will have to modify these tables for your problem.}
-
-\plt{The traceability matrix is not generally symmetric.  If GD1 uses A1, that
-  means that GD1's derivation or presentation requires invocation of A1.  A1
-  does not use GD1.  A1 is ``used by'' GD1.}
-
-\plt{The traceability matrix is challenging to maintain manually.  Please do
-  your best.  In the future tools (like Drasil) will make this much easier.}
-
-\afterpage{
-\begin{landscape}
-\begin{table}[h!]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\begin{itemize}
+    \item Stimulus:
+    \begin{itemize}
+        \item In\_Chat: The customer or shop opens a chat with each other.
+        \item In\_CustomerR: The customer makes an appointment with a shop.
+        \item In\_ShopR: The shop owner/employee accepts a customer request.
+        \item In\_Complete: The appointment with a customer is marked as complete.
+    \end{itemize}
+    \item State:
+    \begin{itemize}
+        \item Init (I): Initial state, can be considered to be a landing page.
+        \item ChatWin (CW): The customer can chat with the shop and vice versa.
+        \item AppShop (AS): The shop can see an appointment request from the customer.
+        \item AppAcc (AA): The customer can see their request has been accepted by the shop.
+    \end{itemize}
+\end{itemize}
+\newpage
+\begin{longtable}{| p{3cm} | p{1cm} | p{1cm}| p{1cm} | p{1cm}| p{1cm}| p{1cm}|}
+\caption{Formalized subsection of the requirements space.}
+\label{tab:formal}
+\\ \hline
+\textbf{} & \textbf{I} & \textbf{CW} &\textbf{AS} & \textbf{AA} & \textbf{CW \& AS}  & \textbf{CW \& AA} \\
 \hline
-	& \aref{A_OnlyThermalEnergy}& \aref{A_hcoeff}& \aref{A_mixed}& \aref{A_tpcm}& \aref{A_const_density}& \aref{A_const_C}& \aref{A_Newt_coil}& \aref{A_tcoil}& \aref{A_tlcoil}& \aref{A_Newt_pcm}& \aref{A_charge}& \aref{A_InitTemp}& \aref{A_OpRangePCM}& \aref{A_OpRange}& \aref{A_htank}& \aref{A_int_heat}& \aref{A_vpcm}& \aref{A_PCM_state}& \aref{A_Pressure} \\
-\hline
-\tref{T_COE}        & X& & & & & & & & & & & & & & & & & & \\ \hline
-\tref{T_SHE}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\tref{T_LHE}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\dref{NL}           & & X& & & & & & & & & & & & & & & & & \\ \hline
-\dref{ROCT}         & & & X& X& X& X& & & & & & & & & & & & & \\ \hline
-\ddref{FluxCoil}    & & & & & & & X& X& X& & & & & & & & & & \\ \hline
-\ddref{FluxPCM}     & & & X& X& & & & & & X& & & & & & & & & \\ \hline
-\ddref{D_HOF}       & & & & & & & & & & & & & & & & & & & \\ \hline
-\ddref{D_MF}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\iref{ewat}         & & & & & & & & & & & X& X& & X& X& X& & & X \\ \hline
-\iref{epcm}         & & & & & & & & & & & & X& X& & & X& X& X& \\ \hline
-\iref{I_HWAT}       & & & & & & & & & & & & & & X& & & & & X \\ \hline
-\iref{I_HPCM}       & & & & & & & & & & & & & X& & & & & X & \\ \hline
-\lcref{LC_tpcm}     & & & & X& & & & & & & & & & & & & & & \\ \hline
-\lcref{LC_tcoil}    & & & & & & & & X& & & & & & & & & & & \\ \hline
-\lcref{LC_tlcoil}   & & & & & & & & & X& & & & & & & & & & \\ \hline
-\lcref{LC_charge}   & & & & & & & & & & & X& & & & & & & & \\ \hline
-\lcref{LC_InitTemp} & & & & & & & & & & & & X& & & & & & & \\ \hline
-\lcref{LC_htank}    & & & & & & & & & & & & & & & X& & & & \\
-\hline
-\end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
-\label{Table:A_trace}
-\end{table}
-\end{landscape}
-}
+\endfirsthead
 
-\begin{table}[h!]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-\hline        
-	& \tref{T_COE}& \tref{T_SHE}& \tref{T_LHE}& \dref{NL}& \dref{ROCT} & \ddref{FluxCoil}& \ddref{FluxPCM} & \ddref{D_HOF}& \ddref{D_MF}& \iref{ewat}& \iref{epcm}& \iref{I_HWAT}& \iref{I_HPCM} \\
+\textbf{In\_Chat} & CW & - & CW \& AS  & CW \& AA & - & - \\
 \hline
-\tref{T_COE}     & & & & & & & & & & & & & \\ \hline
-\tref{T_SHE}     & & & X& & & & & & & & & & \\ \hline
-\tref{T_LHE}     & & & & & & & & & & & & & \\ \hline
-\dref{NL}        & & & & & & & & & & & & & \\ \hline
-\dref{ROCT}      & X& & & & & & & & & & & & \\ \hline
-\ddref{FluxCoil} & & & & X& & & & & & & & & \\ \hline
-\ddref{FluxPCM}  & & & & X& & & & & & & & & \\ \hline
-\ddref{D_HOF}    & & & & & & & & & & & & & \\ \hline
-\ddref{D_MF}     & & & & & & & & X& & & & & \\ \hline
-\iref{ewat}      & & & & & X& X& X& & & & X& & \\ \hline
-\iref{epcm}      & & & & & X& & X& & X& X& & & X \\ \hline
-\iref{I_HWAT}    & & X& & & & & & & & & & & \\ \hline
-\iref{I_HPCM}    & & X& X& & & & X& X& X& & X& & \\
+\textbf{In\_CustomerR} & AS & CW \& AS & -  & - & - & -  \\
 \hline
-\end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Items of Different Sections}
-\label{Table:trace}
+\textbf{In\_ShopR} & - & - & AA & - & CW \& AA & - \\
+\hline
+\textbf{In\_Complete} & - & - & - & I & - & I \\
+\hline
+\end{longtable}
+
+\subsection{Phase in Plan}
+
+In this section, the functional requirements have been divided into batches of work based on the applications user stories. The division of batches and proposed dates are detailed in Table \hyperref[tab:phaseInPlan]{3}.
+
+\begin{table}[ht!]
+  \caption{Schedule of batches of work} \\
+  \label{tab:phaseInPlan}
+  \centering
+  \begin{tabular}{l|p{0.23\textwidth}|p{0.4\textwidth}|p{0.18\textwidth}}
+  \toprule
+  \textbf{Batch} & \textbf{Description} & \textbf{Functional Requirements} & \textbf{Dates}\\
+  \midrule
+  1 & Shop Owner Account Creation and Shop Enrolment & FR\ref{R_EnrollShop}, FR\ref{R_CreateOwnerAccount}, FR\ref{R_Login}, FR\ref{R_RestPassword} & Oct. 24, 2022\\
+  \hline
+  2 & Basic Customer Services & FR\ref{R_CreateQuote}, FR\ref{R_SendQuote}, FR\ref{R_OwnerAppointment}, FR\ref{R_CreateWorkOrder}, FR\ref{R_SendWorkOrder}, FR\ref{R_EmployeeAppointment}, FR\ref{R_SetShopAvailability}, FR\ref{R_ViewShop}, FR\ref{R_ViewQuotes}, FR\ref{R_ViewWorkOrder}, FR\ref{R_CustomerCommunication}, FR\ref{R_AutoDeleteWorkOrder}, FR\ref{R_AutoCreateWorkOrder}, FR\ref{R_BookAppointment}, FR\ref{R_SubmitQuoteRequests}, FR\ref{R_SearchShop} & Nov. 21, 2022\\
+  \hline
+  3 & Employee Account Creation & FR\ref{R_InviteEmployee}, FR\ref{R_CreateEmployeeAccount} & Jan. 5, 2023 \\
+  \hline
+  4 & Shop Owner Capabilities & FR\ref{R_EditEmployee}, FR\ref{R_ViewEmployee}, FR\ref{R_AssignWorkOrder} & Feb. 7, 2023\\
+  \hline
+  5 & Finishing Touches & FR\ref{R_SeeAllUsers}, FR\ref{R_EditAccount}, FR\ref{R_DeleteAccount}, FR\ref{R_EditShopProfile}, FR\ref{R_ReworkRequest} & Mar. 20, 2023\\
+  \bottomrule
+  \end{tabular}
+  
 \end{table}
 
-\begin{table}[h!]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|}
-\hline
-	& \iref{ewat}& \iref{epcm}& \iref{I_HWAT}& \iref{I_HPCM}& \ref{sec_DataConstraints}& \rref{R_RawInputs}& \rref{R_MassInputs} \\
-\hline
-\iref{ewat}            & & X& & & & X& X \\ \hline
-\iref{epcm}            & X& & & X& & X& X \\ \hline
-\iref{I_HWAT}          & & & & & & X& X \\ \hline
-\iref{I_HPCM}          & & X& & & & X& X \\ \hline
-\rref{R_RawInputs}     & & & & & & & \\ \hline
-\rref{R_MassInputs}    & & & & & & X& \\ \hline
-\rref{R_CheckInputs}   & & & & & X& & \\ \hline
-\rref{R_OutputInputs}  & X& X& & & & X& X \\ \hline
-\rref{R_TempWater}     & X& & & & & & \\ \hline 
-\rref{R_TempPCM}       & & X& & & & & \\ \hline
-\rref{R_EnergyWater}   & & & X& & & & \\ \hline
-\rref{R_EnergyPCM}     & & & & X& & & \\ \hline
-\rref{R_VerifyOutput}  & & & X& X& & & \\ \hline
-\rref{R_timeMeltBegin} & & X& & & & & \\ \hline
-\rref{R_timeMeltEnd}   & & X& & & & & \\ 
-\hline
-\end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Requirements and Instance Models}
-\label{Table:R_trace}
-\end{table}
+\section{Nonfunctional Requirements} 
+\label{sec:NFuncReq}
 
-The purpose of the traceability graphs is also to provide easy references on
-what has to be additionally modified if a certain component is changed.  The
-arrows in the graphs represent dependencies. The component at the tail of an
-arrow is depended on by the component at the head of that arrow. Therefore, if a
-component is changed, the components that it points to should also be
-changed. Figure~\ref{Fig_ATrace} shows the dependencies of theoretical models,
-general definitions, data definitions, instance models, likely changes, and
-assumptions on each other. Figure~\ref{Fig_RTrace} shows the dependencies of
-instance models, requirements, and data constraints on each other.
+\subsection{Look and Feel Requirements}
+\subsubsection{Appearance Requirements}
+\begin{enumerate}[label = NFR-\arabic*, left=\parindent, series=nfr]
+    \item The product shall be visually appealing.
+    \newline \textbf{Rationale}: To attract new shop owners and customers to sign up, it is important that the product appears visually appealing. 
+    \newline \textbf{Fit Criterion}: Without any external prompt, 90\% of a sample group of representative users shall start using the product within a few minutes of their encounter.
+    
+    \item The product shall have a consistent appearance on all of the devices.
+    \newline \textbf{Rationale}: It is important for the product to have a consistent appearance so that users can use their experience with the product on other devices. 
+    \newline \textbf{Fit Criterion}: 95\% of a sample group of users shall agree that the product looks identical in appearance on different devices.
 
-% \begin{figure}[h!]
-% 	\begin{center}
-% 		%\rotatebox{-90}
-% 		{
-% 			\includegraphics[width=\textwidth]{ATrace.png}
-% 		}
-% 		\caption{\label{Fig_ATrace} Traceability Matrix Showing the Connections Between Items of Different Sections}
-% 	\end{center}
-% \end{figure}
+    \item The product shall allow the users to customize the appearance of the product.
+    \newline \textbf{Rationale}: Since everyone has a difference taste, it is important for the product to offer customization options so that users can have a more personalized experience. 
+    \newline \textbf{Fit Criterion}: The supervisor shall certify that the product is customizable.
+\end{enumerate}
 
+\subsubsection{Style Requirements}
+\begin{enumerate}[nfr]
+    \item The product shall feel professional and trustworthy.
+    \newline \textbf{Rationale}: It is essential that the product appear professional and trustworthy in order to build up the trust of the users.
+    \newline \textbf{Fit Criterion}: 85\% of a representative sample of users shall agree that the product feels professional and trustworthy, 
+    \item The font and theme used shall be consistent throughout the app.
+    \newline \textbf{Rationale}: It is important that the components adhere to the same fonts and styles to ensure that they complement one another.
+    \newline \textbf{Fit Criterion}: 90\% of a representative sample of users shall not be able to discern any variations in font and theme of any of the elements of the product.
+\end{enumerate}
 
-% \begin{figure}[h!]
-% 	\begin{center}
-% 		%\rotatebox{-90}
-% 		{
-% 			\includegraphics[width=0.7\textwidth]{RTrace.png}
-% 		}
-% 		\caption{\label{Fig_RTrace} Traceability Matrix Showing the Connections Between Requirements, Instance Models, and Data Constraints}
-% 	\end{center}
-% \end{figure}
+\subsection{Usability and Humanity Requirements}
+\subsubsection{Ease of Use Requirements}
+\begin{enumerate}[nfr]
+    \item The product shall be easy to use by anyone above the age of 16.
+    \newline \textbf{Rationale}: Since the minimum driving age in most provinces is 16, the product shall be user friendly for everyone above this age.
+    \newline \textbf{Fit Criterion}: 80\% of the representative users who are 16 or older shall be able to do the assigned tasks in the allotted time.
+    \item The product shall be usable by people with a basic comprehension of the English language, without any prior training. 
+    \newline \textbf{Rationale}: To target a diverse group of users from various educational backgrounds, the product must not require prior training or knowledge to operate.
+    \newline \textbf{Fit Criterion}: Without any training, 90\% of a sample English-speaking group shall be able to navigate through the different services offered by the app. 
+\end{enumerate}
 
-\section{Development Plan}
+\subsubsection{Personalization and Internationalization Requirements}
+\begin{enumerate}[nfr]
+    \item The product shall automatically save user preferences.
+    \newline \textbf{Rationale}: Users should be able to exit the web app and return later or on a different device with the same settings applied. This saves them time from making modifications everytime they launch the web app.
+    \newline \textbf{Fit Criterion}: The settings applied by a user shall automatically apply on other devices at least 90\% of the times. 
+\end{enumerate}
 
-\plt{This section is optional.  It is used to explain the plan for developing
-  the software.  In particular, this section gives a list of the order in which
-  the requirements will be implemented.  In the context of a course  this is
-  where you can indicate which requirements will be implemented as part of the
-  course, and which will be ``faked'' as future work.  This section can be
-  organized as a prioritized list of requirements, or it could should the
-  requirements that will be implemented for ``phase 1'', ``phase 2'', etc.}
+\subsubsection{Learning Requirements}
+\begin{enumerate}[nfr]
+    \item The product shall require no external training to learn.
+    \newline \textbf{Rationale}: Users should not have to spend time learning how to use the different services offered by the product.
+    \newline \textbf{Fit Criterion}: 95\% of a sample group shall be able to use the different services offered by the product without any prior experience or training with the product.
+\end{enumerate}
 
-\section{Values of Auxiliary Constants}
+\subsubsection{Understandability and Politeness Requirements}
+\begin{enumerate}[nfr]
+    \item The product shall use icons and symbols that are widely recognized.
+    \newline \textbf{Rationale}: Widely reocgnizable icons and symbols will make the product more understandable.
+    \newline \textbf{Fit Criterion}: In a wide and diverse sample group, 90\% of the users shall be able to comprehend what the icons and symbols represent.
+\end{enumerate}
 
-\plt{Show the values of the symbolic parameters introduced in the report.}
+\subsection{Performance Requirements}
+\subsubsection{Speed and Latency Requirements}
+\begin{enumerate}[nfr]
+    \item Messages sent by users shall be received by the recipients within 2 seconds after being sent.
+    \newline \textbf{Rationale}: Messages should be sent and received in a timely manner to prevent any waiting time for the users.
+    \newline \textbf{Fit Criterion}: The product shall be able to deliver messages to the recipents within 2 seconds for 90 percent of the times, and less than 5 seconds for the rest of the times. 
 
-\plt{The definition of the requirements will likely call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.}
+    \item The product's loading time between different pages shall be no more than 5 seconds.
+    \newline \textbf{Rationale}: A website with long loading times can lose the trust of its users.
+    \newline \textbf{Fit Criterion}: When navigating between different pages, the product shall take less than 2 seconds 95\% of times, and less than 4 seconds rest of the times. 
 
-\plt{The value of FRACTION, for the Maintainability NFR would be given here.}
+    \item The product's response times shall be quick enough to prevent the disruption of the user's train of thought.
+    \newline \textbf{Rationale}: Users will not be able to use the product's services efficiently if the response time is slow.
+    \newline \textbf{Fit Criterion}: A survey of a group of users shall indicate that 90\% of the users found the response times to be fast.
+\end{enumerate}
+
+\subsubsection{Safety-Critical Requirements}
+N/A
+\subsubsection{Precision or Accuracy Requirements}
+N/A
+
+\subsubsection{Reliability and Availability Requirements}
+\begin{enumerate}[nfr]
+    \item The product shall achieve 98\% up time.
+    \newline \textbf{Rationale}: A product with long downtime will lose the trust of its users.
+    \newline \textbf{Fit Criterion}: The product shall not be unavailable for more than 2\% of the times. 
+\end{enumerate}
+
+\subsubsection{Robustness or Fault-Tolerance Requirements}
+\begin{enumerate}[nfr]
+    \item Errors shall be logged and handled gracefully. 
+    \newline \textbf{Rationale}: Logging errors will allow developers to find potential bugs in the product. Handling errors gracefully will allow users to continue to use the app even in case of errors.
+    \newline \textbf{Fit Criterion}: A survey of users conducted after a few weeks of launching the product shall indicate that no more than 5\% of users encountered any crashes.
+\end{enumerate}
+
+\subsubsection{Capacity Requirements}
+N/A
+
+\subsubsection{Scalability or Extensibility Requirements}
+\begin{enumerate}[nfr]
+  \item The product shall be able to scale to handle more than 50,000 users within the 6 months after its release. 
+  \newline \textbf{Rationale}: A product that is designed with scalability in mind will require less changes in the future.
+  \newline \textbf{Fit Criterion}: Logging reports shall not show an increase in failure rate when more than 50,000 users have signed up on the product.
+\end{enumerate}
+
+\subsubsection{Longevity Requirements}
+\begin{enumerate}[nfr]
+    \item The product shall be expected to operate for at least 5 years without requiring significant maintenance.
+    \newline \textbf{Rationale}: A product that is designed to operate with low maintainence will last longer.
+    \newline \textbf{Fit Criterion}: Internal surveys shall show that the majority of engineers working on the product believe it can operate without significant maintainence.
+\end{enumerate}
+
+\subsection{Operational and Environmental Requirements}
+\subsubsection{Expected Physical Environment}
+N/A
+
+\subsubsection{Requirements for Interfacing with Adjacent Systems}
+\begin{enumerate}[nfr]
+    \item The frontend application shall be able to communicate with the backend server.
+    \newline \textbf{Rationale}: If the product is designed to allow interfacing with a backend server, developers can prevent future rework.
+    \newline \textbf{Fit Criterion}: The frontend application shall be capable of fetching and sending data to the backend server.
+\end{enumerate}
+
+\subsubsection{Productization Requirements}
+\begin{enumerate}[nfr]
+    \item The product shall be hosted on a remote server and be accessible to customers through a URL.
+    \newline \textbf{Rationale}: It is important for the product to be deployed on a server so that users can access it quickly and on the device of their choice.
+    \newline \textbf{Fit Criterion}: A diverse group of users from around the globe shall verify that they can access the product using the URL.
+\end{enumerate}
+
+\subsubsection{Release Requirements}
+N/A
+
+\subsection{Maintainability and Support Requirements}
+\subsubsection{Maintenance Requirements}
+\begin{enumerate}[nfr]
+    \item New updates shall be installed overnight.
+    \newline \textbf{Rationale}: Updating the product overnight will avoid downtimes during business hours.
+    \newline \textbf{Fit Criterion}: Log reports shall verify that updates are only occuring during the night.
+\end{enumerate}
+
+\subsubsection{Supportability Requirements}
+N/A
+
+\subsubsection{Adaptability Requirements}
+\begin{enumerate}[nfr]
+    \item The product shall be installable on mobile and desktop devices, and run on modern web browsers.
+    \newline \textbf{Rationale}: An app that can operate on multiple platforms has a greater market reach.
+    \newline \textbf{Fit Criterion}: A survey of the users shall indicate that the app is compatible on at least 80\% of their modern devices.
+\end{enumerate}
+
+\subsection{Security Requirements}
+\subsubsection{Access Requirements}
+\begin{enumerate}[nfr]
+    \item Only the developers and other members of the company shall be able to access the internal bug and crash logs.
+    \newline \textbf{Rationale}: It is a security risk if a log report with sensitive data is made accessible to all users.
+    \newline \textbf{Fit Criterion}: A security firm shall certify that only the company employees and developers have access to the internal bug and crash logs.
+\end{enumerate}
+
+\subsubsection{Integrity Requirements}
+\begin{enumerate}[nfr]
+    \item Users shall not be able to directly query data stored in the database.
+    \newline \textbf{Rationale}: It is a huge security and privacy risk if users are able to query the database directly.
+    \newline \textbf{Fit Criterion}: A security firm shall certify that users have no way to to query data stored in the database.
+\end{enumerate}
+
+\subsubsection{Privacy Requirements}
+\begin{enumerate}[nfr]
+    \item Private data shall be protected in compliance with applicable data protection laws and the company's information policy.
+    \newline \textbf{Rationale}: A product that complies with data protection laws is more trusted by the users.
+    \newline \textbf{Fit Criterion}: A security firm shall certify that all data protection laws are being followed.
+    
+    \item Users shall be notified before storing cookies on their devices.
+    \newline \textbf{Rationale}: To comply with the privacy laws, it is necessary to alert users before storing cookies on their computer.
+    \newline \textbf{Fit Criterion}: A survey shall indicate that at least 99\% of the users received a prompt to allow cookies to be stored on their devices when they first accessed the product.
+\end{enumerate}
+
+\subsubsection{Audit Requirements}
+N/A
+
+\subsubsection{Immunity Requirements}
+N/A
+
+\subsection{Cultural Requirements}
+\subsubsection{Cultural Requirements}
+\begin{enumerate}[nfr]
+    \item The product shall not include any images or content that might be perceived as offensive to the users.
+    \newline \textbf{Rationale}: Customers would not want to use a product that contains any offensive imagery or content.
+    \newline \textbf{Fit Criterion}: There shall be a consensus among a diverse group of potential customers that the product doesn't include anything that may be offensive.
+\end{enumerate}
+
+\subsubsection{Political Requirements}
+N/A
+
+\subsection{Legal Requirements}
+\subsubsection{Compliance Requirements}
+N/A
+
+\subsubsection{Standards Requirements}
+N/A
+
+\subsection{Health and Safety Requirements}
+N/A
+
+\section{Project Issues} \label{sec:PI}
+
+\subsection{Open Issues}
+
+In the current automotive ecosystem, it is a hassle for the average motorist to find an auto service professional they can trust and that provides the most affordable services. The process requires many phone calls to be made and the consumer is required to describe the same problem multiple times.
+
+From the opposite perspective, it is difficult for shop owners to accurately provide estimates on when they would be available to service your vehicle.
+
+\subsection{Off-the-Shelf Solutions}
+
+There are many automotive repair related apps already on the market, but even the best of them are only able to fulfill a subset of the aforementioned problems. One such app, GoMechanic Car Services, provides price estimates, appointment booking, and an accessory shop, but it is limited to a single automotive repair shop franchise, and does not allow independent repair shop owners to leverage the platform. Furthermore, it is only available in India, and such an alternative does not yet exist in North America.
+
+Another app, Simply Auto: Car Maintenance, focuses more on providing an accurate maintenance schedule and providing cost summaries and other cost related features, such as attaching receipts, and calculating taxes. This app fails, however, to provide easy appointment booking, and other helpful features that allow the consumer to stay connected with repair technicians.
+
+\subsection{Tasks}
+
+\begin{enumerate}
+    \item Complete documentation as required.
+    \item Setup repository, initialize project codebases, and setup continuous integration pipeline.
+    \item Receive the product requirements from our industry partner.
+    \item Create the relational database model.
+    \item Create the UI design on Figma.
+    \item Implement features.
+    \item Demo features to partner and interview our partner for clarification on the requirements.
+    \item Repeat previous two steps until the final product is created.
+\end{enumerate}
+
+\subsection{Migration to the New Product}
+
+The app will be designed to be easy to learn for both users that are completely new to these types of apps, as well as for users that have already used a similar solution in the past.
+
+\subsection{Risks}
+
+The back-end server could go down, but this has a low likelihood of occurring if we host it on a popular cloud provider such as AWS or Google Cloud. In general, this project is not safety critical, so there are no other major risks.
+
+\subsection{Costs}
+
+This project has no costs for development other than the cost incurred by the students to take this course.
+
+\subsection{User Documentation and Training}
+
+Documentation is not required for this project as our industry partner only desires a MVP to showcase to prospective investors. There is no training required to use this system.
 
 \newpage
 
-\bibliographystyle {plainnat}
-\bibliography {../../refs/References}
+\section{Appendix}
+\setcounter{table}{0}
+\renewcommand{\thetable}{A\arabic{table}}
 
-\newpage
+\subsection{Reflection}
+\label{sec:refAppendix}
 
-\noindent \plt{The following is not part of the template, just some things to consider
-  when filing in the template.}
+The successful completion of this software project is dependent on  the team's collective acquisition of necessary skills. The skills and/or knowledge that each team member will need are listed in Table \hyperref[tab:reflectionSkills]{A1}.
 
-\noindent \plt{Grammar, flow and \LaTeX advice:
-\begin{itemize}
-\item For Mac users \texttt{*.DS\_Store} should be in \texttt{.gitignore}
-\item \LaTeX{} and formatting rules
-\begin{itemize}
-\item Variables are italic, everything else not, includes subscripts (link to
-  document)
-\begin{itemize}
-\item \href{https://physics.nist.gov/cuu/pdf/typefaces.pdf}{Conventions}
-\item Watch out for implied multiplication
-\end{itemize}
-\item Use BibTeX
-\item Use cross-referencing
-\end{itemize}
-\item Grammar and writing rules
-\begin{itemize}
-\item Acronyms expanded on first usage (not just in table of acronyms)
-\item ``In order to'' should be ``to''
-\end{itemize}
-\end{itemize}}
+%\renewcommand{\arraystretch}{1.8}%
+\begin{longtable}{|>{\centering\arraybackslash}m{.22\linewidth}|>{\centering\arraybackslash}m{.78\linewidth}| }
+\caption{Breakdown of team member required knowledge}
+\label{tab:reflectionSkills}
+\\ \hline
+\textbf{Team Member} & \textbf{Required Knowledge} \\
+\hline
+\endfirsthead
 
-\noindent \plt{Advice on using the template:
-\begin{itemize}
-\item Difference between physical and software constraints
-\item Properties of a correct solution means \emph{additional} properties, not
-  a restating of the requirements (may be ``not applicable'' for your problem).
-  If you have a table of output constraints, then these are properties of a
-  correct solution.
-\item Assumptions have to be invoked somewhere
-\item ``Referenced by'' implies that there is an explicit reference
-\item Think of traceability matrix, list of assumption invocations and list of
-  reference by fields as automatically generatable
-\item If you say the format of the output (plot, table etc), then your
-  requirement could be more abstract
-\end{itemize}
-}
+\multicolumn{2}{c}
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\hline \multicolumn{1}{|c|}{\textbf{Team Member}} & \multicolumn{1}{c|}{\textbf{Required Knowledge}} \\ \hline 
+\endhead
+
+\hline \multicolumn{2}{|r|}{{Continued on next page}} \\ \hline
+\endfoot
+
+\endlastfoot
+
+Tevis Doe &  \begin{itemize}
+    \item Front-end specific knowledge: NextJS, PWA technologies
+    \item Back-end specific knowledge: Django
+    \item General knowledge: General long-term project management
+\end{itemize} \\
+\hline
+Caitlin Bridel &  \begin{itemize}
+    \item Knowledge: Next.js, Django, and PWA technologies
+    \item Skills: Time management
+\end{itemize}\\ 
+\hline
+Gilbert Cherrie & \begin{itemize}
+    \item Front-end specific knowledge: Learn NextJS and about PWA technologies, enhance React skills
+    \item Back-end specific knowledge: Learn Django and creating restful APIs
+\end{itemize} \\ 
+\hline
+Rachel Johnson & \begin{itemize}
+    \item Front-end specific knowledge: React, NextJS
+    \item Back-end specific knowledge: Django
+\end{itemize} \\ 
+\hline
+Harkeerat Kanwal & \begin{itemize}
+    \item Front-end specific knowledge: React, NextJS
+    \item Back-end specific knowledge: Django, PostgreSQL
+    \item Project management using GitHub.
+\end{itemize} \\ 
+\hline
+Himanshu Aggarwal & \begin{itemize}
+    \item Front-end specific knowledge: React, NextJS, TailwindCSS
+    \item Back-end specific knowledge: Django, PostgreSQL
+\end{itemize} \\ 
+\hline
+\end{longtable}
+
+\subsubsection{Approaches}
+A possible approach to gain knowledge and enhance skills in front-end and back-end technologies including React, NextJS, TailwindCSS, Django, Postgresql and PWA technologies is by taking online courses through Udemy or Coursera. These courses are usually paid but will give an in-depth tutorial and overview about the specific front end technologies. Another approach is to use free sources such as Youtube and written tutorials on websites such as geeksforgeeks or w3schools. This option will not cost the team but will require the team members to create their own syllabus and do more self-teaching. 
+
+To learn project management skills, team members could study project management methodologies through online documentation. This could also include Github projects and issue documentation, to learn how Github will be used to manage project work. Another strategy would be to meet with a project manager to shadow his work or learn from a 1-on-1 on how to implement project management skills in this project effectively.
+
+Enhancing time management skills could be done by adopting a tight schedule for this project and using calendars, agendas, and to-do lists to track progress. Another way to develop this skill is to set SMART goals and work with another team member to check-in on individual progress to ensure goals are being met on a regular basis.
+
+\subsubsection{Chosen Strategies}
+For learning domain-specific technologies, all team members have decided to use free outlets such as Youtube and tutorial websites to source relevant information for the technologies they require more knowledge in. This approach was chosen to keep costs for each team member low and also the team was able to find helpful free resources that will allow them to gain necessary knowledge.
+
+To enhance project management skills, Tevis and Harkeerat will review methodologies and documentation online. Harkeerat will specifically focus on Github documentation. This method was chosen by both team members as it will be much less time consuming than reaching out to a project manager and both members only require small refreshers to contribute to the project effectively.
+
+Caitlin has chosen to improve her time management skills by adding our project schedule to her calendar and making sure to stay on track by consistently tracking progress with to-do and priority lists. Caitlin has chosen this strategy as she already keeps a calendar for other courses and can easily apply it to this project on a more rigid scale to increase her time management.
+
+\section{Resources}
+
+\label{1}[1] Ibrahim, Nabil. “Sayyara Confluence.” \textit{Confluence}, https://www.atlassian.com/.\\ We cannot link to the confluence directly, as it contains information we cannot disclose, however, it was used to create this document.\\
+
+
+\noindent \label{2}[2] James Robertson and Suzanne Robertson. \emph{Volere Requirements Specification Template}. Atlantic Systems Guild Limited, 16 edition, 2012.
 
 \end{document}
