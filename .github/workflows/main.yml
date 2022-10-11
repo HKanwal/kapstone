@@ -16,6 +16,7 @@ jobs:
         with:
           node-version: 16.15.1
 
+      - run: ls
       - run: cd src/next-app/
       - run: npm install
       - run: npm run lint
