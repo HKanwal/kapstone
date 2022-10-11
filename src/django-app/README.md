@@ -27,11 +27,18 @@ Note: you can keep any name for your database, username and password.
 - Create a virtual env:
 
   - Run:
-
     - `pip3 install virtualenv`
+    
 
     - `virtualenv env`
-    - `source env/bin/activate`
+    
+    - **MacOS / Linux**:
+      - `source env/bin/activate`
+ 
+    - **Windows (with Powershell)**:
+      - `.\env\Scripts\activate`
+    - **Windows (with Git Bash)**:
+      - `source env/Scripts/activate`
 
 - Run `pip install -r requirements.txt` to install the required packages
 
@@ -42,20 +49,15 @@ Note: you can keep any name for your database, username and password.
 ## Step 3: Setup environment variables with direnv
 
 - Install `direnv`
-
-Windows specific instructions, using git bash:
-
-Download [direnv.windows-amd64.exe](https://github.com/direnv/direnv/releases/download/v2.32.1/direnv.windows-amd64.exe).
-
-Move `direnv.windows-amd64.exe` to `C:\Program Files\Git\usr\bin`.
-
-Add the following lines to your `.bashrc` file (if you haven't made one, create the file under your home folder):
-
-`alias direnv="/usr/bin/direnv.windows-amd64.exe"
-# direnv
-eval "$(direnv hook bash)"`
-
-Launch git bash and ensure `direnv` is installed correctly by executing `direnv --version`. Note that this method will not work if you are using powershell.
+  - **MacOS**: 
+    - `brew install direnv`
+  - **Windows (using git bash)**:
+    - Download [direnv.windows-amd64.exe](https://github.com/direnv/direnv/releases/download/v2.32.1/direnv.windows-amd64.exe).
+    - Move `direnv.windows-amd64.exe` to `C:\Program Files\Git\usr\bin`.
+    - Add the following lines to your `.bashrc` file (if you haven't made one, create the file under your home folder):
+      - `alias direnv="/usr/bin/direnv.windows-amd64.exe"`
+      - `eval "$(direnv hook bash)"`
+      - Launch git bash and ensure `direnv` is installed correctly by executing `direnv --version`. Note that this method will not work if you are using powershell.
 
 - Create a file in the `django-app` directory called `.envrc`.
 
