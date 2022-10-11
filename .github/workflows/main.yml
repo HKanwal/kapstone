@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  main:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,10 +16,18 @@ jobs:
         with:
           node-version: 16.15.1
 
-      - run: ls
-      - run: cd src
-      - run: ls
-      - run: npm install
-      - run: npm run lint
-      - run: npm run build
-      - run: npm test --if-present
+      - run: |
+          cd src/next-app
+          npm install
+      - name: lint
+        run: |
+          cd src/next-app
+          npm run lint
+      - name: build
+        run: |
+          cd src/next-app
+          npm run build
+      - name: test
+        run: |
+          cd src/next-app
+          npm test --if-present
