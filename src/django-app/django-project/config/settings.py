@@ -77,7 +77,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DB_NAME = os.environ.get("DB_NAME", "sayyara").strip()
 DB_USER = os.environ.get("DB_USER", "postgres").strip()
-DB_PASSWORD = os.environ.get("DB_USER", "postgres").strip()
+DB_PASSWORD = os.environ.get("DB_PASSWORD", "postgres").strip()
 DB_HOST = os.environ.get("DB_HOST", "localhost").strip()
 DB_PORT = os.environ.get("DB_PORT", "5432").strip()
 
