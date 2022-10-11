@@ -2,23 +2,28 @@
 
 ## Step 1: Create a Postgres DB
 - Install PostgreSQL (if not already installed)
+
 - On the terminal, run:
+
+##### Step 1:
 ```bash
 psql -U postgres
 ```
+##### Step 2:
 ```bash
 CREATE DATABASE sayyara;
 ```
 
+##### Step 3 (Optional: Use this to create a custom User):
 ```
 CREATE USER my_username WITH PASSWORD 'my_password';
 ```
-
+##### Step 4 (Optional: Use this if you followed Step 3):
 ```
 GRANT ALL PRIVILEGES ON DATABASE sayyara TO my_username;
 ```
 
-Note: you can keep any name for your database, username and password.
+*Note: you can keep any name for your database, username and password. You can skip Step 3 below if you did not create a custom User above.*
 
 
 
@@ -34,7 +39,7 @@ Note: you can keep any name for your database, username and password.
     
     - **MacOS / Linux**:
       - `source env/bin/activate`
- 
+
     - **Windows (with Powershell)**:
       - `.\env\Scripts\activate`
     - **Windows (with Git Bash)**:
@@ -46,7 +51,9 @@ Note: you can keep any name for your database, username and password.
 
   
 
-## Step 3: Setup environment variables with direnv
+## Step 3 (Optional): Setup environment variables with direnv
+
+#### You may follow the instructions below to define a custom user on the database (This step is optional if you are using default postgres settings)
 
 - Install `direnv`
   - **MacOS**: 
