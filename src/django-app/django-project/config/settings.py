@@ -76,10 +76,10 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DB_NAME = os.environ.get("DB_NAME", "sayyara").strip()
-DB_USER = os.environ.get("DB_USER", "admin").strip()
-DB_PASSWORD = os.environ.get("DB_USER", "password").strip()
+DB_USER = os.environ.get("DB_USER", "postgres").strip()
+DB_PASSWORD = os.environ.get("DB_USER", "postgres").strip()
 DB_HOST = os.environ.get("DB_HOST", "localhost").strip()
-DB_PORT = os.environ.get("DB_PORT", "").strip()
+DB_PORT = os.environ.get("DB_PORT", "5432").strip()
 
 DATABASES = {
     'default': {
