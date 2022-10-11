@@ -4,7 +4,7 @@
 - Install PostgreSQL (if not already installed)
 - On the terminal, run:
 ```bash
-psql
+psql -U postgres
 ```
 ```bash
 CREATE DATABASE sayyara;
@@ -42,6 +42,20 @@ Note: you can keep any name for your database, username and password.
 ## Step 3: Setup environment variables with direnv
 
 - Install `direnv`
+
+Windows specific instructions, using git bash:
+
+Download [direnv.windows-amd64.exe](https://github.com/direnv/direnv/releases/download/v2.32.1/direnv.windows-amd64.exe).
+
+Move `direnv.windows-amd64.exe` to `C:\Program Files\Git\usr\bin`.
+
+Add the following lines to your `.bashrc` file (if you haven't made one, create the file under your home folder):
+
+`alias direnv="/usr/bin/direnv.windows-amd64.exe"
+# direnv
+eval "$(direnv hook bash)"`
+
+Launch git bash and ensure `direnv` is installed correctly by executing `direnv --version`. Note that this method will not work if you are using powershell.
 
 - Create a file in the `django-app` directory called `.envrc`.
 
