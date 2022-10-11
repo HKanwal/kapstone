@@ -23,11 +23,7 @@ Set the following VSCode settings related to formatting:
 
 ```json
 "editor.formatOnSave": true,
-"editor.defaultFormatter": "esbenp.prettier-vscode",
-"editor.tabSize": 2,
-"prettier.jsxBracketSameLine": true,
-"prettier.singleQuote": true,
-"prettier.printWidth": 100
+"editor.defaultFormatter": "esbenp.prettier-vscode"
 ```
 
 # Development
