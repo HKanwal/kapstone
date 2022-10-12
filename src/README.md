@@ -41,6 +41,10 @@ Backend:
 
 ...
 
+# Testing
+
+Testing server/deployment: https://kapstone-ten.vercel.app/
+
 # Production
 
 Frontend:
