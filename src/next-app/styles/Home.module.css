@@ -14,9 +14,10 @@
 }
 
 .or {
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 1em;
+  padding-bottom: 1em;
   text-align: center;
   color: var(--text-grey-color);
   font-weight: 600;
+  font-size: 4vmin;
 }
