@@ -21,7 +21,7 @@ const FormField = (props: FormFieldProps) => {
       <span className={styles.name}>{props.name}:</span>
       <TextInput
         placeholder={props.placeholder}
-        width={props.width ?? "100%"}
+        width={props.width}
         onChange={handleChange}
       />
     </div>
