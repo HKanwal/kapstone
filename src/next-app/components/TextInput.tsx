@@ -23,7 +23,7 @@ const TextInput = (props: TextInputProps) => {
       placeholder={props.placeholder ?? ""}
       value={value}
       onChange={handleChange}
-      style={{ width: props.width }}
+      style={{ width: props.width ?? "100%" }}
     />
   );
 };

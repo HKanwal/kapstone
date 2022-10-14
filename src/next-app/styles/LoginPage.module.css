@@ -4,4 +4,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+}
+
+.username-container {
+  padding-bottom: 3vh;
+  width: 80%;
+}
+
+.password-container {
+  padding-bottom: 1.5vh;
+  width: 80%;
+}
+
+.forgot-password {
+  width: 80%;
+  text-align: right;
+  color: var(--text-grey-color);
 }
