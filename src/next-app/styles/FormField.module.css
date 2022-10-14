@@ -1,0 +1,11 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-size: 4vmin;
+  color: var(--text-grey-color);
+  font-weight: 400;
+  padding-bottom: 0.4em;
+}

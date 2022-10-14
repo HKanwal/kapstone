@@ -1,0 +1,9 @@
+.input {
+  background-color: var(--text-input-color);
+  border: 0;
+  padding-left: 1em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  border-radius: 0.2em;
+  font-size: 3.8vmin;
+}

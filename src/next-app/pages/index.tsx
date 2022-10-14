@@ -19,7 +19,12 @@ const Home: NextPage = () => {
         <div className={styles["btns-container"]}>
           <Button title="Continue as a Customer" />
           <span className={styles.or}>OR</span>
-          <Button title="Login as a Shop Owner" />
+          <Button
+            title="Login as a Shop Owner"
+            onClick={() => {
+              window.location.href = "/login";
+            }}
+          />
         </div>
       </div>
     </>
