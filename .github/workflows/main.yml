@@ -18,16 +18,16 @@ jobs:
 
       - run: |
           cd src/next-app
-          npm install
+          yarn install
       - name: lint
         run: |
           cd src/next-app
-          npm run lint
+          yarn lint
       - name: build
         run: |
           cd src/next-app
-          npm run build
+          yarn build
       - name: test
         run: |
           cd src/next-app
-          npm test --if-present
+          yarn test --if-present
