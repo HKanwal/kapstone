@@ -27,7 +27,3 @@ jobs:
         run: |
           cd src/next-app
           yarn build
-      - name: test
-        run: |
-          cd src/next-app
-          yarn test --if-present
