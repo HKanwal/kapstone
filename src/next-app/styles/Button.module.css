@@ -9,6 +9,10 @@
   font-weight: 600;
 }
 
+.button:hover {
+  cursor: pointer;
+}
+
 .button:active {
   opacity: 0.8;
 }
