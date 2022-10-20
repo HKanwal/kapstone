@@ -44,7 +44,7 @@
   padding: 4vmin;
 }
 
-.reset-password-title-container {
+.modal-title-container {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -52,13 +52,13 @@
   margin-bottom: 4vh;
 }
 
-.reset-password-title {
+.modal-title {
   font-size: 6vmin;
   font-weight: bold;
   text-align: center;
 }
 
-.modal-submit-btn {
+.modal-submit {
   width: 100%;
   margin-top: 3vh;
   margin-bottom: 2vh;
