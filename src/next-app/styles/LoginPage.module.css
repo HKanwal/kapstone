@@ -26,7 +26,7 @@
 
 .forgot-password {
   color: var(--text-grey-color);
-  padding-bottom: 4vh;
+  margin-bottom: 4vh;
   font-size: 4vmin;
   color: #3fdeae;
 }
@@ -35,8 +35,31 @@
   cursor: pointer;
 }
 
+.modal-content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4vmin;
+}
+
+.reset-password-title-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 2vh;
+  margin-bottom: 4vh;
+}
+
 .reset-password-title {
   font-size: 6vmin;
   font-weight: bold;
   text-align: center;
+}
+
+.modal-submit-btn {
+  width: 100%;
+  margin-top: 3vh;
+  margin-bottom: 2vh;
 }
