@@ -21,4 +21,6 @@
   width: 80%;
   text-align: right;
   color: var(--text-grey-color);
+  padding-bottom: 4vh;
+  font-size: 4vmin;
 }
