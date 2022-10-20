@@ -32,10 +32,17 @@ const LoginPage: NextPage = () => {
       <Button title="Login" width="80%" />
 
       <Modal visible={modalVisible} onClose={hideModal}>
-        <span className={styles["reset-password-title"]}>
-          Reset Password
-        </span>
-        <FormField name="Email" placeholder="Enter your email" />
+        <div className={styles["modal-content"]}>
+          <div className={styles["reset-password-title-container"]}>
+            <span className={styles["reset-password-title"]}>
+              Reset Password
+            </span>
+          </div>
+          <FormField name="Email" placeholder="Enter your email" />
+          <div className={styles["modal-submit-btn"]}>
+            <Button title="Continue" width="100%" />
+          </div>
+        </div>
       </Modal>
     </div>
   );
