@@ -18,7 +18,7 @@ const FormField = (props: FormFieldProps) => {
 
   return (
     <div className={styles.container}>
-      <span className={styles.name}>{props.name}:</span>
+      <span className={styles.name}>{props.name}</span>
       <TextInput
         placeholder={props.placeholder}
         width={props.width}

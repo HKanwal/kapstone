@@ -17,10 +17,26 @@
   width: 80%;
 }
 
-.forgot-password {
+.forgot-password-container {
   width: 80%;
-  text-align: right;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.forgot-password {
   color: var(--text-grey-color);
   padding-bottom: 4vh;
   font-size: 4vmin;
+  color: #3fdeae;
+}
+
+.forgot-password:hover {
+  cursor: pointer;
+}
+
+.reset-password-title {
+  font-size: 6vmin;
+  font-weight: bold;
+  text-align: center;
 }
