@@ -5,6 +5,7 @@ import { GrClose } from "react-icons/gr";
 type ModalProps = {
   children?: ReactElement<any, any> | ReactElement<any, any>[];
   visible?: boolean;
+  onClose?: () => void;
 };
 
 const Modal = (props: ModalProps) => {
@@ -16,9 +17,10 @@ const Modal = (props: ModalProps) => {
 
   const handleClose = () => {
     setVisible(false);
+    props.onClose && props.onClose();
   };
 
-  if (!props.visible) {
+  if (!visible) {
     return <></>;
   }
   else {

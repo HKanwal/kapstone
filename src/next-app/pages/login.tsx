@@ -8,8 +8,12 @@ import styles from "../styles/LoginPage.module.css";
 const LoginPage: NextPage = () => {
   const [modalVisible, setModalVisisble] = useState<boolean>(false);
 
-  const handleClickForgotPwd = () => {
+  const showModal = () => {
     setModalVisisble(true);
+  };
+
+  const hideModal = () => {
+    setModalVisisble(false);
   };
 
   return (
@@ -21,13 +25,13 @@ const LoginPage: NextPage = () => {
         <FormField name="Password" placeholder="Enter your password" />
       </div>
       <div className={styles["forgot-password-container"]}>
-        <span className={styles["forgot-password"]} onClick={handleClickForgotPwd}>
+        <span className={styles["forgot-password"]} onClick={showModal}>
           Forgot Password?
         </span>
       </div>
       <Button title="Login" width="80%" />
 
-      <Modal visible={modalVisible}>
+      <Modal visible={modalVisible} onClose={hideModal}>
         <span className={styles["reset-password-title"]}>
           Reset Password
         </span>
