@@ -23,3 +23,7 @@
   flex-direction: row;
   justify-content: flex-end;
 }
+
+.close:hover {
+  cursor: pointer;
+}

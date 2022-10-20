@@ -26,7 +26,7 @@ const Modal = (props: ModalProps) => {
       <div className={styles.backdrop}>
         <div className={styles.container}>
           <div className={styles.header}>
-            <GrClose onClick={handleClose} />
+            <GrClose className={styles.close} onClick={handleClose} />
           </div>
           {props.children}
         </div>
