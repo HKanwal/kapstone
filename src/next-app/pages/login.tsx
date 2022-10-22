@@ -7,6 +7,8 @@ import Modal from "../components/Modal";
 import styles from "../styles/LoginPage.module.css";
 
 const LoginPage: NextPage = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [modalVisible, setModalVisisble] = useState<boolean>(false);
 
   const showModal = () => {
@@ -31,7 +33,11 @@ const LoginPage: NextPage = () => {
           <FormField name="Username" placeholder="Enter your username" />
         </div>
         <div className={styles["password-container"]}>
-          <FormField name="Password" placeholder="Enter your password" />
+          <FormField
+            name="Password"
+            placeholder="Enter your password"
+            inputType="password"
+          />
         </div>
         <div className={styles["forgot-password-container"]}>
           <span className={styles["forgot-password"]} onClick={showModal}>

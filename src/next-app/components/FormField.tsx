@@ -7,6 +7,7 @@ type FormFieldProps = {
   placeholder?: string;
   width?: string | number;
   onChange?: (newValue: string) => void;
+  inputType?: string;
 };
 
 const FormField = (props: FormFieldProps) => {
@@ -23,6 +24,7 @@ const FormField = (props: FormFieldProps) => {
         placeholder={props.placeholder}
         width={props.width}
         onChange={handleChange}
+        type={props.inputType}
       />
     </div>
   );
