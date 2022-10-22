@@ -30,13 +30,18 @@ const LoginPage: NextPage = () => {
       </div>
       <div className={styles.content}>
         <div className={styles["username-container"]}>
-          <FormField name="Username" placeholder="Enter your username" />
+          <FormField
+            name="Username"
+            placeholder="Enter your username"
+            onChange={setUsername}
+          />
         </div>
         <div className={styles["password-container"]}>
           <FormField
             name="Password"
             placeholder="Enter your password"
             inputType="password"
+            onChange={setPassword}
           />
         </div>
         <div className={styles["forgot-password-container"]}>
@@ -44,7 +49,11 @@ const LoginPage: NextPage = () => {
             Forgot Password?
           </span>
         </div>
-        <Button title="Login" width="80%" />
+        <Button
+          title="Login"
+          width="80%"
+          disabled={username.length < 1 || password.length < 1}
+        />
 
         <Modal visible={modalVisible} onClose={hideModal}>
           <div className={styles["modal-content"]}>
