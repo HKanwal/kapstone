@@ -15,6 +15,7 @@ const FormField = (props: FormFieldProps) => {
 
   const handleChange = (newValue: string) => {
     setValue(newValue);
+    props.onChange && props.onChange(newValue);
   };
 
   return (
