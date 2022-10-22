@@ -18,8 +18,8 @@ const LoginPage: NextPage = () => {
   };
 
   const goBack = () => {
-    window.location.href = '/';
-  }
+    window.location.href = "/";
+  };
 
   return (
     <div className={styles.container}>
@@ -27,7 +27,6 @@ const LoginPage: NextPage = () => {
         <BackButton onClick={goBack} />
       </div>
       <div className={styles.content}>
-
         <div className={styles["username-container"]}>
           <FormField name="Username" placeholder="Enter your username" />
         </div>
@@ -37,16 +36,14 @@ const LoginPage: NextPage = () => {
         <div className={styles["forgot-password-container"]}>
           <span className={styles["forgot-password"]} onClick={showModal}>
             Forgot Password?
-        </span>
+          </span>
         </div>
         <Button title="Login" width="80%" />
 
         <Modal visible={modalVisible} onClose={hideModal}>
           <div className={styles["modal-content"]}>
             <div className={styles["modal-title-container"]}>
-              <span className={styles["modal-title"]}>
-                Reset Password
-            </span>
+              <span className={styles["modal-title"]}>Reset Password</span>
             </div>
             <FormField name="Email" placeholder="Enter your email" />
             <div className={styles["modal-submit"]}>
