@@ -9,10 +9,15 @@
   font-weight: 600;
 }
 
-.button:hover {
+.button:enabled:hover {
   cursor: pointer;
 }
 
-.button:active {
+.button:enabled:active {
   opacity: 0.8;
+}
+
+.button:disabled {
+  background-color: #d9f8ef;
+  color: #0db38c;
 }

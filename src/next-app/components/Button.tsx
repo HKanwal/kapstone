@@ -4,14 +4,22 @@ type ButtonProps = {
   title: string;
   width?: string | number;
   onClick?: () => void;
+  disabled?: boolean;
 };
 
 const Button = (props: ButtonProps) => {
+  const handleClick = () => {
+    if (!props.disabled) {
+      props.onClick && props.onClick();
+    }
+  };
+
   return (
     <button
       className={styles.button}
       style={{ width: props.width }}
-      onClick={() => props.onClick && props.onClick()}
+      onClick={handleClick}
+      disabled={props.disabled}
     >
       {props.title}
     </button>
