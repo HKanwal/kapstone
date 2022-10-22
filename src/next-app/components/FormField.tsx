@@ -8,6 +8,9 @@ type FormFieldProps = {
   width?: string | number;
   onChange?: (newValue: string) => void;
   inputType?: string;
+
+  /** Adds a red asterisk */
+  required?: boolean;
 };
 
 const FormField = (props: FormFieldProps) => {
@@ -20,7 +23,10 @@ const FormField = (props: FormFieldProps) => {
 
   return (
     <div className={styles.container}>
-      <span className={styles.name}>{props.name}</span>
+      <span className={styles.name}>
+        {props.name}
+        {props.required ? <span className={styles.asterisk}>*</span> : <></>}
+      </span>
       <TextInput
         placeholder={props.placeholder}
         width={props.width}
