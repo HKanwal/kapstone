@@ -1,9 +1,10 @@
 .container {
   border: 0;
   background-color: white;
+  color: black;
 }
 
-.container:active {
+.container:enabled:active {
   opacity: 0.5;
 }
 

@@ -1,0 +1,22 @@
+.header {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-btn-container {
+  position: absolute;
+  top: 50%;
+  left: 2vw;
+  transform: translate(0px, -50%);
+}
+
+.title {
+  font-size: 6vmin;
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+  font-weight: bold;
+}

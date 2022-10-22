@@ -3,6 +3,7 @@ import { useState } from "react";
 import BackButton from "../components/BackButton";
 import Button from "../components/Button";
 import FormField from "../components/FormField";
+import Header from "../components/Header";
 import Modal from "../components/Modal";
 import styles from "../styles/LoginPage.module.css";
 
@@ -19,15 +20,10 @@ const LoginPage: NextPage = () => {
     setModalVisisble(false);
   };
 
-  const goBack = () => {
-    window.location.href = "/";
-  };
-
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <BackButton onClick={goBack} />
-      </div>
+      <Header goBackToHref="/" />
+
       <div className={styles.content}>
         <div className={styles["username-container"]}>
           <FormField
