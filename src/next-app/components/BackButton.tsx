@@ -7,9 +7,14 @@ type BackButtonProps = {
 
 const BackButton = (props: BackButtonProps) => {
   return (
-    <IoMdArrowBack className={styles.back} size="25" onClick={props.onClick} />
+    <button className={styles.container}>
+      <IoMdArrowBack
+        className={styles.back}
+        size="25"
+        onClick={props.onClick}
+      />
+    </button>
   );
 };
 
 export default BackButton;
-

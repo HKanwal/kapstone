@@ -46,6 +46,10 @@
   color: #3fdeae;
 }
 
+.forgot-password:active {
+  opacity: 0.5;
+}
+
 .forgot-password:hover {
   cursor: pointer;
 }
