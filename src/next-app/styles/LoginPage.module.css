@@ -60,14 +60,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 4vmin;
 }
 
 .modal-title-container {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: 2vh;
   margin-bottom: 4vh;
 }
 
@@ -80,5 +78,4 @@
 .modal-submit {
   width: 100%;
   margin-top: 3vh;
-  margin-bottom: 2vh;
 }

@@ -22,15 +22,14 @@ const Modal = (props: ModalProps) => {
 
   if (!visible) {
     return <></>;
-  }
-  else {
+  } else {
     return (
       <div className={styles.backdrop}>
         <div className={styles.container}>
           <div className={styles.header}>
             <GrClose className={styles.close} onClick={handleClose} />
           </div>
-          {props.children}
+          <div className={styles.content}>{props.children}</div>
         </div>
       </div>
     );
