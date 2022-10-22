@@ -5,6 +5,7 @@ type TextInputProps = {
   placeholder?: string;
   width?: string | number;
   onChange?: (newValue: string) => void;
+  type?: string;
 };
 
 const TextInput = (props: TextInputProps) => {
@@ -19,7 +20,7 @@ const TextInput = (props: TextInputProps) => {
   return (
     <input
       className={styles.input}
-      type="text"
+      type={props.type ?? "text"}
       placeholder={props.placeholder ?? ""}
       value={value}
       onChange={handleChange}
