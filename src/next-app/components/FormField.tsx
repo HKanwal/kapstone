@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "../styles/FormField.module.css";
+import Link from "./Link";
 import TextInput from "./TextInput";
 
 type FormFieldProps = {
@@ -11,6 +12,9 @@ type FormFieldProps = {
 
   /** Adds a red asterisk */
   required?: boolean;
+
+  /** Allows user to create additional inputs */
+  multi?: string;
 };
 
 const FormField = (props: FormFieldProps) => {
@@ -19,6 +23,10 @@ const FormField = (props: FormFieldProps) => {
   const handleChange = (newValue: string) => {
     setValue(newValue);
     props.onChange && props.onChange(newValue);
+  };
+
+  const addTextInput = () => {
+    console.log('TODO: this should add a text input');
   };
 
   return (
@@ -33,6 +41,9 @@ const FormField = (props: FormFieldProps) => {
         onChange={handleChange}
         type={props.inputType}
       />
+      {
+        (!!props.multi) ? <Link text={`+ ${props.multi}`} onClick={addTextInput} /> : <></>
+      }
     </div>
   );
 };

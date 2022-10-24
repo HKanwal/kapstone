@@ -1,0 +1,12 @@
+.link {
+  font-size: 4vmin;
+  color: #3fdeae;
+}
+
+.link:active {
+  opacity: 0.5;
+}
+
+.link:hover {
+  cursor: pointer;
+}
