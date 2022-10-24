@@ -7,7 +7,7 @@ type FormFieldProps = {
   name: string;
   placeholder?: string;
   width?: string | number;
-  onChange?: (newValue: string) => void;
+  onChange?: (newValues: string[]) => void;
   inputType?: string;
 
   /** Adds a red asterisk */
@@ -18,15 +18,16 @@ type FormFieldProps = {
 };
 
 const FormField = (props: FormFieldProps) => {
-  const [value, setValue] = useState("");
+  const [values, setValues] = useState<string[]>([""]);
 
-  const handleChange = (newValue: string) => {
-    setValue(newValue);
-    props.onChange && props.onChange(newValue);
+  const handleChange = (i: number, newValue: string) => {
+    const newValues = [...values.slice(0, i), newValue, ...values.slice(i + 1)];
+    setValues(newValues);
+    props.onChange && props.onChange(newValues);
   };
 
   const addTextInput = () => {
-    console.log('TODO: this should add a text input');
+    // todo
   };
 
   return (
@@ -35,6 +36,14 @@ const FormField = (props: FormFieldProps) => {
         {props.name}
         {props.required ? <span className={styles.asterisk}>*</span> : <></>}
       </span>
+      {
+        values.map((value, i) => {
+          <TextInput
+            placeholder={props.placeholder}
+            width={props.width}
+            onChange={handleChange} />
+        })
+      }
       <TextInput
         placeholder={props.placeholder}
         width={props.width}
