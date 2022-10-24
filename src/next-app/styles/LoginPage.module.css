@@ -46,6 +46,15 @@
   cursor: pointer;
 }
 
+.or {
+  padding-top: 5vh;
+  padding-bottom: 5vh;
+  text-align: center;
+  color: var(--text-grey-color);
+  font-weight: 600;
+  font-size: 4vmin;
+}
+
 .modal-content {
   height: 100%;
   width: 100%;

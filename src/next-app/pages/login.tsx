@@ -49,6 +49,8 @@ const LoginPage: NextPage = () => {
           width="80%"
           disabled={username.length < 1 || password.length < 1}
         />
+        <span className={styles.or}>OR</span>
+        <Button title="Register" width="80%" />
 
         <Modal visible={modalVisible} onClose={hideModal}>
           <div className={styles["modal-content"]}>
