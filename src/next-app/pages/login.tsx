@@ -19,6 +19,10 @@ const LoginPage: NextPage = () => {
     setModalVisisble(false);
   };
 
+  const goToCreateShop = () => {
+    window.location.href = '/create-shop';
+  }
+
   return (
     <div className={styles.container}>
       <Header goBackToHref="/" />
@@ -50,7 +54,7 @@ const LoginPage: NextPage = () => {
           disabled={username.length < 1 || password.length < 1}
         />
         <span className={styles.or}>OR</span>
-        <Button title="Register" width="80%" />
+        <Button title="Register" width="80%" onClick={goToCreateShop} />
 
         <Modal visible={modalVisible} onClose={hideModal}>
           <div className={styles["modal-content"]}>
