@@ -16,7 +16,7 @@ const CreateShopPage: NextPage = () => {
           <FormField name="Shop Address" placeholder="Enter your shop's address" required />
         </div>
         <div className={styles['shop-phones-container']}>
-          <FormField name="Shop Phone Number(s)" placeholder="Enter your shop's phone number" />
+          <FormField name="Shop Phone Number(s)" placeholder="Enter your shop's phone number" multi="Add phone number" />
         </div>
         <div className={styles['shop-email-container']}>
           <FormField name="Shop Email" placeholder="Enter your shop's email" />

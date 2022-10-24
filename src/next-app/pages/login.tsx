@@ -3,6 +3,7 @@ import { useState } from "react";
 import Button from "../components/Button";
 import FormField from "../components/FormField";
 import Header from "../components/Header";
+import Link from "../components/Link";
 import Modal from "../components/Modal";
 import styles from "../styles/LoginPage.module.css";
 
@@ -44,9 +45,7 @@ const LoginPage: NextPage = () => {
           />
         </div>
         <div className={styles["forgot-password-container"]}>
-          <span className={styles["forgot-password"]} onClick={showModal}>
-            Forgot Password?
-          </span>
+          <Link text="Forgot Password?" onClick={showModal} />
         </div>
         <Button
           title="Login"

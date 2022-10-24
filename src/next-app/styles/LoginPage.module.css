@@ -29,21 +29,7 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-}
-
-.forgot-password {
-  color: var(--text-grey-color);
   margin-bottom: 4vh;
-  font-size: 4vmin;
-  color: #3fdeae;
-}
-
-.forgot-password:active {
-  opacity: 0.5;
-}
-
-.forgot-password:hover {
-  cursor: pointer;
 }
 
 .or {
