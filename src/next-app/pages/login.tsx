@@ -33,7 +33,7 @@ const LoginPage: NextPage = () => {
           <FormField
             name="Username"
             placeholder="Enter your username"
-            onChange={setUsername}
+            onChange={(newVals) => setUsername(newVals[0])}
           />
         </div>
         <div className={styles["password-container"]}>
@@ -41,7 +41,7 @@ const LoginPage: NextPage = () => {
             name="Password"
             placeholder="Enter your password"
             inputType="password"
-            onChange={setPassword}
+            onChange={(newVals) => setPassword(newVals[0])}
           />
         </div>
         <div className={styles["forgot-password-container"]}>
