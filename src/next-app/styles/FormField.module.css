@@ -8,10 +8,17 @@
   font-size: 4vmin;
   color: var(--text-grey-color);
   font-weight: 400;
-  padding-bottom: 1vh;
+}
+
+.text-input-container {
+  margin-top: 1vh;
 }
 
 .asterisk {
   color: red;
   padding-left: 0.2em;
+}
+
+.link-container {
+  margin-top: 1vh;
 }
