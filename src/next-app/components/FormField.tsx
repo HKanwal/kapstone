@@ -18,41 +18,49 @@ type FormFieldProps = {
 };
 
 const FormField = (props: FormFieldProps) => {
-  const [values, setValues] = useState<string[]>([""]);
+  const [vals, setVals] = useState<string[]>([""]);
 
-  const handleChange = (i: number, newValue: string) => {
-    const newValues = [...values.slice(0, i), newValue, ...values.slice(i + 1)];
-    setValues(newValues);
-    props.onChange && props.onChange(newValues);
+  const handleChange = (i: number, newVal: string) => {
+    const newVals = [...vals.slice(0, i), newVal, ...vals.slice(i + 1)];
+    setVals(newVals);
+    props.onChange && props.onChange(newVals);
   };
 
   const addTextInput = () => {
-    // todo
+    setVals(oldVals => {
+      return [...oldVals, ""]
+    });
   };
 
   return (
     <div className={styles.container}>
-      <span className={styles.name}>
-        {props.name}
-        {props.required ? <span className={styles.asterisk}>*</span> : <></>}
-      </span>
-      {
-        values.map((value, i) => {
-          <TextInput
-            placeholder={props.placeholder}
-            width={props.width}
-            onChange={handleChange} />
-        })
-      }
-      <TextInput
-        placeholder={props.placeholder}
-        width={props.width}
-        onChange={handleChange}
-        type={props.inputType}
-      />
-      {
-        (!!props.multi) ? <Link text={`+ ${props.multi}`} onClick={addTextInput} /> : <></>
-      }
+      <>
+        <span className={styles.name}>
+          {props.name}
+          {props.required ? <span className={styles.asterisk}>*</span> : <></>}
+        </span>
+        {
+          vals.map((val, i) => {
+            return (
+              <div className={styles['text-input-container']} key={i}>
+                <TextInput
+                  placeholder={props.placeholder}
+                  width={props.width}
+                  onChange={(newVal) => handleChange(i, newVal)}
+                  type={props.inputType}
+                />
+              </div>
+            );
+          })
+        }
+        {
+          (!!props.multi) ?
+            <div className={styles['link-container']}>
+              <Link text={`+ ${props.multi}`} onClick={addTextInput} />
+            </div>
+            : <></>
+        }
+      </>
     </div>
   );
 };
