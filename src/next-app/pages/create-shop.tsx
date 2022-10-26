@@ -5,6 +5,7 @@ import TextField from "../components/TextField";
 import TextMultiField from '../components/TextMultiField';
 import Header from "../components/Header";
 import styles from "../styles/pages/CreateShopPage.module.css";
+import Chip from "../components/Chip";
 
 const CreateShopPage: NextPage = () => {
   const [name, setName] = useState("");

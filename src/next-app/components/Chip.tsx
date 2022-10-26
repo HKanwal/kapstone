@@ -3,7 +3,6 @@ import { GrClose } from "react-icons/gr";
 
 type ChipProps = {
   text: string;
-  removeable?: boolean;
 
   /** Only called if removeable = true */
   onRemove?: () => void;
@@ -16,12 +15,12 @@ const Chip = (props: ChipProps) => {
 
   return (
     <div className={styles.container} onClick={handleRemove}>
-      <span className={styles.text}>
-        {props.text}
-      </span>
+      {props.text}
       {
-        (props.removeable) ?
-          <GrClose />
+        (props.onRemove) ?
+          <div className={styles['close-container']}>
+            <GrClose />
+          </div>
           : <></>
       }
     </div>
