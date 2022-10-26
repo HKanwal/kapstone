@@ -5,7 +5,6 @@
 }
 
 .name {
-  font-size: 4vmin;
   color: var(--text-grey-color);
   font-weight: 400;
 }
