@@ -1,4 +1,4 @@
-import styles from "../styles/BackButton.module.css";
+import styles from "../styles/components/BackButton.module.css";
 import { IoMdArrowBack } from "react-icons/io";
 import { useEffect, useState } from "react";
 

@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import styles from "../styles/TextInput.module.css";
+import styles from "../styles/components/TextInput.module.css";
 import { ImCancelCircle } from 'react-icons/im';
 
 type TextInputProps = {
