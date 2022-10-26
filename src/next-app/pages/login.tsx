@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useState } from "react";
 import Button from "../components/Button";
-import FormField from "../components/FormField";
+import TextField from "../components/TextField";
 import Header from "../components/Header";
 import Link from "../components/Link";
 import Modal from "../components/Modal";
@@ -30,18 +30,18 @@ const LoginPage: NextPage = () => {
 
       <div className={styles.content}>
         <div className={styles["username-container"]}>
-          <FormField
+          <TextField
             name="Username"
             placeholder="Enter your username"
-            onChange={(newVals) => setUsername(newVals[0])}
+            onChange={setUsername}
           />
         </div>
         <div className={styles["password-container"]}>
-          <FormField
+          <TextField
             name="Password"
             placeholder="Enter your password"
             inputType="password"
-            onChange={(newVals) => setPassword(newVals[0])}
+            onChange={setPassword}
           />
         </div>
         <div className={styles["forgot-password-container"]}>
@@ -60,7 +60,7 @@ const LoginPage: NextPage = () => {
             <div className={styles["modal-title-container"]}>
               <span className={styles["modal-title"]}>Reset Password</span>
             </div>
-            <FormField name="Email" placeholder="Enter your email" />
+            <TextField name="Email" placeholder="Enter your email" />
             <div className={styles["modal-submit"]}>
               <Button title="Continue" width="100%" />
             </div>

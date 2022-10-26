@@ -1,7 +1,8 @@
 import type { NextPage } from "next";
 import { useState } from "react";
 import Button from "../components/Button";
-import FormField from "../components/FormField";
+import TextField from "../components/TextField";
+import TextMultiField from '../components/TextMultiField';
 import Header from "../components/Header";
 import styles from "../styles/pages/CreateShopPage.module.css";
 
@@ -19,43 +20,43 @@ const CreateShopPage: NextPage = () => {
 
       <div className={styles.content}>
         <div className={styles['field-container']}>
-          <FormField
+          <TextField
             name="Shop Name"
             placeholder="Enter your shop's name"
-            onChange={(newVals) => setName(newVals[0])}
+            onChange={setName}
             required />
         </div>
         <div className={styles['field-container']}>
-          <FormField
+          <TextField
             name="Shop Address"
             placeholder="Enter your shop's address"
-            onChange={(newVals) => setAddress(newVals[0])}
+            onChange={setAddress}
             required />
         </div>
         <div className={styles['field-container']}>
-          <FormField
+          <TextMultiField
             name="Shop Phone Number(s)"
             placeholder="Enter your shop's phone number"
             onChange={setPhoneNumbers}
             multi="Add phone number" />
         </div>
         <div className={styles['field-container']}>
-          <FormField
+          <TextField
             name="Shop Email"
             placeholder="Enter your shop's email"
-            onChange={(newVals) => setEmail(newVals[0])} />
+            onChange={setEmail} />
         </div>
         <div className={styles['field-container']}>
-          <FormField
+          <TextField
             name="Number of Employees"
             placeholder="Enter number of employees"
-            onChange={(newVals) => setEmployees(newVals[0])} />
+            onChange={setEmployees} />
         </div>
         <div className={styles['field-container']}>
-          <FormField
+          <TextField
             name="Number of Service Bays"
             placeholder="Enter number of service bays"
-            onChange={(newVals) => setServiceBays(newVals[0])} />
+            onChange={setServiceBays} />
         </div>
         <Button
           title="Create"
