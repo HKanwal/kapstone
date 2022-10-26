@@ -11,25 +11,11 @@
   justify-content: center;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  padding-top: 4vh;
+  padding-bottom: 4vh;
 }
 
-.shop-name-container {
-  width: 80%;
-  padding-bottom: 3vh;
-}
-
-.shop-address-container {
-  width: 80%;
-  padding-bottom: 3vh;
-}
-
-.shop-phones-container {
-  width: 80%;
-  padding-bottom: 3vh;
-}
-
-.shop-email-container {
+.field-container {
   width: 80%;
   padding-bottom: 3vh;
 }
