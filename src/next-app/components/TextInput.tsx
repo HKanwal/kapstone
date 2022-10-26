@@ -8,7 +8,6 @@ type TextInputProps = {
   value?: string;
   onChange?: (newValue: string) => void;
   type?: string;
-  removable?: boolean;
 
   /** Only called if removable = true */
   onRemove?: () => void;
@@ -60,7 +59,7 @@ const TextInput = (props: TextInputProps) => {
         style={{ width: props.width ?? "100%" }}
       />
       {
-        (props.removable) ?
+        (props.onRemove) ?
           <div className={styles['cancel-button']} onClick={handleCancel}>
             <ImCancelCircle size={cancelSize} />
           </div>
