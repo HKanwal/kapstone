@@ -1,3 +1,7 @@
+.container {
+  position: relative;
+}
+
 .input {
   background-color: var(--text-input-color);
   border: 0;
@@ -7,4 +11,16 @@
   padding-bottom: 1.5em;
   border-radius: 0.2em;
   font-size: 4vmin;
+}
+
+.cancel-button {
+  position: absolute;
+  top: 50%;
+  right: 6%;
+  transform: translate(0px, -40%);
+  color: var(--red-color);
+}
+
+.cancel-button:hover {
+  cursor: pointer;
 }
