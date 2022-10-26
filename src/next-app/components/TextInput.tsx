@@ -6,10 +6,8 @@ type TextInputProps = {
   placeholder?: string;
   width?: string | number;
   value?: string;
-  onChange?: (newValue: string) => void;
+  onChange?: (newVal: string) => void;
   type?: string;
-
-  /** Only called if removable = true */
   onRemove?: () => void;
 };
 
@@ -39,9 +37,9 @@ const TextInput = (props: TextInputProps) => {
   }, [props.value]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    props.onChange && props.onChange(newValue);
-    setValue(newValue);
+    const newVal = e.target.value;
+    props.onChange && props.onChange(newVal);
+    setValue(newVal);
   };
 
   const handleCancel = () => {

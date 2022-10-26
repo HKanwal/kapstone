@@ -3,11 +3,11 @@ import styles from "../styles/components/FormField.module.css";
 import Link from "./Link";
 import TextInput from "./TextInput";
 
-type FormFieldProps = {
+type TextMultiFieldProps = {
   name: string;
   placeholder?: string;
   width?: string | number;
-  onChange?: (newValues: string[]) => void;
+  onChange?: (newVals: string[]) => void;
   inputType?: string;
 
   /** Adds a red asterisk */
@@ -17,7 +17,7 @@ type FormFieldProps = {
   multi?: string;
 };
 
-const FormField = (props: FormFieldProps) => {
+const TextMultiField = (props: TextMultiFieldProps) => {
   const [vals, setVals] = useState<string[]>([""]);
 
   const handleChange = (i: number, newVal: string) => {
@@ -73,4 +73,5 @@ const FormField = (props: FormFieldProps) => {
   );
 };
 
-export default FormField;
+export type { TextMultiFieldProps };
+export default TextMultiField;
