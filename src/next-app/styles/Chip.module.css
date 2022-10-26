@@ -1,0 +1,21 @@
+.container {
+  font-size: 4vmin;
+  background-color: rgba(147, 156, 183, 0.6);
+  padding-top: 0.4em;
+  padding-bottom: 0.4em;
+  padding-left: 0.7em;
+  padding-right: 0.7em;
+  border-radius: 0.2em;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.container:hover {
+  cursor: pointer;
+}
+
+.text {
+  margin-right: 0.5em;
+}
