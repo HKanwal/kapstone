@@ -4,6 +4,12 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+
+  --font-size: 4vmin;
+  font-size: var(--font-size);
+  --title-font-size: 6vmin;
+
+  /* Theme */
   --primary-color: #3fdeae;
   --red-color: red;
   --text-grey-color: #61697d;
