@@ -55,8 +55,7 @@ const FormField = (props: FormFieldProps) => {
                   value={val}
                   onChange={(newVal) => handleChange(i, newVal)}
                   type={props.inputType}
-                  removable={i > 0}
-                  onRemove={() => removeTextInput(i)}
+                  onRemove={i > 0 ? () => removeTextInput(i) : undefined}
                 />
               </div>
             );
