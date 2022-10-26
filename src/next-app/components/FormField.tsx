@@ -32,6 +32,12 @@ const FormField = (props: FormFieldProps) => {
     });
   };
 
+  const removeTextInput = (i: number) => {
+    setVals(oldVals => {
+      return [...oldVals.slice(0, i), ...oldVals.slice(i + 1)];
+    });
+  }
+
   return (
     <div className={styles.container}>
       <>
@@ -46,8 +52,11 @@ const FormField = (props: FormFieldProps) => {
                 <TextInput
                   placeholder={props.placeholder}
                   width={props.width}
+                  value={val}
                   onChange={(newVal) => handleChange(i, newVal)}
                   type={props.inputType}
+                  removable={i > 0}
+                  onRemove={() => removeTextInput(i)}
                 />
               </div>
             );
