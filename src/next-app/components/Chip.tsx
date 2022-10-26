@@ -1,4 +1,4 @@
-import styles from "../styles/Chip.module.css";
+import styles from "../styles/components/Chip.module.css";
 import { GrClose } from "react-icons/gr";
 
 type ChipProps = {

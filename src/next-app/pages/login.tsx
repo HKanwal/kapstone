@@ -5,7 +5,7 @@ import FormField from "../components/FormField";
 import Header from "../components/Header";
 import Link from "../components/Link";
 import Modal from "../components/Modal";
-import styles from "../styles/LoginPage.module.css";
+import styles from "../styles/pages/LoginPage.module.css";
 
 const LoginPage: NextPage = () => {
   const [username, setUsername] = useState("");

@@ -1,10 +1,9 @@
 import type { NextPage } from "next";
 import { useState } from "react";
 import Button from "../components/Button";
-import Chip from "../components/Chip";
 import FormField from "../components/FormField";
 import Header from "../components/Header";
-import styles from "../styles/CreateShopPage.module.css";
+import styles from "../styles/pages/CreateShopPage.module.css";
 
 const CreateShopPage: NextPage = () => {
   const [name, setName] = useState("");
