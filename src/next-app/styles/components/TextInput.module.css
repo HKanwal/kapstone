@@ -13,6 +13,10 @@
   font-size: var(--font-size);
 }
 
+.input:focus {
+  outline: 1px solid var(--primary-color);
+}
+
 .cancel-button {
   position: absolute;
   top: 50%;

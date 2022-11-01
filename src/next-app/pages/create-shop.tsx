@@ -6,6 +6,7 @@ import TextMultiField from '../components/TextMultiField';
 import Header from "../components/Header";
 import styles from "../styles/pages/CreateShopPage.module.css";
 import Chip from "../components/Chip";
+import DropdownField from "../components/DropdownField";
 
 const CreateShopPage: NextPage = () => {
   const [name, setName] = useState("");
@@ -46,6 +47,9 @@ const CreateShopPage: NextPage = () => {
             name="Shop Email"
             placeholder="Enter your shop's email"
             onChange={setEmail} />
+        </div>
+        <div className={styles['field-container']}>
+          <DropdownField name="Services Offered" placeholder="Enter services..." items={[]} />
         </div>
         <div className={styles['field-container']}>
           <TextField
