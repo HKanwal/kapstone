@@ -1,0 +1,26 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.name {
+  color: var(--text-grey-color);
+  font-weight: 400;
+}
+
+.asterisk {
+  color: red;
+  padding-left: 0.2em;
+}
+
+.input-container {
+  position: relative;
+}
+
+.chevron-container {
+  position: absolute;
+  top: 50%;
+  right: 6%;
+  transform: translate(0px, -40%);
+}

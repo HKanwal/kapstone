@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, CSSProperties, useEffect, useMemo, useState } from "react";
 import styles from "../styles/components/TextInput.module.css";
 import { ImCancelCircle } from 'react-icons/im';
 
@@ -9,6 +9,12 @@ type TextInputProps = {
   onChange?: (newVal: string) => void;
   type?: string;
   onRemove?: () => void;
+  style?: {
+    paddingLeft?: string;
+    paddingRight?: string;
+    paddingTop?: string;
+    paddingBottom?: string;
+  };
 };
 
 const calcSize = (winHeight: number, winWidth: number) => {
@@ -18,6 +24,12 @@ const calcSize = (winHeight: number, winWidth: number) => {
 const TextInput = (props: TextInputProps) => {
   const [value, setValue] = useState(props.value ?? '');
   const [cancelSize, setCancelSize] = useState(0);
+  const style: CSSProperties = useMemo(() => {
+    return {
+      width: props.width ?? '100%',
+      ...props.style
+    };
+  }, [props.width, props.style]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -54,7 +66,7 @@ const TextInput = (props: TextInputProps) => {
         placeholder={props.placeholder ?? ""}
         value={value}
         onChange={handleChange}
-        style={{ width: props.width ?? "100%" }}
+        style={style}
       />
       {
         (props.onRemove) ?
