@@ -27,7 +27,8 @@ const TextInput = (props: TextInputProps) => {
   const style: CSSProperties = useMemo(() => {
     return {
       width: props.width ?? '100%',
-      ...props.style
+      ...props.style,
+      paddingRight: props.onRemove ? '3em' : (props.style?.paddingRight ?? '1em'),
     };
   }, [props.width, props.style]);
 
