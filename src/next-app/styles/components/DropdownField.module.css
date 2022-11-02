@@ -24,3 +24,33 @@
   right: 6%;
   transform: translate(0px, -40%);
 }
+
+.dropdown {
+  position: absolute;
+  top: 120%;
+  left: 0;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  background-color: white;
+  width: 100%;
+  box-shadow: 0 0 0.2em 0.01em #888888;
+  border-radius: 0.2em;
+  z-index: 1;
+}
+
+.item {
+  background-color: white;
+  border: 0;
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding-left: 5%;
+  padding-top: 0.7em;
+  padding-bottom: 0.7em;
+  font-size: var(--font-size);
+}
+
+.item:focus,
+.item:hover {
+  background-color: #d9f8ef;
+}
