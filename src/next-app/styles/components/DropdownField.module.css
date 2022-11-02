@@ -7,17 +7,18 @@
 .name {
   color: var(--text-grey-color);
   font-weight: 400;
-  margin-bottom: 1vh;
 }
 
 .chips-container {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .chip-container {
   margin-left: 2%;
   margin-right: 2%;
+  margin-top: 1vh;
 }
 
 .asterisk {
