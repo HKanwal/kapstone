@@ -16,6 +16,10 @@ const CreateShopPage: NextPage = () => {
   const [employees, setEmployees] = useState("");
   const [serviceBays, setServiceBays] = useState("");
 
+  const handleSubmit = () => {
+    window.location.href = "/create-account";
+  };
+
   return (
     <div className={styles.container}>
       <Header goBackToHref="/login" title="Create New Shop" />
@@ -77,6 +81,7 @@ const CreateShopPage: NextPage = () => {
           title="Create"
           disabled={name.length < 1 || address.length < 1}
           width="80%"
+          onClick={handleSubmit}
         />
       </div>
     </div>
