@@ -112,5 +112,7 @@ const TextInput = forwardRef(
   }
 );
 
+TextInput.displayName = "TextInput";
+
 export type { TextInputRef };
 export default TextInput;
