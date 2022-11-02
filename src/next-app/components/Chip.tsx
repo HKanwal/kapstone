@@ -3,6 +3,7 @@ import { GrClose } from "react-icons/gr";
 
 type ChipProps = {
   text: string;
+  onMouseDown?: () => void;
 
   /** Only called if removeable = true */
   onRemove?: () => void;
@@ -13,8 +14,12 @@ const Chip = (props: ChipProps) => {
     props.onRemove && props.onRemove();
   };
 
+  const handleMouseDown = () => {
+    props.onMouseDown && props.onMouseDown();
+  };
+
   return (
-    <div className={styles.container} onClick={handleRemove}>
+    <div className={styles.container} onClick={handleRemove} onMouseDown={handleMouseDown}>
       {props.text}
       {
         (props.onRemove) ?
