@@ -48,6 +48,8 @@
   box-shadow: 0 0 0.2em 0.01em #888888;
   border-radius: 0.2em;
   z-index: 1;
+  max-height: 30vh;
+  overflow: scroll;
 }
 
 .item {
