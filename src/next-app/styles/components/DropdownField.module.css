@@ -7,6 +7,17 @@
 .name {
   color: var(--text-grey-color);
   font-weight: 400;
+  margin-bottom: 1vh;
+}
+
+.chips-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.chip-container {
+  margin-left: 2%;
+  margin-right: 2%;
 }
 
 .asterisk {
@@ -16,7 +27,7 @@
 
 .input-container {
   position: relative;
-  margin-top: 1vh;
+  margin-top: 1.5vh;
 }
 
 .chevron-container {

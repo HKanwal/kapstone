@@ -2,6 +2,7 @@ import { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
 import styles from "../styles/components/DropdownField.module.css";
 import TextInput, { TextInputRef } from "./TextInput";
 import { BsChevronDown } from "react-icons/bs";
+import Chip from "./Chip";
 
 type DropdownFieldProps = {
   name: string;
@@ -38,12 +39,38 @@ const DropdownField = (props: DropdownFieldProps) => {
     });
   };
 
+  const handleChipMouseDown = () => {
+    setTimeout(() => {
+      clearTimeout(collapseTimout);
+      inputRef.current?.focus();
+    }, 10);
+  };
+
+  const handleRemove = (item: string) => {
+    setSelectedItems((prevSelectedItems) => {
+      return prevSelectedItems.filter(si => {
+        return si !== item;
+      });
+    });
+  };
+
   return (
     <div className={styles.container}>
       <span className={styles.name}>
         {props.name}
         {props.required ? <span className={styles.asterisk}>*</span> : <></>}
       </span>
+      <div className={styles['chips-container']}>
+        {
+          selectedItems.map(item => {
+            return (
+              <div className={styles['chip-container']} key={item}>
+                <Chip text={item} onRemove={() => handleRemove(item)} onMouseDown={handleChipMouseDown} />
+              </div>
+            )
+          })
+        }
+      </div>
       <div className={styles["input-container"]}>
         <TextInput
           placeholder={props.placeholder ?? ""}
