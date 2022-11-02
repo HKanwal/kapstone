@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import { useState } from "react";
 import Button from "../components/Button";
 import TextField from "../components/TextField";
-import TextMultiField from '../components/TextMultiField';
+import TextMultiField from "../components/TextMultiField";
 import Header from "../components/Header";
 import styles from "../styles/pages/CreateShopPage.module.css";
 import Chip from "../components/Chip";
@@ -21,52 +21,63 @@ const CreateShopPage: NextPage = () => {
       <Header goBackToHref="/login" title="Create New Shop" />
 
       <div className={styles.content}>
-        <div className={styles['field-container']}>
+        <div className={styles["field-container"]}>
           <TextField
             name="Shop Name"
             placeholder="Enter your shop's name"
             onChange={setName}
-            required />
+            required
+          />
         </div>
-        <div className={styles['field-container']}>
+        <div className={styles["field-container"]}>
           <TextField
             name="Shop Address"
             placeholder="Enter your shop's address"
             onChange={setAddress}
-            required />
+            required
+          />
         </div>
-        <div className={styles['field-container']}>
+        <div className={styles["field-container"]}>
           <TextMultiField
             name="Shop Phone Number(s)"
             placeholder="Enter your shop's phone number"
             onChange={setPhoneNumbers}
-            multi="Add phone number" />
+            multi="Add phone number"
+          />
         </div>
-        <div className={styles['field-container']}>
+        <div className={styles["field-container"]}>
           <TextField
             name="Shop Email"
             placeholder="Enter your shop's email"
-            onChange={setEmail} />
+            onChange={setEmail}
+          />
         </div>
-        <div className={styles['field-container']}>
-          <DropdownField name="Services Offered" placeholder="Enter services..." items={[]} />
+        <div className={styles["field-container"]}>
+          <DropdownField
+            name="Services Offered"
+            placeholder="Enter services..."
+            items={new Set(["a", "b"])}
+          />
         </div>
-        <div className={styles['field-container']}>
+        <div className={styles["field-container"]}>
           <TextField
             name="Number of Employees"
             placeholder="Enter number of employees"
-            onChange={setEmployees} />
+            onChange={setEmployees}
+          />
         </div>
-        <div className={styles['field-container']}>
+        <div className={styles["field-container"]}>
           <TextField
             name="Number of Service Bays"
             placeholder="Enter number of service bays"
-            onChange={setServiceBays} />
+            onChange={setServiceBays}
+          />
         </div>
         <Button
           title="Create"
           disabled={name.length < 1 || address.length < 1}
-          width="80%" />
+          width="80%"
+        />
       </div>
     </div>
   );
