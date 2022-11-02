@@ -50,7 +50,7 @@ const TextInput = forwardRef(
           ? "3em"
           : props.style?.paddingRight ?? "1em",
       };
-    }, [props.width, props.style]);
+    }, [props.width, props.style, props.onRemove]);
 
     useImperativeHandle(ref, () => {
       return {
