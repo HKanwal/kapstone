@@ -1,8 +1,14 @@
 \documentclass[12pt, titlepage]{article}
 
 \usepackage{booktabs}
+\usepackage{cite}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{longtable}
 \hypersetup{
     colorlinks,
     citecolor=blue,
@@ -11,14 +17,19 @@
     urlcolor=blue
 }
 \usepackage[round]{natbib}
+\usepackage{mdframed}
+\usepackage{amssymb}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{tikz}
 
 \input{../Comments}
 \input{../Common}
 
 \begin{document}
 
-\title{Project Title: System Verification and Validation Plan for \progname{}} 
-\author{Author Name}
+\title{System Verification and Validation Plan for \progname{}} 
+\author{\authname}
 \date{\today}
 	
 \maketitle
@@ -27,11 +38,10 @@
 
 \section{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
+\begin{tabularx}{\textwidth}{p{3.2cm}p{1.8cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+2 November 2022 & 1.0 & First iteration of V\&V Plan\\
 \bottomrule
 \end{tabularx}
 
@@ -42,8 +52,8 @@ Date 2 & 1.1 & Notes\\
 \listoftables
 \wss{Remove this section if it isn't needed}
 
-\listoffigures
-\wss{Remove this section if it isn't needed}
+%\listoffigures
+%\wss{Remove this section if it isn't needed}
 
 \newpage
 
@@ -52,31 +62,34 @@ Date 2 & 1.1 & Notes\\
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{l l} 
   \toprule		
-  \textbf{symbol} & \textbf{description}\\
+  \textbf{Acronym} & \textbf{Description}\\
   \midrule 
-  T & Test\\
+  SRS & Software Requirements Specification\\
+  PWA & Progressive Web App\\
   \bottomrule
 \end{tabular}\\
 
-\wss{symbols, abbreviations or acronyms -- you can simply reference the SRS
+\wss{symbols, abbreviations or acronyms --- you can simply reference the SRS
   \citep{SRS} tables, if appropriate}
+
+\wss{Remove this section if it isn't needed}
 
 \newpage
 
 \pagenumbering{arabic}
 
-This document ... \wss{provide an introductory blurb and roadmap of the
+This document is the verification plan for the \progname{}. The primary focus of this document is to outline the plan for the testing of the \progname{}, ensuring that it meets the requirements detailed in the SRS. This document will go over the general information of the project, provide a section on the general planning for testing, and finally provide concrete tests for both the functional and non-functional requirements, taken from the SRS. \wss{provide an introductory blurb and roadmap of the
   Verification and Validation plan}
 
 \section{General Information}
 
 \subsection{Summary}
 
-\wss{Say what software is being tested.  Give its name and a brief overview of
-  its general functions.}
+The \progname{} is a software that is intended to provide customers an easy way to find and meet with mechanics for their automobiles. It will allow shop owners to create their shop in an application, provide services to clients, book appointments with them, and provide them with quotes for their services. Clients will be able to search through shops in the system and send requests for quotes to many shops. Clients will also be able to quickly make appointments with shops for the services they provide that don't need a quote. The bottom line is that the \progname{} facilitates communication between clients and shop owners.
 
 \subsection{Objectives}
 
+The objective of this document is twofold: To provide both current and future developers an easy way to verify and validate both the requirements that have already been implemented in the project, as well as the future requirements, and also to demonstrate to any viewer that the software has reached a point where it can be adequately used as a minimal viable product.
 \wss{State what is intended to be accomplished.  The objective will be around
   the qualities that are most important for your project.  You might have
   something like: ``build confidence in the software correctness,''
@@ -85,10 +98,12 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 
 \subsection{Relevant Documentation}
 
+
+The relevant documentation for this project includes the Software Requirements Specification for the \progname{}.
 \wss{Reference relevant documentation.  This will definitely include your SRS
-  and your other project documents (MG, MIS, etc).  You can include these even
-  before they are written, since by the time the project is done, they will be
-  written.}
+  and your other project documents (design documents, like MG, MIS, etc).  You
+  can include these even before they are written, since by the time the project
+  is done, they will be written.}
 
 \citet{SRS}
 
@@ -99,54 +114,106 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 
 \subsection{Verification and Validation Team}
 
-\wss{You, your classmates and the course instructor.  Maybe your supervisor.
+To execute the team's verification and validation plan, each team member was given a role. The following table explains each member's responsibilities.
+
+%\begin{table}[H]
+%\centering
+\renewcommand{\arraystretch}{1.8}%
+\begin{longtable}{|>{\centering\arraybackslash}m{.22\linewidth}|>{\centering\arraybackslash}m{.19\linewidth}|m{.59\linewidth}| }
+\caption{Breakdown of team member testing roles}
+\label{tab:teamRoles}
+\\ \hline
+\textbf{Team Member} & \textbf{Role(s)} & \textbf{Role Description} \\
+\hline
+\endfirsthead
+
+\multicolumn{3}{c}
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\hline \multicolumn{1}{|c|}{\textbf{Team Member}} & \multicolumn{1}{c|}{\textbf{Role(s)}} & \multicolumn{1}{c|}{\textbf{Role Description}} \\ \hline 
+\endhead
+
+\hline \multicolumn{3}{|r|}{{Continued on next page}} \\ \hline
+\endfoot
+
+\endlastfoot
+
+Tevis Doe & Back-End Tester  &  Write back-end tests using PyTest. \\
+\hline
+Caitlin Bridel & Documentation Reviewer & Review documentation and ensure that it meets standards. \\ 
+\hline
+Gilbert Cherrie & Front-End \& End-to-End Tester &  Write front-end unit tests and end-to-end tests.  \\ 
+\hline
+Rachel Johnson & User Surveyor & Survey users for feedback on usability. \\ 
+\hline
+Harkeerat Kanwal &  Front-End \& End-to-End Tester & Write front-end unit tests and end-to-end tests.  \\ 
+\hline
+Himanshu Aggarwal & Back-End Tester & Write back-end tests using PyTest. \\ 
+\hline
+Nabil Ibrahim & General Feedback & Will be referenced to provide general feedback as the project progresses. This ensures that our requirements and concept will stay relevant to Sayyara.
+\hline
+\end{longtable}
+
+\wss{Your teammates.  Maybe your supervisor.
   You shoud do more than list names.  You should say what each person's role is
-  for the project.  A table is a good way to summarize this information.}
+  for the project's verification.  A table is a good way to summarize this information.}
 
 \subsection{SRS Verification Plan}
 
-\wss{List any approaches you intend to use for SRS verification.  This may just
-  be ad hoc feedback from reviewers, like your classmates, or you may have
-  something more rigorous/systematic in mind..}
+As this is an industry project, the SRS cannot receive feedback from fellow members of the course. Because of this, the verification of the SRS is more internal than other projects. For feedback from an outside source, the supervisor of this project, Nabil Ibrahim, will be consulted for feedback on the requirements in the SRS. When a requirement is added to or removed from the scope of the project, Mr. Ibrahim will again be consulted, depending on his availability. In addition to consulting the supervisor of this project, before implementing requirements into the system, a few questions will be asked:
+\begin{enumerate}
+    \item Is the requirement relevant to the project?
+    \item Is the requirement impossible to verify?
+    \item Is the requirement achievable within the first phase of the project?
+\end{enumerate}
 
-\wss{Remember you have an SRS checklist}
+\noindent If the answer to any of these questions is no, then the requirement will be reexamined and removed, improved upon, or left as-is, depending on the discussion. It is hoped that this process will help verify the SRS as a whole.
+\wss{List any approaches you intend to use for SRS verification.  This may include
+  ad hoc feedback from reviewers, like your classmates, or you may plan for 
+  something more rigorous/systematic.}
+
+\wss{Maybe create an SRS checklist?}
 
 \subsection{Design Verification Plan}
 
-\wss{Plans for design verification}
+According to the Many Worlds interpretation of quantum mechanics, our design exists in a superposition of varying degrees of correctness. It follows that there exists a world in which our design is 100\% correct and, given that such a world is guaranteed to exist, verification of our design is not necessary.
 
-\wss{The review will include reviews by your classmates}
+The above logic presents us with an issue, however. Though there exists a world with a perfectly correct design, it is unlikely to be the world we find ourselves in. So, how do we verify our design in this more likely scenario? Since our project is very much dependent on our partner, Sayyara's, vision, it is vital that our design is reviewed by our supervisor, Nabil Ibrahim. This review will take place during a meeting with our supervisor in which we describe and walk through our design, while receiving his feedback.
 
-\wss{Remember you have MG and MIS checklists}
+Additionally, the design shall be reviewed by all team members to ensure technical details are correct.
+
+\subsection{Verification and Validation Plan Verification Plan}
+
+The verification of this verification plan shall be outsourced to independent, third-party auditors, also known as ``Teaching Assistants''. These auditors shall review this document and evaluate it according to a predetermined set of criteria, eventually producing an evaluation score, also known as a ``grade''. This ``grade'' shall be given to the writers of this plan, also known as the ``students'', to serve as a gauge for the quality of this document.
 
 \subsection{Implementation Verification Plan}
 
-\wss{You should at least point to the tests listed in this document and the unit
-  testing plan.}
+To test our implementation, the team shall implement all of the unit tests and end-to-end tests listed in this document, in addition to further unit tests discovered to be useful after implementation has been completed.
 
-\wss{In this section you would also give any details of any plans for static verification of
-  the implementation.  Potential techniques include code walkthroughs, code
-  inspection, static analyzers, etc.}
+During development pull requests must be reviewed by at least one other team member before they can be merged into the main branch. This is a means of verification of the implementation via manual code inspection.
 
 \subsection{Automated Testing and Verification Tools}
 
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-  Python.}
+The tools we will be using, including testing libraries, frameworks, and continuous integration tools, have already been thoroughly detailed in our development plan. Below is a brief summary, but it is recommended that the reader look at "Section 6 - Technology" of our development plan to read a complete description.
 
-\wss{The details of this section will likely evolve as you get closer to the
-  implementation.}
+For the front-end, the linter we are using is ESLint. ESLint can also be used to ensure full code coverage. Our front-end testing frameworks will be Jest and Cypress. Jest will be used for unit testing, while Cypress will be used for end-to-end testing.
+
+For the back-end, the linter we are using is pylint. Our back-end testing framework will be pytest.
+
+To facilitate continuous integration, we are using GitHub actions. As an additional tool that was not mentioned in our development plan becuse we had not planed to deploy our project, we are using Vercel to facilitate continuous deployment of both our main branch and all development branches of our GitHub repository.
 
 \subsection{Software Validation Plan}
+
+There is no external data that can be used for validation. Instead review sessions with our stakeholder shall be conducting to validate our software.
 
 \wss{If there is any external data that can be used for validation, you should
   point to it here.  If there are no plans for validation, you should state that
   here.}
+
+\wss{You might want to use review sessions with the stakeholder to check that
+the requirements document captures the right requirements.  Maybe task based
+inspection?}
+
+\wss{This section might reference back to the SRS verification section.}
 
 \section{System Test Description}
 	
@@ -157,218 +224,803 @@ This document ... \wss{provide an introductory blurb and roadmap of the
   level of document structure can be removed.}
 
 \wss{Include a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good.}
+  cover the requirements.  References to the SRS would be good here.}
 
-\subsubsection{Area of Testing1}
+The following subsections cover the various functionalities of the system. Each set of test cases relate to a specific subsystem. Each test case relates to one ore more functional requirements as specified in the SRS.
+
+\subsubsection{Shop Owner Registration}
 
 \wss{It would be nice to have a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good.  If a section
+  cover the requirements.  References to the SRS would be good here.  If a section
   covers tests for input constraints, you should reference the data constraints
   table in the SRS.}
 		
-\paragraph{Title for Test}
+%\paragraph{Front End Testing}
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{FT-RT-1\\}
 
-Control: Manual versus Automatic
+Control: Automatic
 					
-Initial State: 
+Initial State: Add Shop Page
 					
-Input: 
+Input: Valid shop details, such as address, availability and contact information is entered.
 					
-Output: \wss{The expected result for the given inputs}
+Output: The shop is added to the shop owner profile.
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+How test will be performed: The test will be performed using the \textbf{cypress} library to automatically fill in valid shop registration details.
 
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
+\item{FT-RT-1.1\\}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+Control: Manual
+					
+Initial State: Back end server is running and a shop was added through the automatic testing
+					
+Input: None
+					
+Output: The shop is added to the shop owner profile database.
 
-How test will be performed: 
+How test will be performed: The test will be performed by manually checking the database to verify that the shop was correctly added to the shop owner profile.
+
+
+\item{FT-RT-2\\}
+
+Control: Automatic
+					
+Initial State: Registration Page
+					
+Input: A valid username, email, and password are entered.
+					
+Output: The user is redirected to the 'Add Shop Page'.
+					
+How test will be performed: The test will be performed using the \textbf{cypress} library to automatically fill in valid registration details to verify if the user is redirected to the 'Add Shop Page'.
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\subsubsection{Employee Account Creation, Edit and Deletion}
 
-...
+\begin{enumerate}
+
+\item{FT-RT-3\\}
+
+Control: Manual
+					
+Initial State: Invite employee page
+					
+Input: Employee emails are entered.
+					
+Output: The employees receive an email allowing them to sign up.
+
+How test will be performed: The test will be performed by manually entering in emails to the invite employee page and then manually verifying that the emails were sent and received by the intended accounts.
+
+\item{FT-RT-4\\}
+
+Control: Automatic
+					
+Initial State: Employee email invitation received
+					
+Input: Valid employee registration data including email, name, username and password is entered.
+					
+Output: Employee added to shop page.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library to verify that employees can create an account with valid registration information and join a shop using a given email invitation.
+
+\item{FT-RT-5\\}
+
+Control: Automatic
+					
+Initial State: Shop owner or employee account created and logged in
+					
+Input: Valid shop owner or employee account information different from registration information is entered.
+					
+Output: Shop owner or employee account is updated with new information.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library to verify that shop owners and employees can edit their account information by entering valid data and confirming the account is updated with the new data.
+
+\item{FT-RT-6\\}
+
+Control: Automatic
+					
+Initial State: Employee account created and logged in
+					
+Input: Employee account requests to be deleted.
+					
+Output: Employee account is deleted and removed from shop.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library to verify that employees can delete their account and the account will be removed from the shop it was associated with.
+
+\item{FT-RT-7\\}
+
+Control: Manual
+					
+Initial State: Shop owner logged in and shop has employees assigned to it.
+					
+Input: Shop owner can view employee list and from there they can view employees, add employees, remove employees, search for employees and filter the employee list.
+					
+Output: The shop employee has been added or removed and the employee list has been filtered or returned the search results.
+
+How test will be performed: The test will be performed manually by viewing the employee page on a shop owner account and manually adding an employee, removing an employee, filtering the employee list and searching the employee list.
+
+\end{enumerate}
+
+\subsubsection{Shop Owner/Employee Login}
+
+\begin{enumerate}
+
+\item{FT-RT-8\\}
+
+Control: Automatic
+					
+Initial State: Shop owner or employee account created
+					
+Input: Valid username and password is entered for a shop owner or employee account.
+					
+Output: Shop owner or employee is logged in with access to their information and functionality.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library by entering a valid username and password for a shop owner or employee account and then checking that the user is logged in with access to their relevant data.
+
+\item{FT-RT-9\\}
+
+Control: Automatic
+					
+Initial State: Shop owner or employee account created
+					
+Input: Valid account email or username is entered and then new valid password is entered.
+					
+Output: User account password is changed.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library by entering a valid username or email for a shop owner or employee account then confirming that they receive a password reset email. It will then test that the user can change their password by entering a new valid password and verifying that they can log in with the new password.
+
+\end{enumerate}
+
+\subsubsection{Quotes, Appointments and Work Orders}
+\begin{enumerate}
+
+\item{FT-RT-10\\}
+
+Control: Automatic
+					
+Initial State: Submit quote request page
+					
+Input: Quote request data is entered.
+					
+Output: Quote request is submitted and can be viewed by a shop owner for a shop that the quote request was sent to.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library by entering valid quote request data and submitting the quote request to a list of selected shops.
+
+\item{FT-RT-11\\}
+
+Control: Automatic
+					
+Initial State: Quote request is received.
+					
+Input: Quote information is entered and sent to a customer from a shop owner.
+					
+Output: Quote is created and can be viewed by customer.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library by entering valid quote information for a received quote request. Then the test case will verify that the quote has been created and received by the customer.
+
+\item{FT-RT-12\\}
+
+Control: Automatic
+					
+Initial State: Quote is received by customer.
+					
+Input: Appointment is created by customer and shop owner can accept, reject and assign the appointment.
+					
+Output: The appointment has been accepted, rejected or assigned to an employee by a shop owner.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library by sending a valid appointment request from a customer and then the shop owner can accept, reject or assign the appointment.
+
+\item{FT-RT-13\\}
+
+Control: Automatic
+					
+Initial State: Quote is accepted by a customer, customer creates appointment and appointment accepted by shop owner.
+					
+Input: Work order is created by automatically obtaining relevant information from the accepted quote.
+					
+Output: Work Order has been created.
+
+How test will be performed: The test will be performed using the \textbf{pytest} library to verify that the work order was correctly created in the database.
+
+\item{FT-RT-14\\}
+
+Control: Automatic
+					
+Initial State: Work order is created.
+					
+Input: Shop owner can send work order to the customer.
+					
+Output: Customer has received and can view the work order.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library by sending a work order to customer and verifying that the customer it was sent to has received the work order and can view it.
+
+\item{FT-RT-15\\}
+
+Control: Automatic
+
+Initial State: Shop receives appointment request from customer.
+
+Input: Shop employee can view and accept appointment requests.
+
+Output: Appointment is created.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library to verify that the appointment is created after the employee accepts the appointment request and that employees can view the appointment after its creation.
+
+\item{FT-RT-16\\}
+
+Control: Automatic
+
+Initial State: Shop is created and shop owner invites employees.
+
+Input: Shop employees can edit shop availability.
+
+Output: Shop availability updates to reflect changes made by employees.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library to verify that changes made to shop availability by employees are visible after changes are saved.
+
+\item{FT-RT-17\\}
+
+Control: Automatic
+
+Initial State: Shop completes a work order for a customer.
+
+Input: Customers can submit rework orders.
+
+Output: Shop receives rework order request from customer.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library to verify that the rework order is visible to the shop after the customer submits the rework order request.
+
+\item{FT-RT-18\\}
+
+Control: Automatic
+
+Initial State: Quotes are created.
+
+Input: Shop owners and employees can view, search for, and filter quotes.
+
+Output: Quotes are displayed when selected or searched for.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library to verify that the proper quotes are displayed when selected, filtered, or searched for.
+
+\item{FT-RT-19\\}
+
+Control: Automatic
+
+Initial State: Work orders are created.
+
+Input: Shop owners and employees can view, search for, and filter past and upcoming work orders.
+
+Output: Work orders are displayed when selected or searched for.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library to verify that the correct work orders are displayed when selected, filtered, or searched for.
+
+\item{FT-RT-20\\}
+
+Control: Automatic
+
+Initial State: Appointment is created.
+
+Input: Work order is created automatically when an appointment is booked and deleted automatically when appointment is cancelled.
+
+Output: Both the appointment and work order become visible upon creation and both are no longer visible after cancellation.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library to verify that both the appointment and the work order appear when the appointment is created and both disappear when the appointment is cancelled.
+
+\item{FT-RT-21\\}
+
+Control: Automatic
+
+Initial State: Work orders are created.
+
+Input: Shop owners and employees can assign work orders to employees.
+
+Output: Employees receive work order assignment.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library to verify that the correct work order is assigned to the correct employee.
+
+\end{enumerate}
+
+\subsubsection{View/Edit Shops and Shop Details}
+
+\begin{enumerate}
+
+\item{FT-RT-22\\}
+
+Control: Automatic
+					
+Initial State: Shop is created by shop owner
+					
+Input: Shop owner can edit their shop information.
+					
+Output: The shop information has been edited with the new information.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library to edit a shop's information with new information and then testing that the information has been updated with the new information that was inputted.
+
+\item{FT-RT-23\\}
+
+Control: Automatic
+
+Initial State: Shop and shop profile are created.
+
+Input: Any user can view a shop profile.
+
+Output: Shop profile displayed to the user.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library to verify that the shop profile is visible when a user chooses to view it.
+
+\item{FT-RT-24\\}
+
+Control: Automatic
+
+Initial State: Customers access the system.
+
+Input: Customers can view, search for, and filter shops.
+
+Output: Shops are displayed to customers when selected and searched for.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library to verify that the correct shop is displayed to the customer when selected, filtered, or searched for.
+
+\end{enumerate}
+
+\subsubsection{Call and Chat Functionality}
+
+\begin{enumerate}
+    \item{FT-RT-25\\}
+
+Control: Automatic and Manual
+
+Initial State: Shop is created and shop owner invites employees.
+
+Input: Shop owners and employees can call and chat with customers.
+
+Output: Shop owners and employees communicate with customers through the call and chat functionality.
+
+How test will be performed: The test for the chat functionality will be performed using the \textbf{cypress} library to verify that shops and customers can send and receive messages to and from each other. The test for the call functionality will be performed manually to ensure that shops and customers can also correspond through audio calls.
+\end{enumerate}
 
 \subsection{Tests for Nonfunctional Requirements}
 
 \wss{The nonfunctional requirements for accuracy will likely just reference the
   appropriate functional tests from above.  The test cases should mention
-  reporting the relative error for these tests.}
+  reporting the relative error for these tests.  Not all projects will
+  necessarily have nonfunctional requirements related to accuracy}
 
 \wss{Tests related to usability could include conducting a usability test and
-  survey.}
+  survey.  The survey will be in the Appendix.}
 
-\subsubsection{Area of Testing1}
+\wss{Static tests, review, inspections, and walkthroughs, will not follow the
+format for the tests given below.}
+
+The following subsections are divided according to non-functional requirement sections in the SRS. Each subsection contains tests that verify relevant non-functional requirements.
+
+\subsubsection{Look and Feel}
 		
-\paragraph{Title for Test}
+%\paragraph{Title for Test}
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{NFT-LF-1}
 
-Type: 
+Type: Dynamic, Manual
 					
-Initial State: 
+Initial State: The application is deployed to a web server.
 					
-Input/Condition: 
+Input/Condition: The application is opened in front of the users.
 					
-Output/Result: 
+Output/Result: Within a few minutes, 90\% of the users should start using the application without external prompt.
 					
-How test will be performed: 
-					
-\item{test-id2\\}
+How test will be performed: A sample group of users will be shown the application on individual computers. No external commands will be given. Within a few minutes, at least 90\% of the users should start exploring the application. This would reflect if the app is visually appealing.
 
-Type: Functional, Dynamic, Manual, Static etc.
+\item{NFT-LF-2}
+
+Type: Dynamic, Manual
 					
-Initial State: 
+Initial State: The application is deployed to a web server.
 					
-Input: 
+Input/Condition: A sample of users are asked use the application.
 					
-Output: 
+Output/Result: After a few minutes using the application, 85\% of a representative sample of users should agree that the application has a professional and reliable feel.
 					
-How test will be performed: 
+How test will be performed: After being introduced to the application for the first time, a group of individuals representing the target audience will be questioned about whether they feel that the application is professional and trustworthy. It should be considered successful if more than 85\% of individuals agree that the application looks professional and trustworthy.
+
+\item{NFT-LF-3}
+
+Type: Structural, Static, Manual
+					
+Initial State: The application source code is downloaded onto a computer.
+					
+Input: A team of developers is asked to go through the code and conduct an informal review of the fonts and styles used.
+					
+Output: The developers shall not be able to find inconsistencies in the fonts and styles used throughout the application.
+					
+How test will be performed: A team of developers will be given the source code on a computer and be asked to review the code to find inconsistencies in the fonts and styles used throughout the application. The developers should not be able to find any such inconsistencies.
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\subsubsection{Usability}
+\begin{enumerate}
+\item{NFT-UT-1}
 
-...
+Type: Dynamic, Manual
+					
+Initial State: The application is deployed to a web server.
+					
+Input/Condition: A diverse group of users is asked to navigate through the different pages and perform certain actions.
+					
+Output/Result: The actions requested should be easily completed by at least 80\% of the users who are 16 years of age or older in the time allotted.
+					
+How test will be performed: A diverse group of users (including users of age 16 and above) will be asked to navigate and perform certain tasks across the different pages of the application. If at least 80\% of the users are able to complete the tasks in a given time frame, it should be considered a success.
+
+\item{NFT-UT-2}
+
+Type: Dynamic, Manual
+					
+Initial State: The application is deployed and launched on a web server.
+					
+Input/Condition: Users are asked to interpret the meaning of different icons used throughout the application.
+					
+Output/Result: At least 90\% of the users are able to recognize all of the icons used. 
+					
+How test will be performed: A diverse group of users will be shown the different pages of the application and asked to interpret the meaning of the various icons. It will be considered successful if more than 90\% of the users are able to correctly decipher the meaning of all of the icons.
+\end{enumerate}
+
+\subsubsection{Performance}
+\begin{enumerate}
+\item{NFT-PF-1}
+
+Type: Dynamic, Automatic
+					
+Initial State: The application is deployed and launched on a web server.
+					
+Input/Condition: Messages are sent from one user to another.
+					
+Output/Result: Messages should be received by the receiving user within 2 seconds.
+					
+How test will be performed: The \textbf{cypress} library will be used to simulate two instances of users. One instance will send a message to another to verify if the messages are received within the desired time. If the messages are received within 2 seconds for 90 percent of the times, and less than 5 seconds for the rest of the times, then the test would be considered successful.
+
+\item{NFT-PF-2}
+
+Type: Dynamic, Automatic
+					
+Initial State: The application is deployed and launched on a web server.
+					
+Input/Condition: Different pages of the application are visited.
+					
+Output/Result: The loading time between different pages shall be no more than 5 seconds.
+					
+How test will be performed: The \textbf{cypress} library will be used to simulate navigation between different pages. The test will be considered successful if the application takes less than 2 seconds 95\% of times, and less than 4 seconds rest of the times.
+\end{enumerate}
+
+\subsubsection{Operational and Environmental}
+\begin{enumerate}
+\item{NFT-OE-1}
+
+Type: Dynamic, Manual
+					
+Initial State: The application is deployed on a web server and is made available via a URL.
+					
+Input/Condition: Users from different parts of the world are asked to access the application using the URL.
+					
+Output/Result: The application is accessible regardless of the user's location.
+					
+How test will be performed: Users from around the world will be asked to access the website using the provided URL. If the application is accessible from everywhere, this test would be considered a success.
+\end{enumerate}
+
+\subsubsection{Maintainability and Support}
+\begin{enumerate}
+\item{NFT-MS-1}
+
+Type: Dynamic, Manual
+					
+Initial State: The application is deployed on a web server.
+					
+Input/Condition: Install and launch the application on different mobile and desktop devices, and on modern web browsers.
+					
+Output/Result: The application should launch successfully on all devices tested on.
+					
+How test will be performed: The application will be deployed on a web server. It will be accessed via a URL and run on modern web browsers. It will also be installed on different mobile and desktop devices as a Progressive Web App (PWA). This will be used to verify if the application can operate on multiple platforms.
+\end{enumerate}
+
+\subsubsection{Security}
+\begin{enumerate}
+\item{NFT-ST-1}
+
+Type: Structural, Static, Manual
+					
+Initial State: The application source code is downloaded onto a computer.
+					
+Input/Condition: A security firm is asked to inspect the code to find potential areas where log reports can leak from.
+					
+Output/Result: The security firm is unable to find any security risks related to log reports.
+					
+How test will be performed: A security firm will be asked to inspect the code and find security risks where log reports can get accessed from someone other than the developers or other members of the company. The test will be considered successful if the security firm can certify that only company employees and developers have access to the internal bug and crash log reports.
+
+\item{NFT-ST-2}
+
+Type: Structural, Static, Manual
+					
+Initial State: The application source code is downloaded onto a computer.
+					
+Input/Condition: A security firm is asked to inspect the code to determine if there is a flaw that allows users to directly access the database.
+					
+Output/Result: The security firm is unable to find any security risks related to database access.
+					
+How test will be performed: A security firm will be asked to inspect the code to see if there is a vulnerability that enables users to access the database directly. The test will be considered successful if the security firm can certify that the database cannot be accessed by the users directly.
+
+\item{NFT-ST-3}
+
+Type: Dynamic, Automatic
+					
+Initial State: The application is deployed on a web server.
+					
+Input/Condition: The application is launched.
+					
+Output/Result: A notification is displayed to notify the user that the application uses cookies.
+					
+How test will be performed: The \textbf{cypress} library will be used to open the application and verify if a notification is shown related to storing of cookies.
+\end{enumerate}
+
+
+\pagebreak
 
 \subsection{Traceability Between Test Cases and Requirements}
 
 \wss{Provide a table that shows which test cases are supporting which
   requirements.}
+  
+The following tables show the traceability between functional and non-functional requirements and the previously defined test cases.
 
-\section{Unit Test Description}
+\begin{table}[H]
+  \centering
+  \caption{Traceability Table for Functional Test Cases and Requirements}
+  \label{tab:FRTrace}
 
-\wss{Reference your MIS and explain your overall philosophy for test case
-  selection.}  
-\wss{This section should not be filled in until after the MIS has
-  been completed.}
+ \makebox[\textwidth]{\begin{tabular}{|c|c|} 
+    \hline
+     \textbf{Test Case ID} & \textbf{Related Requirement(s)}\\ 
+    \hline 
+    \hline
+    FT-RT-1 & FR-1\\
+    \hline
+     FT-RT-1.1 & FR-1\\
+    \hline
+    FT-RT-2 & FR-2\\
+    \hline
+    FT-RT-3 & FR-3\\
+    \hline
+    FT-RT-4 & FR-4\\
+    \hline
+    FT-RT-5 & FR-6\\
+    \hline
+    FT-RT-6 & FR-7\\
+    \hline
+    FT-RT-7 & FR-5, FR-13, FR-14\\
+    \hline
+    FT-RT-8 & FR-8\\
+    \hline
+    FT-RT-9 & FR-9\\
+    \hline
+    FT-RT-10 & FR-29\\
+    \hline
+    FT-RT-11 & FR-10, FR-11\\
+    \hline
+    FT-RT-12 & FR-12\\
+    \hline
+\end{tabular}
+\quad
+  \begin{tabular}{|c|c|} 
+    \hline
+     \textbf{Test Case ID} & \textbf{Related Requirement(s)}\\ 
+    \hline 
+    \hline 
+    FT-RT-13 & FR-15\\
+    \hline
+    FT-RT-14 & FR-16\\
+    \hline
+    FT-RT-15 & FR-18, FR-28\\
+    \hline
+    FT-RT-16 & FR-19\\
+    \hline
+    FT-RT-17 & FR-21\\
+    \hline
+    FT-RT-18 & FR-22\\
+    \hline
+    FT-RT-19 & FR-23\\
+    \hline
+    FT-RT-20 & FR-25, FR-26, FR-28\\
+    \hline
+    FT-RT-21 & FR-27\\
+    \hline
+    FT-RT-22 & FR-17\\
+    \hline 
+    FT-RT-23 & FR-20\\
+    \hline
+    FT-RT-24 & FR-30\\
+    \hline
+    FT-RT-25 & FR-24\\
+    \hline
+\end{tabular}}
+\end{table}
 
-\subsection{Unit Testing Scope}
+\begin{table}[H]
+  \centering
+  \caption{Traceability Table for Non-Functional Test Cases and Requirements}
+  \label{tab:NFRTrace}
+ \makebox[\textwidth]{\begin{tabular}{|c|c|} 
+    \hline
+     \textbf{Test Case ID} & \textbf{Related Requirement(s)}\\ 
+    \hline 
+    \hline
+    NFT-LF-1 & NFR-1\\
+    \hline
+    NFT-LF-2 & NFR-4\\
+    \hline
+    NFT-LF-3 & NFR-5\\
+    \hline
+    NFT-UT-1 & NFR-6, NFR-7\\
+    \hline
+    NFT-UT-2 & NFR-10\\
+    \hline
+    NFT-PF-1 & NFR-11\\
+    \hline
+    NFT-PF-2 & NFR-12\\
+    \hline
+    NFT-OE-1 & NFR-19\\
+    \hline
+    NFT-MS-1 & NFR-21\\
+    \hline
+    NFT-ST-1 & NFR-22\\
+    \hline
+    NFT-ST-2 & NFR-23\\
+    \hline
+    NFT-ST-3 & NFR-25\\
+    \hline
+\end{tabular}}
+\end{table}
 
-\wss{What modules are outside of the scope.  If there are modules that are
-  developed by someone else, then you would say here if you aren't planning on
-  verifying them.  There may also be modules that are part of your software, but
-  have a lower priority for verification than others.  If this is the case,
-  explain your rationale for the ranking of module importance.}
+\section{Non-dynamic Test Description}
 
-\subsection{Tests for Functional Requirements}
+This section will go over the any non-dynamic tests that the team plans to use to verify the software.
 
-\wss{Most of the verification will be through automated unit testing.  If
-  appropriate specific modules can be verified by a non-testing based
-  technique.  That can also be documented in this section.}
+\subsection{Code Review}
 
-\subsubsection{Module 1}
+The utilization of version control alongside code review will be used to systematically find faults in the software before it is integrated into the main branch. At least 1 approval of any modifications to the codebase is required to be gotten before the modifications can be merged. In this way it is hoped that any bugs with code are found before they are merged (even if that notion is unrealistic).
 
-\wss{Include a blurb here to explain why the subsections below cover the module.
-  References to the MIS would be good.  You will want tests from a black box
-  perspective and from a white box perspective.  Explain to the reader how the
-  tests were selected.}
+\subsection{Document Review}
+
+Document review will be carried out as required on documents at fixed times, at milestones of the project. They will be carried on each document as follows:
 
 \begin{enumerate}
+    \item Upon completion of revision 0.
+    \item Upon the completion of any related document.
+    \item Before work is carried out to create the final project.
+    \item Before the deadline for the final documentation.
+\end{enumerate}
 
-\item{test-id1\\}
+\noindent Document review may or may not include the supervisor depending on the relevance to the supervisor, and/or the availability of the supervisor. In the case the project supervisor is available, feedback will be elicited from him in meetings to ensure that documents remain relevant to the scope of the project. In the case that the supervisor is not available, internal review will be carried out on each document to ensure it aligns with the current state of the project.
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
+\subsection{Walkthroughs}
+
+Informal walkthroughs will be performed, as needed, when a given team member has issues thinking of test cases for a given component. As such, the primary purpose of walkthroughs for this project is to generate test cases, and figure out expected outputs to said test cases. The given team member and at least one other team member will group together, inspect a piece of code, and brainstorm different test cases. Once a valid test case is thought up, the group will draft different outputs to different inputs, making sure to include normal inputs, fringe cases, etc. Test cases generated through this method will then be turned into dynamic tests that will be run by the continuous integration portion of this project on all new changes to the system.
+
+% \section{Unit Test Description}
+
+% \wss{Reference your MIS (detailed design document) and explain your overall
+%   philosophy for test case selection.}  
+% \wss{This section should not be filled in until after the MIS (detailed design
+%   document) has been completed.}
+
+% \subsection{Unit Testing Scope}
+
+% \wss{What modules are outside of the scope.  If there are modules that are
+%   developed by someone else, then you would say here if you aren't planning on
+%   verifying them.  There may also be modules that are part of your software, but
+%   have a lower priority for verification than others.  If this is the case,
+%   explain your rationale for the ranking of module importance.}
+
+% \subsection{Tests for Functional Requirements}
+
+% \wss{Most of the verification will be through automated unit testing.  If
+%   appropriate specific modules can be verified by a non-testing based
+%   technique.  That can also be documented in this section.}
+
+% \subsubsection{Module 1}
+
+% \wss{Include a blurb here to explain why the subsections below cover the module.
+%   References to the MIS would be good.  You will want tests from a black box
+%   perspective and from a white box perspective.  Explain to the reader how the
+%   tests were selected.}
+
+% \begin{enumerate}
+
+% \item{test-id1\\}
+
+% Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+%   be automatic}
 					
-Initial State: 
+% Initial State: 
 					
-Input: 
+% Input: 
 					
-Output: \wss{The expected result for the given inputs}
+% Output: \wss{The expected result for the given inputs}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+% Test Case Derivation: \wss{Justify the expected value given in the Output field}
 
-How test will be performed: 
+% How test will be performed: 
 					
-\item{test-id2\\}
+% \item{test-id2\\}
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
+% Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+%   be automatic}
 					
-Initial State: 
+% Initial State: 
 					
-Input: 
+% Input: 
 					
-Output: \wss{The expected result for the given inputs}
+% Output: \wss{The expected result for the given inputs}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+% Test Case Derivation: \wss{Justify the expected value given in the Output field}
 
-How test will be performed: 
+% How test will be performed: 
 
-\item{...\\}
+% \item{...\\}
     
-\end{enumerate}
+% \end{enumerate}
 
-\subsubsection{Module 2}
+% \subsubsection{Module 2}
 
-...
+% ...
 
-\subsection{Tests for Nonfunctional Requirements}
+% \subsection{Tests for Nonfunctional Requirements}
 
-\wss{If there is a module that needs to be independently assessed for
-  performance, those test cases can go here.  In some projects, planning for
-  nonfunctional tests of units will not be that relevant.}
+% \wss{If there is a module that needs to be independently assessed for
+%   performance, those test cases can go here.  In some projects, planning for
+%   nonfunctional tests of units will not be that relevant.}
 
-\wss{These tests may involve collecting performance data from previously
-  mentioned functional tests.}
+% \wss{These tests may involve collecting performance data from previously
+%   mentioned functional tests.}
 
-\subsubsection{Module ?}
+% \subsubsection{Module ?}
 		
-\begin{enumerate}
+% \begin{enumerate}
 
-\item{test-id1\\}
+% \item{test-id1\\}
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
+% Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+%   be automatic}
 					
-Initial State: 
+% Initial State: 
 					
-Input/Condition: 
+% Input/Condition: 
 					
-Output/Result: 
+% Output/Result: 
 					
-How test will be performed: 
+% How test will be performed: 
 					
-\item{test-id2\\}
+% \item{test-id2\\}
 
-Type: Functional, Dynamic, Manual, Static etc.
+% Type: Functional, Dynamic, Manual, Static etc.
 					
-Initial State: 
+% Initial State: 
 					
-Input: 
+% Input: 
 					
-Output: 
+% Output: 
 					
-How test will be performed: 
+% How test will be performed: 
 
-\end{enumerate}
+% \end{enumerate}
 
-\subsubsection{Module ?}
+% \subsubsection{Module ?}
 
-...
+% ...
 
-\subsection{Traceability Between Test Cases and Modules}
+% \subsection{Traceability Between Test Cases and Modules}
 
-\wss{Provide evidence that all of the modules have been considered.}
+% \wss{Provide evidence that all of the modules have been considered.}
 				
 \bibliographystyle{plainnat}
 
@@ -378,15 +1030,126 @@ How test will be performed:
 
 \section{Appendix}
 
-This is where you can place additional information.
+\subsection{Usability Survey Questions}
 
-\subsection{Symbolic Parameters}
+\label{sec:survey}
+The following survey will be filled out by members of the survey group to validate the system's usability.
+\newcommand*\emptycirc[1][1ex]{\tikz\draw (0,0) circle (#1);} 
+\begin{mdframed}[linewidth=1pt]
+\begin{center}
+{\bf \large \progname{} Survey}\\[\baselineskip]
+\end{center}
+\noindent Please fill out the survey after using the application.\\
 
-The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.
+\noindent {\bf Time spent using software:}\\
 
-\subsection{Usability Survey Questions?}
+\noindent {\bf Device/OS used:}\\
 
-\wss{This is a section that would be appropriate for some projects.}
+\noindent Provide a rating on a scale from 1 to 5 (where 1 represents a poor review and 5 represents a strong review) in each of these questions by filling in the number of circles corresponding to your desired rating. \\[\baselineskip]
+\noindent \begin{table}[H]
+\begin{tabularx}{\textwidth}{@{}p{7cm}X@{}}
+{\bf How easy is the app to use?} & \emptycirc \ \ \ \ \ \emptycirc \ \ \ \ \ \emptycirc \ \ \ \ \ \emptycirc \ \ \ \ \ \emptycirc \\
+& {1 \ \ \ \ \ \ 2 \ \ \ \ \ 3 \ \ \ \ \  4 \ \ \ \ \ \  5}\\[\baselineskip]\\
+{\bf How appealing is the app visually?} & \emptycirc \ \ \ \ \ \emptycirc \ \ \ \ \ \emptycirc \ \ \ \ \ \emptycirc \ \ \ \ \ \emptycirc \\
+& {1 \ \ \ \ \ \ 2 \ \ \ \ \ 3 \ \ \ \ \  4 \ \ \ \ \ \  5}\\[\baselineskip]\\
+\end{tabularx}
+\end{table}
+\end{mdframed}
+\pagebreak
+\begin{mdframed}[linewidth=1pt]
+\begin{center}
+{\bf \large \progname{} Survey}\\[\baselineskip]
+\end{center}
+\noindent Continued.\\
+
+
+\noindent \begin{table}[H]
+\begin{tabularx}{\textwidth}{@{}p{7cm}X@{}}
+{\bf How professional and trustworthy does the app look?} & \emptycirc \ \ \ \ \ \emptycirc \ \ \ \ \ \emptycirc \ \ \ \ \ \emptycirc \ \ \ \ \ \emptycirc \\
+& {1 \ \ \ \ \ \ 2 \ \ \ \ \ 3 \ \ \ \ \  4 \ \ \ \ \ \  5}\\[\baselineskip]\\
+{\bf How responsive is the app?} & \emptycirc \ \ \ \ \ \emptycirc \ \ \ \ \ \emptycirc \ \ \ \ \ \emptycirc \ \ \ \ \ \emptycirc \\
+& {1 \ \ \ \ \ \ 2 \ \ \ \ \ 3 \ \ \ \ \  4 \ \ \ \ \ \  5}\\[\baselineskip]\\
+{\bf How easy are the icons to recognize?} & \emptycirc \ \ \ \ \ \emptycirc \ \ \ \ \ \emptycirc \ \ \ \ \ \emptycirc \ \ \ \ \ \emptycirc \\
+& {1 \ \ \ \ \ \ 2 \ \ \ \ \ 3 \ \ \ \ \  4 \ \ \ \ \ \  5}\\[\baselineskip]\\
+\end{tabularx}
+\end{table}
+\end{mdframed}
+
+
+\newpage{}
+\section*{Appendix --- Reflection}
+\setcounter{table}{0}
+\renewcommand{\thetable}{A\arabic{table}}
+
+The successful completion of this verification and validation plan is dependent on  the team's collective acquisition of necessary testing skills. The skills and/or knowledge that each team member will need are listed in Table \hyperref[tab:reflectionSkills]{A1}.
+
+%\renewcommand{\arraystretch}{1.8}%
+\begin{longtable}{|>{\centering\arraybackslash}m{.22\linewidth}|>{\centering\arraybackslash}m{.78\linewidth}| }
+\caption{Team Member Required Knowledge List}
+\label{tab:reflectionSkills}
+
+\\ \hline
+\textbf{Team Member} & \textbf{Required Knowledge} \\
+\hline
+\endfirsthead
+
+\multicolumn{2}{c}
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\hline \multicolumn{1}{|c|}{\textbf{Team Member}} & \multicolumn{1}{c|}{\textbf{Required Knowledge}} \\ \hline 
+\endhead
+
+\hline \multicolumn{2}{|r|}{{Continued on next page}} \\ \hline
+\endfoot
+
+\endlastfoot
+
+Tevis Doe &  \begin{itemize}
+    \item End-to-End Testing
+    \item User Surveying
+    \item Jest Testing Framework
+\end{itemize} \\
+\hline
+Caitlin Bridel &  \begin{itemize}
+    \item Jest testing framework
+    \item Cypress testing framework
+\end{itemize}\\ 
+\hline
+Gilbert Cherrie & \begin{itemize}
+    \item End-to-End Testing
+    \item User Surveying
+\end{itemize} \\ 
+\hline
+Rachel Johnson & \begin{itemize}
+    \item Jest testing framework
+    \item Cypress testing framework
+\end{itemize} \\ 
+\hline
+Harkeerat Kanwal & \begin{itemize}
+    \item Jest testing framework
+    \item Cypress testing framework
+\end{itemize} \\ 
+\hline
+Himanshu Aggarwal & \begin{itemize}
+    \item Pytest testing library
+    \item Cypress testing framework
+\end{itemize} \\ 
+\hline
+\end{longtable}
+
+\subsubsection*{Approaches}
+
+A possible approach to understanding the topic of End-to-End testing is to read online guides such as guru99 and browserstack. These websites provide an overview of relevant concepts, necessary steps and best practices. Another strategy is to watch tutorial Youtube videos that explain the topic. Both approaches are free but quality Youtube videos are less readily available. 
+
+To understand how to effectively survey users, team members can use online content such as Youtube videos and articles that define strategies to survey users. This approach is free and widely available online. Another strategy would be to learn through trial and error by creating small surveys and surveying friends and family to discover effective strategies. This method could provide hands-on, real-world experience but may be time consuming.
+
+To get familiar with Jest, Pytest and Cypress testing frameworks, team members can watch tutorial Youtube videos. These videos will provide an overarching crash course on the testing framework to allow team members to understand concepts and practices. Team members can also follow along on their own machines to further understand and have hands on learning. This approach would be free and easily accessible, but may not be as in-depth as other approaches. Another approach would be to take a Udemy course on the testing frameworks. This method will provide more hands-on learning but may also be much more time consuming. Finally, the team can use online documentation and tutorial websites to review the framework and get a better understanding of syntax and methods. This approach would require the team to dig through a lot of content and does not provide hands-on examples, but would be free and easily accessible.
+
+\subsubsection*{Chosen Strategies}
+
+To gain knowledge in end-to-end testing, the team has decided to use online written guides on websites such as browserstack and guru99. This will allow them to move at their own pace and take notes on the subject. It is free to access and the sites provide high quality explanations. If the team requires further knowledge, they will look to Youtube to fill in the gaps.
+
+To understand user surveying, the team will use online content such as videos and articles to discover best practices and apply it to the usability survey being used for this project. This is the least time-consuming approach and provides the best way to gain knowledge quickly. 
+
+To learn specific testing frameworks such as Jest, Pytest and Cypress, the team has chosen to use Youtube tutorials. Through research, the team was able to find a full and in-depth crash course on jest and cypress that will provide all the necessary knowledge with no cost to the team. To supplement our learning, the team will also reference official documentation for the frameworks to further understand syntax and specific methods we will be using.
 
 \end{document}
