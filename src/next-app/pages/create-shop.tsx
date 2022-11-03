@@ -66,6 +66,7 @@ const CreateShopPage: NextPage = () => {
           <TextField
             name="Number of Employees"
             placeholder="Enter number of employees"
+            inputType="number"
             onChange={setEmployees}
           />
         </div>
@@ -73,6 +74,7 @@ const CreateShopPage: NextPage = () => {
           <TextField
             name="Number of Service Bays"
             placeholder="Enter number of service bays"
+            inputType="number"
             onChange={setServiceBays}
           />
         </div>
