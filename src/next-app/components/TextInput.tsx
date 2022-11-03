@@ -27,6 +27,7 @@ type TextInputProps = {
     paddingTop?: string;
     paddingBottom?: string;
   };
+  error?: boolean;
 };
 
 type TextInputRef = {
@@ -90,7 +91,7 @@ const TextInput = forwardRef(
     return (
       <div className={styles.container}>
         <input
-          className={styles.input}
+          className={`${styles.input} ${props.error ? styles.error : ""}`}
           type={props.type ?? "text"}
           placeholder={props.placeholder ?? ""}
           value={value}
