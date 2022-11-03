@@ -6,6 +6,7 @@
   border-radius: 0.2em;
   color: white;
   font-weight: 600;
+  font-size: var(--font-size);
 }
 
 .button:enabled:hover {
