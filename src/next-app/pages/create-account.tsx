@@ -3,7 +3,7 @@ import { useState } from "react";
 import Button from "../components/Button";
 import TextField from "../components/TextField";
 import Header from "../components/Header";
-import styles from "../styles/pages/CreateAccountPage.module.css";
+import styles from "../styles/pages/CreateAccount.module.css";
 
 const CreateAccountPage: NextPage = () => {
   const [firstName, setFirstName] = useState("");
@@ -74,7 +74,9 @@ const CreateAccountPage: NextPage = () => {
             required
           />
         </div>
-        <Button title="Create" disabled={!valid} width="80%" />
+        <div className={styles["submit-container"]}>
+          <Button title="Create" disabled={!valid} width="80%" />
+        </div>
       </div>
     </div>
   );

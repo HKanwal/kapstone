@@ -4,8 +4,7 @@ import Button from "../components/Button";
 import TextField from "../components/TextField";
 import TextMultiField from "../components/TextMultiField";
 import Header from "../components/Header";
-import styles from "../styles/pages/CreateShopPage.module.css";
-import Chip from "../components/Chip";
+import styles from "../styles/pages/CreateShop.module.css";
 import DropdownField from "../components/DropdownField";
 
 const CreateShopPage: NextPage = () => {
@@ -77,12 +76,14 @@ const CreateShopPage: NextPage = () => {
             onChange={setServiceBays}
           />
         </div>
-        <Button
-          title="Create"
-          disabled={name.length < 1 || address.length < 1}
-          width="80%"
-          onClick={handleSubmit}
-        />
+        <div className={styles["submit-container"]}>
+          <Button
+            title="Create"
+            disabled={name.length < 1 || address.length < 1}
+            width="80%"
+            onClick={handleSubmit}
+          />
+        </div>
       </div>
     </div>
   );
