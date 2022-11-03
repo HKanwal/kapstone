@@ -19,3 +19,11 @@
   width: 80%;
   padding-bottom: 3vh;
 }
+
+.submit-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}

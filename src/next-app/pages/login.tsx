@@ -5,7 +5,7 @@ import TextField from "../components/TextField";
 import Header from "../components/Header";
 import Link from "../components/Link";
 import Modal from "../components/Modal";
-import styles from "../styles/pages/LoginPage.module.css";
+import styles from "../styles/pages/Login.module.css";
 
 const LoginPage: NextPage = () => {
   const [username, setUsername] = useState("");
@@ -21,8 +21,8 @@ const LoginPage: NextPage = () => {
   };
 
   const goToCreateShop = () => {
-    window.location.href = '/create-shop';
-  }
+    window.location.href = "/create-shop";
+  };
 
   return (
     <div className={styles.container}>
