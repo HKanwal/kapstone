@@ -10,6 +10,9 @@ type TextMultiFieldProps = {
   onChange?: (newVals: string[]) => void;
   inputType?: string;
 
+  /** Makes the first input highlighted red */
+  error?: boolean;
+
   /** Adds a red asterisk */
   required?: boolean;
 
@@ -27,16 +30,16 @@ const TextMultiField = (props: TextMultiFieldProps) => {
   };
 
   const addTextInput = () => {
-    setVals(oldVals => {
-      return [...oldVals, ""]
+    setVals((oldVals) => {
+      return [...oldVals, ""];
     });
   };
 
   const removeTextInput = (i: number) => {
-    setVals(oldVals => {
+    setVals((oldVals) => {
       return [...oldVals.slice(0, i), ...oldVals.slice(i + 1)];
     });
-  }
+  };
 
   return (
     <div className={styles.container}>
@@ -45,29 +48,28 @@ const TextMultiField = (props: TextMultiFieldProps) => {
           {props.name}
           {props.required ? <span className={styles.asterisk}>*</span> : <></>}
         </span>
-        {
-          vals.map((val, i) => {
-            return (
-              <div className={styles['text-input-container']} key={i}>
-                <TextInput
-                  placeholder={props.placeholder}
-                  width={props.width}
-                  value={val}
-                  onChange={(newVal) => handleChange(i, newVal)}
-                  type={props.inputType}
-                  onRemove={i > 0 ? () => removeTextInput(i) : undefined}
-                />
-              </div>
-            );
-          })
-        }
-        {
-          (!!props.multi) ?
-            <div className={styles['link-container']}>
-              <Link text={`+ ${props.multi}`} onClick={addTextInput} />
+        {vals.map((val, i) => {
+          return (
+            <div className={styles["text-input-container"]} key={i}>
+              <TextInput
+                placeholder={props.placeholder}
+                width={props.width}
+                value={val}
+                onChange={(newVal) => handleChange(i, newVal)}
+                type={props.inputType}
+                onRemove={i > 0 ? () => removeTextInput(i) : undefined}
+                error={i === 0 && props.error}
+              />
             </div>
-            : <></>
-        }
+          );
+        })}
+        {!!props.multi ? (
+          <div className={styles["link-container"]}>
+            <Link text={`+ ${props.multi}`} onClick={addTextInput} />
+          </div>
+        ) : (
+          <></>
+        )}
       </>
     </div>
   );

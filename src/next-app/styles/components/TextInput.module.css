@@ -16,6 +16,10 @@
   outline: 1px solid var(--primary-color);
 }
 
+.input.error {
+  outline: 1px solid var(--red-color);
+}
+
 .cancel-button {
   position: absolute;
   top: 50%;
