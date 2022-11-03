@@ -4,12 +4,16 @@ import Button from "../components/Button";
 import TextField from "../components/TextField";
 import Header from "../components/Header";
 import styles from "../styles/pages/CreateAccount.module.css";
+import validateEmail from "../utils/validateEmail";
 
 const CreateAccountPage: NextPage = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
+  const [emailErrors, setEmailErrors] = useState<Set<string> | undefined>(
+    undefined
+  );
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const valid =
@@ -18,7 +22,16 @@ const CreateAccountPage: NextPage = () => {
     phoneNumber.length > 0 &&
     email.length > 0 &&
     username.length > 0 &&
-    password.length > 0;
+    password.length > 0 &&
+    emailErrors === undefined;
+
+  const handleEmailBlur = () => {
+    if (email.length > 0 && !validateEmail(email)) {
+      setEmailErrors(new Set(["Invalid email format"]));
+    } else {
+      setEmailErrors(undefined);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -54,6 +67,8 @@ const CreateAccountPage: NextPage = () => {
             name="Email"
             placeholder="Enter your email"
             onChange={setEmail}
+            onBlur={handleEmailBlur}
+            errors={emailErrors}
             required
           />
         </div>

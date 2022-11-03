@@ -1,7 +1,10 @@
 import TextMultiField, { TextMultiFieldProps } from "./TextMultiField";
 import styles from "../styles/components/TextField.module.css";
 
-type TextFieldProps = Omit<TextMultiFieldProps, "multi" | "onChange"> & {
+type TextFieldProps = Omit<
+  TextMultiFieldProps,
+  "multi" | "onChange" | "error"
+> & {
   onChange?: (newVal: string) => void;
   errors?: Set<string>;
 };
@@ -16,7 +19,7 @@ const TextField = (props: TextFieldProps) => {
       <TextMultiField
         {...props}
         onChange={handleChange}
-        error={props.errors && props.errors.size > 0}
+        error={props.errors !== undefined}
       />
       {props.errors ? (
         <div className={styles["errors-container"]}>
