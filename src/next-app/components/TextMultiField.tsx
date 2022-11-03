@@ -10,6 +10,9 @@ type TextMultiFieldProps = {
   onChange?: (newVals: string[]) => void;
   inputType?: string;
 
+  /** When any of the inputs lost focus */
+  onBlur?: () => void;
+
   /** Makes the first input highlighted red */
   error?: boolean;
 
@@ -41,6 +44,10 @@ const TextMultiField = (props: TextMultiFieldProps) => {
     });
   };
 
+  const handleBlur = () => {
+    props.onBlur && props.onBlur();
+  };
+
   return (
     <div className={styles.container}>
       <>
@@ -59,6 +66,7 @@ const TextMultiField = (props: TextMultiFieldProps) => {
                 type={props.inputType}
                 onRemove={i > 0 ? () => removeTextInput(i) : undefined}
                 error={i === 0 && props.error}
+                onBlur={handleBlur}
               />
             </div>
           );

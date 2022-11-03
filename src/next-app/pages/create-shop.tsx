@@ -6,17 +6,31 @@ import TextMultiField from "../components/TextMultiField";
 import Header from "../components/Header";
 import styles from "../styles/pages/CreateShop.module.css";
 import DropdownField from "../components/DropdownField";
+import validateEmail from "../utils/validateEmail";
 
 const CreateShopPage: NextPage = () => {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [phoneNumbers, setPhoneNumbers] = useState<string[]>([""]);
   const [email, setEmail] = useState("");
+  const [emailErrors, setEmailErrors] = useState<Set<string> | undefined>(
+    undefined
+  );
   const [employees, setEmployees] = useState("");
   const [serviceBays, setServiceBays] = useState("");
+  const valid =
+    name.length > 0 && address.length > 0 && emailErrors === undefined;
 
   const handleSubmit = () => {
     window.location.href = "/create-account";
+  };
+
+  const handleEmailBlur = () => {
+    if (email.length > 0 && !validateEmail(email)) {
+      setEmailErrors(new Set(["Invalid email format"]));
+    } else {
+      setEmailErrors(undefined);
+    }
   };
 
   return (
@@ -53,6 +67,8 @@ const CreateShopPage: NextPage = () => {
             name="Shop Email"
             placeholder="Enter your shop's email"
             onChange={setEmail}
+            onBlur={handleEmailBlur}
+            errors={emailErrors}
           />
         </div>
         <div className={styles["field-container"]}>
@@ -81,7 +97,7 @@ const CreateShopPage: NextPage = () => {
         <div className={styles["submit-container"]}>
           <Button
             title="Create"
-            disabled={name.length < 1 || address.length < 1}
+            disabled={!valid}
             width="80%"
             onClick={handleSubmit}
           />
