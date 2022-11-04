@@ -1,21 +1,19 @@
-import type { NextPage } from "next";
-import { useState } from "react";
-import Button from "../components/Button";
-import TextField from "../components/TextField";
-import Header from "../components/Header";
-import styles from "../styles/pages/CreateAccount.module.css";
-import validateEmail from "../utils/validateEmail";
+import type { NextPage } from 'next';
+import { useState } from 'react';
+import Button from '../components/Button';
+import TextField from '../components/TextField';
+import Header from '../components/Header';
+import styles from '../styles/pages/CreateAccount.module.css';
+import validateEmail from '../utils/validateEmail';
 
 const CreateAccountPage: NextPage = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [emailErrors, setEmailErrors] = useState<Set<string> | undefined>(
-    undefined
-  );
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState('');
+  const [emailErrors, setEmailErrors] = useState<Set<string> | undefined>(undefined);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const valid =
     firstName.length > 0 &&
     lastName.length > 0 &&
@@ -27,14 +25,14 @@ const CreateAccountPage: NextPage = () => {
 
   const handleEmailBlur = () => {
     if (email.length > 0 && !validateEmail(email)) {
-      setEmailErrors(new Set(["Invalid email format"]));
+      setEmailErrors(new Set(['Invalid email format']));
     } else {
       setEmailErrors(undefined);
     }
   };
 
   const handleSubmit = () => {
-    window.location.href = "/invite";
+    window.location.href = '/invite';
   };
 
   return (
@@ -42,7 +40,7 @@ const CreateAccountPage: NextPage = () => {
       <Header goBackToHref="/create-shop" title="Create New Account" />
 
       <div className={styles.content}>
-        <div className={styles["field-container"]}>
+        <div className={styles['field-container']}>
           <TextField
             name="First Name"
             placeholder="Enter your first name"
@@ -50,7 +48,7 @@ const CreateAccountPage: NextPage = () => {
             required
           />
         </div>
-        <div className={styles["field-container"]}>
+        <div className={styles['field-container']}>
           <TextField
             name="Last Name"
             placeholder="Enter your last name"
@@ -58,7 +56,7 @@ const CreateAccountPage: NextPage = () => {
             required
           />
         </div>
-        <div className={styles["field-container"]}>
+        <div className={styles['field-container']}>
           <TextField
             name="Phone Number"
             placeholder="Enter your phone number"
@@ -66,7 +64,7 @@ const CreateAccountPage: NextPage = () => {
             required
           />
         </div>
-        <div className={styles["field-container"]}>
+        <div className={styles['field-container']}>
           <TextField
             name="Email"
             placeholder="Enter your email"
@@ -76,7 +74,7 @@ const CreateAccountPage: NextPage = () => {
             required
           />
         </div>
-        <div className={styles["field-container"]}>
+        <div className={styles['field-container']}>
           <TextField
             name="Username"
             placeholder="Enter your username"
@@ -84,7 +82,7 @@ const CreateAccountPage: NextPage = () => {
             required
           />
         </div>
-        <div className={styles["field-container"]}>
+        <div className={styles['field-container']}>
           <TextField
             name="Password"
             inputType="password"
@@ -93,13 +91,8 @@ const CreateAccountPage: NextPage = () => {
             required
           />
         </div>
-        <div className={styles["submit-container"]}>
-          <Button
-            title="Create"
-            disabled={!valid}
-            width="80%"
-            onClick={handleSubmit}
-          />
+        <div className={styles['submit-container']}>
+          <Button title="Create" disabled={!valid} width="80%" onClick={handleSubmit} />
         </div>
       </div>
     </div>

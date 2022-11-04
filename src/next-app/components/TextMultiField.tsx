@@ -1,7 +1,7 @@
-import { useState } from "react";
-import styles from "../styles/components/TextMultiField.module.css";
-import Link from "./Link";
-import TextInput from "./TextInput";
+import { useState } from 'react';
+import styles from '../styles/components/TextMultiField.module.css';
+import Link from './Link';
+import TextInput from './TextInput';
 
 type TextMultiFieldProps = {
   name: string;
@@ -24,7 +24,7 @@ type TextMultiFieldProps = {
 };
 
 const TextMultiField = (props: TextMultiFieldProps) => {
-  const [vals, setVals] = useState<string[]>([""]);
+  const [vals, setVals] = useState<string[]>(['']);
 
   const handleChange = (i: number, newVal: string) => {
     const newVals = [...vals.slice(0, i), newVal, ...vals.slice(i + 1)];
@@ -34,7 +34,7 @@ const TextMultiField = (props: TextMultiFieldProps) => {
 
   const addTextInput = () => {
     setVals((oldVals) => {
-      return [...oldVals, ""];
+      return [...oldVals, ''];
     });
   };
 
@@ -57,7 +57,7 @@ const TextMultiField = (props: TextMultiFieldProps) => {
         </span>
         {vals.map((val, i) => {
           return (
-            <div className={styles["text-input-container"]} key={i}>
+            <div className={styles['text-input-container']} key={i}>
               <TextInput
                 placeholder={props.placeholder}
                 width={props.width}
@@ -72,7 +72,7 @@ const TextMultiField = (props: TextMultiFieldProps) => {
           );
         })}
         {!!props.multi ? (
-          <div className={styles["link-container"]}>
+          <div className={styles['link-container']}>
             <Link text={`+ ${props.multi}`} onClick={addTextInput} />
           </div>
         ) : (

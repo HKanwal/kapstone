@@ -1,6 +1,6 @@
-import { ReactElement, useEffect, useState } from "react";
-import styles from "../styles/components/Modal.module.css";
-import { GrClose } from "react-icons/gr";
+import { ReactElement, useEffect, useState } from 'react';
+import styles from '../styles/components/Modal.module.css';
+import { GrClose } from 'react-icons/gr';
 
 type ModalProps = {
   children?: ReactElement<any, any> | ReactElement<any, any>[];

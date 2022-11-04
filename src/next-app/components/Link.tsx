@@ -1,4 +1,4 @@
-import styles from "../styles/components/Link.module.css";
+import styles from '../styles/components/Link.module.css';
 
 type LinkProps = {
   text: string;
