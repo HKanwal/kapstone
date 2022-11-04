@@ -1,8 +1,8 @@
-import { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
-import styles from "../styles/components/DropdownField.module.css";
-import TextInput, { TextInputRef } from "./TextInput";
-import { BsChevronDown } from "react-icons/bs";
-import Chip from "./Chip";
+import { MutableRefObject, useEffect, useMemo, useRef, useState } from 'react';
+import styles from '../styles/components/DropdownField.module.css';
+import TextInput, { TextInputRef } from './TextInput';
+import { BsChevronDown } from 'react-icons/bs';
+import Chip from './Chip';
 
 type DropdownFieldProps = {
   name: string;
@@ -17,7 +17,7 @@ let collapseTimout: NodeJS.Timeout;
 const DropdownField = (props: DropdownFieldProps) => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [expanded, setExpanded] = useState(false);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
   const items = useMemo(() => Array.from(props.items), [props.items]);
   const inputRef = useRef<TextInputRef>(null);
 
@@ -60,10 +60,10 @@ const DropdownField = (props: DropdownFieldProps) => {
         {props.name}
         {props.required ? <span className={styles.asterisk}>*</span> : <></>}
       </span>
-      <div className={styles["chips-container"]}>
+      <div className={styles['chips-container']}>
         {selectedItems.map((item) => {
           return (
-            <div className={styles["chip-container"]} key={item}>
+            <div className={styles['chip-container']} key={item}>
               <Chip
                 text={item}
                 onRemove={() => handleRemove(item)}
@@ -73,22 +73,22 @@ const DropdownField = (props: DropdownFieldProps) => {
           );
         })}
       </div>
-      <div className={styles["input-container"]}>
+      <div className={styles['input-container']}>
         <TextInput
-          placeholder={props.placeholder ?? ""}
+          placeholder={props.placeholder ?? ''}
           width={props.width}
-          style={{ paddingRight: "14%" }}
+          style={{ paddingRight: '14%' }}
           value={value}
           onChange={setValue}
           onFocus={handleFocus}
           onBlur={handleBlur}
           ref={inputRef}
         />
-        <div className={styles["chevron-container"]}>
+        <div className={styles['chevron-container']}>
           <BsChevronDown />
         </div>
         {expanded ? (
-          <div className={styles["dropdown"]}>
+          <div className={styles['dropdown']}>
             {items
               .filter((item) => {
                 return !selectedItems.includes(item);
@@ -102,8 +102,7 @@ const DropdownField = (props: DropdownFieldProps) => {
                   key={item}
                   onFocus={handleFocus}
                   onBlur={handleBlur}
-                  onClick={() => handleItemClick(item)}
-                >
+                  onClick={() => handleItemClick(item)}>
                   {item}
                 </button>
               ))}
