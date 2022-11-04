@@ -48,7 +48,7 @@ const DropdownField = (props: DropdownFieldProps) => {
 
   const handleRemove = (item: string) => {
     setSelectedItems((prevSelectedItems) => {
-      return prevSelectedItems.filter(si => {
+      return prevSelectedItems.filter((si) => {
         return si !== item;
       });
     });
@@ -60,16 +60,18 @@ const DropdownField = (props: DropdownFieldProps) => {
         {props.name}
         {props.required ? <span className={styles.asterisk}>*</span> : <></>}
       </span>
-      <div className={styles['chips-container']}>
-        {
-          selectedItems.map(item => {
-            return (
-              <div className={styles['chip-container']} key={item}>
-                <Chip text={item} onRemove={() => handleRemove(item)} onMouseDown={handleChipMouseDown} />
-              </div>
-            )
-          })
-        }
+      <div className={styles["chips-container"]}>
+        {selectedItems.map((item) => {
+          return (
+            <div className={styles["chip-container"]} key={item}>
+              <Chip
+                text={item}
+                onRemove={() => handleRemove(item)}
+                onMouseDown={handleChipMouseDown}
+              />
+            </div>
+          );
+        })}
       </div>
       <div className={styles["input-container"]}>
         <TextInput

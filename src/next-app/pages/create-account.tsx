@@ -33,6 +33,10 @@ const CreateAccountPage: NextPage = () => {
     }
   };
 
+  const handleSubmit = () => {
+    window.location.href = "/invite";
+  };
+
   return (
     <div className={styles.container}>
       <Header goBackToHref="/create-shop" title="Create New Account" />
@@ -90,7 +94,12 @@ const CreateAccountPage: NextPage = () => {
           />
         </div>
         <div className={styles["submit-container"]}>
-          <Button title="Create" disabled={!valid} width="80%" />
+          <Button
+            title="Create"
+            disabled={!valid}
+            width="80%"
+            onClick={handleSubmit}
+          />
         </div>
       </div>
     </div>
