@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.15.1
+          cache: "yarn"
+          cache-dependency-path: src/next-app/yarn.lock
+
+      - run: |
+          cd src/next-app
+          yarn install
+      - name: lint
+        run: |
+          cd src/next-app
+          yarn lint
+      - name: build
+        run: |
+          cd src/next-app
+          yarn build

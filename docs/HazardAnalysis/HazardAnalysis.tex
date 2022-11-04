@@ -1,15 +1,28 @@
 \documentclass{article}
 
-\usepackage{booktabs}
-\usepackage{tabularx}
+
+\usepackage{tabularx,booktabs,ragged2e}
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{xltabular}
+\usepackage{chngpage}
+\usepackage{caption,lipsum}
+\usepackage{enumitem}
+
+\hypersetup{
+    colorlinks=true,       % false: boxed links; true: colored links
+    linkcolor=red,          % color of internal links (change box color with linkbordercolor)
+    citecolor=green,        % color of links to bibliography
+    filecolor=magenta,      % color of file links
+    urlcolor=cyan           % color of external links
+}
 
 \title{Hazard Analysis\\\progname}
 
-\author{Team \#, Team Name
-		\\ Student 1 name and macid
-		\\ Student 2 name and macid
-		\\ Student 3 name and macid
-}
+\author{\authname}
 
 \date{}
 
@@ -18,22 +31,220 @@
 
 \begin{document}
 
+\maketitle
+\thispagestyle{empty}
+
+~\newpage
+
+\pagenumbering{roman}
+
 \begin{table}[hp]
 \caption{Revision History} \label{TblRevisionHistory}
 \begin{tabularx}{\textwidth}{llX}
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date1 & Name(s) & Description of changes\\
-Date2 & Name(s) & Description of changes\\
-... & ... & ...\\
+Oct. 19th, 2022 & All Members & Initial document creation. Revision 0.\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\newpage
+~\newpage
 
-\maketitle
+\tableofcontents
 
+~\newpage
+
+\pagenumbering{arabic}
+
+\wss{You are free to modify this template.}
+
+\section{Introduction}
+
+This document goes over the hazard analysis of the Sayyara Automotive Matcher. The Sayyara Automotive Matcher is a software that assists customers is finding and creating appointments with mechanics to perform maintenance on their vehicles.
+\\\\
+\noindent For the purposes of this project, the definition of a hazard, based on Nancy Leveson's work is as follows: A hazard is any property in the system, that when paired with an event in the environment causes loss in the system.
+
+\section{Scope and Purpose of Hazard Analysis}
+
+The purpose of this Hazard Analysis is to identify possible hazards within the system. The hazards identified are analyzed to deduce causes, effects and steps for mitigation. Further safety and security requirements are developed to ensure hazards are avoided.   
+
+\section{System Boundaries and Components}
+Within our hazard analysis, we will consider failures and hazards that could occur on the following system components:
+\begin{enumerate}
+    \item The \textbf{progressive web application (PWA)} which facilitates the following services:
+    \begin{itemize}
+        \item Account creation and deletion
+        \item Authentication
+        \item Sending and receiving quotes and quote requests
+        \item Booking appointments
+        \item Creating and deleting work orders
+    \end{itemize}
+    \item The \textbf{database} which stores information related to:
+    \begin{itemize}
+        \item Shops
+        \item Shop owners
+        \item Shop employees
+        \item Customers
+        \item Quotes
+        \item Work orders
+        \item Appointments
+    \end{itemize}
+    \item The \textbf{user device} which is the medium through which users will interact with the PWA
+\end{enumerate}
+
+\section{Critical Assumptions}
+
+The only critical assumption being made is that the cloud provider we are using will have a 98\% up time to allow us to achieve our non functional requirement for reliability and availability.
+
+\wss{These assumptions that are made about the software or system.  You should
+minimize the number of assumptions that remove potential hazards.  For instance,
+you could assume a part will never fail, but it is generally better to include
+this potential failure mode.}
+
+\section{Failure Mode and Effect Analysis}
+
+A failure modes and effect analysis (FMEA) is performed below as a way to identify potential hazards, and provide recommended actions as a means to mitigate them.
+
+\subsection{Hazards Out of Scope}
+
+The final product our partner wishes to receive is meant to be an MVP that can be demoed to potential investors. Given this aim, it is imperative that performance, and up-time related hazards be thoroughly accounted for, however, this also means the following hazards are considered low priority and/or out of scope:
+
+\begin{itemize}
+    \item Security concerns (unnecessary because the demos will be done using a dummy account, whose data is of no consequence)
+    \item Long term data loss (unnecessary because the data is not required to be stored after the demos have been completed)
+\end{itemize}
+
+\subsection{Failure Mode and Effects Analysis Table}
+
+\wss{Include your FMEA table here}
+The Failure Mode and Effects Analysis for the \progname system is outlined in Table \hyperref[tab:FMEA]{2}.
+\pagebreak
+\begin{center}
+\newcolumntype{M}[1]{>{\RaggedRight\centering\arraybackslash}m{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}p}
+ %\tabcolsep=2pt\relax
+ \small
+ \renewcommand{\arraystretch}{1.5}
+ 
+\captionof{table}{Failure Mode \& Effects Analysis} \label{tab:FMEA}
+\makebox[\textwidth]{\begin{tabular}{|P{0.18\textwidth}| Y{0.15\textwidth} Y{0.23\textwidth} Y{0.3\textwidth} Y{0.31\textwidth} M{0.08\textwidth} M{0.07\textwidth} M{0.06\textwidth}|} 
+ \hline
+ \multicolumn{1}{|>\centering\arraybackslash}{\textbf{Component}} & \multicolumn{1}{>\centering\arraybackslash}{\textbf{Failure Modes}} & \multicolumn{1}{>\centering\arraybackslash}{\textbf{Effects of Failure}} & \multicolumn{1}{>\centering\arraybackslash}{\textbf{Causes of Failure}} & \multicolumn{1}{>\centering\arraybackslash}{\textbf{Recommended Action}} & \textbf{Severity} & \textbf{SR} & \textbf{Ref.} \\ [0.5ex]
+ \hline
+ \hline
+\multirow{2}{*}{Shop Info} & Appointment list is lost & Loss of business. Customers will show up for appointments that are not scheduled in the system, causing angry customers and overall loss of money. & \begin{itemize}
+                    \item Host site for server unexpectedly goes down.
+                    \item Server crashes from instability related to bugs.
+                \end{itemize} & Periodically backup database, allowing rollbacks to database on request from a shop owner. & High & IR-1 & H1-1 \\
+\cline{2-8}
+& Services list is lost & Customers will not be able to request services from shops because they are not listed, causing the shop to lose out on business. & \begin{itemize}
+    \item Host site for server unexpectedly goes down.
+     \item Server crashes from instability related to bugs.
+     \item Database failure \end{itemize} &  Same as H1-1. & High & IR-1 & H1-2 \\
+\hline
+\multirow{1}{*}{Quotes} & Active quotes list is lost & Loss of customer quote data. Shop owners can potentially lose customers if customers lose their quote data or shop owners can lose information related to the quotes they are working on. & \begin{itemize}
+                    \item Host site for server unexpectedly goes down.
+                    \item Server crashes from instability related to bugs.
+                \end{itemize} & Periodically backup database, allowing rollbacks to database on request from a shop owner. & High & IR-1 & H2-1 \\
+% \cline{2-8}
+% & test & test & \begin{itemize}
+%                     \item test
+%                 \end{itemize} & test & test & TBD & TBD \\
+\hline
+\multirow{1}{1.5cm}{Employee Invitations} & Employee invites are sent to incorrect emails & Authorized employees do not receive invitations and are unable to create account or login & \begin{itemize}
+                    \item Emails inputted are not correctly stored in database
+                    \item Database failure
+                    \item Miscommunication between database and email-sending software
+                \end{itemize} & \begin{itemize}
+                    \item Provide a way to verify emails are correctly received by app.
+                    \item Same as H1-1
+                \end{itemize} & Medium & IR-1 & H3-1 \\
+ \hline
+
+\end{tabular}}
+
+
+\makebox[\textwidth]{\begin{tabular}{|P{0.18\textwidth}| Y{0.15\textwidth} Y{0.23\textwidth} Y{0.3\textwidth} Y{0.31\textwidth} M{0.08\textwidth} M{0.07\textwidth} M{0.06\textwidth}|} 
+ \hline
+ \multicolumn{1}{|>\centering\arraybackslash}{\textbf{Component}} & \multicolumn{1}{>\centering\arraybackslash}{\textbf{Failure Modes}} & \multicolumn{1}{>\centering\arraybackslash}{\textbf{Effects of Failure}} & \multicolumn{1}{>\centering\arraybackslash}{\textbf{Causes of Failure}} & \multicolumn{1}{>\centering\arraybackslash}{\textbf{Recommended Action}} & \textbf{Severity} & \textbf{SR} & \textbf{Ref.} \\ [0.5ex]
+ \hline
+ \hline
+ \multirow{1}{*}{Server} & Server crashes unexpectedly & Complete loss of function in the system beyond front end interface. Current progress in app is essentially lost. & \begin{itemize}
+                    \item Host site for server unexpectedly goes down.
+                    \item Server crashes from instability related to bugs.
+                \end{itemize} & \begin{itemize}
+                    \item If current host site proves unstable, research a new way to deploy the server.
+                    \item Store current session of a user, allowing in-progress actions to be resumed when server access is restored. In the meantime, display an error to the user.
+                \end{itemize} & High & IR-2, IR-3 & H4-1 \\ 
+\hline
+\multirow{2}{*}{Authentication} & User credentials are lost & Shop owners will be denied access to the system. Loss of business. Cannot manage shops, nor respond to potential customers. & \begin{itemize}
+                    \item Credentials of a given user do not match the hash stored in database
+                    \item Database failure
+                \end{itemize} & \begin{itemize}
+                    \item Provide a way to reset the user's password in a secure way, allowing them to use the system again.
+                    \item Same as H1-1.
+                \end{itemize} & High & IR-1 & H5-1 \\
+\cline{2-8}
+ & Unauthorized user gains shop owner level of access to the system & The user could make unauthorized edits to shop profiles, employee accounts, quotes, work orders, and appointments.
+ & \begin{itemize}
+     \item Failed authentication
+     \item The unauthorized user stole a real user's login information
+     \item The real user created a password that was not very secure
+ \end{itemize}
+ & \begin{itemize}
+     \item Invest in a reliable method of authentication
+     \item Provide multi-factor authentication that does not rely solely on correctly entering login information
+     \item During account creation, prompt the user to create a secure password and advise them on how to do so
+ \end{itemize}
+ & High & AR-1, IR-4, IR-5 & H5-2 \\
+\hline
+\multirow{1}{*}{Database} & Users gain direct access to the database. & The user could query private data and make unauthorized changes. The user could also steal emails and passwords of other users. & \begin{itemize}
+    \item The backend server has a flaw that allows direct access to the database.
+\end{itemize} & 
+\begin{itemize}
+    \item Store encrypted passwords.
+    \item Use a different database for storing user details and passwords.
+\end{itemize} & High & IR-6, IR-7, PR-1 & H6-1 \\
+\hline
+\end{tabular}}
+\end{center}
+
+
+\section{Safety and Security Requirements}
+\subsection{Access Requirements}
+\begin{enumerate}[label = AR-\arabic*, left=\parindent, series=AR]
+    \item Only shop owners shall be allowed to edit shop profiles, employee accounts, quotes, work orders, and appointments.
+\end{enumerate}
+
+\subsection{Integrity Requirements}
+\begin{enumerate}[label = IR-\arabic*, left=\parindent, series=IR]
+    \item The databases shall be backed up every 12 hours.
+    \item Any pending tasks paused due to a server crash shall be resumed automatically when the server is back up.
+    \item Any errors that cause the server to crash shall be logged.
+    \item The system shall require users to create a strong password when registering.
+    \item The system shall provide support for multi-factor authentication.
+    \item The system shall encrypt passwords before storing them.
+    \item The system shall store user details and credentials in a different database.
+\end{enumerate}
+
+\subsection{Privacy Requirements}
+\begin{enumerate}[label = PR-\arabic*, left=\parindent, series=PR]
+    \item Users shall not be able to query data related to other users directly through the database.
+\end{enumerate}
+
+\subsection{Audit Requirements}
+N/A
+
+\subsection{Immunity Requirements}
+N/A
+
+\wss{Newly discovered requirements.  These should also be added to the SRS.  (A
+rationale design process how and why to fake it.)}
+
+\section{Roadmap}
+
+All of the safety requirements will be implemented as part of the capstone timeline because they are required by our partner (excluding requirements explicitly stated as out of scope in section 5.1).
 
 \end{document}
