@@ -1,4 +1,4 @@
-import styles from "../styles/components/Button.module.css";
+import styles from '../styles/components/Button.module.css';
 
 type ButtonProps = {
   title: string;
@@ -19,8 +19,7 @@ const Button = (props: ButtonProps) => {
       className={styles.button}
       style={{ width: props.width }}
       onClick={handleClick}
-      disabled={props.disabled}
-    >
+      disabled={props.disabled}>
       {props.title}
     </button>
   );

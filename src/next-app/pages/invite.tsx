@@ -1,8 +1,8 @@
-import type { NextPage } from "next";
-import Button from "../components/Button";
-import EmailsField from "../components/EmailsField";
-import Header from "../components/Header";
-import styles from "../styles/pages/Invite.module.css";
+import type { NextPage } from 'next';
+import Button from '../components/Button';
+import EmailsField from '../components/EmailsField';
+import Header from '../components/Header';
+import styles from '../styles/pages/Invite.module.css';
 
 const InvitePage: NextPage = () => {
   return (
@@ -10,19 +10,12 @@ const InvitePage: NextPage = () => {
       <Header goBackToHref="/create-account" title="Invite Employees" />
 
       <div className={styles.content}>
-        <div className={styles["field-container"]}>
-          <EmailsField
-            name="Emails"
-            placeholder="Enter your employees' emails"
-          />
+        <div className={styles['field-container']}>
+          <EmailsField name="Emails" placeholder="Enter your employees' emails" />
         </div>
         <Button title="Invite" width="80%" />
         <span className={styles.or}>OR</span>
-        <Button
-          title="Skip"
-          width="80%"
-          onClick={() => console.log("do something")}
-        />
+        <Button title="Skip" width="80%" onClick={() => console.log('do something')} />
       </div>
     </div>
   );

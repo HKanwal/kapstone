@@ -1,6 +1,6 @@
-import styles from "../styles/components/BackButton.module.css";
-import { IoMdArrowBack } from "react-icons/io";
-import { useEffect, useState } from "react";
+import styles from '../styles/components/BackButton.module.css';
+import { IoMdArrowBack } from 'react-icons/io';
+import { useEffect, useState } from 'react';
 
 type BackButtonProps = {
   onClick?: () => void;
@@ -20,20 +20,16 @@ const BackButton = (props: BackButtonProps) => {
     };
 
     handleResize();
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
   return (
     <button className={styles.container} disabled={!props.onClick}>
-      <IoMdArrowBack
-        className={styles.back}
-        size={size}
-        onClick={props.onClick}
-      />
+      <IoMdArrowBack className={styles.back} size={size} onClick={props.onClick} />
     </button>
   );
 };

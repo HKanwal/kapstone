@@ -1,5 +1,5 @@
-import styles from "../styles/components/Header.module.css";
-import BackButton from "./BackButton";
+import styles from '../styles/components/Header.module.css';
+import BackButton from './BackButton';
 
 type HeaderProps = {
   goBackToHref: string;
@@ -13,13 +13,13 @@ const Header = (props: HeaderProps) => {
 
   return (
     <div className={styles.header}>
-      <div className={styles["back-btn-container"]}>
+      <div className={styles['back-btn-container']}>
         <BackButton onClick={goBack} />
       </div>
       {!!props.title ? (
         <span className={styles.title}>{props.title}</span>
       ) : (
-        <span className={styles.title} style={{ visibility: "hidden" }}>
+        <span className={styles.title} style={{ visibility: 'hidden' }}>
           bad css
         </span>
       )}
