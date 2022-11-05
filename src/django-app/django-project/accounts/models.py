@@ -5,12 +5,46 @@ from django.utils.translation import gettext as _
 from phonenumber_field.modelfields import PhoneNumberField
 
 
+class UserManager(BaseUserManager):
+    def create_user(self, username, email, type, password=None, **extra_fields):
+        if not username:
+            raise ValueError("A username is required")
+
+        if email is None:
+            raise ValueError(_("A valid email address is required"))
+
+        if type not in self.model.Types:
+            raise ValueError(_("A type must be one of: customer, employee or shop_owner"))
+
+        if password is None:
+            raise ValueError(_("Please set a password"))
+
+        user = self.model(email=self.normalize_email(email), **extra_fields)
+        user.username = username
+        user.type = type
+        user.set_password(password)
+        user.save()
+        return user
+
+    def create_superuser(self, username, email, type, password=None):
+        if password is None:
+            raise ValueError(_("Please enter your password"))
+
+        user = self.create_user(email=self.normalize_email(email))
+        user.username = username
+        user.type = type
+        user.is_superuser = True
+        user.is_staff = True
+        user.save()
+        return user
+
+
 class User(AbstractUser):
     """
     Custom User Model with types for shop owners, employees and customers.
 
-    Required fields: username, password, type
-    Optional fields: first_name, last_name, email, phone_number
+    Required fields: username, email, password, type
+    Optional fields: first_name, last_name, phone_number
     """
 
     class Types(models.TextChoices):
@@ -18,9 +52,7 @@ class User(AbstractUser):
         EMPLOYEE = "employee", "Employee"
         CUSTOMER = "customer", "Customer"
 
-    email = models.EmailField(
-        _("email address"), max_length=255, null=True
-    )
+    email = models.EmailField(_("email address"), max_length=255, null=True)
     first_name = models.CharField(_("first name"), max_length=255, blank=True)
     last_name = models.CharField(_("last name"), max_length=255, blank=True)
     phone_number = PhoneNumberField(blank=True)
@@ -30,8 +62,13 @@ class User(AbstractUser):
         _("Type"), max_length=40, choices=Types.choices, default=base_type
     )
 
+    objects = UserManager()
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email', 'type']
+
+
     def save(self, *args, **kwargs):
-        if not self.pk:
+        if not self.pk and not self.type:
             self.type = self.base_type
         return super().save(*args, **kwargs)
 
