@@ -133,8 +133,8 @@ GRANT ALL PRIVILEGES ON DATABASE sayyara TO my_username;
 
   - ```json
     {
-        "username": "h1234",
-        "password": "AbAb123#"
+        "username": "USERNAME",
+        "password": "PASSWORD"
     }
     ```
 
@@ -154,7 +154,7 @@ GRANT ALL PRIVILEGES ON DATABASE sayyara TO my_username;
 
   - ```json
     {
-        "refresh": "REFRESH TOKEN"
+        "refresh": "REFRESH_TOKEN"
     }
     ```
 
