@@ -18,9 +18,9 @@ from .models import (
 @receiver(post_save, sender=User)
 def create_user_data_instance(sender, instance, created, **kwargs):
     if created:
-        if instance.type == "shop_owner":
+        if instance.type == User.Types.SHOP_OWNER:
             ShopOwnerData.objects.create(user=instance)
-        elif instance.type == "employee":
+        elif instance.type == User.Types.EMPLOYEE:
             EmployeeData.objects.create(user=instance)
-        elif instance.type == "customer":
+        elif instance.type == User.Types.CUSTOMER:
             CustomerData.objects.create(user=instance)
