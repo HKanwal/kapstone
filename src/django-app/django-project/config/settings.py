@@ -118,7 +118,6 @@ AUTH_USER_MODEL = "accounts.User"
 
 DJOSER = {
     "LOGIN_FIELD": "username",
-    "USER_CREATE_PASSWORD_RETYPE": True,
     "SEND_CONFIRMATION_EMAIL": False,
     "ACTIVATION_URL": "activate/{uid}/{token}",
     "SEND_ACTIVATION_EMAIL": False,
