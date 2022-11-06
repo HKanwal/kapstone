@@ -14,7 +14,9 @@ class UserManager(BaseUserManager):
             raise ValueError(_("A valid email address is required"))
 
         if type not in self.model.Types:
-            raise ValueError(_("A type must be one of: customer, employee or shop_owner"))
+            raise ValueError(
+                _("A type must be one of: customer, employee or shop_owner")
+            )
 
         if password is None:
             raise ValueError(_("Please set a password"))
@@ -63,9 +65,8 @@ class User(AbstractUser):
     )
 
     objects = UserManager()
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email', 'type']
-
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ["email", "type"]
 
     def save(self, *args, **kwargs):
         if not self.pk and not self.type:
@@ -95,7 +96,7 @@ class ShopOwnerData(models.Model):
         verbose_name_plural = "Shop Owner Data"
 
     def __str__(self):
-        return self.user.username + "'s Data"
+        return self.user.username + "'s data"
 
 
 class ShopOwner(User):
@@ -136,6 +137,9 @@ class EmployeeData(models.Model):
         verbose_name = "Employee Data"
         verbose_name_plural = "Employee Data"
 
+    def __str__(self):
+        return self.user.username + "'s data"
+
 
 class Employee(User):
     """
@@ -175,7 +179,7 @@ class CustomerData(models.Model):
         verbose_name_plural = "Customer Data"
 
     def __str__(self):
-        return self.user.username + "'s Data"
+        return self.user.username + "'s data"
 
 
 class Customer(User):
