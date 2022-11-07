@@ -86,3 +86,98 @@ GRANT ALL PRIVILEGES ON DATABASE sayyara TO my_username;
 
 - `cd` into the `django-project` folder.
 - run: `python manage.py runserver`
+
+
+
+
+
+# API Endpoints:
+
+### Create User
+
+- **Request Type**: POST
+
+- **Request URL**: http://localhost:8000/auth/users/
+
+- **Headers**:
+
+  - *Content-Type*: application/json
+
+- **Body**:
+
+  - ```json
+    {
+        "email": "EMAIL ADDRESS (UNIQUE)",
+        "username": "USERNAME (Case Sensitive)",
+        "password": "PASSWORD",
+        "re_password": "RE-ENTER PASSWORD",
+        "first_name": "FIRST NAME (Optional)",
+        "last_name": "LAST NAME (Optional)",
+        "user_type": "ONE OF: shop_owner, employee or customer (DEFAULT = customer)"
+    }
+    ```
+
+
+
+### Create JWT Token (aka Login)
+
+- **Request Type**: POST
+
+- **Request URL**: http://localhost:8000/auth/jwt/create/
+
+- **Headers**:
+
+  - *Content-Type*: application/json
+
+- **Body**:
+
+  - ```json
+    {
+        "username": "USERNAME",
+        "password": "PASSWORD"
+    }
+    ```
+
+
+
+### Refresh JWT Token
+
+- **Request Type**: POST
+
+- **Request URL**: http://localhost:8000/auth/jwt/refresh/
+
+- **Headers**:
+
+  - *Content-Type*: application/json
+
+- **Body**:
+
+  - ```json
+    {
+        "refresh": "REFRESH_TOKEN"
+    }
+    ```
+
+
+
+### Delete JWT Token (aka Logout)
+
+- **Request Type**: DELETE
+
+- **Request URL**: http://localhost:8000/auth/users/me
+
+- **Headers**:
+
+  - *Content-Type*: application/json
+  - *Authorization*: JWT {INSERT ACCESS TOKEN HERE}
+
+- **Body**:
+
+  - ```json
+    {
+        "current_password": "PASSWORD"
+    }
+    ```
+
+
+
