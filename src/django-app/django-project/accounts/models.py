@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext as _
+from shops.models import Shop
 
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -132,6 +133,7 @@ class EmployeeManager(BaseUserManager):
 class EmployeeData(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     salary = models.DecimalField(decimal_places=2, max_digits=15, null=True)
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Employee Data"
