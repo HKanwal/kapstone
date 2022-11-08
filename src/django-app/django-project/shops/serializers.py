@@ -3,8 +3,8 @@ from rest_framework import serializers
 from .models import Shop, Address
 
 class ShopSerializer(serializers.ModelSerializer):
-    shop_owner = serializers.PrimaryKeyRelatedField(queryset=Shop.objects.all())
-    address =  serializers.StringRelatedField()
+    shop_owner = serializers.SlugRelatedField(slug_field="name", queryset=Shop.objects.all())
+    address =  serializers.SlugRelatedField(slug_field="street", queryset=Address.objects.all())
 
     class Meta:
         model = Shop
