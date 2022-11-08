@@ -20,7 +20,7 @@ class Address(models.Model):
     street = models.CharField(_("street"), max_length=255)
     city = models.CharField(_("city"), max_length=255)
     country = models.CharField(_("country"), max_length=255)
-    province = models.CharField(_("province"), max_length=2)
+    province = models.CharField(_("province"), max_length=10)
 
     class Meta:
         verbose_name = "Address"
