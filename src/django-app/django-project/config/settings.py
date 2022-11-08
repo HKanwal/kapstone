@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "djoser",
     "phonenumber_field",
     "accounts.apps.AccountsConfig",
+    "shops.apps.ShopsConfig",
 ]
 
 MIDDLEWARE = [
