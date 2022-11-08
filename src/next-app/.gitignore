@@ -1,5 +1,12 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# next-pwa
+fallback-development.js
+sw.js
+sw.js.map
+workbox-*.js
+workbox-*.js.map
+
 # dependencies
 /node_modules
 /.pnp

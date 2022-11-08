@@ -1,0 +1,22 @@
+.container {
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btns-container {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
+
+.or {
+  padding-top: 1em;
+  padding-bottom: 1em;
+  text-align: center;
+  color: var(--text-grey-color);
+  font-weight: 600;
+}
