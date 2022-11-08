@@ -13,7 +13,8 @@ class Shop(models.Model):
     
     @property
     def num_employees(self):
-        return apps.get_model('EmployeeData').objects.filter(shop__pk=self.pk).count()
+        EmployeeData = apps.get_model('accounts', 'EmployeeData')
+        return EmployeeData.objects.filter(shop__pk=self.pk).count()
     
     class Meta:
         verbose_name = "Shop"
