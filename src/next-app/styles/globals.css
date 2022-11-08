@@ -4,6 +4,16 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+
+  --font-size: 4vmin;
+  font-size: var(--font-size);
+  --title-font-size: 6vmin;
+
+  /* Theme */
+  --primary-color: #3fdeae;
+  --red-color: red;
+  --text-grey-color: #61697d;
+  --text-input-color: #f3f6ff;
 }
 
 a {
@@ -15,7 +25,7 @@ a {
   box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
@@ -23,4 +33,4 @@ a {
     color: white;
     background: black;
   }
-}
+} */
