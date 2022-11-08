@@ -196,7 +196,6 @@ GRANT ALL PRIVILEGES ON DATABASE sayyara TO my_username;
         "shop_owner": "SHOP OWNER (Model)",
         "address": "ADDRESS (Model)",
         "shop_name": "SHOP NAME",
-        "num_employees": "NUMBER OF EMPLOYEES (Optional)",
         "num_bays": "NUMBER OF SERVICE BAYS (Optional)",
         "availability": "AVAILABILITY (Optional)",
         "shop_hours": "SHOP HOURS (Optional)"
