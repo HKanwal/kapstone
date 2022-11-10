@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from '../styles/components/Navbar.module.css';
+import Button from './Button';
 import { IoMdMenu, IoMdClose } from 'react-icons/io';
 import Link from 'next/link';
 import { NavbarData } from './NavbarData';
@@ -11,20 +12,23 @@ function Navbar() {
   const showSidebar = () => setSidebar(!sidebar);
 
   return (
-    <>
-      <IconContext.Provider value={{ color: '#fff' }}>
+    <div>
+      <IconContext.Provider value={{ color: '#000' }}>
         <div className={styles.navbar}>
-          <Link href="#" className={styles['menu-bars']}>
+          <div className={sidebar ? styles['menu-bars-active'] : styles['menu-bars']}>
             <IoMdMenu onClick={showSidebar} />
-          </Link>
+          </div>
         </div>
-        <nav className={sidebar ? styles['nav-menu active'] : styles['nav-menu']}>
+        <nav className={sidebar ? styles['nav-menu-active'] : styles['nav-menu']}>
           <ul className={styles['nav-menu-items']} onClick={showSidebar}>
             {NavbarData.map((item, index) => {
               return (
-                <li key={index} className={styles[item.cName]}>
+                <li key={index} className={styles['nav-text']}>
                   <Link href={item.path}>
-                    <span>{item.title}</span>
+                    <div>
+                      {item.icon}
+                      <span className={styles['nav-text-item']}>{item.title}</span>
+                    </div>
                   </Link>
                 </li>
               );
@@ -32,7 +36,7 @@ function Navbar() {
           </ul>
         </nav>
       </IconContext.Provider>
-    </>
+    </div>
   );
 }
 

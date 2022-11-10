@@ -12,11 +12,3 @@
   flex-direction: column;
   width: 80%;
 }
-
-.or {
-  padding-top: 1em;
-  padding-bottom: 1em;
-  text-align: center;
-  color: var(--text-grey-color);
-  font-weight: 600;
-}

@@ -1,68 +1,95 @@
 .navbar {
-  background-color: #060b26;
+  /* background-color: #f3f6ff; */
   height: 80px;
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
+  overflow: hidden;
   align-items: center;
+  /* padding: 16px; */
 }
 
 .menu-bars {
-  margin-left: 2rem;
   font-size: 2rem;
   background: none;
+  padding-top: 10px;
+  padding-left: 26px;
+  padding-right: 30px;
+  height: 100%;
+}
+
+.menu-bars-active {
+  background-color: #f3f6ff;
+  padding-top: 10px;
+  padding-left: 26px;
+  padding-right: 30px;
+  height: 100%;
+  font-size: 2rem;
+}
+
+.menu-bars:hover {
+  cursor: pointer;
 }
 
 .nav-menu {
-  background-color: #060b26;
-  width: 250px;
+  background-color: #f3f6ff;
+  width: 300px;
   height: 100vh;
   display: flex;
-  justify-content: center;
-  position: fixed;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: absolute;
   top: 0;
   left: -100%;
-  transition: 850ms;
+  transition: transform 0.3s ease-in-out;
 }
 
-.nav-menu.active {
+.nav-menu-active {
+  background-color: #f3f6ff;
+  width: 300px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: absolute;
   left: 0;
-  transition: 350ms;
+  transition: transform 0.3s ease-in-out;
+}
+
+.nav-text-item {
+  margin-left: 10px;
 }
 
 .nav-text {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
-  padding: 8px 0px 8px 16px;
+  padding: 8px 0px 8px 20px;
   list-style: none;
   height: 60px;
 }
 
-.nav-text a {
-  text-decoration: none;
-  color: #f5f5f5;
-  font-size: 18px;
-  width: 95%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  border-radius: 4px;
+.nav-text:hover {
+  background-color: #d9f8ef;
+  cursor: pointer;
 }
 
-.nav-text a:hover {
-  background-color: #1a83ff;
+.nav-text:active {
+  background-color: var(--primary-color);
 }
 
 .nav-menu-items {
   width: 100%;
+  list-style: none;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
 }
 
-.navbar-toggle {
-  background-color: #060b26;
-  width: 100%;
-  height: 80px;
-  display: flex;
-  justify-content: start;
-  align-items: center;
+.logout-btn {
+  float: right;
+  justify-content: center;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  font-size: 0.5rem;
 }
