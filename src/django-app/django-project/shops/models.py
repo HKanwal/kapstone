@@ -3,6 +3,9 @@ from django.db import models
 
 from django.utils.translation import gettext as _
 from django.apps import apps
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 
 class Shop(models.Model):
@@ -58,8 +61,32 @@ class Invitation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        unique_together = ('shop', 'email')
         verbose_name = "Invitation"
         verbose_name_plural = "Invitations"
+
+    def send_invitation(self):
+        subject = f"Invitation to join {self.shop.name}"
+        context = {
+            "shop_name": self.shop.name,
+            "invitation_url": self.get_invitation_url(),
+        }
+        text_invitation_email_template = "invitations/email/employee_invitation.txt"
+        html_invitation_email_template = "invitations/email/employee_invitation.html"
+        text_body = render_to_string(text_invitation_email_template, context)
+        html_body = render_to_string(html_invitation_email_template, context)
+
+        message = EmailMultiAlternatives(
+            subject=subject,
+            body=text_body,
+            from_email=settings.EMAIL_HOST_USER,
+            to=[self.email],
+        )
+        message.attach_alternative(html_body, "text/html")
+        message.send(fail_silently=False)
+
+    def get_invitation_url(self):
+        return f"{settings.APP_URL}/{settings.APP_REGISTRATION_ROUTE}/?type=employee&invitation_key={self.invitation_key}"
 
     def __str__(self):
         return f'Invitation for {self.email} from "{self.shop.name}".'
