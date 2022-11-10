@@ -8,7 +8,8 @@ from django.db import transaction
 User = get_user_model()
 
 from .models import ShopOwnerData, EmployeeData, CustomerData
-from shops.models import Invitation
+from shops.models import Invitation, Shop
+from shops.serializers import ShopSerializer
 
 
 class UserCreateSerializer(BaseUserCreateSerializer):
@@ -68,3 +69,21 @@ class UserCreateSerializer(BaseUserCreateSerializer):
                         "There is no such invitation key."
                     )
             return user
+
+
+class ShopOwnerDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShopOwnerData
+        fields = "__all__"
+
+
+class EmployeeDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmployeeData
+        fields = "__all__"
+
+
+class CustomerDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerData
+        fields = "__all__"
