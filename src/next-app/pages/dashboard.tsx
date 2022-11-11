@@ -6,7 +6,7 @@ import styles from '../styles/pages/Dashboard.module.css';
 
 const Dashboard: NextPage = () => {
   return (
-    <>
+    <div id={styles.wrapper}>
       <Head>
         <title>Dashboard</title>
         <meta name="description" content="Sayyara automotive matcher (working title)" />
@@ -16,7 +16,7 @@ const Dashboard: NextPage = () => {
       <div className={styles.container}>
         <h2>Today&apos;s Appointments</h2>
       </div>
-    </>
+    </div>
   );
 };
 

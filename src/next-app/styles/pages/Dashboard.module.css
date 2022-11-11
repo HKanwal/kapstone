@@ -1,5 +1,8 @@
+#wrapper {
+  margin: 0 auto;
+}
 .container {
-  padding: 36px;
+  padding: 5vh;
   width: 100vw;
   height: fit-content;
   display: flex;

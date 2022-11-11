@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from '../styles/components/Navbar.module.css';
 import Button from './Button';
+import ProfileModal from './ProfileModal';
 import { IoMdMenu, IoMdContact } from 'react-icons/io';
 import Link from 'next/link';
 import { NavbarData } from './NavbarData';
@@ -9,7 +10,15 @@ import { IconContext } from 'react-icons';
 function Navbar() {
   const [sidebar, setSidebar] = useState(false);
 
+  const [profile, setProfile] = useState(false);
+
   const showSidebar = () => setSidebar(!sidebar);
+
+  const showProfile = () => setProfile(!profile);
+
+  const logout = () => {
+    window.location.href = '/';
+  };
 
   return (
     <div>
@@ -19,12 +28,14 @@ function Navbar() {
             <IoMdMenu onClick={showSidebar} />
           </div>
           <div className={styles['btn-contianer']}>
-            <IoMdContact className={styles['profile-btn']} />
+            <IoMdContact className={styles['profile-btn']} onClick={showProfile} />
+            {profile ? <ProfileModal /> : null}
             <div className={styles['logout-btn']}>
-              <Button title={'Logout'} width={'120%'} />
+              <Button title={'Logout'} width={'120%'} onClick={logout} />
             </div>
           </div>
         </div>
+
         <nav className={sidebar ? styles['nav-menu-active'] : styles['nav-menu']}>
           <ul className={styles['nav-menu-items']} onClick={showSidebar}>
             {NavbarData.map((item, index) => {
