@@ -9,12 +9,12 @@ export const NavbarData = [
   },
   {
     title: 'Services',
-    path: '/create-account',
+    path: '#',
     icon: <IoIcons.IoMdConstruct />,
   },
   {
     title: 'Appointments',
-    path: '/create-shop',
+    path: '#',
     icon: <IoIcons.IoMdCalendar />,
   },
   {
@@ -24,12 +24,12 @@ export const NavbarData = [
   },
   {
     title: 'Work Orders',
-    path: '/login',
+    path: '#',
     icon: <IoIcons.IoMdCalculator />,
   },
   {
     title: 'Quotes',
-    path: '/',
+    path: '#',
     icon: <IoIcons.IoMdFiling />,
   },
 ];
