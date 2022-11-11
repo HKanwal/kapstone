@@ -8,12 +8,14 @@ const Dashboard: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Sayyara</title>
+        <title>Dashboard</title>
         <meta name="description" content="Sayyara automotive matcher (working title)" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-      <div className={styles.container}>Today&apos;s Appointments</div>
+      <div className={styles.container}>
+        <h2>Today&apos;s Appointments</h2>
+      </div>
     </>
   );
 };

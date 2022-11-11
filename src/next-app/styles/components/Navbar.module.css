@@ -5,6 +5,7 @@
   justify-content: space-between;
   overflow: hidden;
   align-items: center;
+  position: relative;
   /* padding: 16px; */
 }
 
@@ -30,10 +31,52 @@
   cursor: pointer;
 }
 
+.menu-bars:active {
+  opacity: 0.5;
+}
+
+.menu-bars-active:hover {
+  cursor: pointer;
+}
+
+.menu-bars-active:active {
+  opacity: 0.5;
+}
+
+.logout-btn {
+  zoom: 0.6;
+}
+
+.btn-contianer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  font-size: 2rem;
+  background: none;
+  padding-top: 10px;
+  padding-right: 26px;
+  height: 100%;
+  position: relative;
+}
+
+.profile-btn {
+  margin-right: 30px;
+}
+
+.profile-btn:hover {
+  cursor: pointer;
+}
+
+.profile-btn:active {
+  opacity: 0.5;
+}
+
 .nav-menu {
   background-color: #f3f6ff;
-  width: 300px;
-  height: 100vh;
+  width: fit-content;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -46,7 +89,7 @@
 .nav-menu-active {
   background-color: #f3f6ff;
   width: 300px;
-  height: 100vh;
+  height: 87%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -84,12 +127,4 @@
   padding: 0;
   margin: 0;
   list-style-type: none;
-}
-
-.logout-btn {
-  float: right;
-  justify-content: center;
-  margin-top: 2vh;
-  margin-bottom: 2vh;
-  font-size: 0.5rem;
 }
