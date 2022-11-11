@@ -14,7 +14,7 @@ const ProfileModal = () => {
       <p>Phone Number</p>
       <p>Email Address</p>
       <div className={styles['profile-btn']}>
-        <Button title={'Profile'} width="80%" onClick={goToProfile} />
+        <Button title="Profile" width="80%" onClick={goToProfile} />
       </div>
     </div>
   );
