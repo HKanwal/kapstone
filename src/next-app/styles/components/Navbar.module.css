@@ -1,30 +1,30 @@
 .navbar {
   /* background-color: #f3f6ff; */
-  height: 80px;
+  height: 10vh;
   display: flex;
   justify-content: space-between;
-  overflow: hidden;
+  /* overflow: hidden; */
   align-items: center;
   position: relative;
   /* padding: 16px; */
 }
 
 .menu-bars {
-  font-size: 2rem;
+  font-size: 8vmin;
   background: none;
-  padding-top: 10px;
-  padding-left: 26px;
-  padding-right: 30px;
-  height: 100%;
+  padding-top: 1.5vh;
+  padding-left: 4vh;
+  padding-right: 4.5vh;
+  height: 10vh;
 }
 
 .menu-bars-active {
   background-color: #f3f6ff;
-  padding-top: 10px;
-  padding-left: 26px;
-  padding-right: 30px;
-  height: 100%;
-  font-size: 2rem;
+  font-size: 8vmin;
+  padding-top: 1.5vh;
+  padding-left: 4vh;
+  padding-right: 4.5vh;
+  height: 10vh;
 }
 
 .menu-bars:hover {
@@ -53,16 +53,16 @@
   align-items: center;
   margin-top: 2vh;
   margin-bottom: 2vh;
-  font-size: 2rem;
+  font-size: 8vmin;
   background: none;
-  padding-top: 10px;
-  padding-right: 26px;
-  height: 100%;
+  padding-top: 1.5vh;
+  padding-right: 4vh;
+  height: 10vh;
   position: relative;
 }
 
 .profile-btn {
-  margin-right: 30px;
+  margin-right: 4vh;
 }
 
 .profile-btn:hover {
@@ -76,7 +76,7 @@
 .nav-menu {
   background-color: #f3f6ff;
   width: fit-content;
-  height: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -88,8 +88,8 @@
 
 .nav-menu-active {
   background-color: #f3f6ff;
-  width: 300px;
-  height: 87%;
+  width: 45vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -99,16 +99,16 @@
 }
 
 .nav-text-item {
-  margin-left: 10px;
+  margin-left: 1.5vh;
 }
 
 .nav-text {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 8px 0px 8px 20px;
+  padding: 1vh 0vh 1vh 3vh;
   list-style: none;
-  height: 60px;
+  height: 9vh;
 }
 
 .nav-text:hover {
@@ -121,7 +121,7 @@
 }
 
 .nav-menu-items {
-  width: 100%;
+  width: 45vh;
   list-style: none;
   overflow: hidden;
   padding: 0;
