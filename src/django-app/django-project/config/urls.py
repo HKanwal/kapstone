@@ -11,4 +11,5 @@ urlpatterns = [
     path("auth/", include("djoser.urls.jwt")),
     path("accounts/", include("accounts.urls")),
     path("shops/", include("shops.urls")),
+    path('quotes/', include('quotes.urls')),
 ]

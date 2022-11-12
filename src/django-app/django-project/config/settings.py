@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "phonenumber_field",
     "accounts.apps.AccountsConfig",
     "shops.apps.ShopsConfig",
+    "quotes.apps.QuotesConfig",
 ]
 
 MIDDLEWARE = [
