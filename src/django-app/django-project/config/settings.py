@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "phonenumber_field",
     "accounts.apps.AccountsConfig",
     "shops.apps.ShopsConfig",
+    "quotes.apps.QuotesConfig",
 ]
 
 MIDDLEWARE = [
@@ -133,6 +134,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    "EXCEPTION_HANDLER": "rest_framework.views.exception_handler",
 }
 
 SIMPLE_JWT = {
@@ -146,6 +148,8 @@ EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "NOT SET").strip()
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "NOT SET").strip()
 EMAIL_USE_TLS = True
 
+APP_URL = "http://127.0.0.1:8000"
+APP_REGISTRATION_ROUTE = "signup"
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
