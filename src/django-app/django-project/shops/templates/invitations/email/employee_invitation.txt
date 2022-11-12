@@ -1,0 +1,8 @@
+Hi,
+
+You have been invited to join {{ shop_name }}.
+
+To join, please visit this url: {{ invitation_url }}
+
+Thank you,
+Sayyara
