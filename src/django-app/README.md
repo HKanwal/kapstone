@@ -113,7 +113,7 @@ GRANT ALL PRIVILEGES ON DATABASE sayyara TO my_username;
         "re_password": "RE-ENTER PASSWORD",
         "first_name": "FIRST NAME (Optional)",
         "last_name": "LAST NAME (Optional)",
-        "user_type": "ONE OF: shop_owner, employee or customer (DEFAULT = customer)"
+        "type": "ONE OF: shop_owner, employee or customer (DEFAULT = customer)"
     }
     ```
 
