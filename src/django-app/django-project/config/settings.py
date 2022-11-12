@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+# SECURITY WARNING: don't allow all CORS origins in production
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
@@ -44,11 +46,13 @@ INSTALLED_APPS = [
     "accounts.apps.AccountsConfig",
     "shops.apps.ShopsConfig",
     "quotes.apps.QuotesConfig",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",

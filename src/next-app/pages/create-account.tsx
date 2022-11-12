@@ -38,10 +38,12 @@ const CreateAccountPage: NextPage = () => {
 
   const mutation = useMutation({
     mutationFn: (registration: Registration) => {
-      return fetch(`${apiUrl}/auth/users`, {
+      return fetch(`${apiUrl}/auth/users/`, {
         method: 'POST',
         body: JSON.stringify(registration),
-        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
       });
     },
   });
