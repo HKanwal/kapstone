@@ -6,18 +6,7 @@ import Header from '../components/Header';
 import styles from '../styles/pages/CreateAccount.module.css';
 import validateEmail from '../utils/validateEmail';
 import { useMutation } from 'react-query';
-import apiUrl from '../constants/api-url';
-
-// body of registration POST request
-type Registration = {
-  email: string;
-  username: string;
-  password: string;
-  re_password: string;
-  first_name?: string;
-  last_name?: string;
-  type: 'shop_owner' | 'employee' | 'customer';
-};
+import { registrationFn } from '../utils/api';
 
 const CreateAccountPage: NextPage = () => {
   const [firstName, setFirstName] = useState('');
@@ -37,15 +26,7 @@ const CreateAccountPage: NextPage = () => {
     emailErrors === undefined;
 
   const mutation = useMutation({
-    mutationFn: (registration: Registration) => {
-      return fetch(`${apiUrl}/auth/users/`, {
-        method: 'POST',
-        body: JSON.stringify(registration),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      });
-    },
+    mutationFn: registrationFn,
   });
 
   const handleEmailBlur = () => {
@@ -57,16 +38,22 @@ const CreateAccountPage: NextPage = () => {
   };
 
   const handleSubmit = () => {
-    mutation.mutate({
-      email: email,
-      username: username,
-      password: password,
-      re_password: password,
-      type: 'shop_owner',
-      first_name: firstName || undefined,
-      last_name: lastName || undefined,
-    });
-    //window.location.href = '/invite';
+    mutation.mutate(
+      {
+        email: email,
+        username: username,
+        password: password,
+        re_password: password,
+        type: 'shop_owner',
+        first_name: firstName || undefined,
+        last_name: lastName || undefined,
+      },
+      {
+        onSuccess: () => {
+          window.location.href = '/invite';
+        },
+      }
+    );
   };
 
   return (
