@@ -49,8 +49,14 @@ const CreateAccountPage: NextPage = () => {
         last_name: lastName || undefined,
       },
       {
-        onSuccess: () => {
-          window.location.href = '/invite';
+        onSuccess(data, variables, context) {
+          if (data.ok) {
+            window.location.href = '/invite';
+          } else {
+            data.json().then((response) => {
+              console.log(response);
+            });
+          }
         },
       }
     );
