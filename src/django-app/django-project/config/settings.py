@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "accounts.apps.AccountsConfig",
     "shops.apps.ShopsConfig",
     "quotes.apps.QuotesConfig",
+    "vehicles.apps.VehiclesConfig",
 ]
 
 MIDDLEWARE = [
