@@ -44,7 +44,7 @@ const CreateAccountPage: NextPage = () => {
       {
         onSuccess(data, variables, context) {
           if (data.ok) {
-            window.location.href = '/invite';
+            window.location.href = '/create-shop';
           } else {
             setEmail((prev) => {
               return { ...prev, errors: [] };
@@ -70,7 +70,7 @@ const CreateAccountPage: NextPage = () => {
 
   return (
     <div className={styles.container}>
-      <Header goBackToHref="/create-shop" title="Create New Account" />
+      <Header goBackToHref="/login" title="Create New Account" />
 
       <div className={styles.content}>
         <div className={styles['field-container']}>

@@ -20,8 +20,8 @@ const LoginPage: NextPage = () => {
     setModalVisisble(false);
   };
 
-  const goToCreateShop = () => {
-    window.location.href = '/create-shop';
+  const handleClickRegister = () => {
+    window.location.href = '/create-account';
   };
 
   return (
@@ -45,7 +45,7 @@ const LoginPage: NextPage = () => {
         </div>
         <Button title="Login" width="80%" disabled={username.length < 1 || password.length < 1} />
         <span className={styles.or}>OR</span>
-        <Button title="Register" width="80%" onClick={goToCreateShop} />
+        <Button title="Register" width="80%" onClick={handleClickRegister} />
 
         <Modal visible={modalVisible} onClose={hideModal}>
           <div className={styles['modal-content']}>

@@ -19,7 +19,7 @@ const CreateShopPage: NextPage = () => {
   const valid = name.length > 0 && address.length > 0 && emailErrors === undefined;
 
   const handleSubmit = () => {
-    window.location.href = '/create-account';
+    window.location.href = '/invite';
   };
 
   const handleEmailBlur = () => {
@@ -32,7 +32,7 @@ const CreateShopPage: NextPage = () => {
 
   return (
     <div className={styles.container}>
-      <Header goBackToHref="/login" title="Create New Shop" />
+      <Header goBackToHref="/create-account" title="Create New Shop" />
 
       <div className={styles.content}>
         <div className={styles['field-container']}>
