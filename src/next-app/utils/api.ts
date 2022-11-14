@@ -1,3 +1,4 @@
+import { createContext } from 'react';
 import apiUrl from '../constants/api-url';
 
 /** Mutations */
@@ -32,6 +33,8 @@ type Jwt = {
   access: string;
 };
 
+const AuthContext = createContext({ refresh: '', access: '' });
+
 function loginFn(loginBody: LoginBody) {
   return fetch(`${apiUrl}/auth/jwt/create/`, {
     method: 'POST',
@@ -43,4 +46,4 @@ function loginFn(loginBody: LoginBody) {
 }
 
 export type { RegistrationBody, LoginBody, Jwt };
-export { registrationFn, loginFn };
+export { registrationFn, loginFn, AuthContext };
