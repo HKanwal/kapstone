@@ -17,10 +17,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     setJwt(jwt);
   };
 
-  useEffect(() => {
-    console.log(jwt);
-  }, [jwt]);
-
   return (
     <QueryClientProvider client={queryClient}>
       <Head>

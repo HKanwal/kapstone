@@ -40,7 +40,6 @@ const LoginPage: NextPage<LoginPageProps, {}> = (props) => {
         onSuccess(data, variables, context) {
           if (data.ok) {
             data.json().then((response: Jwt) => {
-              console.log('calling callback..');
               props.onLogin(response);
             });
             router.push('/dashboard');
