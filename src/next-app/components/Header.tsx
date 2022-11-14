@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import styles from '../styles/components/Header.module.css';
 import BackButton from './BackButton';
 
@@ -7,8 +8,10 @@ type HeaderProps = {
 };
 
 const Header = (props: HeaderProps) => {
+  const router = useRouter();
+
   const goBack = () => {
-    window.location.href = props.goBackToHref;
+    router.push(props.goBackToHref);
   };
 
   return (

@@ -7,8 +7,10 @@ import Header from '../components/Header';
 import styles from '../styles/pages/CreateShop.module.css';
 import DropdownField from '../components/DropdownField';
 import validateEmail from '../utils/validateEmail';
+import { useRouter } from 'next/router';
 
 const CreateShopPage: NextPage = () => {
+  const router = useRouter();
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [phoneNumbers, setPhoneNumbers] = useState<string[]>(['']);
@@ -19,7 +21,7 @@ const CreateShopPage: NextPage = () => {
   const valid = name.length > 0 && address.length > 0 && emailErrors === undefined;
 
   const handleSubmit = () => {
-    window.location.href = '/invite';
+    router.push('/invite');
   };
 
   const handleEmailBlur = () => {

@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import styles from '../styles/pages/CreateAccount.module.css';
 import { useMutation } from 'react-query';
 import { registrationFn } from '../utils/api';
+import { useRouter } from 'next/router';
 
 type Field = {
   value: string;
@@ -17,6 +18,7 @@ function fieldIsValid(field: Field) {
 }
 
 const CreateAccountPage: NextPage = () => {
+  const router = useRouter();
   const [firstName, setFirstName] = useState<Field>({ value: '', errors: [] });
   const [lastName, setLastName] = useState<Field>({ value: '', errors: [] });
   const [phoneNumber, setPhoneNumber] = useState<Field>({ value: '', errors: [] });
@@ -44,7 +46,7 @@ const CreateAccountPage: NextPage = () => {
       {
         onSuccess(data, variables, context) {
           if (data.ok) {
-            window.location.href = '/create-shop';
+            router.push('/create-shop');
           } else {
             setEmail((prev) => {
               return { ...prev, errors: [] };
