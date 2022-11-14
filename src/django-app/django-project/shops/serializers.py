@@ -5,7 +5,7 @@ from .models import Shop, Address, Invitation
 
 class ShopSerializer(serializers.ModelSerializer):
     shop_owner = serializers.SlugRelatedField(
-        slug_field="name", queryset=Shop.objects.all()
+        slug_field="username", queryset=Shop.objects.all()
     )
     address = serializers.SlugRelatedField(
         slug_field="street", queryset=Address.objects.all()
