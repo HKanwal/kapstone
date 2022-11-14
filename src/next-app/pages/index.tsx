@@ -1,9 +1,12 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import Button from '../components/Button';
 import styles from '../styles/pages/Home.module.css';
 
 const Home: NextPage = () => {
+  const router = useRouter();
+
   return (
     <>
       <Head>
@@ -19,7 +22,7 @@ const Home: NextPage = () => {
           <Button
             title="Login as a Shop Owner"
             onClick={() => {
-              window.location.href = '/login';
+              router.push('/login');
             }}
           />
         </div>

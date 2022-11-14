@@ -8,6 +8,7 @@ import Modal from '../components/Modal';
 import styles from '../styles/pages/Login.module.css';
 import { useMutation } from 'react-query';
 import { Jwt, loginFn } from '../utils/api';
+import { useRouter } from 'next/router';
 
 type LoginPageProps = {
   onLogin: (jwt: Jwt) => void;
@@ -18,6 +19,7 @@ const LoginPage: NextPage<LoginPageProps, {}> = (props) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [modalVisible, setModalVisisble] = useState<boolean>(false);
+  const router = useRouter();
 
   const mutation = useMutation({
     mutationFn: loginFn,
@@ -41,7 +43,7 @@ const LoginPage: NextPage<LoginPageProps, {}> = (props) => {
               console.log('calling callback..');
               props.onLogin(response);
             });
-            window.location.href = '/dashboard';
+            router.push('/dashboard');
           } else {
             setError('Invalid credentials.');
           }
@@ -51,7 +53,7 @@ const LoginPage: NextPage<LoginPageProps, {}> = (props) => {
   };
 
   const handleClickRegister = () => {
-    window.location.href = '/create-account';
+    router.push('/create-account');
   };
 
   return (
