@@ -1,60 +1,66 @@
 import type { NextPage } from 'next';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import Button from '../components/Button';
 import TextField from '../components/TextField';
 import Header from '../components/Header';
 import styles from '../styles/pages/CreateAccount.module.css';
-import validateEmail from '../utils/validateEmail';
 import { useMutation } from 'react-query';
 import { registrationFn } from '../utils/api';
 
+type Field = {
+  value: string;
+  errors: string[];
+};
+
+function fieldIsValid(field: Field) {
+  return field.value.length > 0 && field.errors.length === 0;
+}
+
 const CreateAccountPage: NextPage = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [email, setEmail] = useState('');
-  const [emailErrors, setEmailErrors] = useState<Set<string> | undefined>(undefined);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const valid =
-    firstName.length > 0 &&
-    lastName.length > 0 &&
-    phoneNumber.length > 0 &&
-    email.length > 0 &&
-    username.length > 0 &&
-    password.length > 0 &&
-    emailErrors === undefined;
+  const [firstName, setFirstName] = useState<Field>({ value: '', errors: [] });
+  const [lastName, setLastName] = useState<Field>({ value: '', errors: [] });
+  const [phoneNumber, setPhoneNumber] = useState<Field>({ value: '', errors: [] });
+  const [email, setEmail] = useState<Field>({ value: '', errors: [] });
+  const [username, setUsername] = useState<Field>({ value: '', errors: [] });
+  const [password, setPassword] = useState<Field>({ value: '', errors: [] });
+  const fields = [firstName, lastName, phoneNumber, email, username, password];
+  const valid = fields.every(fieldIsValid);
 
   const mutation = useMutation({
     mutationFn: registrationFn,
   });
 
-  const handleEmailBlur = () => {
-    if (email.length > 0 && !validateEmail(email)) {
-      setEmailErrors(new Set(['Invalid email format']));
-    } else {
-      setEmailErrors(undefined);
-    }
-  };
-
   const handleSubmit = () => {
     mutation.mutate(
       {
-        email: email,
-        username: username,
-        password: password,
-        re_password: password,
+        email: email.value,
+        username: username.value,
+        password: password.value,
+        re_password: password.value,
         type: 'shop_owner',
-        first_name: firstName || undefined,
-        last_name: lastName || undefined,
+        first_name: firstName.value || undefined,
+        last_name: lastName.value || undefined,
       },
       {
         onSuccess(data, variables, context) {
           if (data.ok) {
             window.location.href = '/invite';
           } else {
+            setEmail((prev) => {
+              return { ...prev, errors: [] };
+            });
             data.json().then((response) => {
-              console.log(response);
+              const setterMap = new Map<string, Dispatch<SetStateAction<Field>>>();
+              setterMap.set('email', setEmail);
+              setterMap.set('username', setUsername);
+              setterMap.set('password', setPassword);
+              for (let key of Object.keys(response)) {
+                const setter = setterMap.get(key);
+                setter &&
+                  setter((prev) => {
+                    return { ...prev, errors: response[key] };
+                  });
+              }
             });
           }
         },
@@ -71,7 +77,10 @@ const CreateAccountPage: NextPage = () => {
           <TextField
             name="First Name"
             placeholder="Enter your first name"
-            onChange={setFirstName}
+            onChange={(newVal) => {
+              setFirstName({ value: newVal, errors: [] });
+            }}
+            errors={firstName.errors.length === 0 ? undefined : new Set(firstName.errors)}
             required
           />
         </div>
@@ -79,7 +88,10 @@ const CreateAccountPage: NextPage = () => {
           <TextField
             name="Last Name"
             placeholder="Enter your last name"
-            onChange={setLastName}
+            onChange={(newVal) => {
+              setLastName({ value: newVal, errors: [] });
+            }}
+            errors={lastName.errors.length === 0 ? undefined : new Set(lastName.errors)}
             required
           />
         </div>
@@ -87,7 +99,10 @@ const CreateAccountPage: NextPage = () => {
           <TextField
             name="Phone Number"
             placeholder="Enter your phone number"
-            onChange={setPhoneNumber}
+            onChange={(newVal) => {
+              setPhoneNumber({ value: newVal, errors: [] });
+            }}
+            errors={phoneNumber.errors.length === 0 ? undefined : new Set(phoneNumber.errors)}
             required
           />
         </div>
@@ -95,9 +110,10 @@ const CreateAccountPage: NextPage = () => {
           <TextField
             name="Email"
             placeholder="Enter your email"
-            onChange={setEmail}
-            onBlur={handleEmailBlur}
-            errors={emailErrors}
+            onChange={(newVal) => {
+              setEmail({ value: newVal, errors: [] });
+            }}
+            errors={email.errors.length === 0 ? undefined : new Set(email.errors)}
             required
           />
         </div>
@@ -105,7 +121,10 @@ const CreateAccountPage: NextPage = () => {
           <TextField
             name="Username"
             placeholder="Enter your username"
-            onChange={setUsername}
+            onChange={(newVal) => {
+              setUsername({ value: newVal, errors: [] });
+            }}
+            errors={username.errors.length === 0 ? undefined : new Set(username.errors)}
             required
           />
         </div>
@@ -114,7 +133,10 @@ const CreateAccountPage: NextPage = () => {
             name="Password"
             inputType="password"
             placeholder="Enter your password"
-            onChange={setPassword}
+            onChange={(newVal) => {
+              setPassword({ value: newVal, errors: [] });
+            }}
+            errors={password.errors.length === 0 ? undefined : new Set(password.errors)}
             required
           />
         </div>
