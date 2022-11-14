@@ -22,5 +22,25 @@ function registrationFn(registrationBody: RegistrationBody) {
   });
 }
 
-export type { RegistrationBody };
-export { registrationFn };
+type LoginBody = {
+  username: string;
+  password: string;
+};
+
+type Jwt = {
+  refresh: string;
+  access: string;
+};
+
+function loginFn(loginBody: LoginBody) {
+  return fetch(`${apiUrl}/auth/jwt/create/`, {
+    method: 'POST',
+    body: JSON.stringify(loginBody),
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  });
+}
+
+export type { RegistrationBody, LoginBody, Jwt };
+export { registrationFn, loginFn };

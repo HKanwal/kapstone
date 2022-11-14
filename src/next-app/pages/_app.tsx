@@ -2,10 +2,25 @@ import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { useEffect, useState } from 'react';
+import { Jwt } from '../utils/api';
 
 const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const [jwt, setJwt] = useState<Jwt>({
+    refresh: '',
+    access: '',
+  });
+
+  const handleLogin = (jwt: Jwt) => {
+    setJwt(jwt);
+  };
+
+  useEffect(() => {
+    console.log(jwt);
+  }, [jwt]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Head>
@@ -63,7 +78,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
         />
       </Head>
-      <Component {...pageProps} />
+      <Component {...pageProps} onLogin={handleLogin} />
     </QueryClientProvider>
   );
 }

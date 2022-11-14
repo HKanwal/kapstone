@@ -6,11 +6,22 @@ import Header from '../components/Header';
 import Link from '../components/Link';
 import Modal from '../components/Modal';
 import styles from '../styles/pages/Login.module.css';
+import { useMutation } from 'react-query';
+import { Jwt, loginFn } from '../utils/api';
 
-const LoginPage: NextPage = () => {
+type LoginPageProps = {
+  onLogin: (jwt: Jwt) => void;
+};
+
+const LoginPage: NextPage<LoginPageProps, {}> = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [modalVisible, setModalVisisble] = useState<boolean>(false);
+
+  const mutation = useMutation({
+    mutationFn: loginFn,
+  });
 
   const showModal = () => {
     setModalVisisble(true);
@@ -18,6 +29,25 @@ const LoginPage: NextPage = () => {
 
   const hideModal = () => {
     setModalVisisble(false);
+  };
+
+  const handleClickLogin = () => {
+    mutation.mutate(
+      { username, password },
+      {
+        onSuccess(data, variables, context) {
+          if (data.ok) {
+            data.json().then((response: Jwt) => {
+              console.log('calling callback..');
+              props.onLogin(response);
+            });
+            window.location.href = '/dashboard';
+          } else {
+            setError('Invalid credentials.');
+          }
+        },
+      }
+    );
   };
 
   const handleClickRegister = () => {
@@ -29,21 +59,37 @@ const LoginPage: NextPage = () => {
       <Header goBackToHref="/" />
 
       <div className={styles.content}>
+        {error.length > 0 ? <div className={styles['error-container']}>{error}</div> : <></>}
         <div className={styles['username-container']}>
-          <TextField name="Username" placeholder="Enter your username" onChange={setUsername} />
+          <TextField
+            name="Username"
+            placeholder="Enter your username"
+            onChange={(username) => {
+              setError('');
+              setUsername(username);
+            }}
+          />
         </div>
         <div className={styles['password-container']}>
           <TextField
             name="Password"
             placeholder="Enter your password"
             inputType="password"
-            onChange={setPassword}
+            onChange={(password) => {
+              setError('');
+              setPassword(password);
+            }}
           />
         </div>
         <div className={styles['forgot-password-container']}>
           <Link text="Forgot Password?" onClick={showModal} />
         </div>
-        <Button title="Login" width="80%" disabled={username.length < 1 || password.length < 1} />
+        <Button
+          title="Login"
+          width="80%"
+          onClick={handleClickLogin}
+          disabled={username.length < 1 || password.length < 1}
+        />
         <span className={styles.or}>OR</span>
         <Button title="Register" width="80%" onClick={handleClickRegister} />
 
