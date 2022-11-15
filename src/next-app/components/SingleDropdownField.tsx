@@ -25,8 +25,8 @@ const SingleDropdownField = (props: DropdownFieldProps) => {
   const items = useMemo(() => Array.from(props.items), [props.items]);
   const inputRef = useRef<TextInputRef>(null);
 
-  const handleChange = (newVals: string) => {
-    props.onChange && props.onChange(newVals);
+  const handleChange = (newVal: string) => {
+    props.onChange && props.onChange(newVal);
   };
 
   const handleBlur = () => {
@@ -38,7 +38,7 @@ const SingleDropdownField = (props: DropdownFieldProps) => {
   const handleFocus = () => {
     setValue('');
     handleChange('');
-    setSelectedItem('');
+    setSelectedItem(props.placeholder ?? '');
     clearTimeout(collapseTimout);
     setExpanded(true);
     inputRef.current?.focus();

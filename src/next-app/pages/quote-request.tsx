@@ -197,7 +197,7 @@ const QuoteRequestPage: NextPage = () => {
           <TextField name="Quote Request Name" placeholder="Enter a quote request name" onChange={setName} required />
         </div>
         <div className={styles['text-container']}>
-          <SingleDropdownField name="Select Vehicle Make" items={makesList} onChange={setMake} required />
+          <SingleDropdownField name="Select Vehicle Make" placeholder='Select your vehicle make' items={makesList} onChange={setMake} required />
         </div>
         {make === 'Other' ?
           <div className={styles['text-container']}>
@@ -212,7 +212,7 @@ const QuoteRequestPage: NextPage = () => {
         }
         {make && make !== 'Other' ?
           <div className={styles['text-container']}>
-            <SingleDropdownField name="Select Vehicle Model" items={modelsList[make]} onChange={setModel} required />
+            <SingleDropdownField name="Select Vehicle Model" placeholder='Select your vehicle model' items={modelsList[make]} onChange={setModel} required />
           </div>
           : null
         }
@@ -241,7 +241,7 @@ const QuoteRequestPage: NextPage = () => {
           <TextField name="Email" placeholder="Enter your email" onChange={setEmail} onBlur={handleEmailBlur} errors={emailErrors} required />
         </div>
         <div className={styles['text-container']}>
-          <SingleDropdownField name="Preferred Contact Method" items={['Email', 'Phone']} onChange={setPreferredContact} />
+          <SingleDropdownField name="Preferred Contact Method" placeholder="None" items={['Email', 'Phone']} onChange={setPreferredContact} />
         </div>
       </div>
       <div className={styles.subtitle}>
@@ -251,10 +251,10 @@ const QuoteRequestPage: NextPage = () => {
       </div>
       <div className={styles.content}>
         <div className={styles['text-container']}>
-          <SingleDropdownField name="New or Used Part Preference" items={['New Parts Only', 'Used Parts Only', 'No Preference']} onChange={setPartPreferenceSeller} />
+          <SingleDropdownField name="New or Used Part Preference" placeholder="No Preference" items={['New Parts Only', 'Used Parts Only', 'No Preference']} onChange={setPartPreferenceSeller} />
         </div>
         <div className={styles['text-container']}>
-          <SingleDropdownField name="OEM or Aftermarket Part Preference" items={['OEM Parts Only', 'Aftermarket Parts Only', 'No Preference']} onChange={setPartPreferenceType} />
+          <SingleDropdownField name="OEM or Aftermarket Part Preference" placeholder="No Preference" items={['OEM Parts Only', 'Aftermarket Parts Only', 'No Preference']} onChange={setPartPreferenceType} />
         </div>
         <div className={styles['text-container']}>
           <TextArea name='Additional Notes' placeholder='Enter any additional notes here.' onChange={setNotes} />
