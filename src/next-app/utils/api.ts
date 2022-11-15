@@ -13,6 +13,15 @@ type RegistrationBody = {
   type: 'shop_owner' | 'employee' | 'customer';
 };
 
+type RegistrationErrResponse = {
+  type: string;
+  errors: {
+    code: string;
+    detail: string;
+    attr: string;
+  }[];
+};
+
 function registrationFn(registrationBody: RegistrationBody) {
   return fetch(`${apiUrl}/auth/users/`, {
     method: 'POST',
@@ -45,5 +54,5 @@ function loginFn(loginBody: LoginBody) {
   });
 }
 
-export type { RegistrationBody, LoginBody, Jwt };
+export type { RegistrationBody, RegistrationErrResponse, LoginBody, Jwt };
 export { registrationFn, loginFn, AuthContext };
