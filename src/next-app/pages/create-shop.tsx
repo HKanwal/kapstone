@@ -34,7 +34,7 @@ const CreateShopPage: NextPage = () => {
 
   return (
     <div className={styles.container}>
-      <Header goBackToHref="/create-account" title="Create New Shop" />
+      <Header title="Create New Shop" />
 
       <div className={styles.content}>
         <div className={styles['field-container']}>

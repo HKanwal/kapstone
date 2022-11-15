@@ -72,7 +72,7 @@ const CreateAccountPage: NextPage = () => {
 
   return (
     <div className={styles.container}>
-      <Header goBackToHref="/login" title="Create New Account" />
+      <Header title="Create New Account" />
 
       <div className={styles.content}>
         <div className={styles['field-container']}>

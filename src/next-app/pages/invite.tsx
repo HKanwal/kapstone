@@ -7,7 +7,7 @@ import styles from '../styles/pages/Invite.module.css';
 const InvitePage: NextPage = () => {
   return (
     <div className={styles.container}>
-      <Header goBackToHref="/create-shop" title="Invite Employees" />
+      <Header title="Invite Employees" />
 
       <div className={styles.content}>
         <div className={styles['field-container']}>
