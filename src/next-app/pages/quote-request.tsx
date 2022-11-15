@@ -184,7 +184,7 @@ const QuoteRequestPage: NextPage = () => {
 
   return (
     <div>
-      <Header goBackToHref="/login" title="Create Quote Request" />
+      <Header title="Create Quote Request" />
       <div className={styles.subtitle}>
         <label>
           Vehicle Information
