@@ -10,6 +10,7 @@ type DropdownFieldProps = {
   width?: string | number;
   required?: boolean;
   items: Set<string>;
+  onChange?: (newVal: string) => void;
 };
 
 let collapseTimout: NodeJS.Timeout;
@@ -20,6 +21,10 @@ const DropdownField = (props: DropdownFieldProps) => {
   const [value, setValue] = useState('');
   const items = useMemo(() => Array.from(props.items), [props.items]);
   const inputRef = useRef<TextInputRef>(null);
+
+  const handleChange = (newVals: string) => {
+    props.onChange && props.onChange(newVals);
+  };
 
   const handleBlur = () => {
     collapseTimout = setTimeout(() => {
@@ -37,6 +42,7 @@ const DropdownField = (props: DropdownFieldProps) => {
     setSelectedItems((prevSelectedItems) => {
       return [...prevSelectedItems, item];
     });
+    handleChange(item);
   };
 
   const handleChipMouseDown = () => {
