@@ -86,3 +86,7 @@ local_settings.py
 
 .envrc
 db.sqlite3
+
+## venv
+Scripts/
+pyvenv.cfg
