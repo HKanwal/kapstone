@@ -1,0 +1,322 @@
+{
+  "carData": [
+    {
+      "make": "Volkswagen",
+      "models": [
+        "ID.4",
+        "Atlas",
+        "Atlas Cross Sport",
+        "Tiguan",
+        "Taos",
+        "Jetta",
+        "Jetta GLI",
+        "Arteon",
+        "Golf R",
+        "Golf GTI",
+        "Other"
+      ]
+    },
+    {
+      "make": "Toyota",
+      "models": [
+        "GR86",
+        "GP Supra",
+        "Prius",
+        "Prius Prime",
+        "Corolla Hatchback",
+        "Corolla",
+        "Camry",
+        "Mirai",
+        "Crown",
+        "C-HR",
+        "Corolla Cross",
+        "Corolla Cross Hybrid",
+        "RAV4",
+        "RAV4 Prime",
+        "Venza",
+        "Highlander",
+        "4Runner",
+        "Sequoia",
+        "Sienna",
+        "Tacoma",
+        "Tundra",
+        "Other"
+      ]
+    },
+    {
+      "make": "Mercedes-Benz",
+      "models": [
+        "GLA SUV",
+        "GLB SUV",
+        "GLC SUV",
+        "GLC Coupe",
+        "GLE SUV",
+        "EQB SUV",
+        "GLE Coupe",
+        "GLS SUV",
+        "EQS SUV",
+        "G-Class SUV",
+        "Mercedes-Maybach GLS SUV",
+        "A-Class Hatch",
+        "A-Class Sedan",
+        "C-Class Sedan",
+        "E-Class Sedan",
+        "S-Class Sedan",
+        "EQS Sedan",
+        "Maybach S-Class",
+        "E-Class Wagon",
+        "CLA Coupe",
+        "C Class Coupe",
+        "E Class Coupe",
+        "CLS Coupe",
+        "Mercedes-AMG GT 4-door Coupe",
+        "C-Class Cabriolet",
+        "E-Class Cabriolet",
+        "SL Roadster",
+        "EQB SUV",
+        "EQS SUV",
+        "EQS Sedan",
+        "Other"
+      ]
+    },
+    {
+      "make": "Ford",
+      "models": [
+        "EDGE ST",
+        "Explorer",
+        "F-150 Raptor",
+        "Mustang Shelby GT500",
+        "Ford GT",
+        "Ecosport",
+        "Escape",
+        "Bronco Sport",
+        "Edge",
+        "Bronco",
+        "Mustang Mach-E",
+        "Expedition",
+        "Maverick",
+        "Transit Connect",
+        "F-150",
+        "Transit",
+        "Super Duty",
+        "F-150 Lightning",
+        "Mustang",
+        "Escape Hybrid",
+        "Escape SE Plug-In Hybrid",
+        "E-Transit",
+        "Other"
+      ]
+    },
+    {
+      "make": "Honda",
+      "models": [
+        "Civic Sedan",
+        "Civic Hatchback",
+        "Type R",
+        "Accord Sedan",
+        "Accord Hybrid",
+        "HR-V",
+        "CR-V",
+        "Passport",
+        "Pilot",
+        "Odyssey",
+        "Ridgeline",
+        "Other"
+      ]
+    },
+    {
+      "make": "Chevrolet",
+      "models": [
+        "Trax",
+        "Trailblazer",
+        "Equinox",
+        "Blazer",
+        "Traverse",
+        "Tahoe",
+        "Suburban",
+        "Colorado",
+        "Silverado",
+        "Silverado HD",
+        "Bolt EV",
+        "Bolt EUV",
+        "Spark",
+        "Malibu",
+        "Camaro",
+        "Corvette Stingray",
+        "Corvette",
+        "Other"
+      ]
+    },
+    {
+      "make": "Buick",
+      "models": [
+        "Encore",
+        "Encore GX",
+        "Envision",
+        "Envision Avenir",
+        "Enclave",
+        "Enclave Avenir",
+        "Other"
+      ]
+    },
+    {
+      "make": "GMC",
+      "models": [
+        "Canyon",
+        "Sierra 1500",
+        "Sierra HD",
+        "Terrain",
+        "Acadia",
+        "Yukon",
+        "Hummer EV Pickup",
+        "Hummer EV SUV",
+        "Terrain Denali",
+        "Canyon Denali",
+        "Acadia Denali",
+        "Sierra 1500 Denali",
+        "Sierra HD Denali",
+        "Yukon Denali",
+        "Canyon AT4",
+        "Sierra 1500 AT4",
+        "Sierra HD AT4",
+        "Terrain AT4",
+        "Acadia AT4",
+        "Yukon AT4",
+        "Savana Passenger",
+        "Savana Cargo",
+        "Other"
+      ]
+    },
+    {
+      "make": "Cadillac",
+      "models": [
+        "Escalade",
+        "Escalade-V",
+        "Lyriq",
+        "XT6",
+        "XT5",
+        "XT4",
+        "Other"
+      ]
+    },
+    {
+      "make": "BMW",
+      "models": [
+        "iX",
+        "iX M60",
+        "i7",
+        "i4 Gran Coupe",
+        "i4 M50 xDrive",
+        "Other"
+      ]
+    },
+    {
+      "make": "Chrysler",
+      "models": [
+        "Grand Caravan",
+        "Pacifica",
+        "Pacifica Hybrid",
+        "300",
+        "Other"
+      ]
+    },
+    {
+      "make": "Dodge",
+      "models": [
+        "Durango",
+        "Challenger",
+        "Charger",
+        "Other"
+      ]
+    },
+    {
+      "make": "Fiat",
+      "models": [
+        "500X",
+        "Other"
+      ]
+    },
+    {
+      "make": "Ram",
+      "models": [
+        "1500",
+        "1500 Classic",
+        "2500",
+        "3500",
+        "Chassis Cab",
+        "Promaster",
+        "Promaster City",
+        "Other"
+      ]
+    },
+    {
+      "make": "Jeep",
+      "models": [
+        "Grand Cherokee",
+        "Grand Cherokee 4xe",
+        "Grand Cherokee L",
+        "Wrangler 4xe",
+        "Wrangler",
+        "Gladiator",
+        "Cherokee",
+        "Compass",
+        "Grand Cherokee WK",
+        "Renegade",
+        "Wagoneer",
+        "Grand Wagoneer",
+        "Other"
+      ]
+    },
+    {
+      "make": "Hyundai",
+      "models": [
+        "Tuscon",
+        "Tuscon Hybrid",
+        "Tuscon Plug-in-Hybrid",
+        "Santa Fe",
+        "Santa Fe Hybrid",
+        "Santa Fe Plug-in-Hybrid",
+        "Palisade",
+        "Ioniq 5",
+        "Santa Cruz",
+        "Kona",
+        "Kona Electic",
+        "Kona N Series",
+        "Venue",
+        "Nexo",
+        "Elantra",
+        "Elantra Hybrid",
+        "Elantra N Line",
+        "Elantra N Series",
+        "Sonata",
+        "Sonata Hybrid",
+        "Sonata N Line",
+        "Other"
+      ]
+    },
+    {
+      "make": "KIA",
+      "models": [
+        "Telluride",
+        "Sportage",
+        "Carnival",
+        "Sorento",
+        "Niro EV",
+        "Forte",
+        "Stinger",
+        "Seltos",
+        "Other"
+      ]
+    },
+    {
+      "make": "Tesla",
+      "models": [
+        "Model S",
+        "Model 3",
+        "Model X",
+        "Model Y",
+        "Other"
+      ]
+    }
+  ]
+}
