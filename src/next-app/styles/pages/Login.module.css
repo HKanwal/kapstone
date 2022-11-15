@@ -14,6 +14,11 @@
   height: 100%;
 }
 
+.error-container {
+  color: var(--red-color);
+  margin-bottom: 3vh;
+}
+
 .username-container {
   padding-bottom: 3vh;
   width: 80%;
