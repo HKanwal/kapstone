@@ -5,7 +5,7 @@ import TextField from '../components/TextField';
 import Header from '../components/Header';
 import styles from '../styles/pages/CreateAccount.module.css';
 import { useMutation } from 'react-query';
-import { registrationFn } from '../utils/api';
+import { RegistrationErrResponse, registrationFn } from '../utils/api';
 import { useRouter } from 'next/router';
 
 type Field = {
@@ -48,21 +48,21 @@ const CreateAccountPage: NextPage = () => {
           if (data.ok) {
             router.push('/create-shop');
           } else {
-            setEmail((prev) => {
-              return { ...prev, errors: [] };
-            });
-            data.json().then((response) => {
+            data.json().then((response: RegistrationErrResponse) => {
               const setterMap = new Map<string, Dispatch<SetStateAction<Field>>>();
               setterMap.set('email', setEmail);
               setterMap.set('username', setUsername);
               setterMap.set('password', setPassword);
-              for (let key of Object.keys(response)) {
-                const setter = setterMap.get(key);
-                setter &&
-                  setter((prev) => {
-                    return { ...prev, errors: response[key] };
-                  });
-              }
+              setterMap.forEach((setter, key) => {
+                setter((prev) => {
+                  return {
+                    ...prev,
+                    errors: response.errors
+                      .filter((err) => err.attr === key)
+                      .map((err) => err.detail),
+                  };
+                });
+              });
             });
           }
         },
