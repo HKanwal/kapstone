@@ -13,7 +13,6 @@ import carData from '../data/data.json';
 import validateEmail from '../utils/validateEmail';
 import TextArea from '../components/TextArea';
 import ShopCard from '../components/ShopCard';
-// import { ImagePicker } from 'react-file-picker';
 
 interface carModels {
   [make: string]: string[],
