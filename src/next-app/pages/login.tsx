@@ -57,7 +57,7 @@ const LoginPage: NextPage<LoginPageProps, {}> = (props) => {
 
   return (
     <div className={styles.container}>
-      <Header goBackToHref="/" />
+      <Header />
 
       <div className={styles.content}>
         {error.length > 0 ? <div className={styles['error-container']}>{error}</div> : <></>}
