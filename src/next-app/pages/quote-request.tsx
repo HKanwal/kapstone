@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import Button from '../components/Button';
 import TextField from '../components/TextField';
 import Header from '../components/Header';
@@ -42,8 +42,11 @@ const QuoteRequestPage: NextPage = () => {
   const [disableSubmitShops, setDisableSubmitShops] = useState(true);
   const [checkedShopsDisplay, setCheckedShopsDisplay] = useState([] as JSX.Element[]);
   const [formValid, setFormValid] = useState(false);
-  let makes: string[] = [];
-  let models: carModels = {};
+  const [makesList, setMakesList] = useState([] as string[]);
+  const [modelsList, setModelsList] = useState({} as carModels);
+
+  const today = new Date();
+  const minDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
 
   console.log(formValid);
   if (name.length > 0 &&
@@ -59,28 +62,33 @@ const QuoteRequestPage: NextPage = () => {
     setFormValid(true);
   }
 
-  carData.carData.forEach((entry) => {
-    makes.push(entry.make);
-    models[entry.make] = [];
-    models[entry.make] = entry.models.sort((a, b) => {
-      if (a == 'Other') {
-        return 1;
-      }
-      if (b == 'Other') {
-        return -1;
-      }
-      if (a > b) {
-        return 1;
-      }
-      if (a < b) {
-        return -1
-      }
-      return 0
+  useEffect(() => {
+    let makes: string[] = [];
+    let models: carModels = {};
+    carData.carData.forEach((entry) => {
+      makes.push(entry.make);
+      models[entry.make] = [];
+      models[entry.make] = entry.models.sort((a, b) => {
+        if (a == 'Other') {
+          return 1;
+        }
+        if (b == 'Other') {
+          return -1;
+        }
+        if (a > b) {
+          return 1;
+        }
+        if (a < b) {
+          return -1
+        }
+        return 0
+      });
     });
-  });
-
-  makes.sort();
-  makes.push('Other');
+    makes.sort();
+    makes.push('Other');
+    setMakesList(makes);
+    setModelsList(models);
+  }, []);
 
   const handleEmailBlur = () => {
     if (email.length > 0 && !validateEmail(email)) {
@@ -99,9 +107,6 @@ const QuoteRequestPage: NextPage = () => {
 
     // this.setState({ title: file.name });
   };
-
-  const today = new Date();
-  const minDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
 
   const handleSelectShops = () => {
     setOpen(true);
@@ -192,7 +197,7 @@ const QuoteRequestPage: NextPage = () => {
           <TextField name="Quote Request Name" placeholder="Enter a quote request name" onChange={setName} required />
         </div>
         <div className={styles['text-container']}>
-          <SingleDropdownField name="Select Vehicle Make" items={makes} onChange={setMake} required />
+          <SingleDropdownField name="Select Vehicle Make" items={makesList} onChange={setMake} required />
         </div>
         {make === 'Other' ?
           <div className={styles['text-container']}>
@@ -207,7 +212,7 @@ const QuoteRequestPage: NextPage = () => {
         }
         {make && make !== 'Other' ?
           <div className={styles['text-container']}>
-            <SingleDropdownField name="Select Vehicle Model" items={models[make]} onChange={setModel} required />
+            <SingleDropdownField name="Select Vehicle Model" items={modelsList[make]} onChange={setModel} required />
           </div>
           : null
         }
