@@ -18,6 +18,7 @@ type TextInputProps = {
   value?: string;
   onChange?: (newVal: string) => void;
   type?: string;
+  min?: string;
   onRemove?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
@@ -92,6 +93,7 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
         type={props.type ?? 'text'}
         placeholder={props.placeholder ?? ''}
         value={value}
+        min={props.min ?? undefined}
         onChange={handleChange}
         style={style}
         onFocus={props.onFocus}
