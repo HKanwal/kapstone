@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styles from '../styles/components/ShopCard.module.css';
 
 type ShopCardProps = {

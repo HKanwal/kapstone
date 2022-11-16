@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import styles from '../styles/components/DropdownField.module.css';
 import TextInput, { TextInputRef } from './TextInput';
-import { BsChevronDown, BsKeyFill } from 'react-icons/bs';
+import { BsChevronDown } from 'react-icons/bs';
 
 type DropdownFieldProps = {
   name: string;

@@ -1,6 +1,6 @@
-import { MutableRefObject, useEffect, useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import styles from '../styles/components/TextArea.module.css';
-import TextInput, { TextInputRef } from './TextInput';
+import { TextInputRef } from './TextInput';
 
 type DropdownFieldProps = {
   name: string;

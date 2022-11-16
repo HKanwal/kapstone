@@ -3,17 +3,13 @@ import { ChangeEvent, useState } from 'react';
 import Button from '../components/Button';
 import TextField from '../components/TextField';
 import Header from '../components/Header';
-import Link from '../components/Link';
 import Modal from '../components/Modal';
 import styles from '../styles/pages/QuoteRequest.module.css';
-import DropdownField from '../components/DropdownField';
-import TextMultiField from '../components/TextMultiField';
 import SingleDropdownField from '../components/SingleDropdownField';
 import carData from '../data/data.json';
 import validateEmail from '../utils/validateEmail';
 import TextArea from '../components/TextArea';
 import ShopCard from '../components/ShopCard';
-// import { ImagePicker } from 'react-file-picker';
 
 interface carModels {
   [make: string]: string[],
