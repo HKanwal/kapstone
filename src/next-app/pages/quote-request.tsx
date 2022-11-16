@@ -56,36 +56,38 @@ const QuoteRequestPage: NextPage = () => {
     email.length < 1 ||
     (emailErrors && emailErrors.size > 0) ||
     checkedShopsDisplay.length === 0
-  )
+  ) {
+    valid = true;
+  }
 
-    useEffect(() => {
-      let makes: string[] = [];
-      let models: carModels = {};
-      carData.carData.forEach((entry) => {
-        makes.push(entry.make);
-        models[entry.make] = [];
-        models[entry.make] = entry.models.sort((a, b) => {
-          if (a == 'Other') {
-            return 1;
-          }
-          if (b == 'Other') {
-            return -1;
-          }
-          if (a > b) {
-            return 1;
-          }
-          if (a < b) {
-            return -1
-          }
-          return 0
-        });
+  useEffect(() => {
+    let makes: string[] = [];
+    let models: carModels = {};
+    carData.carData.forEach((entry) => {
+      makes.push(entry.make);
+      models[entry.make] = [];
+      models[entry.make] = entry.models.sort((a, b) => {
+        if (a == 'Other') {
+          return 1;
+        }
+        if (b == 'Other') {
+          return -1;
+        }
+        if (a > b) {
+          return 1;
+        }
+        if (a < b) {
+          return -1
+        }
+        return 0
       });
+    });
 
-      makes.sort();
-      makes.push('Other');
-      setMakesList(makes);
-      setModelsList(models);
-    }, []);
+    makes.sort();
+    makes.push('Other');
+    setMakesList(makes);
+    setModelsList(models);
+  }, []);
 
   const handleEmailBlur = () => {
     if (email.length > 0 && !validateEmail(email)) {
@@ -93,15 +95,6 @@ const QuoteRequestPage: NextPage = () => {
     } else {
       setEmailErrors(undefined);
     }
-  };
-
-  const handleFileChange = (file: File) => {
-    const reader = new FileReader();
-    reader.readAsArrayBuffer(file);
-    reader.onload = e => {
-      // this.extractWordRawText(e.target.result);
-    };
-    // this.setState({ title: file.name });
   };
 
   const handleSelectShops = () => {
