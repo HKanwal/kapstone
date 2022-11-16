@@ -292,7 +292,7 @@ const QuoteRequestPage: NextPage = () => {
         <Button title="Select Shops" width="50%" onClick={handleSelectShops} />
       </div>
       {open ?
-        <Modal visible={open} onClose={() => { setOpen(false) }} children={
+        <Modal visible={open} onClose={() => { setOpen(false) }}>
           <div className={styles['select-shops-modal']}>
             <div className={styles['modal-title']}>
               <label>Select shops to send quote request to:</label>
@@ -315,7 +315,7 @@ const QuoteRequestPage: NextPage = () => {
             {/* <Button title="Submit" width="100%" disabled={disableSubmitShops} onClick={handleShopsSubmit} /> */}
             <Button title="Submit" width="100%" onClick={handleShopsSubmit} />
           </div>
-        } /> : null
+        </Modal> : null
       }
       <div className={styles.content}>
         {checkedShopsDisplay}
