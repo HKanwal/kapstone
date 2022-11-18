@@ -336,7 +336,7 @@ const QuoteRequestPage: NextPage = () => {
       }
       <div className={styles.content}>
         {submittedShopsDisplay}
-        <Button title="Login" width="80%" disabled={valid} />
+        <Button title="Submit" width="80%" disabled={valid} />
       </div >
     </div >
   );
