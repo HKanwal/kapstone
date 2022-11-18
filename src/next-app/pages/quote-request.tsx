@@ -106,6 +106,7 @@ const QuoteRequestPage: NextPage = () => {
 
   const handleSelectShops = () => {
     const tempPreviousSubmittedShops: previousSubmittedShops = {};
+    // Sets initial check marks for previously checked shops
     submittedShops.forEach((shop) => {
       tempPreviousSubmittedShops[shop.id] = { checked: true, name: shop.name };
     });
@@ -115,10 +116,12 @@ const QuoteRequestPage: NextPage = () => {
 
   const handleChecks = (e: ChangeEvent<HTMLInputElement>, checkedShop: shopObject) => {
     if (e.target.checked) {
+      // If checked, add checked shop to the previous submitted shops and checked shops
       setPreviousSubmittedShops({ ...previousSubmittedShops, [checkedShop.id]: { checked: true, name: checkedShop.name } });
       setCheckedShops([...checkedShops, { name: checkedShop.name, id: checkedShop.id }])
       setDisableSubmitShops(false);
     } else {
+      // If unchecked remove shop from previous submitted shops and checked shops
       setPreviousSubmittedShops({ ...previousSubmittedShops, [checkedShop.id]: { checked: false, name: checkedShop.name } });
       checkedShops.forEach((shop) => {
         if (shop.id === checkedShop.id) {
@@ -132,6 +135,7 @@ const QuoteRequestPage: NextPage = () => {
     }
   }
 
+  // Remove shop from previous submitted shops and submitted shops
   const handleRemoveShop = (removedShop: shopObject) => {
     setPreviousSubmittedShops({ ...previousSubmittedShops, [removedShop.id]: { checked: false, name: removedShop.name } });
     const index = submittedShops.indexOf(removedShop);
@@ -141,10 +145,12 @@ const QuoteRequestPage: NextPage = () => {
     }
   }
 
+  // Each time submitted shops are changed run refresh to update the list of shop UI elements to display 
   useEffect(() => {
     handleShopsRefresh();
   }, [submittedShops]);
 
+  // Update list of shop UI elements to display
   const handleShopsRefresh = () => {
     const submittedShopsDisplay: JSX.Element[] = [];
     submittedShops.forEach((shop: shopObject) => {
@@ -164,6 +170,7 @@ const QuoteRequestPage: NextPage = () => {
     setSubmittedShopsDisplay(submittedShopsDisplay);
   }
 
+  // Add checked shops and previously submitted shops (shops that are initially selected) to submitted shops
   const handleShopsSubmit = () => {
     setOpen(false);
     const allCheckedShops = [...checkedShops];
