@@ -12,11 +12,16 @@ import TextArea from '../components/TextArea';
 import ShopCard from '../components/ShopCard';
 
 interface carModels {
-  [make: string]: string[],
+  [make: string]: string[]
 }
 
-interface checkedShops {
-  [shop: string]: boolean
+interface shopObject {
+  name: string
+  id: string
+}
+
+interface previousSubmittedShops {
+  [id: string]: { checked: boolean, name: string }
 }
 
 const QuoteRequestPage: NextPage = () => {
@@ -38,9 +43,13 @@ const QuoteRequestPage: NextPage = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [open, setOpen] = useState(false);
-  const [checkedShops, setCheckedShops] = useState({} as checkedShops);
+
+  const [checkedShops, setCheckedShops] = useState([] as shopObject[]);
+  const [submittedShops, setSubmittedShops] = useState([] as shopObject[]);
+  const [submittedShopsDisplay, setSubmittedShopsDisplay] = useState([] as JSX.Element[]);
+  const [previousSubmittedShops, setPreviousSubmittedShops] = useState({} as previousSubmittedShops)
+
   const [disableSubmitShops, setDisableSubmitShops] = useState(true);
-  const [checkedShopsDisplay, setCheckedShopsDisplay] = useState([] as JSX.Element[]);
   const [makesList, setMakesList] = useState([] as string[]);
   const [modelsList, setModelsList] = useState({} as carModels);
 
@@ -55,7 +64,7 @@ const QuoteRequestPage: NextPage = () => {
     phoneNumber.length < 1 ||
     email.length < 1 ||
     (emailErrors && emailErrors.size > 0) ||
-    checkedShopsDisplay.length === 0
+    submittedShops.length === 0
   ) {
     valid = true;
   }
@@ -98,79 +107,95 @@ const QuoteRequestPage: NextPage = () => {
   };
 
   const handleSelectShops = () => {
+    const tempPreviousSubmittedShops: previousSubmittedShops = {};
+    submittedShops.forEach((shop) => {
+      console.log(shop);
+      tempPreviousSubmittedShops[shop.id] = { checked: true, name: shop.name };
+    });
+    setPreviousSubmittedShops(tempPreviousSubmittedShops);
     setOpen(true);
   }
 
-  const handleChecks = (e: ChangeEvent<HTMLInputElement>) => {
-    setCheckedShops({ ...checkedShops, [e.target.name]: e.target.checked });
+  const handleChecks = (e: ChangeEvent<HTMLInputElement>, checkedShop: shopObject) => {
     if (e.target.checked) {
+      setPreviousSubmittedShops({ ...previousSubmittedShops, [checkedShop.id]: { checked: true, name: checkedShop.name } });
+      setCheckedShops([...checkedShops, { name: checkedShop.name, id: checkedShop.id }])
       setDisableSubmitShops(false);
     } else {
-      for (const shop in checkedShops) {
-        console.log(checkedShops[shop]);
-        if (e.target.name != shop && checkedShops[shop]) {
-          setDisableSubmitShops(false);
-          return;
+      setPreviousSubmittedShops({ ...previousSubmittedShops, [checkedShop.id]: { checked: false, name: checkedShop.name } });
+      checkedShops.forEach((shop) => {
+        if (shop.id === checkedShop.id) {
+          // const index = checkedShops.findIndex((currentShop) => currentShop.id === shop.id)
+          const index = checkedShops.indexOf(shop);
+          if (index !== -1) {
+            checkedShops.splice(index, 1)
+            setSubmittedShops([...checkedShops]);
+          }
         }
-      }
-      setDisableSubmitShops(true);
+      })
+      // for (const shop in checkedShops) {
+      //   console.log(checkedShops[shop]);
+      //   if (e.target.name != shop && checkedShops[shop]) {
+      //     setDisableSubmitShops(false);
+      //     return;
+      //   }
+      // }
+      // setDisableSubmitShops(true);
     }
   }
 
-  const handleRemoveShop = (shop: string, checkedShops: checkedShops) => {
-    console.log(shop);
-    console.log(checkedShops);
-    const newCheckedShops = { ...checkedShops, [shop]: false };
-    setCheckedShops(newCheckedShops);
-    handleShopsRefresh(shop, newCheckedShops);
+  const handleRemoveShop = (removedShop: shopObject) => {
+    setPreviousSubmittedShops({ ...previousSubmittedShops, [removedShop.id]: { checked: false, name: removedShop.name } });
+    const index = submittedShops.indexOf(removedShop);
+    if (index !== -1) {
+      submittedShops.splice(index, 1)
+      setSubmittedShops([...submittedShops]);
+    }
+  }
+
+  useEffect(() => {
+    handleShopsRefresh();
+  }, [submittedShops]);
+
+  const handleShopsRefresh = () => {
+    const submittedShopsDisplay: JSX.Element[] = [];
+    submittedShops.forEach((shop: shopObject) => {
+      submittedShopsDisplay.push(
+        <div className={styles['shop-card']} key={shop.id}>
+          <div className={styles['shop-title-container']}>
+            <label>
+              {shop.name}
+            </label>
+          </div>
+          <div className={styles['remove-button-container']}>
+            <button className={styles['remove-button']} onClick={() => { handleRemoveShop(shop) }}>Remove</button>
+          </div>
+        </div>
+      )
+    })
+    setSubmittedShopsDisplay(submittedShopsDisplay);
   }
 
   const handleShopsSubmit = () => {
     setOpen(false);
-    const checkedShopsDisplay = [];
-    for (const shop in checkedShops) {
-      if (checkedShops[shop]) {
-        checkedShopsDisplay.push(
-          <div className={styles['shop-card']} key={shop}>
-            <div className={styles['shop-title-container']}>
-              <label key={shop}>
-                {shop}
-              </label>
-            </div>
-            <div className={styles['remove-button-container']}>
-              <button className={styles['remove-button']} onClick={() => { handleRemoveShop(shop, checkedShops) }}>Remove</button>
-            </div>
-          </div>
-        )
+    const allCheckedShops = [...checkedShops];
+    checkedShops.forEach((checkedShop) => {
+      setPreviousSubmittedShops({ ...previousSubmittedShops, [checkedShop.id]: { checked: true, name: checkedShop.name } });
+    })
+    for (const shop in previousSubmittedShops) {
+      if (previousSubmittedShops[shop].checked) {
+        const tempItem = { name: previousSubmittedShops[shop].name, id: shop }
+        if (allCheckedShops.filter((checkedShop) => (checkedShop.id === shop)).length === 0) {
+          allCheckedShops.push(tempItem);
+        }
       }
     }
-    console.log(checkedShopsDisplay)
-    setCheckedShopsDisplay(checkedShopsDisplay);
-  }
-
-  const handleShopsRefresh = (removedShop: string, newCheckedShops: checkedShops) => {
-    const checkedShopsDisplay = [];
-    console.log(newCheckedShops);
-
-    for (const shop in newCheckedShops) {
-      if (newCheckedShops[shop] && removedShop !== shop) {
-        checkedShopsDisplay.push(
-          <div className={styles['shop-card']} key={shop}>
-            <div className={styles['shop-title-container']}>
-              <label key={shop}>
-                {shop}
-              </label>
-            </div>
-            <div className={styles['remove-button-container']}>
-              <button className={styles['remove-button']} onClick={() => { handleRemoveShop(shop, checkedShops) }}>Remove</button>
-            </div>
-          </div>
-        )
-        console.log(checkedShopsDisplay);
-      }
-    }
-    console.log(checkedShopsDisplay);
-    setCheckedShopsDisplay(checkedShopsDisplay);
+    allCheckedShops.sort((shop1, shop2) => {
+      return parseInt(shop1.id) - parseInt(shop2.id);
+    })
+    setSubmittedShops(allCheckedShops);
+    setCheckedShops([]);
+    handleShopsRefresh();
   }
 
   return (
@@ -284,23 +309,23 @@ const QuoteRequestPage: NextPage = () => {
         <Button title="Select Shops" width="50%" onClick={handleSelectShops} />
       </div>
       {open ?
-        <Modal visible={open} onClose={() => { setOpen(false) }}>
+        <Modal visible={open} onClose={() => { setCheckedShops([]); setPreviousSubmittedShops({}); setOpen(false) }}>
           <div className={styles['select-shops-modal']}>
             <div className={styles['modal-title']}>
               <label>Select shops to send quote request to:</label>
             </div>
             <div className={styles['card-container']}>
-              <input className='checkbox' name='Shop1' checked={checkedShops['Shop1']} onChange={handleChecks} type="checkbox"></input>
+              <input className='checkbox' name='Shop1' checked={previousSubmittedShops['1'] ? previousSubmittedShops['1'].checked : undefined} onChange={(e) => handleChecks(e, { name: 'Shop1', id: '1' })} type="checkbox"></input>
               <ShopCard name='Shop1' />
             </div>
             <br />
             <div className={styles['card-container']}>
-              <input className='checkbox' name='Shop2' checked={checkedShops['Shop2']} onChange={handleChecks} type="checkbox"></input>
+              <input className='checkbox' name='Shop2' checked={previousSubmittedShops['2'] ? previousSubmittedShops['2'].checked : undefined} onChange={(e) => handleChecks(e, { name: 'Shop2', id: '2' })} type="checkbox"></input>
               <ShopCard name='Shop2' />
             </div>
             <br />
             <div className={styles['card-container']}>
-              <input className='checkbox' name='Shop3' checked={checkedShops['Shop3']} onChange={handleChecks} type="checkbox"></input>
+              <input className='checkbox' name='Shop3' checked={previousSubmittedShops['3'] ? previousSubmittedShops['3'].checked : undefined} onChange={(e) => handleChecks(e, { name: 'Shop3', id: '3' })} type="checkbox"></input>
               <ShopCard name='Shop3' />
             </div>
             <br />
@@ -310,7 +335,7 @@ const QuoteRequestPage: NextPage = () => {
         </Modal> : null
       }
       <div className={styles.content}>
-        {checkedShopsDisplay}
+        {submittedShopsDisplay}
         <Button title="Login" width="80%" disabled={valid} />
       </div >
     </div >
