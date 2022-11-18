@@ -43,12 +43,10 @@ const QuoteRequestPage: NextPage = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [open, setOpen] = useState(false);
-
   const [checkedShops, setCheckedShops] = useState([] as shopObject[]);
   const [submittedShops, setSubmittedShops] = useState([] as shopObject[]);
   const [submittedShopsDisplay, setSubmittedShopsDisplay] = useState([] as JSX.Element[]);
   const [previousSubmittedShops, setPreviousSubmittedShops] = useState({} as previousSubmittedShops)
-
   const [disableSubmitShops, setDisableSubmitShops] = useState(true);
   const [makesList, setMakesList] = useState([] as string[]);
   const [modelsList, setModelsList] = useState({} as carModels);
@@ -109,7 +107,6 @@ const QuoteRequestPage: NextPage = () => {
   const handleSelectShops = () => {
     const tempPreviousSubmittedShops: previousSubmittedShops = {};
     submittedShops.forEach((shop) => {
-      console.log(shop);
       tempPreviousSubmittedShops[shop.id] = { checked: true, name: shop.name };
     });
     setPreviousSubmittedShops(tempPreviousSubmittedShops);
@@ -125,7 +122,6 @@ const QuoteRequestPage: NextPage = () => {
       setPreviousSubmittedShops({ ...previousSubmittedShops, [checkedShop.id]: { checked: false, name: checkedShop.name } });
       checkedShops.forEach((shop) => {
         if (shop.id === checkedShop.id) {
-          // const index = checkedShops.findIndex((currentShop) => currentShop.id === shop.id)
           const index = checkedShops.indexOf(shop);
           if (index !== -1) {
             checkedShops.splice(index, 1)
@@ -133,14 +129,6 @@ const QuoteRequestPage: NextPage = () => {
           }
         }
       })
-      // for (const shop in checkedShops) {
-      //   console.log(checkedShops[shop]);
-      //   if (e.target.name != shop && checkedShops[shop]) {
-      //     setDisableSubmitShops(false);
-      //     return;
-      //   }
-      // }
-      // setDisableSubmitShops(true);
     }
   }
 
@@ -329,7 +317,6 @@ const QuoteRequestPage: NextPage = () => {
               <ShopCard name='Shop3' />
             </div>
             <br />
-            {/* <Button title="Submit" width="100%" disabled={disableSubmitShops} onClick={handleShopsSubmit} /> */}
             <Button title="Submit" width="100%" onClick={handleShopsSubmit} />
           </div>
         </Modal> : null
