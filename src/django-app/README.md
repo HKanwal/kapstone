@@ -84,7 +84,6 @@ GRANT ALL PRIVILEGES ON DATABASE sayyara TO my_username;
 
 ## Step 4: Run the Django App
 
-- `cd` into the `django-project` folder.
 - run: `python manage.py runserver`
 
 
