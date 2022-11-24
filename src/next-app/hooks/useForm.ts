@@ -19,12 +19,20 @@ function fieldsToValues<F extends { [field: string]: FieldValue }>(fields: Field
   }, {}) as F;
 }
 
-function validateField(value: FieldValue, schema: ValidationFunctions[]): string[] {
+function toTitle(str: string) {
+  if (str.length === 0) {
+    return str;
+  }
+
+  return str[0].toUpperCase() + str.slice(1);
+}
+
+function validateField(field: string, value: FieldValue, schema: ValidationFunctions[]): string[] {
   let errors: string[] = [];
   if (schema.includes('required') && value === '') {
-    errors.push('This field is required');
-  } else if (schema.includes('email') && !validateEmail(value)) {
-    errors.push('Please enter a valid email');
+    errors.push(`${toTitle(field)} is required.`);
+  } else if (schema.includes('email') && value.length > 0 && !validateEmail(value)) {
+    errors.push('Please enter a valid email.');
   }
   return errors;
 }
@@ -74,7 +82,11 @@ export function useForm<F extends { [field: string]: FieldValue }>({
     },
     handleBlur: (field: keyof F) => {
       return () => {
-        const errors = validateField(fields[field].value, validationSchema[field] || []);
+        const errors = validateField(
+          field.toString(),
+          fields[field].value,
+          validationSchema[field] || []
+        );
         setFields((prev) => {
           return {
             ...copyFields(prev),
@@ -91,6 +103,7 @@ export function useForm<F extends { [field: string]: FieldValue }>({
       for (let field in fieldsCopy) {
         if (field in validationSchema) {
           fieldsCopy[field].errors = validateField(
+            field,
             fieldsCopy[field].value,
             validationSchema[field] || []
           );

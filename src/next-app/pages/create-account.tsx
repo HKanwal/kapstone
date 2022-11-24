@@ -139,7 +139,7 @@ const CreateAccountPage: NextPage = () => {
           />
         </div>
         <div className={styles['submit-container']}>
-          <Button title="Create" disabled={!form.isValid} width="80%" />
+          <Button type="submit" title="Create" disabled={!form.isValid} width="80%" />
         </div>
       </form>
     </div>
