@@ -8,22 +8,6 @@ import { RegistrationErrResponse, registrationFn } from '../utils/api';
 import { useRouter } from 'next/router';
 import { useForm } from '../hooks/useForm';
 
-function camelCaseToTitle(str: string): string {
-  if (str.length === 0) {
-    return '';
-  }
-
-  let title = str[0].toUpperCase();
-  for (let letter of str.slice(1)) {
-    if (letter.toLowerCase() === letter) {
-      title += letter;
-    } else {
-      title += ' ' + letter;
-    }
-  }
-  return title;
-}
-
 const CreateAccountPage: NextPage = () => {
   const router = useRouter();
   const mutation = useMutation({
