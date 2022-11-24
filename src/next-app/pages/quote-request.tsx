@@ -12,16 +12,16 @@ import TextArea from '../components/TextArea';
 import ShopCard from '../components/ShopCard';
 
 interface carModels {
-  [make: string]: string[]
+  [make: string]: string[];
 }
 
 interface shopObject {
-  name: string
-  id: string
+  name: string;
+  id: string;
 }
 
 interface previousSubmittedShops {
-  [id: string]: { checked: boolean, name: string }
+  [id: string]: { checked: boolean; name: string };
 }
 
 const QuoteRequestPage: NextPage = () => {
@@ -46,19 +46,25 @@ const QuoteRequestPage: NextPage = () => {
   const [checkedShops, setCheckedShops] = useState([] as shopObject[]);
   const [submittedShops, setSubmittedShops] = useState([] as shopObject[]);
   const [submittedShopsDisplay, setSubmittedShopsDisplay] = useState([] as JSX.Element[]);
-  const [previousSubmittedShops, setPreviousSubmittedShops] = useState({} as previousSubmittedShops)
+  const [previousSubmittedShops, setPreviousSubmittedShops] = useState(
+    {} as previousSubmittedShops
+  );
   const [disableSubmitShops, setDisableSubmitShops] = useState(true);
   const [makesList, setMakesList] = useState([] as string[]);
   const [modelsList, setModelsList] = useState({} as carModels);
 
   const today = new Date();
-  const minDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+  const minDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
   let valid = false;
-  if (name.length < 1 ||
-    (make.length < 1 || customMake.length < 1) ||
-    (model.length < 1 || customModel.length < 1) ||
+  if (
+    name.length < 1 ||
+    make.length < 1 ||
+    customMake.length < 1 ||
+    model.length < 1 ||
+    customModel.length < 1 ||
     modelYear.length < 1 ||
-    firstName.length < 1 || lastName.length < 1 ||
+    firstName.length < 1 ||
+    lastName.length < 1 ||
     phoneNumber.length < 1 ||
     email.length < 1 ||
     (emailErrors && emailErrors.size > 0) ||
@@ -84,9 +90,9 @@ const QuoteRequestPage: NextPage = () => {
           return 1;
         }
         if (a < b) {
-          return -1
+          return -1;
         }
-        return 0
+        return 0;
       });
     });
 
@@ -112,40 +118,49 @@ const QuoteRequestPage: NextPage = () => {
     });
     setPreviousSubmittedShops(tempPreviousSubmittedShops);
     setOpen(true);
-  }
+  };
 
   const handleChecks = (e: ChangeEvent<HTMLInputElement>, checkedShop: shopObject) => {
     if (e.target.checked) {
       // If checked, add checked shop to the previous submitted shops and checked shops
-      setPreviousSubmittedShops({ ...previousSubmittedShops, [checkedShop.id]: { checked: true, name: checkedShop.name } });
-      setCheckedShops([...checkedShops, { name: checkedShop.name, id: checkedShop.id }])
+      setPreviousSubmittedShops({
+        ...previousSubmittedShops,
+        [checkedShop.id]: { checked: true, name: checkedShop.name },
+      });
+      setCheckedShops([...checkedShops, { name: checkedShop.name, id: checkedShop.id }]);
       setDisableSubmitShops(false);
     } else {
       // If unchecked remove shop from previous submitted shops and checked shops
-      setPreviousSubmittedShops({ ...previousSubmittedShops, [checkedShop.id]: { checked: false, name: checkedShop.name } });
+      setPreviousSubmittedShops({
+        ...previousSubmittedShops,
+        [checkedShop.id]: { checked: false, name: checkedShop.name },
+      });
       checkedShops.forEach((shop) => {
         if (shop.id === checkedShop.id) {
           const index = checkedShops.indexOf(shop);
           if (index !== -1) {
-            checkedShops.splice(index, 1)
+            checkedShops.splice(index, 1);
             setSubmittedShops([...checkedShops]);
           }
         }
-      })
+      });
     }
-  }
+  };
 
   // Remove shop from previous submitted shops and submitted shops
   const handleRemoveShop = (removedShop: shopObject) => {
-    setPreviousSubmittedShops({ ...previousSubmittedShops, [removedShop.id]: { checked: false, name: removedShop.name } });
+    setPreviousSubmittedShops({
+      ...previousSubmittedShops,
+      [removedShop.id]: { checked: false, name: removedShop.name },
+    });
     const index = submittedShops.indexOf(removedShop);
     if (index !== -1) {
-      submittedShops.splice(index, 1)
+      submittedShops.splice(index, 1);
       setSubmittedShops([...submittedShops]);
     }
-  }
+  };
 
-  // Each time submitted shops are changed run refresh to update the list of shop UI elements to display 
+  // Each time submitted shops are changed run refresh to update the list of shop UI elements to display
   useEffect(() => {
     handleShopsRefresh();
   }, [submittedShops]);
@@ -157,116 +172,191 @@ const QuoteRequestPage: NextPage = () => {
       submittedShopsDisplay.push(
         <div className={styles['shop-card']} key={shop.id}>
           <div className={styles['shop-title-container']}>
-            <label>
-              {shop.name}
-            </label>
+            <label>{shop.name}</label>
           </div>
           <div className={styles['remove-button-container']}>
-            <button className={styles['remove-button']} onClick={() => { handleRemoveShop(shop) }}>Remove</button>
+            <button
+              className={styles['remove-button']}
+              onClick={() => {
+                handleRemoveShop(shop);
+              }}>
+              Remove
+            </button>
           </div>
         </div>
-      )
-    })
+      );
+    });
     setSubmittedShopsDisplay(submittedShopsDisplay);
-  }
+  };
 
   // Add checked shops and previously submitted shops (shops that are initially selected) to submitted shops
   const handleShopsSubmit = () => {
     setOpen(false);
     const allCheckedShops = [...checkedShops];
     checkedShops.forEach((checkedShop) => {
-      setPreviousSubmittedShops({ ...previousSubmittedShops, [checkedShop.id]: { checked: true, name: checkedShop.name } });
-    })
+      setPreviousSubmittedShops({
+        ...previousSubmittedShops,
+        [checkedShop.id]: { checked: true, name: checkedShop.name },
+      });
+    });
     for (const shop in previousSubmittedShops) {
       if (previousSubmittedShops[shop].checked) {
-        const tempItem = { name: previousSubmittedShops[shop].name, id: shop }
-        if (allCheckedShops.filter((checkedShop) => (checkedShop.id === shop)).length === 0) {
+        const tempItem = { name: previousSubmittedShops[shop].name, id: shop };
+        if (allCheckedShops.filter((checkedShop) => checkedShop.id === shop).length === 0) {
           allCheckedShops.push(tempItem);
         }
       }
     }
     allCheckedShops.sort((shop1, shop2) => {
       return parseInt(shop1.id) - parseInt(shop2.id);
-    })
+    });
     setSubmittedShops(allCheckedShops);
     setCheckedShops([]);
     handleShopsRefresh();
-  }
+  };
 
   return (
     <div>
       <Header title="Create Quote Request" />
+
       <div className={styles.subtitle}>
-        <label>
-          Vehicle Information
-        </label>
+        <label>Vehicle Information</label>
       </div>
       <div className={styles.content}>
         <div className={styles['text-container']}>
-          <TextField name="Quote Request Name" placeholder="Enter a quote request name" onChange={setName} required />
+          <TextField
+            name="Quote Request Name"
+            placeholder="Enter a quote request name"
+            onChange={setName}
+            required
+          />
         </div>
         <div className={styles['text-container']}>
-          <SingleDropdownField name="Select Vehicle Make" placeholder="Select your vehicle make" items={makesList} onChange={setMake} required />
+          <SingleDropdownField
+            name="Select Vehicle Make"
+            placeholder="Select your vehicle make"
+            items={makesList}
+            onChange={setMake}
+            required
+          />
         </div>
-        {make === 'Other' ?
+        {make === 'Other' ? (
           <div className={styles['text-container']}>
             <div>
-              <TextField name='Enter Vehicle Make' placeholder="Enter your vehicle make" onChange={setCustomMake} required />
+              <TextField
+                name="Enter Vehicle Make"
+                placeholder="Enter your vehicle make"
+                onChange={setCustomMake}
+                required
+              />
             </div>
             <div>
-              <TextField name='Enter Vehicle Model' placeholder="Enter your vehicle model" onChange={setCustomModel} required />
+              <TextField
+                name="Enter Vehicle Model"
+                placeholder="Enter your vehicle model"
+                onChange={setCustomModel}
+                required
+              />
             </div>
           </div>
-          : null
-        }
-        {make && make !== 'Other' ?
+        ) : null}
+        {make && make !== 'Other' ? (
           <div className={styles['text-container']}>
-            <SingleDropdownField name="Select Vehicle Model" placeholder="Select your vehicle model" items={modelsList[make]} onChange={setModel} required />
+            <SingleDropdownField
+              name="Select Vehicle Model"
+              placeholder="Select your vehicle model"
+              items={modelsList[make]}
+              onChange={setModel}
+              required
+            />
           </div>
-          : null
-        }
-        {model || customModel ?
+        ) : null}
+        {model || customModel ? (
           <div className={styles['text-container']}>
-            <TextField name="Vehicle Model Year" placeholder="Enter vehicle model year" onChange={setModelYear} required inputType='number' width={'25%'} />
-          </div> : null
-        }
+            <TextField
+              name="Vehicle Model Year"
+              placeholder="Enter vehicle model year"
+              onChange={setModelYear}
+              required
+              inputType="number"
+              width={'25%'}
+            />
+          </div>
+        ) : null}
       </div>
       <div className={styles.subtitle}>
-        <label>
-          Contact Information
-        </label>
+        <label>Contact Information</label>
       </div>
       <div className={styles.content}>
         <div className={styles['text-container']}>
-          <TextField name="First Name" placeholder="Enter your first name" onChange={setFirstName} required />
+          <TextField
+            name="First Name"
+            placeholder="Enter your first name"
+            onChange={setFirstName}
+            required
+          />
         </div>
         <div className={styles['text-container']}>
-          <TextField name="Last Name" placeholder="Enter your last name" onChange={setLastName} required />
-        </div >
-        <div className={styles['text-container']}>
-          <TextField name="Phone Number" placeholder="Enter your phone number" onChange={setPhoneNumber} required />
+          <TextField
+            name="Last Name"
+            placeholder="Enter your last name"
+            onChange={setLastName}
+            required
+          />
         </div>
         <div className={styles['text-container']}>
-          <TextField name="Email" placeholder="Enter your email" onChange={setEmail} onBlur={handleEmailBlur} errors={emailErrors} required />
+          <TextField
+            name="Phone Number"
+            placeholder="Enter your phone number"
+            onChange={setPhoneNumber}
+            required
+          />
         </div>
         <div className={styles['text-container']}>
-          <SingleDropdownField name="Preferred Contact Method" placeholder="None" items={['Email', 'Phone']} onChange={setPreferredContact} />
+          <TextField
+            name="Email"
+            placeholder="Enter your email"
+            onChange={setEmail}
+            onBlur={handleEmailBlur}
+            errors={emailErrors}
+            required
+          />
+        </div>
+        <div className={styles['text-container']}>
+          <SingleDropdownField
+            name="Preferred Contact Method"
+            placeholder="None"
+            items={['Email', 'Phone']}
+            onChange={setPreferredContact}
+          />
         </div>
       </div>
       <div className={styles.subtitle}>
-        <label>
-          Quote Request Information
-        </label>
+        <label>Quote Request Information</label>
       </div>
       <div className={styles.content}>
         <div className={styles['text-container']}>
-          <SingleDropdownField name="New or Used Part Preference" placeholder="No Preference" items={['New Parts Only', 'Used Parts Only', 'No Preference']} onChange={setPartPreferenceSeller} />
+          <SingleDropdownField
+            name="New or Used Part Preference"
+            placeholder="No Preference"
+            items={['New Parts Only', 'Used Parts Only', 'No Preference']}
+            onChange={setPartPreferenceSeller}
+          />
         </div>
         <div className={styles['text-container']}>
-          <SingleDropdownField name="OEM or Aftermarket Part Preference" placeholder="No Preference" items={['OEM Parts Only', 'Aftermarket Parts Only', 'No Preference']} onChange={setPartPreferenceType} />
+          <SingleDropdownField
+            name="OEM or Aftermarket Part Preference"
+            placeholder="No Preference"
+            items={['OEM Parts Only', 'Aftermarket Parts Only', 'No Preference']}
+            onChange={setPartPreferenceType}
+          />
         </div>
         <div className={styles['text-container']}>
-          <TextArea name='Additional Notes' placeholder='Enter any additional notes here.' onChange={setNotes} />
+          <TextArea
+            name="Additional Notes"
+            placeholder="Enter any additional notes here."
+            onChange={setNotes}
+          />
         </div>
       </div>
       <div className={styles.subtitle}>
@@ -279,60 +369,94 @@ const QuoteRequestPage: NextPage = () => {
         {/* </ImagePicker> */}
         <br />
         <div className={styles.images}>
-          <label>
-            Images:
-          </label>
+          <label>Images:</label>
           <br />
-          <div className={styles['image-list']}>
-          </div>
+          <div className={styles['image-list']}></div>
         </div>
         <br />
       </div>
       <div className={styles.content}>
         <div className={styles['date-container']}>
           <div className={styles['start-date']}>
-            <TextField name="Preferred Availability" onChange={setStartDate} min={minDate} inputType='date' />
+            <TextField
+              name="Preferred Availability"
+              onChange={setStartDate}
+              min={minDate}
+              inputType="date"
+            />
           </div>
-          {startDate ?
+          {startDate ? (
             <div className={styles['end-date']}>
-              <TextField name="Latest Preferred Availability" onChange={setEndDate} min={startDate} inputType='date' />
-            </div> : null
-          }
+              <TextField
+                name="Latest Preferred Availability"
+                onChange={setEndDate}
+                min={startDate}
+                inputType="date"
+              />
+            </div>
+          ) : null}
         </div>
       </div>
       <div className={styles['select-shop-button-container']}>
         <Button title="Select Shops" width="50%" onClick={handleSelectShops} />
       </div>
-      {open ?
-        <Modal visible={open} onClose={() => { setCheckedShops([]); setPreviousSubmittedShops({}); setOpen(false) }}>
+      {open ? (
+        <Modal
+          visible={open}
+          onClose={() => {
+            setCheckedShops([]);
+            setPreviousSubmittedShops({});
+            setOpen(false);
+          }}>
           <div className={styles['select-shops-modal']}>
             <div className={styles['modal-title']}>
               <label>Select shops to send quote request to:</label>
             </div>
             <div className={styles['card-container']}>
-              <input className='checkbox' name='Shop1' checked={previousSubmittedShops['1'] ? previousSubmittedShops['1'].checked : undefined} onChange={(e) => handleChecks(e, { name: 'Shop1', id: '1' })} type="checkbox"></input>
-              <ShopCard name='Shop1' />
+              <input
+                className="checkbox"
+                name="Shop1"
+                checked={
+                  previousSubmittedShops['1'] ? previousSubmittedShops['1'].checked : undefined
+                }
+                onChange={(e) => handleChecks(e, { name: 'Shop1', id: '1' })}
+                type="checkbox"></input>
+              <ShopCard name="Shop1" />
             </div>
             <br />
             <div className={styles['card-container']}>
-              <input className='checkbox' name='Shop2' checked={previousSubmittedShops['2'] ? previousSubmittedShops['2'].checked : undefined} onChange={(e) => handleChecks(e, { name: 'Shop2', id: '2' })} type="checkbox"></input>
-              <ShopCard name='Shop2' />
+              <input
+                className="checkbox"
+                name="Shop2"
+                checked={
+                  previousSubmittedShops['2'] ? previousSubmittedShops['2'].checked : undefined
+                }
+                onChange={(e) => handleChecks(e, { name: 'Shop2', id: '2' })}
+                type="checkbox"></input>
+              <ShopCard name="Shop2" />
             </div>
             <br />
             <div className={styles['card-container']}>
-              <input className='checkbox' name='Shop3' checked={previousSubmittedShops['3'] ? previousSubmittedShops['3'].checked : undefined} onChange={(e) => handleChecks(e, { name: 'Shop3', id: '3' })} type="checkbox"></input>
-              <ShopCard name='Shop3' />
+              <input
+                className="checkbox"
+                name="Shop3"
+                checked={
+                  previousSubmittedShops['3'] ? previousSubmittedShops['3'].checked : undefined
+                }
+                onChange={(e) => handleChecks(e, { name: 'Shop3', id: '3' })}
+                type="checkbox"></input>
+              <ShopCard name="Shop3" />
             </div>
             <br />
             <Button title="Submit" width="100%" onClick={handleShopsSubmit} />
           </div>
-        </Modal> : null
-      }
+        </Modal>
+      ) : null}
       <div className={styles.content}>
         {submittedShopsDisplay}
         <Button title="Submit" width="80%" disabled={valid} />
-      </div >
-    </div >
+      </div>
+    </div>
   );
 };
 
