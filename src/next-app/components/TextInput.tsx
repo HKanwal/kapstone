@@ -33,6 +33,7 @@ type TextInputProps = {
 
 type TextInputRef = {
   focus: () => void;
+  blur: () => void;
 };
 
 const calcSize = (winHeight: number, winWidth: number) => {
@@ -55,6 +56,9 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
     return {
       focus: () => {
         inputRef.current?.focus();
+      },
+      blur: () => {
+        inputRef.current?.blur();
       },
     };
   });

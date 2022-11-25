@@ -5,11 +5,11 @@ import TextField from '../components/TextField';
 import Header from '../components/Header';
 import Modal from '../components/Modal';
 import styles from '../styles/pages/QuoteRequest.module.css';
-import SingleDropdownField from '../components/SingleDropdownField';
 import carData from '../data/data.json';
 import validateEmail from '../utils/validateEmail';
 import TextArea from '../components/TextArea';
 import ShopCard from '../components/ShopCard';
+import DropdownField from '../components/DropdownField';
 
 interface carModels {
   [make: string]: string[];
@@ -25,7 +25,6 @@ interface previousSubmittedShops {
 }
 
 const QuoteRequestPage: NextPage = () => {
-  const [name, setName] = useState('');
   const [make, setMake] = useState('');
   const [customMake, setCustomMake] = useState('');
   const [model, setModel] = useState('');
@@ -57,7 +56,6 @@ const QuoteRequestPage: NextPage = () => {
   const minDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
   let valid = false;
   if (
-    name.length < 1 ||
     make.length < 1 ||
     customMake.length < 1 ||
     model.length < 1 ||
@@ -223,19 +221,11 @@ const QuoteRequestPage: NextPage = () => {
         <div className={styles.section}>
           <span className={styles['section-header']}>Vehicle Information</span>
           <div className={styles['field-container']}>
-            <TextField
-              name="Quote Request Name"
-              placeholder="Enter a quote request name"
-              onChange={setName}
-              required
-            />
-          </div>
-          <div className={styles['field-container']}>
-            <SingleDropdownField
-              name="Select Vehicle Make"
-              placeholder="Select your vehicle make"
-              items={makesList}
-              onChange={setMake}
+            <DropdownField
+              name="Manufacturer"
+              placeholder="Select your vehicle manufacturer"
+              items={new Set(makesList)}
+              onSelect={setMake}
               required
             />
           </div>
@@ -261,11 +251,11 @@ const QuoteRequestPage: NextPage = () => {
           ) : null}
           {make && make !== 'Other' ? (
             <div className={styles['field-container']}>
-              <SingleDropdownField
+              <DropdownField
                 name="Select Vehicle Model"
                 placeholder="Select your vehicle model"
-                items={modelsList[make]}
-                onChange={setModel}
+                items={new Set(modelsList[make])}
+                onSelect={setModel}
                 required
               />
             </div>
@@ -320,30 +310,30 @@ const QuoteRequestPage: NextPage = () => {
             />
           </div>
           <div className={styles['field-container']}>
-            <SingleDropdownField
+            <DropdownField
               name="Preferred Contact Method"
               placeholder="None"
-              items={['Email', 'Phone']}
-              onChange={setPreferredContact}
+              items={new Set(['Email', 'Phone'])}
+              onSelect={setPreferredContact}
             />
           </div>
         </div>
         <div className={styles.section}>
           <span className={styles['section-header']}>Additional Information</span>
           <div className={styles['field-container']}>
-            <SingleDropdownField
+            <DropdownField
               name="New or Used Part Preference"
               placeholder="No Preference"
-              items={['New Parts Only', 'Used Parts Only', 'No Preference']}
-              onChange={setPartPreferenceSeller}
+              items={new Set(['New Parts Only', 'Used Parts Only', 'No Preference'])}
+              onSelect={setPartPreferenceSeller}
             />
           </div>
           <div className={styles['field-container']}>
-            <SingleDropdownField
+            <DropdownField
               name="OEM or Aftermarket Part Preference"
               placeholder="No Preference"
-              items={['OEM Parts Only', 'Aftermarket Parts Only', 'No Preference']}
-              onChange={setPartPreferenceType}
+              items={new Set(['OEM Parts Only', 'Aftermarket Parts Only', 'No Preference'])}
+              onSelect={setPartPreferenceType}
             />
           </div>
           <div className={styles['field-container']}>

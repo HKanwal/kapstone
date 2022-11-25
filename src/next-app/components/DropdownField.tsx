@@ -4,13 +4,15 @@ import TextInput, { TextInputRef } from './TextInput';
 import { BsChevronDown } from 'react-icons/bs';
 import Chip from './Chip';
 
+type Type = 'single-select' | 'multi-select';
 type DropdownFieldProps = {
   name: string;
   placeholder?: string;
   width?: string | number;
   required?: boolean;
   items: Set<string>;
-  onChange?: (newVal: string) => void;
+  onSelect?: (item: string, selectedItems: string[]) => void;
+  type?: Type;
 };
 
 let collapseTimout: NodeJS.Timeout;
@@ -21,9 +23,10 @@ const DropdownField = (props: DropdownFieldProps) => {
   const [value, setValue] = useState('');
   const items = useMemo(() => Array.from(props.items), [props.items]);
   const inputRef = useRef<TextInputRef>(null);
+  const type: Type = props.type === 'multi-select' ? 'multi-select' : 'single-select';
 
-  const handleChange = (newVals: string) => {
-    props.onChange && props.onChange(newVals);
+  const handleSelect = (item: string) => {
+    props.onSelect && props.onSelect(item, selectedItems);
   };
 
   const handleBlur = () => {
@@ -34,15 +37,22 @@ const DropdownField = (props: DropdownFieldProps) => {
 
   const handleFocus = () => {
     clearTimeout(collapseTimout);
+    setValue('');
     setExpanded(true);
     inputRef.current?.focus();
   };
 
   const handleItemClick = (item: string) => {
     setSelectedItems((prevSelectedItems) => {
-      return [...prevSelectedItems, item];
+      if (type === 'single-select') {
+        setValue(item);
+        inputRef.current?.blur();
+        return [item];
+      } else {
+        return [...prevSelectedItems, item];
+      }
     });
-    handleChange(item);
+    handleSelect(item);
   };
 
   const handleChipMouseDown = () => {
@@ -66,19 +76,23 @@ const DropdownField = (props: DropdownFieldProps) => {
         {props.name}
         {props.required ? <span className={styles.asterisk}>*</span> : <></>}
       </span>
-      <div className={styles['chips-container']}>
-        {selectedItems.map((item) => {
-          return (
-            <div className={styles['chip-container']} key={item}>
-              <Chip
-                text={item}
-                onRemove={() => handleRemove(item)}
-                onMouseDown={handleChipMouseDown}
-              />
-            </div>
-          );
-        })}
-      </div>
+      {type === 'multi-select' ? (
+        <div className={styles['chips-container']}>
+          {selectedItems.map((item) => {
+            return (
+              <div className={styles['chip-container']} key={item}>
+                <Chip
+                  text={item}
+                  onRemove={() => handleRemove(item)}
+                  onMouseDown={handleChipMouseDown}
+                />
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <></>
+      )}
       <div className={styles['input-container']}>
         <TextInput
           placeholder={props.placeholder ?? ''}
