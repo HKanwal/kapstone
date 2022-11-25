@@ -6,42 +6,40 @@ import TextMultiField from '../components/TextMultiField';
 import Header from '../components/Header';
 import styles from '../styles/pages/CreateShop.module.css';
 import DropdownField from '../components/DropdownField';
-import validateEmail from '../utils/validateEmail';
 import { useRouter } from 'next/router';
+import { useForm } from '../hooks/useForm';
 
 const CreateShopPage: NextPage = () => {
   const router = useRouter();
-  const [name, setName] = useState('');
-  const [address, setAddress] = useState('');
   const [phoneNumbers, setPhoneNumbers] = useState<string[]>(['']);
-  const [email, setEmail] = useState('');
-  const [emailErrors, setEmailErrors] = useState<Set<string> | undefined>(undefined);
-  const [employees, setEmployees] = useState('');
-  const [serviceBays, setServiceBays] = useState('');
-  const valid = name.length > 0 && address.length > 0 && emailErrors === undefined;
-
-  const handleSubmit = () => {
-    router.push('/invite');
-  };
-
-  const handleEmailBlur = () => {
-    if (email.length > 0 && !validateEmail(email)) {
-      setEmailErrors(new Set(['Invalid email format']));
-    } else {
-      setEmailErrors(undefined);
-    }
-  };
+  const form = useForm({
+    initialValues: {
+      name: '',
+      address: '',
+      email: '',
+      employees: '',
+      serviceBays: '',
+    },
+    validationSchema: {
+      name: ['required'],
+      address: ['required'],
+      email: ['email'],
+    },
+    onSubmit: (values, setErrors) => {
+      router.push('/invite');
+    },
+  });
 
   return (
     <div className={styles.container}>
       <Header title="Create New Shop" />
 
-      <div className={styles.content}>
+      <form className={styles.content} onSubmit={form.handleSubmit}>
         <div className={styles['field-container']}>
           <TextField
             name="Shop Name"
             placeholder="Enter your shop's name"
-            onChange={setName}
+            onChange={form.handleChange('name')}
             required
           />
         </div>
@@ -49,7 +47,7 @@ const CreateShopPage: NextPage = () => {
           <TextField
             name="Shop Address"
             placeholder="Enter your shop's address"
-            onChange={setAddress}
+            onChange={form.handleChange('address')}
             required
           />
         </div>
@@ -65,9 +63,9 @@ const CreateShopPage: NextPage = () => {
           <TextField
             name="Shop Email"
             placeholder="Enter your shop's email"
-            onChange={setEmail}
-            onBlur={handleEmailBlur}
-            errors={emailErrors}
+            onChange={form.handleChange('email')}
+            onBlur={form.handleBlur('email')}
+            errors={form.errors.email.length > 0 ? new Set(form.errors.email) : undefined}
           />
         </div>
         <div className={styles['field-container']}>
@@ -83,7 +81,7 @@ const CreateShopPage: NextPage = () => {
             name="Number of Employees"
             placeholder="Enter number of employees"
             inputType="number"
-            onChange={setEmployees}
+            onChange={form.handleChange('employees')}
           />
         </div>
         <div className={styles['field-container']}>
@@ -91,13 +89,13 @@ const CreateShopPage: NextPage = () => {
             name="Number of Service Bays"
             placeholder="Enter number of service bays"
             inputType="number"
-            onChange={setServiceBays}
+            onChange={form.handleChange('serviceBays')}
           />
         </div>
         <div className={styles['submit-container']}>
-          <Button title="Create" disabled={!valid} width="80%" onClick={handleSubmit} />
+          <Button type="submit" title="Create" disabled={!form.isValid} width="80%" />
         </div>
-      </div>
+      </form>
     </div>
   );
 };
