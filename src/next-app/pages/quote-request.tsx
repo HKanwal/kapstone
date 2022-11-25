@@ -35,10 +35,10 @@ const QuoteRequestPage: NextPage = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [emailErrors, setEmailErrors] = useState<Set<string> | undefined>(undefined);
-  const [preferredContact, setPreferredContact] = useState('');
+  const [preferredContact, setPreferredContact] = useState('None');
   const [notes, setNotes] = useState('');
-  const [partPreferenceSeller, setPartPreferenceSeller] = useState('');
-  const [partPreferenceType, setPartPreferenceType] = useState('');
+  const [partCondition, setPartCondition] = useState('No Preference');
+  const [partType, setPartType] = useState('No Preference');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [open, setOpen] = useState(false);
@@ -318,8 +318,8 @@ const QuoteRequestPage: NextPage = () => {
           <div className={styles['field-container']}>
             <DropdownField
               name="Preferred Contact Method"
-              placeholder="None"
-              items={['Email', 'Phone']}
+              items={['None', 'Email', 'Phone']}
+              selectedItems={[preferredContact]}
               onSelect={setPreferredContact}
             />
           </div>
@@ -328,18 +328,18 @@ const QuoteRequestPage: NextPage = () => {
           <span className={styles['section-header']}>Additional Information</span>
           <div className={styles['field-container']}>
             <DropdownField
-              name="New or Used Part Preference"
-              placeholder="No Preference"
-              items={['New Parts Only', 'Used Parts Only', 'No Preference']}
-              onSelect={setPartPreferenceSeller}
+              name="Part Condition"
+              items={['No Preference', 'New Parts Only', 'Used Parts Only']}
+              selectedItems={[partCondition]}
+              onSelect={setPartCondition}
             />
           </div>
           <div className={styles['field-container']}>
             <DropdownField
-              name="OEM or Aftermarket Part Preference"
-              placeholder="No Preference"
-              items={['OEM Parts Only', 'Aftermarket Parts Only', 'No Preference']}
-              onSelect={setPartPreferenceType}
+              name="Part Type"
+              items={['No Preference', 'OEM Parts Only', 'Aftermarket Parts Only']}
+              selectedItems={[partType]}
+              onSelect={setPartType}
             />
           </div>
           <div className={styles['field-container']}>
