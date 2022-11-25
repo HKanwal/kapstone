@@ -52,10 +52,14 @@ const TextMultiField = (props: TextMultiFieldProps) => {
   return (
     <div className={styles.container}>
       <>
-        <span className={styles.name}>
-          {props.name}
-          {props.required ? <span className={styles.asterisk}>*</span> : <></>}
-        </span>
+        {props.name.length > 0 ? (
+          <span className={styles.name}>
+            {props.name}
+            {props.required ? <span className={styles.asterisk}>*</span> : <></>}
+          </span>
+        ) : (
+          <></>
+        )}
         {vals.map((val, i) => {
           return (
             <div className={styles['text-input-container']} key={i}>

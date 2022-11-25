@@ -220,40 +220,42 @@ const QuoteRequestPage: NextPage = () => {
       <div className={styles.content}>
         <div className={styles.section}>
           <span className={styles['section-header']}>Vehicle Information</span>
-          <div className={styles['field-container']}>
+          <div
+            className={styles['field-container']}
+            style={make === 'Other' ? { paddingBottom: 0 } : {}}>
             <DropdownField
               name="Manufacturer"
-              placeholder="Select your vehicle manufacturer"
+              placeholder="Enter manufacturer..."
               items={makesList}
               onSelect={setMake}
               required
             />
           </div>
           {make === 'Other' ? (
-            <div className={styles['field-container']}>
-              <div>
+            <>
+              <div className={styles['field-container']}>
                 <TextField
-                  name="Enter Vehicle Make"
-                  placeholder="Enter your vehicle make"
+                  name=""
+                  placeholder="Enter vehicle manufacturer"
                   onChange={setCustomMake}
                   required
                 />
               </div>
-              <div>
+              <div className={styles['field-container']}>
                 <TextField
-                  name="Enter Vehicle Model"
-                  placeholder="Enter your vehicle model"
+                  name="Model"
+                  placeholder="Enter vehicle model"
                   onChange={setCustomModel}
                   required
                 />
               </div>
-            </div>
+            </>
           ) : null}
           {make && make !== 'Other' ? (
             <div className={styles['field-container']}>
               <DropdownField
-                name="Select Vehicle Model"
-                placeholder="Select your vehicle model"
+                name="Model"
+                placeholder="Enter model..."
                 items={modelsList[make]}
                 onSelect={setModel}
                 required
@@ -263,12 +265,11 @@ const QuoteRequestPage: NextPage = () => {
           {model || customModel ? (
             <div className={styles['field-container']}>
               <TextField
-                name="Vehicle Model Year"
+                name="Model Year"
                 placeholder="Enter vehicle model year"
                 onChange={setModelYear}
                 required
                 inputType="number"
-                width={'25%'}
               />
             </div>
           ) : null}
