@@ -216,147 +216,143 @@ const QuoteRequestPage: NextPage = () => {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <Header title="Create Quote Request" />
 
-      <div className={styles.subtitle}>
-        <label>Vehicle Information</label>
-      </div>
       <div className={styles.content}>
-        <div className={styles['text-container']}>
-          <TextField
-            name="Quote Request Name"
-            placeholder="Enter a quote request name"
-            onChange={setName}
-            required
-          />
-        </div>
-        <div className={styles['text-container']}>
-          <SingleDropdownField
-            name="Select Vehicle Make"
-            placeholder="Select your vehicle make"
-            items={makesList}
-            onChange={setMake}
-            required
-          />
-        </div>
-        {make === 'Other' ? (
-          <div className={styles['text-container']}>
-            <div>
-              <TextField
-                name="Enter Vehicle Make"
-                placeholder="Enter your vehicle make"
-                onChange={setCustomMake}
-                required
-              />
-            </div>
-            <div>
-              <TextField
-                name="Enter Vehicle Model"
-                placeholder="Enter your vehicle model"
-                onChange={setCustomModel}
-                required
-              />
-            </div>
-          </div>
-        ) : null}
-        {make && make !== 'Other' ? (
-          <div className={styles['text-container']}>
-            <SingleDropdownField
-              name="Select Vehicle Model"
-              placeholder="Select your vehicle model"
-              items={modelsList[make]}
-              onChange={setModel}
-              required
-            />
-          </div>
-        ) : null}
-        {model || customModel ? (
-          <div className={styles['text-container']}>
+        <div className={styles.section}>
+          <span className={styles['section-header']}>Vehicle Information</span>
+          <div className={styles['field-container']}>
             <TextField
-              name="Vehicle Model Year"
-              placeholder="Enter vehicle model year"
-              onChange={setModelYear}
+              name="Quote Request Name"
+              placeholder="Enter a quote request name"
+              onChange={setName}
               required
-              inputType="number"
-              width={'25%'}
             />
           </div>
-        ) : null}
-      </div>
-      <div className={styles.subtitle}>
-        <label>Contact Information</label>
-      </div>
-      <div className={styles.content}>
-        <div className={styles['text-container']}>
-          <TextField
-            name="First Name"
-            placeholder="Enter your first name"
-            onChange={setFirstName}
-            required
-          />
+          <div className={styles['field-container']}>
+            <SingleDropdownField
+              name="Select Vehicle Make"
+              placeholder="Select your vehicle make"
+              items={makesList}
+              onChange={setMake}
+              required
+            />
+          </div>
+          {make === 'Other' ? (
+            <div className={styles['field-container']}>
+              <div>
+                <TextField
+                  name="Enter Vehicle Make"
+                  placeholder="Enter your vehicle make"
+                  onChange={setCustomMake}
+                  required
+                />
+              </div>
+              <div>
+                <TextField
+                  name="Enter Vehicle Model"
+                  placeholder="Enter your vehicle model"
+                  onChange={setCustomModel}
+                  required
+                />
+              </div>
+            </div>
+          ) : null}
+          {make && make !== 'Other' ? (
+            <div className={styles['field-container']}>
+              <SingleDropdownField
+                name="Select Vehicle Model"
+                placeholder="Select your vehicle model"
+                items={modelsList[make]}
+                onChange={setModel}
+                required
+              />
+            </div>
+          ) : null}
+          {model || customModel ? (
+            <div className={styles['field-container']}>
+              <TextField
+                name="Vehicle Model Year"
+                placeholder="Enter vehicle model year"
+                onChange={setModelYear}
+                required
+                inputType="number"
+                width={'25%'}
+              />
+            </div>
+          ) : null}
         </div>
-        <div className={styles['text-container']}>
-          <TextField
-            name="Last Name"
-            placeholder="Enter your last name"
-            onChange={setLastName}
-            required
-          />
+        <div className={styles.section}>
+          <span className={styles['section-header']}>Contact Information</span>
+          <div className={styles['field-container']}>
+            <TextField
+              name="First Name"
+              placeholder="Enter your first name"
+              onChange={setFirstName}
+              required
+            />
+          </div>
+          <div className={styles['field-container']}>
+            <TextField
+              name="Last Name"
+              placeholder="Enter your last name"
+              onChange={setLastName}
+              required
+            />
+          </div>
+          <div className={styles['field-container']}>
+            <TextField
+              name="Phone Number"
+              placeholder="Enter your phone number"
+              onChange={setPhoneNumber}
+              required
+            />
+          </div>
+          <div className={styles['field-container']}>
+            <TextField
+              name="Email"
+              placeholder="Enter your email"
+              onChange={setEmail}
+              onBlur={handleEmailBlur}
+              errors={emailErrors}
+              required
+            />
+          </div>
+          <div className={styles['field-container']}>
+            <SingleDropdownField
+              name="Preferred Contact Method"
+              placeholder="None"
+              items={['Email', 'Phone']}
+              onChange={setPreferredContact}
+            />
+          </div>
         </div>
-        <div className={styles['text-container']}>
-          <TextField
-            name="Phone Number"
-            placeholder="Enter your phone number"
-            onChange={setPhoneNumber}
-            required
-          />
-        </div>
-        <div className={styles['text-container']}>
-          <TextField
-            name="Email"
-            placeholder="Enter your email"
-            onChange={setEmail}
-            onBlur={handleEmailBlur}
-            errors={emailErrors}
-            required
-          />
-        </div>
-        <div className={styles['text-container']}>
-          <SingleDropdownField
-            name="Preferred Contact Method"
-            placeholder="None"
-            items={['Email', 'Phone']}
-            onChange={setPreferredContact}
-          />
-        </div>
-      </div>
-      <div className={styles.subtitle}>
-        <label>Quote Request Information</label>
-      </div>
-      <div className={styles.content}>
-        <div className={styles['text-container']}>
-          <SingleDropdownField
-            name="New or Used Part Preference"
-            placeholder="No Preference"
-            items={['New Parts Only', 'Used Parts Only', 'No Preference']}
-            onChange={setPartPreferenceSeller}
-          />
-        </div>
-        <div className={styles['text-container']}>
-          <SingleDropdownField
-            name="OEM or Aftermarket Part Preference"
-            placeholder="No Preference"
-            items={['OEM Parts Only', 'Aftermarket Parts Only', 'No Preference']}
-            onChange={setPartPreferenceType}
-          />
-        </div>
-        <div className={styles['text-container']}>
-          <TextArea
-            name="Additional Notes"
-            placeholder="Enter any additional notes here."
-            onChange={setNotes}
-          />
+        <div className={styles.section}>
+          <span className={styles['section-header']}>Additional Information</span>
+          <div className={styles['field-container']}>
+            <SingleDropdownField
+              name="New or Used Part Preference"
+              placeholder="No Preference"
+              items={['New Parts Only', 'Used Parts Only', 'No Preference']}
+              onChange={setPartPreferenceSeller}
+            />
+          </div>
+          <div className={styles['field-container']}>
+            <SingleDropdownField
+              name="OEM or Aftermarket Part Preference"
+              placeholder="No Preference"
+              items={['OEM Parts Only', 'Aftermarket Parts Only', 'No Preference']}
+              onChange={setPartPreferenceType}
+            />
+          </div>
+          <div className={styles['field-container']}>
+            <TextArea
+              name="Additional Notes"
+              placeholder="Enter any additional notes here."
+              onChange={setNotes}
+            />
+          </div>
         </div>
       </div>
       <div className={styles.subtitle}>
