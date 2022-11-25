@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import Button from '../components/Button';
 import TextField from '../components/TextField';
 import Header from '../components/Header';
@@ -10,6 +10,8 @@ import validateEmail from '../utils/validateEmail';
 import TextArea from '../components/TextArea';
 import ShopCard from '../components/ShopCard';
 import DropdownField from '../components/DropdownField';
+import FieldLabel from '../components/FieldLabel';
+import Link from '../components/Link';
 
 interface carModels {
   [make: string]: string[];
@@ -51,6 +53,14 @@ const QuoteRequestPage: NextPage = () => {
   const [disableSubmitShops, setDisableSubmitShops] = useState(true);
   const [makesList, setMakesList] = useState([] as string[]);
   const [modelsList, setModelsList] = useState({} as carModels);
+  const addImageInputRef = useRef<HTMLInputElement>(null);
+  const [imgFiles, setImgFiles] = useState<File[]>([]);
+
+  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    setImgFiles((prev) => {
+      return [...prev, ...Array.from(e.target.files ?? [])];
+    });
+  };
 
   const today = new Date();
   const minDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
@@ -343,29 +353,27 @@ const QuoteRequestPage: NextPage = () => {
             />
           </div>
           <div className={styles['field-container']}>
-            <TextArea
-              name="Additional Notes"
-              placeholder="Enter any additional notes here."
-              onChange={setNotes}
-            />
+            <TextArea name="Notes" placeholder="Enter any additional notes" onChange={setNotes} />
+          </div>
+          <div className={styles['field-container']}>
+            <div className={styles['images-field-container']}>
+              <FieldLabel label="Images" />
+              <div className={styles['images-container']}>
+                {imgFiles.length > 0 ? (
+                  imgFiles.map((file) => {
+                    return <img src={URL.createObjectURL(file)} className={styles.image} />;
+                  })
+                ) : (
+                  <span className={styles['no-images-text']}>no images uploaded</span>
+                )}
+              </div>
+              <input type="file" ref={addImageInputRef} onChange={handleFileUpload} hidden />
+              <div className={styles['link-container']}>
+                <Link text="+ Add Image" onClick={() => addImageInputRef.current?.click()} />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div className={styles.subtitle}>
-        {/* <ImagePicker
-                    extensions={["docx"]} // Notice that I removed the "."
-                    onChange={handleFileChange}
-                // onError={errMsg => console.log(errMsg)} // Please handle error
-                > */}
-        <Button title="Add Image" />
-        {/* </ImagePicker> */}
-        <br />
-        <div className={styles.images}>
-          <label>Images:</label>
-          <br />
-          <div className={styles['image-list']}></div>
-        </div>
-        <br />
       </div>
       <div className={styles.content}>
         <div className={styles['date-container']}>

@@ -1,11 +1,10 @@
 .container {
   display: flex;
-  padding-bottom: 3vh;
   flex-direction: column;
   width: 100%;
 }
 
-.name { 
+.name {
   color: var(--text-grey-color);
   font-weight: 400;
 }
@@ -19,12 +18,12 @@
   padding-bottom: 1.5em;
   border-radius: 0.2em;
   font-size: var(--font-size);
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
+    Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
 .asterisk {
-  color:red;
+  color: red;
   padding-left: 0.2em;
 }
 

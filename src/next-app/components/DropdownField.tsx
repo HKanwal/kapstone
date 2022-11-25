@@ -3,6 +3,7 @@ import styles from '../styles/components/DropdownField.module.css';
 import TextInput, { TextInputRef } from './TextInput';
 import { BsChevronDown } from 'react-icons/bs';
 import Chip from './Chip';
+import FieldLabel from './FieldLabel';
 
 type Type = 'single-select' | 'multi-select';
 type DropdownFieldProps = {
@@ -88,10 +89,7 @@ const DropdownField = (props: DropdownFieldProps) => {
 
   return (
     <div className={styles.container}>
-      <span className={styles.name}>
-        {props.name}
-        {props.required ? <span className={styles.asterisk}>*</span> : <></>}
-      </span>
+      {props.name.length > 0 ? <FieldLabel label={props.name} required={props.required} /> : <></>}
       {type === 'multi-select' ? (
         <div className={styles['chips-container']}>
           {selectedItems.map((item) => {
