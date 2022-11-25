@@ -100,6 +100,10 @@ const QuoteRequestPage: NextPage = () => {
     setModelsList(models);
   }, []);
 
+  useEffect(() => {
+    setModel('');
+  }, [make]);
+
   const handleEmailBlur = () => {
     if (email.length > 0 && !validateEmail(email)) {
       setEmailErrors(new Set(['Invalid email format']));
@@ -257,6 +261,7 @@ const QuoteRequestPage: NextPage = () => {
                 name="Model"
                 placeholder="Enter model..."
                 items={modelsList[make]}
+                selectedItems={model.length > 0 ? [model] : []}
                 onSelect={setModel}
                 required
               />

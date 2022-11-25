@@ -28,6 +28,9 @@ const DropdownField = (props: DropdownFieldProps) => {
 
   useEffect(() => {
     setSelectedItems(props.selectedItems ?? []);
+    if (type === 'single-select') {
+      setValue(props.selectedItems?.[0] ?? '');
+    }
   }, [props.selectedItems]);
 
   const handleSelect = (item: string) => {
