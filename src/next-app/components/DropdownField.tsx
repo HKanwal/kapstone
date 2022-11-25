@@ -10,7 +10,7 @@ type DropdownFieldProps = {
   placeholder?: string;
   width?: string | number;
   required?: boolean;
-  items: Set<string>;
+  items: string[];
   onSelect?: (item: string, selectedItems: string[]) => void;
   type?: Type;
 };
@@ -21,7 +21,7 @@ const DropdownField = (props: DropdownFieldProps) => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [expanded, setExpanded] = useState(false);
   const [value, setValue] = useState('');
-  const items = useMemo(() => Array.from(props.items), [props.items]);
+  const items = useMemo(() => Array.from(new Set(props.items)), [props.items]);
   const inputRef = useRef<TextInputRef>(null);
   const type: Type = props.type === 'multi-select' ? 'multi-select' : 'single-select';
 

@@ -224,7 +224,7 @@ const QuoteRequestPage: NextPage = () => {
             <DropdownField
               name="Manufacturer"
               placeholder="Select your vehicle manufacturer"
-              items={new Set(makesList)}
+              items={makesList}
               onSelect={setMake}
               required
             />
@@ -254,7 +254,7 @@ const QuoteRequestPage: NextPage = () => {
               <DropdownField
                 name="Select Vehicle Model"
                 placeholder="Select your vehicle model"
-                items={new Set(modelsList[make])}
+                items={modelsList[make]}
                 onSelect={setModel}
                 required
               />
@@ -313,7 +313,7 @@ const QuoteRequestPage: NextPage = () => {
             <DropdownField
               name="Preferred Contact Method"
               placeholder="None"
-              items={new Set(['Email', 'Phone'])}
+              items={['Email', 'Phone']}
               onSelect={setPreferredContact}
             />
           </div>
@@ -324,7 +324,7 @@ const QuoteRequestPage: NextPage = () => {
             <DropdownField
               name="New or Used Part Preference"
               placeholder="No Preference"
-              items={new Set(['New Parts Only', 'Used Parts Only', 'No Preference'])}
+              items={['New Parts Only', 'Used Parts Only', 'No Preference']}
               onSelect={setPartPreferenceSeller}
             />
           </div>
@@ -332,7 +332,7 @@ const QuoteRequestPage: NextPage = () => {
             <DropdownField
               name="OEM or Aftermarket Part Preference"
               placeholder="No Preference"
-              items={new Set(['OEM Parts Only', 'Aftermarket Parts Only', 'No Preference'])}
+              items={['OEM Parts Only', 'Aftermarket Parts Only', 'No Preference']}
               onSelect={setPartPreferenceType}
             />
           </div>

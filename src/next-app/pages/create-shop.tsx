@@ -75,7 +75,7 @@ const CreateShopPage: NextPage = () => {
             type="multi-select"
             name="Services Offered"
             placeholder="Enter services..."
-            items={new Set(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'])}
+            items={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']}
           />
         </div>
         <div className={styles['field-container']}>
