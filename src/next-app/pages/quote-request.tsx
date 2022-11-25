@@ -361,7 +361,13 @@ const QuoteRequestPage: NextPage = () => {
               <div className={styles['images-container']}>
                 {imgFiles.length > 0 ? (
                   imgFiles.map((file) => {
-                    return <img src={URL.createObjectURL(file)} className={styles.image} />;
+                    return (
+                      <img
+                        src={URL.createObjectURL(file)}
+                        className={styles.image}
+                        key={file.name + file.size.toString()}
+                      />
+                    );
                   })
                 ) : (
                   <span className={styles['no-images-text']}>no images uploaded</span>
