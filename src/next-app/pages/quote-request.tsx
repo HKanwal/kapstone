@@ -266,7 +266,16 @@ const QuoteRequestPage: NextPage = () => {
             </div>
           </div>
         </div>
-        <Button title="Create" disabled={!valid} width="80%" />
+        <Button
+          title="Create"
+          disabled={!valid}
+          width="80%"
+          onClick={() => {
+            console.log(
+              'TODO: handle submit by verifying form, sending API request, and redirecting to find-shop'
+            );
+          }}
+        />
       </div>
     </div>
   );
