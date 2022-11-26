@@ -21,13 +21,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-)pzy(*e-*mo=9f39qw+s+65w9nz5k@tu_eu4bq*y4hei9o9t8@"
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "django-insecure-)pzy(*e-*mo=9f39qw+s+65w9nz5k@tu_eu4bq*y4hei9o9t8@",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = str(os.environ.get("DEBUG", 1)) == "1"
 
+ENV_ALLOWED_HOST = os.environ.get("DJANGO_ALLOWED_HOST") or None
 ALLOWED_HOSTS = []
 
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+    ALLOWED_HOSTS = ["*"]
+else:
+    CORS_ALLOW_ALL_ORIGINS = True
+    ALLOWED_HOSTS += [os.environ.get("DJANGO_ALLOWED_HOST")]
+    # CORS_ALLOWED_ORIGINS = [os.environ.get("DJANGO_CORS_ALLOWED_ORIGINS", None)]
 
 # Application definition
 
@@ -39,17 +50,21 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "drf_standardized_errors",
     "djoser",
     "phonenumber_field",
     "accounts.apps.AccountsConfig",
     "shops.apps.ShopsConfig",
     "quotes.apps.QuotesConfig",
     "vehicles.apps.VehiclesConfig",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -135,8 +150,10 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    "EXCEPTION_HANDLER": "rest_framework.views.exception_handler",
+    "EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler",
 }
+
+DRF_STANDARDIZED_ERRORS = {"ENABLE_IN_DEBUG_FOR_UNHANDLED_EXCEPTIONS": True}
 
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("JWT",),
@@ -166,7 +183,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+STATIC_ROOT = Path(BASE_DIR).joinpath("staticfiles")
+STATICFILES_DIRS = (Path(BASE_DIR).joinpath("static"),)
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

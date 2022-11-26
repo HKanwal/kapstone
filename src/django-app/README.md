@@ -84,7 +84,6 @@ GRANT ALL PRIVILEGES ON DATABASE sayyara TO my_username;
 
 ## Step 4: Run the Django App
 
-- `cd` into the `django-project` folder.
 - run: `python manage.py runserver`
 
 
@@ -195,7 +194,7 @@ GRANT ALL PRIVILEGES ON DATABASE sayyara TO my_username;
     {
         "shop_owner": "SHOP OWNER (Model)",
         "address": "ADDRESS (Model)",
-        "shop_name": "SHOP NAME",
+        "name": "SHOP NAME",
         "num_bays": "NUMBER OF SERVICE BAYS (Optional)",
         "availability": "AVAILABILITY (Optional)",
         "shop_hours": "SHOP HOURS (Optional)"

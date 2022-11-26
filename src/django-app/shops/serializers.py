@@ -1,15 +1,14 @@
 from rest_framework import serializers
 
 from .models import Shop, Address, Invitation
+from accounts.models import ShopOwner
 
 
 class ShopSerializer(serializers.ModelSerializer):
     shop_owner = serializers.SlugRelatedField(
-        slug_field="name", queryset=Shop.objects.all()
+        slug_field="username", queryset=ShopOwner.objects.all()
     )
-    address = serializers.SlugRelatedField(
-        slug_field="street", queryset=Address.objects.all()
-    )
+    address = serializers.PrimaryKeyRelatedField(queryset=Address.objects.all())
 
     class Meta:
         model = Shop
