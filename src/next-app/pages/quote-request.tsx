@@ -17,6 +17,8 @@ import {
   DatePicker as MantineDatePicker,
   TimeRangeInput as MantineTimeRangeInput,
 } from '@mantine/dates';
+import DatePickerField from '../components/DatePickerField';
+import TimeRangeField from '../components/TimeRangeField';
 
 interface carModels {
   [make: string]: string[];
@@ -59,6 +61,7 @@ const QuoteRequestPage: NextPage = () => {
   const addImageInputRef = useRef<HTMLInputElement>(null);
   const [imgFiles, setImgFiles] = useState<File[]>([]);
   const [dates, setDates] = useState<Date[]>([]);
+  const [timeRange, setTimeRange] = useState<[Date | null, Date | null]>([null, null]);
 
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     setImgFiles((prev) => {
@@ -339,6 +342,19 @@ const QuoteRequestPage: NextPage = () => {
           </div>
         </div>
         <div className={styles.section}>
+          <span className={styles['section-header']}>Availability</span>
+          <div className={styles['field-container']}>
+            <DatePickerField name="Dates" value={dates} onChange={setDates} />
+          </div>
+          {dates.length > 0 ? (
+            <div className={styles['field-container']}>
+              <TimeRangeField name="Time Range" value={timeRange} onChange={setTimeRange} />
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
+        <div className={styles.section}>
           <span className={styles['section-header']}>Additional Information</span>
           <div className={styles['field-container']}>
             <DropdownField
@@ -382,19 +398,6 @@ const QuoteRequestPage: NextPage = () => {
                 <Link text="+ Add Image" onClick={() => addImageInputRef.current?.click()} />
               </div>
             </div>
-          </div>
-          <div className={styles['field-container']}>
-            <FieldLabel label="Availability" />
-            <div className={styles['date-picker-container']}>
-              <DatePicker value={dates} onChange={setDates} />
-            </div>
-            {dates.length > 0 ? (
-              <div className={styles['time-picker-container']}>
-                <MantineTimeRangeInput />
-              </div>
-            ) : (
-              <></>
-            )}
           </div>
         </div>
         <Button title="Create" disabled={!valid} width="80%" />
