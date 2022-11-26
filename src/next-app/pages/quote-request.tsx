@@ -13,7 +13,10 @@ import DropdownField from '../components/DropdownField';
 import FieldLabel from '../components/FieldLabel';
 import Link from '../components/Link';
 import DatePicker from '../components/DatePicker';
-import { DatePicker as MantineDatePicker } from '@mantine/dates';
+import {
+  DatePicker as MantineDatePicker,
+  TimeRangeInput as MantineTimeRangeInput,
+} from '@mantine/dates';
 
 interface carModels {
   [make: string]: string[];
@@ -385,6 +388,13 @@ const QuoteRequestPage: NextPage = () => {
             <div className={styles['date-picker-container']}>
               <DatePicker value={dates} onChange={setDates} />
             </div>
+            {dates.length > 0 ? (
+              <div className={styles['time-picker-container']}>
+                <MantineTimeRangeInput />
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </div>

@@ -45,6 +45,7 @@ const DatePicker = (props: DatePickerProps) => {
             );
           })
           .join('; ')}
+        onChange={() => {}}
         disabled
       />
       {opened ? (

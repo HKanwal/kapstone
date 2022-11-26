@@ -1,4 +1,5 @@
 import '../styles/globals.css';
+import '../styles/mantine.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { QueryClient, QueryClientProvider } from 'react-query';

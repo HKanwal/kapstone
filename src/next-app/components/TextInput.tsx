@@ -15,8 +15,8 @@ import { ImCancelCircle } from 'react-icons/im';
 type TextInputProps = {
   placeholder?: string;
   width?: string | number;
-  value?: string;
-  onChange?: (newVal: string) => void;
+  value: string;
+  onChange: (newVal: string) => void;
   type?: string;
   min?: string;
   onRemove?: () => void;
@@ -43,7 +43,6 @@ const calcSize = (winHeight: number, winWidth: number) => {
 };
 
 const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => {
-  const [value, setValue] = useState(props.value ?? '');
   const [cancelSize, setCancelSize] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const style: CSSProperties = useMemo(() => {
@@ -78,14 +77,9 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
     };
   }, []);
 
-  useEffect(() => {
-    setValue(props.value ?? '');
-  }, [props.value]);
-
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newVal = e.target.value;
-    props.onChange && props.onChange(newVal);
-    setValue(newVal);
+    props.onChange(newVal);
   };
 
   const handleCancel = () => {
@@ -98,7 +92,7 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
         className={`${styles.input} ${props.error ? styles.error : ''}`}
         type={props.type ?? 'text'}
         placeholder={props.placeholder ?? ''}
-        value={value}
+        value={props.value}
         min={props.min ?? undefined}
         onChange={handleChange}
         style={style}

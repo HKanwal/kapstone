@@ -7,5 +7,5 @@
   z-index: 2;
   background-color: white;
   top: 115%;
-  box-shadow: 0px 0px 5px 1px rgb(201, 201, 201);
+  box-shadow: 0 0 0.2em 0.01em #888888;
 }

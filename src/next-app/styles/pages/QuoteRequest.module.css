@@ -42,6 +42,10 @@
   margin-top: 1vh;
 }
 
+.time-picker-container {
+  margin-top: 2vh;
+}
+
 .content {
   display: flex;
   align-items: center;
