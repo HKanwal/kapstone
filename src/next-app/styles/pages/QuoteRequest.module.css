@@ -38,6 +38,10 @@
   margin-top: 1vh;
 }
 
+.date-picker-container {
+  margin-top: 1vh;
+}
+
 .content {
   display: flex;
   align-items: center;

@@ -22,6 +22,8 @@ type TextInputProps = {
   onRemove?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
+  onClick?: () => void;
+  disabled?: boolean;
   style?: {
     paddingLeft?: string;
     paddingRight?: string;
@@ -91,7 +93,7 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} onClick={props.onClick}>
       <input
         className={`${styles.input} ${props.error ? styles.error : ''}`}
         type={props.type ?? 'text'}
@@ -103,6 +105,7 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
         onFocus={props.onFocus}
         onBlur={props.onBlur}
         ref={inputRef}
+        disabled={props.disabled}
       />
       {props.onRemove ? (
         <div className={styles['cancel-button']} onClick={handleCancel}>

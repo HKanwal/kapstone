@@ -12,6 +12,8 @@ import ShopCard from '../components/ShopCard';
 import DropdownField from '../components/DropdownField';
 import FieldLabel from '../components/FieldLabel';
 import Link from '../components/Link';
+import DatePicker from '../components/DatePicker';
+import { DatePicker as MantineDatePicker } from '@mantine/dates';
 
 interface carModels {
   [make: string]: string[];
@@ -41,8 +43,6 @@ const QuoteRequestPage: NextPage = () => {
   const [notes, setNotes] = useState('');
   const [partCondition, setPartCondition] = useState('No Preference');
   const [partType, setPartType] = useState('No Preference');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
   const [open, setOpen] = useState(false);
   const [checkedShops, setCheckedShops] = useState([] as shopObject[]);
   const [submittedShops, setSubmittedShops] = useState([] as shopObject[]);
@@ -55,6 +55,7 @@ const QuoteRequestPage: NextPage = () => {
   const [modelsList, setModelsList] = useState({} as carModels);
   const addImageInputRef = useRef<HTMLInputElement>(null);
   const [imgFiles, setImgFiles] = useState<File[]>([]);
+  const [dates, setDates] = useState<Date[]>([]);
 
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     setImgFiles((prev) => {
@@ -379,28 +380,12 @@ const QuoteRequestPage: NextPage = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div className={styles.content}>
-        <div className={styles['date-container']}>
-          <div className={styles['start-date']}>
-            <TextField
-              name="Preferred Availability"
-              onChange={setStartDate}
-              min={minDate}
-              inputType="date"
-            />
-          </div>
-          {startDate ? (
-            <div className={styles['end-date']}>
-              <TextField
-                name="Latest Preferred Availability"
-                onChange={setEndDate}
-                min={startDate}
-                inputType="date"
-              />
+          <div className={styles['field-container']}>
+            <FieldLabel label="Availability" />
+            <div className={styles['date-picker-container']}>
+              <DatePicker value={dates} onChange={setDates} />
             </div>
-          ) : null}
+          </div>
         </div>
       </div>
       <div className={styles['select-shop-button-container']}>
