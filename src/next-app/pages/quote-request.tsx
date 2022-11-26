@@ -3,20 +3,13 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import Button from '../components/Button';
 import TextField from '../components/TextField';
 import Header from '../components/Header';
-import Modal from '../components/Modal';
 import styles from '../styles/pages/QuoteRequest.module.css';
 import carData from '../data/data.json';
 import validateEmail from '../utils/validateEmail';
 import TextArea from '../components/TextArea';
-import ShopCard from '../components/ShopCard';
 import DropdownField from '../components/DropdownField';
 import FieldLabel from '../components/FieldLabel';
 import Link from '../components/Link';
-import DatePicker from '../components/DatePicker';
-import {
-  DatePicker as MantineDatePicker,
-  TimeRangeInput as MantineTimeRangeInput,
-} from '@mantine/dates';
 import DatePickerField from '../components/DatePickerField';
 import TimeRangeField from '../components/TimeRangeField';
 
