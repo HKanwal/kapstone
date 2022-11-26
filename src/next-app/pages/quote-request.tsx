@@ -48,14 +48,6 @@ const QuoteRequestPage: NextPage = () => {
   const [notes, setNotes] = useState('');
   const [partCondition, setPartCondition] = useState('No Preference');
   const [partType, setPartType] = useState('No Preference');
-  const [open, setOpen] = useState(false);
-  const [checkedShops, setCheckedShops] = useState([] as shopObject[]);
-  const [submittedShops, setSubmittedShops] = useState([] as shopObject[]);
-  const [submittedShopsDisplay, setSubmittedShopsDisplay] = useState([] as JSX.Element[]);
-  const [previousSubmittedShops, setPreviousSubmittedShops] = useState(
-    {} as previousSubmittedShops
-  );
-  const [disableSubmitShops, setDisableSubmitShops] = useState(true);
   const [makesList, setMakesList] = useState([] as string[]);
   const [modelsList, setModelsList] = useState({} as carModels);
   const addImageInputRef = useRef<HTMLInputElement>(null);
@@ -69,21 +61,16 @@ const QuoteRequestPage: NextPage = () => {
     });
   };
 
-  const today = new Date();
-  const minDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
   let valid = false;
   if (
-    make.length < 1 ||
-    customMake.length < 1 ||
-    model.length < 1 ||
-    customModel.length < 1 ||
-    modelYear.length < 1 ||
-    firstName.length < 1 ||
-    lastName.length < 1 ||
-    phoneNumber.length < 1 ||
-    email.length < 1 ||
-    (emailErrors && emailErrors.size > 0) ||
-    submittedShops.length === 0
+    make.length > 0 &&
+    model.length > 0 &&
+    modelYear.length > 0 &&
+    firstName.length > 0 &&
+    lastName.length > 0 &&
+    phoneNumber.length > 0 &&
+    email.length > 0 &&
+    emailErrors === undefined
   ) {
     valid = true;
   }
@@ -127,111 +114,6 @@ const QuoteRequestPage: NextPage = () => {
     } else {
       setEmailErrors(undefined);
     }
-  };
-
-  const handleSelectShops = () => {
-    const tempPreviousSubmittedShops: previousSubmittedShops = {};
-    // Sets initial check marks for previously checked shops
-    submittedShops.forEach((shop) => {
-      tempPreviousSubmittedShops[shop.id] = { checked: true, name: shop.name };
-    });
-    setPreviousSubmittedShops(tempPreviousSubmittedShops);
-    setOpen(true);
-  };
-
-  const handleChecks = (e: ChangeEvent<HTMLInputElement>, checkedShop: shopObject) => {
-    if (e.target.checked) {
-      // If checked, add checked shop to the previous submitted shops and checked shops
-      setPreviousSubmittedShops({
-        ...previousSubmittedShops,
-        [checkedShop.id]: { checked: true, name: checkedShop.name },
-      });
-      setCheckedShops([...checkedShops, { name: checkedShop.name, id: checkedShop.id }]);
-      setDisableSubmitShops(false);
-    } else {
-      // If unchecked remove shop from previous submitted shops and checked shops
-      setPreviousSubmittedShops({
-        ...previousSubmittedShops,
-        [checkedShop.id]: { checked: false, name: checkedShop.name },
-      });
-      checkedShops.forEach((shop) => {
-        if (shop.id === checkedShop.id) {
-          const index = checkedShops.indexOf(shop);
-          if (index !== -1) {
-            checkedShops.splice(index, 1);
-            setSubmittedShops([...checkedShops]);
-          }
-        }
-      });
-    }
-  };
-
-  // Remove shop from previous submitted shops and submitted shops
-  const handleRemoveShop = (removedShop: shopObject) => {
-    setPreviousSubmittedShops({
-      ...previousSubmittedShops,
-      [removedShop.id]: { checked: false, name: removedShop.name },
-    });
-    const index = submittedShops.indexOf(removedShop);
-    if (index !== -1) {
-      submittedShops.splice(index, 1);
-      setSubmittedShops([...submittedShops]);
-    }
-  };
-
-  // Each time submitted shops are changed run refresh to update the list of shop UI elements to display
-  useEffect(() => {
-    handleShopsRefresh();
-  }, [submittedShops]);
-
-  // Update list of shop UI elements to display
-  const handleShopsRefresh = () => {
-    const submittedShopsDisplay: JSX.Element[] = [];
-    submittedShops.forEach((shop: shopObject) => {
-      submittedShopsDisplay.push(
-        <div className={styles['shop-card']} key={shop.id}>
-          <div className={styles['shop-title-container']}>
-            <label>{shop.name}</label>
-          </div>
-          <div className={styles['remove-button-container']}>
-            <button
-              className={styles['remove-button']}
-              onClick={() => {
-                handleRemoveShop(shop);
-              }}>
-              Remove
-            </button>
-          </div>
-        </div>
-      );
-    });
-    setSubmittedShopsDisplay(submittedShopsDisplay);
-  };
-
-  // Add checked shops and previously submitted shops (shops that are initially selected) to submitted shops
-  const handleShopsSubmit = () => {
-    setOpen(false);
-    const allCheckedShops = [...checkedShops];
-    checkedShops.forEach((checkedShop) => {
-      setPreviousSubmittedShops({
-        ...previousSubmittedShops,
-        [checkedShop.id]: { checked: true, name: checkedShop.name },
-      });
-    });
-    for (const shop in previousSubmittedShops) {
-      if (previousSubmittedShops[shop].checked) {
-        const tempItem = { name: previousSubmittedShops[shop].name, id: shop };
-        if (allCheckedShops.filter((checkedShop) => checkedShop.id === shop).length === 0) {
-          allCheckedShops.push(tempItem);
-        }
-      }
-    }
-    allCheckedShops.sort((shop1, shop2) => {
-      return parseInt(shop1.id) - parseInt(shop2.id);
-    });
-    setSubmittedShops(allCheckedShops);
-    setCheckedShops([]);
-    handleShopsRefresh();
   };
 
   return (
