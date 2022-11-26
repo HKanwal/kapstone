@@ -397,65 +397,7 @@ const QuoteRequestPage: NextPage = () => {
             )}
           </div>
         </div>
-      </div>
-      <div className={styles['select-shop-button-container']}>
-        <Button title="Select Shops" width="50%" onClick={handleSelectShops} />
-      </div>
-      {open ? (
-        <Modal
-          visible={open}
-          onClose={() => {
-            setCheckedShops([]);
-            setPreviousSubmittedShops({});
-            setOpen(false);
-          }}>
-          <div className={styles['select-shops-modal']}>
-            <div className={styles['modal-title']}>
-              <label>Select shops to send quote request to:</label>
-            </div>
-            <div className={styles['card-container']}>
-              <input
-                className="checkbox"
-                name="Shop1"
-                checked={
-                  previousSubmittedShops['1'] ? previousSubmittedShops['1'].checked : undefined
-                }
-                onChange={(e) => handleChecks(e, { name: 'Shop1', id: '1' })}
-                type="checkbox"></input>
-              <ShopCard name="Shop1" />
-            </div>
-            <br />
-            <div className={styles['card-container']}>
-              <input
-                className="checkbox"
-                name="Shop2"
-                checked={
-                  previousSubmittedShops['2'] ? previousSubmittedShops['2'].checked : undefined
-                }
-                onChange={(e) => handleChecks(e, { name: 'Shop2', id: '2' })}
-                type="checkbox"></input>
-              <ShopCard name="Shop2" />
-            </div>
-            <br />
-            <div className={styles['card-container']}>
-              <input
-                className="checkbox"
-                name="Shop3"
-                checked={
-                  previousSubmittedShops['3'] ? previousSubmittedShops['3'].checked : undefined
-                }
-                onChange={(e) => handleChecks(e, { name: 'Shop3', id: '3' })}
-                type="checkbox"></input>
-              <ShopCard name="Shop3" />
-            </div>
-            <br />
-            <Button title="Submit" width="100%" onClick={handleShopsSubmit} />
-          </div>
-        </Modal>
-      ) : null}
-      <div className={styles.content}>
-        {submittedShopsDisplay}
-        <Button title="Submit" width="80%" disabled={valid} />
+        <Button title="Create" disabled={!valid} width="80%" />
       </div>
     </div>
   );
