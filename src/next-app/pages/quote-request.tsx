@@ -17,15 +17,6 @@ interface carModels {
   [make: string]: string[];
 }
 
-interface shopObject {
-  name: string;
-  id: string;
-}
-
-interface previousSubmittedShops {
-  [id: string]: { checked: boolean; name: string };
-}
-
 const QuoteRequestPage: NextPage = () => {
   const [make, setMake] = useState('');
   const [customMake, setCustomMake] = useState('');
