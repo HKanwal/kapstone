@@ -4,6 +4,7 @@ import BackButton from './BackButton';
 
 type HeaderProps = {
   title?: string;
+  withoutBackBtn?: boolean;
 };
 
 const Header = (props: HeaderProps) => {
@@ -11,9 +12,13 @@ const Header = (props: HeaderProps) => {
 
   return (
     <div className={styles.header}>
-      <div className={styles['back-btn-container']}>
-        <BackButton onClick={() => router.back()} />
-      </div>
+      {!props.withoutBackBtn ? (
+        <div className={styles['back-btn-container']}>
+          <BackButton onClick={() => router.back()} />
+        </div>
+      ) : (
+        <></>
+      )}
       {!!props.title ? (
         <span className={styles.title}>{props.title}</span>
       ) : (
