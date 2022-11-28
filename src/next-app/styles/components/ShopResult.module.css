@@ -1,0 +1,41 @@
+.container {
+  background-color: var(--text-input-color);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border-radius: 4vmin;
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+}
+
+.labels-container {
+  display: flex;
+  flex-direction: column;
+  margin-left: 5%;
+}
+
+.name {
+  font-weight: bold;
+  font-size: calc(var(--font-size) + 0.1em);
+}
+
+.distance {
+  color: var(--text-grey-color);
+}
+
+.btns-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 40%;
+}
+
+.circular-icon-btn-container {
+  border-radius: 50%;
+  padding: 0.5vmin;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
