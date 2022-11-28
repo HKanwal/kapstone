@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   };
 
   return (
-    <MantineProvider withCSSVariables withGlobalStyles>
+    <MantineProvider withCSSVariables>
       <QueryClientProvider client={queryClient}>
         <AuthContext.Provider value={jwt}>
           <Head>
