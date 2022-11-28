@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from '../styles/components/TextMultiField.module.css';
+import FieldLabel from './FieldLabel';
 import Link from './Link';
 import TextInput from './TextInput';
 
@@ -9,6 +10,7 @@ type TextMultiFieldProps = {
   width?: string | number;
   onChange?: (newVals: string[]) => void;
   inputType?: string;
+  min?: string;
 
   /** When any of the inputs lost focus */
   onBlur?: () => void;
@@ -51,10 +53,11 @@ const TextMultiField = (props: TextMultiFieldProps) => {
   return (
     <div className={styles.container}>
       <>
-        <span className={styles.name}>
-          {props.name}
-          {props.required ? <span className={styles.asterisk}>*</span> : <></>}
-        </span>
+        {props.name.length > 0 ? (
+          <FieldLabel label={props.name} required={props.required} />
+        ) : (
+          <></>
+        )}
         {vals.map((val, i) => {
           return (
             <div className={styles['text-input-container']} key={i}>
@@ -64,6 +67,7 @@ const TextMultiField = (props: TextMultiFieldProps) => {
                 value={val}
                 onChange={(newVal) => handleChange(i, newVal)}
                 type={props.inputType}
+                min={props.min}
                 onRemove={i > 0 ? () => removeTextInput(i) : undefined}
                 error={i === 0 && props.error}
                 onBlur={handleBlur}

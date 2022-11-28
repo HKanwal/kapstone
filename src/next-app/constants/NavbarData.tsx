@@ -29,7 +29,7 @@ export const NavbarData = [
   },
   {
     title: 'Quotes',
-    path: '#',
+    path: '/quote-request',
     icon: <IoIcons.IoMdFiling />,
   },
 ];
