@@ -4,6 +4,7 @@ import TextInput, { TextInputRef } from './TextInput';
 import { BsChevronDown } from 'react-icons/bs';
 import Chip from './Chip';
 import FieldLabel from './FieldLabel';
+import { useClickOutside } from '@mantine/hooks';
 
 type Type = 'single-select' | 'multi-select';
 type DropdownFieldProps = {
@@ -15,6 +16,13 @@ type DropdownFieldProps = {
   selectedItems?: string[];
   onSelect?: (item: string, selectedItems: string[]) => void;
   type?: Type;
+
+  /**
+   * If disabled, the behaviour will be as follows:
+   * - User will not be able to focus the input
+   * - User will not be able to type in the input or filter dropdown items
+   */
+  disabled?: boolean;
 };
 
 let collapseTimout: NodeJS.Timeout;
@@ -25,6 +33,7 @@ const DropdownField = (props: DropdownFieldProps) => {
   const [value, setValue] = useState('');
   const items = useMemo(() => Array.from(new Set(props.items)), [props.items]);
   const inputRef = useRef<TextInputRef>(null);
+  const inputContainerRef = useClickOutside<HTMLDivElement>(() => setExpanded(false));
   const type: Type = props.type === 'multi-select' ? 'multi-select' : 'single-select';
 
   useEffect(() => {
@@ -87,6 +96,25 @@ const DropdownField = (props: DropdownFieldProps) => {
     });
   };
 
+  const handleInputClick = () => {
+    if (props.disabled) {
+      if (!expanded) {
+        setValue('');
+        setExpanded(true);
+      } else {
+        setExpanded(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (props.disabled && !expanded) {
+      if (!expanded && value === '' && type === 'single-select') {
+        setValue(selectedItems[0]);
+      }
+    }
+  }, [expanded]);
+
   return (
     <div className={styles.container}>
       {props.name.length > 0 ? <FieldLabel label={props.name} required={props.required} /> : <></>}
@@ -107,7 +135,7 @@ const DropdownField = (props: DropdownFieldProps) => {
       ) : (
         <></>
       )}
-      <div className={styles['input-container']}>
+      <div className={styles['input-container']} ref={inputContainerRef}>
         <TextInput
           placeholder={props.placeholder ?? ''}
           width={props.width}
@@ -116,7 +144,9 @@ const DropdownField = (props: DropdownFieldProps) => {
           onChange={setValue}
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
+          onClick={handleInputClick}
           ref={inputRef}
+          disabled={props.disabled}
         />
         <div className={styles['chevron-container']}>
           <BsChevronDown />
@@ -135,7 +165,8 @@ const DropdownField = (props: DropdownFieldProps) => {
                   className={styles.item}
                   key={item}
                   onFocus={handleBtnFocus}
-                  onClick={() => handleItemClick(item)}>
+                  onClick={() => handleItemClick(item)}
+                >
                   {item}
                 </button>
               ))}

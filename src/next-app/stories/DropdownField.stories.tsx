@@ -36,10 +36,27 @@ Required.args = {
   required: true,
 };
 
-export const MultiSelect = Template.bind({});
-MultiSelect.args = {
+export const Multi = Template.bind({});
+Multi.args = {
   name: 'Animals',
   placeholder: 'Search for an item...',
   items: ['Cat', 'Dog', 'Frog', 'Pig', 'Cow', 'Goose'],
   type: 'multi-select',
+};
+
+export const Disabled = Template.bind({});
+Disabled.args = {
+  name: 'Animals',
+  placeholder: 'Search for an item...',
+  items: ['Cat', 'Dog', 'Frog'],
+  disabled: true,
+};
+
+export const DisabledMulti = Template.bind({});
+DisabledMulti.args = {
+  name: 'Animals',
+  placeholder: 'Search for an item...',
+  items: ['Cat', 'Dog', 'Frog'],
+  type: 'multi-select',
+  disabled: true,
 };

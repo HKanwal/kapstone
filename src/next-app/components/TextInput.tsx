@@ -16,11 +16,10 @@ import { BsChevronDown } from 'react-icons/bs';
 type TextInputProps = {
   placeholder?: string;
   width?: string | number;
-  value: string;
-  onChange: (newVal: string) => void;
+  value?: string;
+  onChange?: (newVal: string) => void;
   type?: string;
-  min?: string;
-  
+
   /**
    * If this prop is provided, a cancel button will be rendered within the input
    * on the right side. When user clicks it, the given callback will be called.
@@ -29,7 +28,6 @@ type TextInputProps = {
   onFocus?: () => void;
   onBlur?: () => void;
   onClick?: () => void;
-  disabled?: boolean;
   style?: {
     paddingLeft?: string;
     paddingRight?: string;
@@ -37,6 +35,7 @@ type TextInputProps = {
     paddingBottom?: string;
   };
   error?: boolean;
+  disabled?: boolean;
 
   /**
    * Renders a dropdown on right side of input. If this prop is provided,
@@ -48,7 +47,6 @@ type TextInputProps = {
 
 type TextInputRef = {
   focus: () => void;
-  blur: () => void;
 };
 
 const calcSize = (winHeight: number, winWidth: number) => {
@@ -56,6 +54,7 @@ const calcSize = (winHeight: number, winWidth: number) => {
 };
 
 const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => {
+  const [value, setValue] = useState(props.value ?? '');
   const [cancelSize, setCancelSize] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const style: CSSProperties = useMemo(() => {
@@ -75,9 +74,6 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
       focus: () => {
         inputRef.current?.focus();
       },
-      blur: () => {
-        inputRef.current?.blur();
-      },
     };
   });
 
@@ -94,9 +90,14 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
     };
   }, []);
 
+  useEffect(() => {
+    setValue(props.value ?? '');
+  }, [props.value]);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newVal = e.target.value;
-    props.onChange(newVal);
+    props.onChange && props.onChange(newVal);
+    setValue(newVal);
   };
 
   const handleCancel = () => {
@@ -109,8 +110,7 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
         className={`${styles.input} ${props.error ? styles.error : ''}`}
         type={props.type ?? 'text'}
         placeholder={props.placeholder ?? ''}
-        value={props.value}
-        min={props.min ?? undefined}
+        value={value}
         onChange={handleChange}
         style={style}
         onFocus={props.onFocus}
@@ -130,30 +130,6 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
           <div className={styles['right-input-container']}>
             <div className={styles.divider}></div>
             <input className={styles['right-input']} defaultValue={props.rightItems[0]} disabled />
-            {expanded ? (
-              <div className={styles['dropdown']}>
-                {items
-                  .filter((item) => {
-                    return !selectedItems.includes(item);
-                  })
-                  .filter((item) => {
-                    return value.length === 0 || item.startsWith(value);
-                  })
-                  .map((item) => (
-                    <button
-                      className={styles.item}
-                      key={item}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                      onClick={() => handleItemClick(item)}
-                    >
-                      {item}
-                    </button>
-                  ))}
-              </div>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles['chevron-container']}>
             <BsChevronDown />
