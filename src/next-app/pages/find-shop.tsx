@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import Button from '../components/Button';
 import DropdownField from '../components/DropdownField';
 import Header from '../components/Header';
@@ -11,8 +11,13 @@ const FindShopPage: NextPage = () => {
   const [zipCode, setZipCode] = useState('');
   const [shopName, setShopName] = useState('');
   const [serviceType, setServiceType] = useState('');
+  const [checked, setChecked] = useState(false);
   const valid = zipCode.length > 0;
   const serviceTypes: string[] = []; // TODO: service types should be retrieved from database
+
+  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setChecked(e.target.checked);
+  };
 
   const handleSubmit = () => {
     // TODO: Redirect to shop results screen
@@ -33,6 +38,10 @@ const FindShopPage: NextPage = () => {
         {/*<div className={formStyles['field-container']}>
           <DropdownField name='Service Type'  /> TODO: Use the single dropdown field component. Must wait until that PR is merged to continue.
         </div> */}
+        <div className={formStyles['field-container']}>
+          <input type="checkbox" checked={checked} onChange={handleCheckboxChange} />
+          <label style={{ marginLeft: '1vw' }}>Show direct booking shops only</label>
+        </div>
         <div className={formStyles['submit-container']}>
           <Button title="Create" disabled={!valid} width="80%" onClick={handleSubmit} />
         </div>
