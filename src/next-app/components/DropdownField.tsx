@@ -120,7 +120,13 @@ const DropdownField = (props: DropdownFieldProps) => {
 
   return (
     <div className={styles.container} style={props.style}>
-      {props.name.length > 0 ? <FieldLabel label={props.name} required={props.required} /> : <></>}
+      {props.name.length > 0 ? (
+        <div className={styles['name-container']}>
+          <FieldLabel label={props.name} required={props.required} />
+        </div>
+      ) : (
+        <></>
+      )}
       {type === 'multi-select' ? (
         <div className={styles['chips-container']}>
           {selectedItems.map((item) => {

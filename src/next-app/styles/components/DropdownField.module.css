@@ -4,6 +4,10 @@
   width: 100%;
 }
 
+.name-container {
+  margin-bottom: 1.5vh;
+}
+
 .chips-container {
   display: flex;
   flex-direction: row;
@@ -13,7 +17,6 @@
 .chip-container {
   margin-left: 2%;
   margin-right: 2%;
-  margin-top: 1vh;
   margin-bottom: 1.5vh;
 }
 
