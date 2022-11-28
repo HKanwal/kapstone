@@ -18,6 +18,11 @@ type TextInputProps = {
   value?: string;
   onChange?: (newVal: string) => void;
   type?: string;
+
+  /**
+   * If this prop is provided, a cancel button will be rendered within the input
+   * on the right side. When user clicks it, the given callback will be called.
+   */
   onRemove?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
@@ -28,6 +33,13 @@ type TextInputProps = {
     paddingBottom?: string;
   };
   error?: boolean;
+
+  /**
+   * Renders a dropdown on right side of input. If this prop is provided,
+   * onRemove will be ignored and no cancel button will be rendered.
+   */
+  rightItems?: string[];
+  onRightItemChange?: (newItem: string) => void;
 };
 
 type TextInputRef = {
@@ -111,5 +123,5 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
 
 TextInput.displayName = 'TextInput';
 
-export type { TextInputRef };
+export type { TextInputRef, TextInputProps };
 export default TextInput;

@@ -102,7 +102,8 @@ const DropdownField = (props: DropdownFieldProps) => {
                   key={item}
                   onFocus={handleFocus}
                   onBlur={handleBlur}
-                  onClick={() => handleItemClick(item)}>
+                  onClick={() => handleItemClick(item)}
+                >
                   {item}
                 </button>
               ))}
