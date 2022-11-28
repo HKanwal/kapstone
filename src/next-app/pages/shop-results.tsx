@@ -4,6 +4,11 @@ import styles from '../styles/pages/ShopResults.module.css';
 import { BsFilter } from 'react-icons/bs';
 import ShopResult from '../components/ShopResult';
 import { useQuery } from 'react-query';
+import Modal from '../components/Modal';
+import { useState } from 'react';
+import DropdownField from '../components/DropdownField';
+import TextField from '../components/TextField';
+import Button from '../components/Button';
 
 type ShopResult = {
   name: string;
@@ -15,6 +20,7 @@ type ShopResult = {
 };
 
 const ShopResultsPage: NextPage = () => {
+  const [filterOpen, setFilterOpen] = useState(false);
   // TODO: fetch results from server
   const resultsData: ShopResult[] = [
     {
@@ -43,6 +49,10 @@ const ShopResultsPage: NextPage = () => {
     },
   ];
 
+  const handleFilterClick = () => {
+    setFilterOpen((prev) => !prev);
+  };
+
   const handleAppointmentClick = (i: number) => {
     console.log('TODO: handle appointment click');
   };
@@ -51,13 +61,13 @@ const ShopResultsPage: NextPage = () => {
     console.log('TODO: handle call click');
   };
 
+  const applyFilters = () => {
+    console.log('TODO: handle application of filters');
+  };
+
   return (
     <div className={styles.container}>
-      <Header
-        title="Shop Results"
-        rightIcon={BsFilter}
-        onRightIconClick={() => console.log('clicked right icon')}
-      />
+      <Header title="Shop Results" rightIcon={BsFilter} onRightIconClick={handleFilterClick} />
 
       <div className={styles.content}>
         {resultsData.map((result, i) => {
@@ -76,6 +86,15 @@ const ShopResultsPage: NextPage = () => {
           );
         })}
       </div>
+      <Modal visible={filterOpen} onClose={() => setFilterOpen(false)}>
+        {/* <div className={styles['field-container']}>
+            <DropdownField /> TODO: Use the single dropdown component when PR is merged
+          </div> */}
+        <div className={styles['field-container']}>
+          <TextField name="Distance limit (km)" placeholder="Enter distance in km" />
+        </div>
+        <Button title="Apply Filter(s)" width="100%" />
+      </Modal>
     </div>
   );
 };

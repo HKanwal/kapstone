@@ -19,3 +19,8 @@
   width: 95%;
   margin-bottom: 2vh;
 }
+
+.field-container {
+  width: 100%;
+  padding-bottom: 3vh;
+}
