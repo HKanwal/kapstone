@@ -28,7 +28,10 @@ type ShopResultProps = {
   name: string;
   distance: string;
   onClick?: () => void;
-  withAppointment?: boolean;
+  cannedDetails?: {
+    cost: number;
+    time: string;
+  };
   onClickAppointment?: () => void;
   onClickCall?: () => void;
 };
@@ -38,14 +41,19 @@ const ShopResult = (props: ShopResultProps) => {
     <div className={styles.container}>
       <div className={styles['labels-container']}>
         <span className={styles.name}>{props.name}</span>
-        <span className={styles.distance}>{props.distance}</span>
-      </div>
-      <div className={styles['btns-container']}>
-        {props.withAppointment ? (
-          <CircularIconButton icon={BiTime} onClick={props.onClickAppointment} />
+        {props.cannedDetails ? (
+          <span className={styles['canned-details']}>
+            {props.cannedDetails.cost.toString() + ' - ' + props.cannedDetails.time}
+          </span>
         ) : (
           <></>
         )}
+        <span className={styles.distance}>{props.distance}</span>
+      </div>
+      <div className={styles['btns-container']}>
+        <div style={{ visibility: props.cannedDetails ? 'visible' : 'hidden' }}>
+          <CircularIconButton icon={BiTime} onClick={props.onClickAppointment} />
+        </div>
         <CircularIconButton icon={AiFillPhone} onClick={props.onClickCall} />
       </div>
     </div>

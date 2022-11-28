@@ -17,7 +17,7 @@ const ShopResultsPage: NextPage = () => {
         <ShopResult
           name="Shop 1"
           distance="15 km"
-          withAppointment
+          cannedDetails={{ cost: 200, time: '2 hours' }}
           onClickCall={() => console.log('TODO: Make quick call')}
         />
       </div>

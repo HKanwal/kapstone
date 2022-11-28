@@ -21,6 +21,10 @@
   font-size: calc(var(--font-size) + 0.1em);
 }
 
+.canned-details {
+  color: var(--text-grey-color);
+}
+
 .distance {
   color: var(--text-grey-color);
 }
