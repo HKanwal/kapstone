@@ -16,21 +16,30 @@ const Template: ComponentStory<typeof DropdownField> = (args) => <DropdownField 
 
 export const Nameless = Template.bind({});
 Nameless.args = {
+  name: '',
   placeholder: 'Search for an item...',
-  items: new Set(['Cat', 'Dog', 'Frog']),
+  items: ['Cat', 'Dog', 'Frog'],
 };
 
 export const Named = Template.bind({});
 Named.args = {
   name: 'Animal',
   placeholder: 'Search for an item...',
-  items: new Set(['Cat', 'Dog', 'Frog']),
+  items: ['Cat', 'Dog', 'Frog'],
 };
 
 export const Required = Template.bind({});
 Required.args = {
   name: 'Animal',
   placeholder: 'Search for an item...',
-  items: new Set(['Cat', 'Dog', 'Frog']),
+  items: ['Cat', 'Dog', 'Frog'],
   required: true,
+};
+
+export const MultiSelect = Template.bind({});
+MultiSelect.args = {
+  name: 'Animals',
+  placeholder: 'Search for an item...',
+  items: ['Cat', 'Dog', 'Frog', 'Pig', 'Cow', 'Goose'],
+  type: 'multi-select',
 };
