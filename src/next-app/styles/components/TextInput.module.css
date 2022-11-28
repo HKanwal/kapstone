@@ -20,6 +20,49 @@
   outline: 1px solid var(--red-color);
 }
 
+.right-input-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 35%;
+  height: 100%;
+}
+
+.divider {
+  width: 1px;
+  height: 50%;
+  background-color: black;
+  position: absolute;
+  top: 50%;
+  transform: translate(0px, -50%);
+  left: 0;
+}
+
+.right-input {
+  height: 100%;
+  width: 100%;
+  border: 0;
+  padding-left: 1em;
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+  padding-right: 30%;
+  border-radius: 0.2em;
+  font-size: var(--font-size);
+  background-color: var(--text-input-color);
+  text-align: center;
+}
+
+.right-input:focus {
+  outline: 1px solid var(--primary-color);
+}
+
+.chevron-container {
+  position: absolute;
+  top: 50%;
+  right: 6%;
+  transform: translate(0px, -40%);
+}
+
 .cancel-button {
   position: absolute;
   top: 50%;
@@ -30,4 +73,19 @@
 
 .cancel-button:hover {
   cursor: pointer;
+}
+
+/*
+ * Disable up and down arrow when type = number
+ */
+/* Chrome, Safari, Edge, Opera */
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.input[type='number'] {
+  -moz-appearance: textfield;
 }

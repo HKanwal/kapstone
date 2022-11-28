@@ -33,3 +33,10 @@ Error.args = {
   placeholder: 'I have an error :(',
   error: true,
 };
+
+export const WithDropdown = Template.bind({});
+WithDropdown.args = {
+  placeholder: 'Enter a distance and select a unit',
+  type: 'number',
+  rightItems: ['km', 'miles'],
+};

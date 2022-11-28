@@ -11,6 +11,7 @@ import {
 } from 'react';
 import styles from '../styles/components/TextInput.module.css';
 import { ImCancelCircle } from 'react-icons/im';
+import { BsChevronDown } from 'react-icons/bs';
 
 type TextInputProps = {
   placeholder?: string;
@@ -58,7 +59,11 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
     return {
       width: props.width ?? '100%',
       ...props.style,
-      paddingRight: props.onRemove ? '3em' : props.style?.paddingRight ?? '1em',
+      paddingRight: props.rightItems
+        ? 'calc(1em + 35%)'
+        : props.onRemove
+        ? '3em'
+        : props.style?.paddingRight ?? '1em',
     };
   }, [props.width, props.style, props.onRemove]);
 
@@ -110,10 +115,47 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
         onBlur={props.onBlur}
         ref={inputRef}
       />
-      {props.onRemove ? (
+      {props.onRemove && !props.rightItems ? (
         <div className={styles['cancel-button']} onClick={handleCancel}>
           <ImCancelCircle size={cancelSize} />
         </div>
+      ) : (
+        <></>
+      )}
+      {props.rightItems ? (
+        <>
+          <div className={styles['right-input-container']}>
+            <div className={styles.divider}></div>
+            <input className={styles['right-input']} defaultValue={props.rightItems[0]} disabled />
+            {expanded ? (
+              <div className={styles['dropdown']}>
+                {items
+                  .filter((item) => {
+                    return !selectedItems.includes(item);
+                  })
+                  .filter((item) => {
+                    return value.length === 0 || item.startsWith(value);
+                  })
+                  .map((item) => (
+                    <button
+                      className={styles.item}
+                      key={item}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                      onClick={() => handleItemClick(item)}
+                    >
+                      {item}
+                    </button>
+                  ))}
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+          <div className={styles['chevron-container']}>
+            <BsChevronDown />
+          </div>
+        </>
       ) : (
         <></>
       )}
