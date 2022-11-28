@@ -12,6 +12,7 @@ import {
 import styles from '../styles/components/TextInput.module.css';
 import { ImCancelCircle } from 'react-icons/im';
 import { BsChevronDown } from 'react-icons/bs';
+import DropdownField from './DropdownField';
 
 type TextInputProps = {
   placeholder?: string;
@@ -126,15 +127,16 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
         <></>
       )}
       {props.rightItems ? (
-        <>
-          <div className={styles['right-input-container']}>
-            <div className={styles.divider}></div>
-            <input className={styles['right-input']} defaultValue={props.rightItems[0]} disabled />
-          </div>
-          <div className={styles['chevron-container']}>
-            <BsChevronDown />
-          </div>
-        </>
+        <div className={styles['right-input-container']}>
+          <DropdownField
+            name=""
+            items={props.rightItems}
+            selectedItems={[props.rightItems[0]]}
+            onSelect={props.onRightItemChange}
+            disabled
+          />
+          <div className={styles.divider}></div>
+        </div>
       ) : (
         <></>
       )}

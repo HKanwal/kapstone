@@ -36,7 +36,6 @@ Error.args = {
 
 export const WithDropdown = Template.bind({});
 WithDropdown.args = {
-  placeholder: 'Enter a distance and select a unit',
-  type: 'number',
+  placeholder: 'I have a dropdown!',
   rightItems: ['km', 'miles'],
 };

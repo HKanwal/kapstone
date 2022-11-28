@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
 import styles from '../styles/components/DropdownField.module.css';
 import TextInput, { TextInputRef } from './TextInput';
 import { BsChevronDown } from 'react-icons/bs';
@@ -16,6 +16,7 @@ type DropdownFieldProps = {
   selectedItems?: string[];
   onSelect?: (item: string, selectedItems: string[]) => void;
   type?: Type;
+  style?: CSSProperties;
 
   /**
    * If disabled, the behaviour will be as follows:
@@ -99,7 +100,9 @@ const DropdownField = (props: DropdownFieldProps) => {
   const handleInputClick = () => {
     if (props.disabled) {
       if (!expanded) {
-        setValue('');
+        if (type === 'multi-select') {
+          setValue('');
+        }
         setExpanded(true);
       } else {
         setExpanded(false);
@@ -116,7 +119,7 @@ const DropdownField = (props: DropdownFieldProps) => {
   }, [expanded]);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={props.style}>
       {props.name.length > 0 ? <FieldLabel label={props.name} required={props.required} /> : <></>}
       {type === 'multi-select' ? (
         <div className={styles['chips-container']}>
@@ -158,6 +161,9 @@ const DropdownField = (props: DropdownFieldProps) => {
                 return type === 'multi-select' ? !selectedItems.includes(item) : true;
               })
               .filter((item) => {
+                if (props.disabled && type === 'single-select') {
+                  return item !== value;
+                }
                 return value.length === 0 || item.startsWith(value);
               })
               .map((item) => (

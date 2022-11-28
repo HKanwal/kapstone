@@ -38,24 +38,6 @@
   left: 0;
 }
 
-.right-input {
-  height: 100%;
-  width: 100%;
-  border: 0;
-  padding-left: 1em;
-  padding-top: 1.5em;
-  padding-bottom: 1.5em;
-  padding-right: 30%;
-  border-radius: 0.2em;
-  font-size: var(--font-size);
-  background-color: var(--text-input-color);
-  text-align: center;
-}
-
-.right-input:focus {
-  outline: 1px solid var(--primary-color);
-}
-
 .chevron-container {
   position: absolute;
   top: 50%;
