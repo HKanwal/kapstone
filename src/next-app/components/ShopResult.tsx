@@ -3,6 +3,7 @@ import { BiTime } from 'react-icons/bi';
 import { AiFillPhone } from 'react-icons/ai';
 import styles from '../styles/components/ShopResult.module.css';
 import IconButton from './IconButton';
+import { CSSProperties } from 'react';
 
 type CircularIconButtonProps = {
   icon: IconType;
@@ -34,16 +35,17 @@ type ShopResultProps = {
   };
   onClickAppointment?: () => void;
   onClickCall?: () => void;
+  style?: CSSProperties;
 };
 
 const ShopResult = (props: ShopResultProps) => {
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={props.style}>
       <div className={styles['labels-container']}>
         <span className={styles.name}>{props.name}</span>
         {props.cannedDetails ? (
           <span className={styles['canned-details']}>
-            {props.cannedDetails.cost.toString() + ' - ' + props.cannedDetails.time}
+            {'$' + props.cannedDetails.cost.toString() + ' - ' + props.cannedDetails.time}
           </span>
         ) : (
           <></>
