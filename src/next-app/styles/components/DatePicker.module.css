@@ -1,0 +1,11 @@
+.container {
+  position: relative;
+}
+
+.calendar-container {
+  position: absolute;
+  z-index: 2;
+  background-color: white;
+  top: 115%;
+  box-shadow: 0 0 0.2em 0.01em #888888;
+}

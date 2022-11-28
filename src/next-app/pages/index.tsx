@@ -17,7 +17,12 @@ const Home: NextPage = () => {
 
       <div className={styles.container}>
         <div className={styles['btns-container']}>
-          <Button title="Continue as a Customer" />
+          <Button
+            title="Continue as a Customer"
+            onClick={() => {
+              router.push('/dashboard');
+            }}
+          />
           <span className={styles.or}>OR</span>
           <Button
             title="Login as a Shop Owner"

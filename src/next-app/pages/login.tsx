@@ -9,21 +9,53 @@ import styles from '../styles/pages/Login.module.css';
 import { useMutation } from 'react-query';
 import { Jwt, loginFn } from '../utils/api';
 import { useRouter } from 'next/router';
+import { useForm } from '../hooks/useForm';
 
 type LoginPageProps = {
   onLogin: (jwt: Jwt) => void;
 };
 
 const LoginPage: NextPage<LoginPageProps, {}> = (props) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [modalVisible, setModalVisisble] = useState<boolean>(false);
   const router = useRouter();
-
+  const [modalVisible, setModalVisisble] = useState<boolean>(false);
   const mutation = useMutation({
     mutationFn: loginFn,
   });
+  const form = useForm({
+    initialValues: {
+      username: '',
+      password: '',
+    },
+    validationSchema: {
+      username: ['required'],
+      password: ['required'],
+    },
+    onSubmit: (values, setErrors) => {
+      mutation.mutate(
+        { username: values.username, password: values.password },
+        {
+          onSuccess(data, variables, context) {
+            if (data.ok) {
+              data.json().then((response: Jwt) => {
+                props.onLogin(response);
+              });
+              router.push('/dashboard');
+            } else {
+              setErrors({
+                username: ['Invalid credentials.'],
+              });
+            }
+          },
+          onError() {
+            setErrors({
+              username: ['Unable to reach server.'],
+            });
+          },
+        }
+      );
+    },
+  });
+  const firstError: string | undefined = [...form.errors.username, ...form.errors.password][0];
 
   const showModal = () => {
     setModalVisisble(true);
@@ -31,24 +63,6 @@ const LoginPage: NextPage<LoginPageProps, {}> = (props) => {
 
   const hideModal = () => {
     setModalVisisble(false);
-  };
-
-  const handleClickLogin = () => {
-    mutation.mutate(
-      { username, password },
-      {
-        onSuccess(data, variables, context) {
-          if (data.ok) {
-            data.json().then((response: Jwt) => {
-              props.onLogin(response);
-            });
-            router.push('/dashboard');
-          } else {
-            setError('Invalid credentials.');
-          }
-        },
-      }
-    );
   };
 
   const handleClickRegister = () => {
@@ -59,16 +73,13 @@ const LoginPage: NextPage<LoginPageProps, {}> = (props) => {
     <div className={styles.container}>
       <Header />
 
-      <div className={styles.content}>
-        {error.length > 0 ? <div className={styles['error-container']}>{error}</div> : <></>}
+      <form className={styles.content} onSubmit={form.handleSubmit}>
+        {firstError ? <div className={styles['error-container']}>{firstError}</div> : <></>}
         <div className={styles['username-container']}>
           <TextField
             name="Username"
             placeholder="Enter your username"
-            onChange={(username) => {
-              setError('');
-              setUsername(username);
-            }}
+            onChange={form.handleChange('username')}
           />
         </div>
         <div className={styles['password-container']}>
@@ -76,21 +87,13 @@ const LoginPage: NextPage<LoginPageProps, {}> = (props) => {
             name="Password"
             placeholder="Enter your password"
             inputType="password"
-            onChange={(password) => {
-              setError('');
-              setPassword(password);
-            }}
+            onChange={form.handleChange('password')}
           />
         </div>
         <div className={styles['forgot-password-container']}>
           <Link text="Forgot Password?" onClick={showModal} />
         </div>
-        <Button
-          title="Login"
-          width="80%"
-          onClick={handleClickLogin}
-          disabled={username.length < 1 || password.length < 1}
-        />
+        <Button type="submit" title="Login" width="80%" />
         <span className={styles.or}>OR</span>
         <Button title="Register" width="80%" onClick={handleClickRegister} />
 
@@ -105,7 +108,7 @@ const LoginPage: NextPage<LoginPageProps, {}> = (props) => {
             </div>
           </div>
         </Modal>
-      </div>
+      </form>
     </div>
   );
 };
