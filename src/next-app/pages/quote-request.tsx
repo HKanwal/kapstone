@@ -36,8 +36,6 @@ const QuoteRequestPage: NextPage = () => {
   const [modelsList, setModelsList] = useState({} as carModels);
   const addImageInputRef = useRef<HTMLInputElement>(null);
   const [imgFiles, setImgFiles] = useState<File[]>([]);
-  const [dates, setDates] = useState<Date[]>([]);
-  const [timeRange, setTimeRange] = useState<[Date | null, Date | null]>([null, null]);
 
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     setImgFiles((prev) => {
@@ -206,19 +204,6 @@ const QuoteRequestPage: NextPage = () => {
               onSelect={setPreferredContact}
             />
           </div>
-        </div>
-        <div className={styles.section}>
-          <span className={styles['section-header']}>Availability</span>
-          <div className={styles['field-container']}>
-            <DatePickerField name="Dates" value={dates} onChange={setDates} />
-          </div>
-          {dates.length > 0 ? (
-            <div className={styles['field-container']}>
-              <TimeRangeField name="Time Range" value={timeRange} onChange={setTimeRange} />
-            </div>
-          ) : (
-            <></>
-          )}
         </div>
         <div className={styles.section}>
           <span className={styles['section-header']}>Additional Information</span>
