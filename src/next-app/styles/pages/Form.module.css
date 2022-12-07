@@ -1,0 +1,29 @@
+.page-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 4vh;
+  padding-bottom: 4vh;
+}
+
+.field-container {
+  width: 80%;
+  padding-bottom: 3vh;
+}
+
+.submit-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
