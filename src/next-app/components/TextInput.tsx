@@ -11,6 +11,8 @@ import {
 } from 'react';
 import styles from '../styles/components/TextInput.module.css';
 import { ImCancelCircle } from 'react-icons/im';
+import { BsChevronDown } from 'react-icons/bs';
+import DropdownField from './DropdownField';
 
 type TextInputProps = {
   placeholder?: string;
@@ -18,9 +20,15 @@ type TextInputProps = {
   value?: string;
   onChange?: (newVal: string) => void;
   type?: string;
+
+  /**
+   * If this prop is provided, a cancel button will be rendered within the input
+   * on the right side. When user clicks it, the given callback will be called.
+   */
   onRemove?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
+  onClick?: () => void;
   style?: {
     paddingLeft?: string;
     paddingRight?: string;
@@ -28,6 +36,14 @@ type TextInputProps = {
     paddingBottom?: string;
   };
   error?: boolean;
+  disabled?: boolean;
+
+  /**
+   * Renders a dropdown on right side of input. If this prop is provided,
+   * onRemove will be ignored and no cancel button will be rendered.
+   */
+  rightItems?: string[];
+  onRightItemChange?: (newItem: string) => void;
 };
 
 type TextInputRef = {
@@ -46,7 +62,11 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
     return {
       width: props.width ?? '100%',
       ...props.style,
-      paddingRight: props.onRemove ? '3em' : props.style?.paddingRight ?? '1em',
+      paddingRight: props.rightItems
+        ? 'calc(1em + 35%)'
+        : props.onRemove
+        ? '3em'
+        : props.style?.paddingRight ?? '1em',
     };
   }, [props.width, props.style, props.onRemove]);
 
@@ -86,7 +106,7 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} onClick={props.onClick}>
       <input
         className={`${styles.input} ${props.error ? styles.error : ''}`}
         type={props.type ?? 'text'}
@@ -97,10 +117,25 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
         onFocus={props.onFocus}
         onBlur={props.onBlur}
         ref={inputRef}
+        disabled={props.disabled}
       />
-      {props.onRemove ? (
+      {props.onRemove && !props.rightItems ? (
         <div className={styles['cancel-button']} onClick={handleCancel}>
           <ImCancelCircle size={cancelSize} />
+        </div>
+      ) : (
+        <></>
+      )}
+      {props.rightItems ? (
+        <div className={styles['right-input-container']}>
+          <DropdownField
+            name=""
+            items={props.rightItems}
+            selectedItems={[props.rightItems[0]]}
+            onSelect={props.onRightItemChange}
+            disabled
+          />
+          <div className={styles.divider}></div>
         </div>
       ) : (
         <></>
@@ -111,5 +146,5 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
 
 TextInput.displayName = 'TextInput';
 
-export type { TextInputRef };
+export type { TextInputRef, TextInputProps };
 export default TextInput;

@@ -1,0 +1,8 @@
+.mantine-Input-input {
+  border: 0;
+  background-color: var(--text-input-color);
+}
+
+.mantine-TimeField-timeInput {
+  font-size: var(--font-size);
+}
