@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
 import styles from '../styles/components/DropdownField.module.css';
 import TextInput, { TextInputRef } from './TextInput';
 import { BsChevronDown } from 'react-icons/bs';
 import Chip from './Chip';
 import FieldLabel from './FieldLabel';
+import { useClickOutside } from '@mantine/hooks';
 
 type Type = 'single-select' | 'multi-select';
 type DropdownFieldProps = {
@@ -15,6 +16,14 @@ type DropdownFieldProps = {
   selectedItems?: string[];
   onSelect?: (item: string, selectedItems: string[]) => void;
   type?: Type;
+  style?: CSSProperties;
+
+  /**
+   * If disabled, the behaviour will be as follows:
+   * - User will not be able to focus the input
+   * - User will not be able to type in the input or filter dropdown items
+   */
+  disabled?: boolean;
 };
 
 let collapseTimout: NodeJS.Timeout;
@@ -25,6 +34,7 @@ const DropdownField = (props: DropdownFieldProps) => {
   const [value, setValue] = useState('');
   const items = useMemo(() => Array.from(new Set(props.items)), [props.items]);
   const inputRef = useRef<TextInputRef>(null);
+  const inputContainerRef = useClickOutside<HTMLDivElement>(() => setExpanded(false));
   const type: Type = props.type === 'multi-select' ? 'multi-select' : 'single-select';
 
   useEffect(() => {
@@ -87,9 +97,36 @@ const DropdownField = (props: DropdownFieldProps) => {
     });
   };
 
+  const handleInputClick = () => {
+    if (props.disabled) {
+      if (!expanded) {
+        if (type === 'multi-select') {
+          setValue('');
+        }
+        setExpanded(true);
+      } else {
+        setExpanded(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (props.disabled && !expanded) {
+      if (!expanded && value === '' && type === 'single-select') {
+        setValue(selectedItems[0]);
+      }
+    }
+  }, [expanded]);
+
   return (
-    <div className={styles.container}>
-      {props.name.length > 0 ? <FieldLabel label={props.name} required={props.required} /> : <></>}
+    <div className={styles.container} style={props.style}>
+      {props.name.length > 0 ? (
+        <div className={styles['name-container']}>
+          <FieldLabel label={props.name} required={props.required} />
+        </div>
+      ) : (
+        <></>
+      )}
       {type === 'multi-select' ? (
         <div className={styles['chips-container']}>
           {selectedItems.map((item) => {
@@ -107,7 +144,7 @@ const DropdownField = (props: DropdownFieldProps) => {
       ) : (
         <></>
       )}
-      <div className={styles['input-container']}>
+      <div className={styles['input-container']} ref={inputContainerRef}>
         <TextInput
           placeholder={props.placeholder ?? ''}
           width={props.width}
@@ -116,7 +153,9 @@ const DropdownField = (props: DropdownFieldProps) => {
           onChange={setValue}
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
+          onClick={handleInputClick}
           ref={inputRef}
+          disabled={props.disabled}
         />
         <div className={styles['chevron-container']}>
           <BsChevronDown />
@@ -128,6 +167,9 @@ const DropdownField = (props: DropdownFieldProps) => {
                 return type === 'multi-select' ? !selectedItems.includes(item) : true;
               })
               .filter((item) => {
+                if (props.disabled && type === 'single-select') {
+                  return item !== value;
+                }
                 return value.length === 0 || item.startsWith(value);
               })
               .map((item) => (
@@ -135,7 +177,8 @@ const DropdownField = (props: DropdownFieldProps) => {
                   className={styles.item}
                   key={item}
                   onFocus={handleBtnFocus}
-                  onClick={() => handleItemClick(item)}>
+                  onClick={() => handleItemClick(item)}
+                >
                   {item}
                 </button>
               ))}

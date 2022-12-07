@@ -4,6 +4,10 @@
   width: 100%;
 }
 
+.name-container {
+  margin-bottom: 1.5vh;
+}
+
 .chips-container {
   display: flex;
   flex-direction: row;
@@ -13,12 +17,11 @@
 .chip-container {
   margin-left: 2%;
   margin-right: 2%;
-  margin-top: 1vh;
+  margin-bottom: 1.5vh;
 }
 
 .input-container {
   position: relative;
-  margin-top: 1.5vh;
 }
 
 .chevron-container {
@@ -41,6 +44,7 @@
   z-index: 1;
   max-height: 30vh;
   overflow: scroll;
+  overflow-x: hidden;
 }
 
 .item {
