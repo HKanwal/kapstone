@@ -3,12 +3,10 @@ import Header from '../components/Header';
 import styles from '../styles/pages/ShopResults.module.css';
 import { BsFilter } from 'react-icons/bs';
 import ShopResult from '../components/ShopResult';
-import { useQuery } from 'react-query';
 import Modal from '../components/Modal';
 import { useState } from 'react';
-import DropdownField from '../components/DropdownField';
-import TextField from '../components/TextField';
 import Button from '../components/Button';
+import SingleTextField from '../components/SingleTextField';
 
 type ShopResult = {
   name: string;
@@ -87,11 +85,13 @@ const ShopResultsPage: NextPage = () => {
         })}
       </div>
       <Modal visible={filterOpen} onClose={() => setFilterOpen(false)}>
-        {/* <div className={styles['field-container']}>
-            <DropdownField /> TODO: Use the single dropdown component when PR is merged
-          </div> */}
         <div className={styles['field-container']}>
-          <TextField name="Distance limit (km)" placeholder="Enter distance in km" />
+          <SingleTextField
+            name="Distance limit"
+            placeholder="Enter distance"
+            rightItems={['km', 'miles']}
+            inputType="number"
+          />
         </div>
         <Button title="Apply Filter(s)" width="100%" />
       </Modal>
