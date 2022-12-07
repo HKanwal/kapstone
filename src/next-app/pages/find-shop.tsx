@@ -4,6 +4,7 @@ import Button from '../components/Button';
 import DropdownField from '../components/DropdownField';
 import Header from '../components/Header';
 import TextField from '../components/TextField';
+import { serviceTypes } from '../constants/service-types';
 import styles from '../styles/pages/FindShop.module.css';
 import formStyles from '../styles/pages/Form.module.css';
 
@@ -13,14 +14,13 @@ const FindShopPage: NextPage = () => {
   const [serviceType, setServiceType] = useState('');
   const [checked, setChecked] = useState(false);
   const valid = zipCode.length > 0;
-  const serviceTypes: string[] = []; // TODO: service types should be retrieved from database
 
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     setChecked(e.target.checked);
   };
 
   const handleSubmit = () => {
-    // TODO: Redirect to shop results screen
+    // TODO: Redirect to shop results screen, send api req
     console.log('TODO: Redirect to shop results screen');
   };
 
@@ -30,14 +30,19 @@ const FindShopPage: NextPage = () => {
 
       <div className={formStyles.content}>
         <div className={formStyles['field-container']}>
-          <TextField name="Your Location" placeholder="Enter your postal code" required />
+          <TextField
+            name="Your Location"
+            placeholder="Enter your postal code"
+            onChange={setZipCode}
+            required
+          />
         </div>
         <div className={formStyles['field-container']}>
           <TextField name="Shop Name" placeholder="Search for a specific shop" />
         </div>
-        {/*<div className={formStyles['field-container']}>
-          <DropdownField name='Service Type'  /> TODO: Use the single dropdown field component. Must wait until that PR is merged to continue.
-        </div> */}
+        <div className={formStyles['field-container']}>
+          <DropdownField name="Service Type" items={serviceTypes} onSelect={setServiceType} />
+        </div>
         <div className={formStyles['field-container']}>
           <input type="checkbox" checked={checked} onChange={handleCheckboxChange} />
           <label style={{ marginLeft: '1vw' }}>Show direct booking shops only</label>
