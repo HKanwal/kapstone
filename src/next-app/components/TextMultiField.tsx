@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from '../styles/components/TextMultiField.module.css';
+import FieldLabel from './FieldLabel';
 import Link from './Link';
 import TextInput from './TextInput';
 
@@ -51,10 +52,11 @@ const TextMultiField = (props: TextMultiFieldProps) => {
   return (
     <div className={styles.container}>
       <>
-        <span className={styles.name}>
-          {props.name}
-          {props.required ? <span className={styles.asterisk}>*</span> : <></>}
-        </span>
+        {props.name.length > 0 ? (
+          <FieldLabel label={props.name} required={props.required} />
+        ) : (
+          <></>
+        )}
         {vals.map((val, i) => {
           return (
             <div className={styles['text-input-container']} key={i}>

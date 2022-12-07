@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.time-range-container {
+  margin-top: 2vh;
+}

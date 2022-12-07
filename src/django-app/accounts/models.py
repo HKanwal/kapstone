@@ -29,15 +29,19 @@ class UserManager(BaseUserManager):
         user.save()
         return user
 
-    def create_superuser(self, username, email, type, password=None):
+    def create_superuser(self, username, email, type, password=None, **extra_fields):
         if password is None:
             raise ValueError(_("Please enter your password"))
 
-        user = self.create_user(email=self.normalize_email(email))
-        user.username = username
-        user.type = type
+        user = self.model(
+            username=username,
+            email=self.normalize_email(email),
+            type=type,
+            **extra_fields
+        )
         user.is_superuser = True
         user.is_staff = True
+        user.set_password(password)
         user.save()
         return user
 

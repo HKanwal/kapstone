@@ -1,5 +1,4 @@
 import type { NextPage } from 'next';
-import { Dispatch, SetStateAction, useState } from 'react';
 import Button from '../components/Button';
 import TextField from '../components/TextField';
 import Header from '../components/Header';
@@ -7,82 +6,82 @@ import styles from '../styles/pages/CreateAccount.module.css';
 import { useMutation } from 'react-query';
 import { RegistrationErrResponse, registrationFn } from '../utils/api';
 import { useRouter } from 'next/router';
-
-type Field = {
-  value: string;
-  errors: string[];
-};
-
-function fieldIsValid(field: Field) {
-  return field.value.length > 0 && field.errors.length === 0;
-}
+import { useForm } from '../hooks/useForm';
 
 const CreateAccountPage: NextPage = () => {
   const router = useRouter();
-  const [firstName, setFirstName] = useState<Field>({ value: '', errors: [] });
-  const [lastName, setLastName] = useState<Field>({ value: '', errors: [] });
-  const [phoneNumber, setPhoneNumber] = useState<Field>({ value: '', errors: [] });
-  const [email, setEmail] = useState<Field>({ value: '', errors: [] });
-  const [username, setUsername] = useState<Field>({ value: '', errors: [] });
-  const [password, setPassword] = useState<Field>({ value: '', errors: [] });
-  const fields = [firstName, lastName, phoneNumber, email, username, password];
-  const valid = fields.every(fieldIsValid);
-
   const mutation = useMutation({
     mutationFn: registrationFn,
   });
-
-  const handleSubmit = () => {
-    mutation.mutate(
-      {
-        email: email.value,
-        username: username.value,
-        password: password.value,
-        re_password: password.value,
-        type: 'shop_owner',
-        first_name: firstName.value || undefined,
-        last_name: lastName.value || undefined,
-      },
-      {
-        onSuccess(data, variables, context) {
-          if (data.ok) {
-            router.push('/create-shop');
-          } else {
-            data.json().then((response: RegistrationErrResponse) => {
-              const setterMap = new Map<string, Dispatch<SetStateAction<Field>>>();
-              setterMap.set('email', setEmail);
-              setterMap.set('username', setUsername);
-              setterMap.set('password', setPassword);
-              setterMap.forEach((setter, key) => {
-                setter((prev) => {
-                  return {
-                    ...prev,
-                    errors: response.errors
-                      .filter((err) => err.attr === key)
-                      .map((err) => err.detail),
-                  };
-                });
-              });
-            });
-          }
+  const form = useForm({
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      phoneNumber: '',
+      email: '',
+      username: '',
+      password: '',
+    },
+    validationSchema: {
+      firstName: ['required'],
+      lastName: ['required'],
+      phoneNumber: ['required'],
+      email: ['required', 'email'],
+      username: ['required'],
+      password: ['required'],
+    },
+    onSubmit: (values, setErrors) => {
+      mutation.mutate(
+        {
+          email: values.email,
+          username: values.username,
+          password: values.password,
+          re_password: values.password,
+          type: 'shop_owner',
+          first_name: values.firstName || undefined,
+          last_name: values.lastName || undefined,
         },
-      }
-    );
-  };
+        {
+          onSuccess(data, variables, context) {
+            if (data.ok) {
+              router.push('/create-shop');
+            } else {
+              data.json().then((response: RegistrationErrResponse) => {
+                let errors: { email: string[]; username: string[]; password: string[] } = {
+                  email: [],
+                  username: [],
+                  password: [],
+                };
+                for (let error of response.errors) {
+                  if (error.attr === 'email') {
+                    errors.email.push(error.detail);
+                  } else if (error.attr === 'username') {
+                    errors.username.push(error.detail);
+                  } else if (error.attr === 'password') {
+                    errors.password.push(error.detail);
+                  }
+                }
+                setErrors(errors);
+              });
+            }
+          },
+        }
+      );
+    },
+  });
 
   return (
     <div className={styles.container}>
       <Header title="Create New Account" />
 
-      <div className={styles.content}>
+      <form className={styles.content} onSubmit={form.handleSubmit}>
         <div className={styles['field-container']}>
           <TextField
             name="First Name"
             placeholder="Enter your first name"
-            onChange={(newVal) => {
-              setFirstName({ value: newVal, errors: [] });
-            }}
-            errors={firstName.errors.length === 0 ? undefined : new Set(firstName.errors)}
+            onChange={form.handleChange('firstName')}
+            errors={form.errors.firstName.length === 0 ? undefined : new Set(form.errors.firstName)}
+            onBlur={form.handleBlur('firstName')}
             required
           />
         </div>
@@ -90,10 +89,9 @@ const CreateAccountPage: NextPage = () => {
           <TextField
             name="Last Name"
             placeholder="Enter your last name"
-            onChange={(newVal) => {
-              setLastName({ value: newVal, errors: [] });
-            }}
-            errors={lastName.errors.length === 0 ? undefined : new Set(lastName.errors)}
+            onChange={form.handleChange('lastName')}
+            errors={form.errors.lastName.length === 0 ? undefined : new Set(form.errors.lastName)}
+            onBlur={form.handleBlur('lastName')}
             required
           />
         </div>
@@ -101,10 +99,11 @@ const CreateAccountPage: NextPage = () => {
           <TextField
             name="Phone Number"
             placeholder="Enter your phone number"
-            onChange={(newVal) => {
-              setPhoneNumber({ value: newVal, errors: [] });
-            }}
-            errors={phoneNumber.errors.length === 0 ? undefined : new Set(phoneNumber.errors)}
+            onChange={form.handleChange('phoneNumber')}
+            errors={
+              form.errors.phoneNumber.length === 0 ? undefined : new Set(form.errors.phoneNumber)
+            }
+            onBlur={form.handleBlur('phoneNumber')}
             required
           />
         </div>
@@ -112,10 +111,9 @@ const CreateAccountPage: NextPage = () => {
           <TextField
             name="Email"
             placeholder="Enter your email"
-            onChange={(newVal) => {
-              setEmail({ value: newVal, errors: [] });
-            }}
-            errors={email.errors.length === 0 ? undefined : new Set(email.errors)}
+            onChange={form.handleChange('email')}
+            errors={form.errors.email.length === 0 ? undefined : new Set(form.errors.email)}
+            onBlur={form.handleBlur('email')}
             required
           />
         </div>
@@ -123,10 +121,9 @@ const CreateAccountPage: NextPage = () => {
           <TextField
             name="Username"
             placeholder="Enter your username"
-            onChange={(newVal) => {
-              setUsername({ value: newVal, errors: [] });
-            }}
-            errors={username.errors.length === 0 ? undefined : new Set(username.errors)}
+            onChange={form.handleChange('username')}
+            errors={form.errors.username.length === 0 ? undefined : new Set(form.errors.username)}
+            onBlur={form.handleBlur('username')}
             required
           />
         </div>
@@ -135,17 +132,16 @@ const CreateAccountPage: NextPage = () => {
             name="Password"
             inputType="password"
             placeholder="Enter your password"
-            onChange={(newVal) => {
-              setPassword({ value: newVal, errors: [] });
-            }}
-            errors={password.errors.length === 0 ? undefined : new Set(password.errors)}
+            onChange={form.handleChange('password')}
+            errors={form.errors.password.length === 0 ? undefined : new Set(form.errors.password)}
+            onBlur={form.handleBlur('password')}
             required
           />
         </div>
         <div className={styles['submit-container']}>
-          <Button title="Create" disabled={!valid} width="80%" onClick={handleSubmit} />
+          <Button type="submit" title="Create" disabled={!form.isValid} width="80%" />
         </div>
-      </div>
+      </form>
     </div>
   );
 };
