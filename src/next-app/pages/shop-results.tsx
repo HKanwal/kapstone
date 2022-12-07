@@ -7,6 +7,8 @@ import Modal from '../components/Modal';
 import { useState } from 'react';
 import Button from '../components/Button';
 import SingleTextField from '../components/SingleTextField';
+import DropdownField from '../components/DropdownField';
+import { Mutable } from '../utils/helper-types';
 
 type ShopResult = {
   name: string;
@@ -16,6 +18,9 @@ type ShopResult = {
     time: string;
   };
 };
+
+// Must include 'Custom' because it gets special logic
+const dateOptions = ['Today', 'This week', 'Next week', 'This month', 'Next month', 'Custom'];
 
 const ShopResultsPage: NextPage = () => {
   const [filterOpen, setFilterOpen] = useState(false);
@@ -46,6 +51,7 @@ const ShopResultsPage: NextPage = () => {
       },
     },
   ];
+  const [dateRange, setDateRange] = useState('');
 
   const handleFilterClick = () => {
     setFilterOpen((prev) => !prev);
@@ -93,6 +99,18 @@ const ShopResultsPage: NextPage = () => {
             inputType="number"
           />
         </div>
+        <div className={styles['field-container']}>
+          <DropdownField
+            name="Date Range"
+            placeholder="Select range"
+            items={dateOptions}
+            onSelect={setDateRange}
+          />
+        </div>
+        {/* {dateRange === 'Custom' ? <div className={styles['field-container']}>
+        // #TODO: show custom date range picker
+        </div> : <></>
+        } */}
         <Button title="Apply Filter(s)" width="100%" />
       </Modal>
     </div>
