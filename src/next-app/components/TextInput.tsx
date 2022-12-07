@@ -133,6 +133,7 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
             items={props.rightItems}
             selectedItems={[props.rightItems[0]]}
             onSelect={props.onRightItemChange}
+            textCentered
             disabled
           />
           <div className={styles.divider}></div>
