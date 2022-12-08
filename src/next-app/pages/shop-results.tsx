@@ -120,7 +120,7 @@ const ShopResultsPage: NextPage = () => {
         ) : (
           <></>
         )}
-        <Button title="Apply Filter(s)" width="100%" />
+        <Button title="Apply Filter(s)" width="100%" onClick={applyFilters} />
       </Modal>
     </div>
   );
