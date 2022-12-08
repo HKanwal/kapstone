@@ -8,7 +8,8 @@ import { useState } from 'react';
 import Button from '../components/Button';
 import SingleTextField from '../components/SingleTextField';
 import DropdownField from '../components/DropdownField';
-import { Mutable } from '../utils/helper-types';
+import DateRangePickerField from '../components/DateRangePickerField';
+import { DateRangePickerValue } from '@mantine/dates';
 
 type ShopResult = {
   name: string;
@@ -52,6 +53,7 @@ const ShopResultsPage: NextPage = () => {
     },
   ];
   const [dateRange, setDateRange] = useState('');
+  const [customDates, setCustomDates] = useState<DateRangePickerValue>([null, null]);
 
   const handleFilterClick = () => {
     setFilterOpen((prev) => !prev);
@@ -90,7 +92,7 @@ const ShopResultsPage: NextPage = () => {
           );
         })}
       </div>
-      <Modal visible={filterOpen} onClose={() => setFilterOpen(false)}>
+      <Modal visible={filterOpen} onClose={() => setFilterOpen(false)} style={{ width: '85vw' }}>
         <div className={styles['field-container']}>
           <SingleTextField
             name="Distance limit"
@@ -107,10 +109,17 @@ const ShopResultsPage: NextPage = () => {
             onSelect={setDateRange}
           />
         </div>
-        {/* {dateRange === 'Custom' ? <div className={styles['field-container']}>
-        // #TODO: show custom date range picker
-        </div> : <></>
-        } */}
+        {dateRange === 'Custom' ? (
+          <div className={styles['field-container']}>
+            <DateRangePickerField
+              name="Custom Date Range"
+              value={customDates}
+              onChange={setCustomDates}
+            />
+          </div>
+        ) : (
+          <></>
+        )}
         <Button title="Apply Filter(s)" width="100%" />
       </Modal>
     </div>

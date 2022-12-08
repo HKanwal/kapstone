@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.date-picker-container {
+  margin-top: 1vh;
+}

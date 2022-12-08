@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { CSSProperties, ReactElement, useEffect, useState } from 'react';
 import styles from '../styles/components/Modal.module.css';
 import { GrClose } from 'react-icons/gr';
 
@@ -6,6 +6,11 @@ type ModalProps = {
   children?: ReactElement<any, any> | ReactElement<any, any>[];
   visible?: boolean;
   onClose?: () => void;
+
+  /**
+   * Applied to the modal container.
+   */
+  style?: CSSProperties;
 };
 
 const Modal = (props: ModalProps) => {
@@ -25,7 +30,7 @@ const Modal = (props: ModalProps) => {
   } else {
     return (
       <div className={styles.backdrop}>
-        <div className={styles.container}>
+        <div className={styles.container} style={props.style}>
           <div className={styles.header}>
             <GrClose className={styles.close} onClick={handleClose} />
           </div>
