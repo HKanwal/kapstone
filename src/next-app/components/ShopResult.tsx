@@ -29,6 +29,9 @@ type ShopResultProps = {
   name: string;
   distance: string;
   onClick?: () => void;
+  /**
+   * If canned details are provided, quick appointment button will be shown.
+   */
   cannedDetails?: {
     cost: number;
     time: string;
