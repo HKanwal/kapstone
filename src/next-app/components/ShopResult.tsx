@@ -3,7 +3,8 @@ import { BiTime } from 'react-icons/bi';
 import { AiFillPhone } from 'react-icons/ai';
 import styles from '../styles/components/ShopResult.module.css';
 import IconButton from './IconButton';
-import { CSSProperties } from 'react';
+import { CSSProperties, ChangeEvent } from 'react';
+import { Checkbox } from '@mantine/core';
 
 type CircularIconButtonProps = {
   icon: IconType;
@@ -39,9 +40,29 @@ type ShopResultProps = {
   onClickAppointment?: () => void;
   onClickCall?: () => void;
   style?: CSSProperties;
+  /**
+   * If true, will not show right side buttons, but will instead show checkbox.
+   */
+  inSelectMode?: boolean;
+  /**
+   * Only triggered if inSelectMode = true.
+   */
+  onSelect?: () => void;
+  /**
+   * Only triggered if inSelectMode = true.
+   */
+  onDeselect?: () => void;
 };
 
 const ShopResult = (props: ShopResultProps) => {
+  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      props.onSelect && props.onSelect();
+    } else {
+      props.onDeselect && props.onDeselect();
+    }
+  };
+
   return (
     <div className={styles.container} style={props.style}>
       <div className={styles['labels-container']}>
@@ -56,10 +77,18 @@ const ShopResult = (props: ShopResultProps) => {
         <span className={styles.distance}>{props.distance}</span>
       </div>
       <div className={styles['btns-container']}>
-        <div style={{ visibility: props.cannedDetails ? 'visible' : 'hidden' }}>
-          <CircularIconButton icon={BiTime} onClick={props.onClickAppointment} />
-        </div>
-        <CircularIconButton icon={AiFillPhone} onClick={props.onClickCall} />
+        {!props.inSelectMode ? (
+          <>
+            <div style={{ visibility: props.cannedDetails ? 'visible' : 'hidden' }}>
+              <CircularIconButton icon={BiTime} onClick={props.onClickAppointment} />
+            </div>
+            <CircularIconButton icon={AiFillPhone} onClick={props.onClickCall} />
+          </>
+        ) : (
+          <div className={styles['checkbox-container']}>
+            <Checkbox onChange={handleCheckboxChange} />
+          </div>
+        )}
       </div>
     </div>
   );

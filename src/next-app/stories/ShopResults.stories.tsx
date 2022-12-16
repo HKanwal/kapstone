@@ -31,3 +31,10 @@ Canned.args = {
     time: '1 hour',
   },
 };
+
+export const SelectMode = Template.bind({});
+SelectMode.args = {
+  name: 'Example Shop',
+  distance: '15 km',
+  inSelectMode: true,
+};
