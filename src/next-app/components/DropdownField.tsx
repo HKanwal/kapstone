@@ -17,6 +17,7 @@ type DropdownFieldProps = {
   onSelect?: (item: string, selectedItems: string[]) => void;
   type?: Type;
   style?: CSSProperties;
+  textCentered?: boolean;
 
   /**
    * If disabled, the behaviour will be as follows:
@@ -178,6 +179,7 @@ const DropdownField = (props: DropdownFieldProps) => {
                   key={item}
                   onFocus={handleBtnFocus}
                   onClick={() => handleItemClick(item)}
+                  style={props.textCentered ? { textAlign: 'center', paddingLeft: 0 } : {}}
                 >
                   {item}
                 </button>
