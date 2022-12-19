@@ -107,7 +107,8 @@ const QuoteRequestPage: NextPage = () => {
           <span className={styles['section-header']}>Vehicle Information</span>
           <div
             className={styles['field-container']}
-            style={make === 'Other' ? { paddingBottom: 0 } : {}}>
+            style={make === 'Other' ? { paddingBottom: 0 } : {}}
+          >
             <DropdownField
               name="Manufacturer"
               placeholder="Enter manufacturer..."
