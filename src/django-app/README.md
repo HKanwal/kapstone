@@ -92,9 +92,9 @@ GRANT ALL PRIVILEGES ON DATABASE sayyara TO my_username;
 
 # API Endpoints:
 
-API Endpoints can ve viewed with the Swagger UI at `http://localhost:8000/docs`.
+API Endpoints can ve viewed with the Swagger UI at http://localhost:8000/docs.
 
-They can also be viewed with Redoc's UI at `http://localhost:8000/redocs`.
+They can also be viewed with Redoc's UI at http://localhost:8000/redocs.
 
 A few of the endpoints are listed below.
 
