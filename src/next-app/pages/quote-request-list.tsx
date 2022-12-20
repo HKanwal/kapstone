@@ -29,6 +29,8 @@ const QuoteRequestListPage: NextPage = () => {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     }).then((data) => { console.log(data) });
+
+    // TODO: Replace sample data with API data and place in above .then handler
     sampleData.sort((a, b) => {
       let keyA = new Date(a.dateCreated);
       let keyB = new Date(b.dateCreated);
