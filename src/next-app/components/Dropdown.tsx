@@ -30,7 +30,9 @@ const Dropdown = (props: DropdownProps) => {
     <div className={styles.container}>
       {props.name ? <div className={styles['label-container']}>{props.name}:</div> : <></>}
       <div className={styles['dropdown-container']}>
-        <select onChange={(item) => handleSelect(item.target.value)}>
+        <select
+          className={styles['custom-select']}
+          onChange={(item) => handleSelect(item.target.value)}>
           {props.items.map((item, index) => (
             <option key={index} value={item}>
               {item}

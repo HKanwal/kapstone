@@ -43,12 +43,10 @@ export const quotes = [
     'shop-name': 'Shop 8',
     status: 'Rejected',
     date: 'Oct 5, 2022',
-    price: '$300',
   },
   {
     'shop-name': 'Shop 9',
     status: 'Rejected',
     date: 'Oct 25, 2022',
-    price: '$200',
   },
 ];
