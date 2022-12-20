@@ -1,0 +1,14 @@
+.container {
+  display: block;
+  margin-right: 0.5vh;
+  margin-bottom: 2vh;
+  width: fit-content;
+}
+.label-container {
+  display: inline;
+  margin-right: 1vh;
+}
+
+.dropdown-container {
+  display: inline;
+}
