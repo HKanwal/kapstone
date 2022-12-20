@@ -80,5 +80,7 @@
 }
 
 .filter-container {
-  padding-bottom: 0.5vh;
+  display: inline-block;
+  padding-right: 1%;
+  padding-bottom: 1vh;
 }
