@@ -10,8 +10,6 @@
   padding: 5vh;
   padding-left: 2vw;
   border-width: 1mm;
-  /* border-style: solid; */
-  /* border-color: black; */
   border-radius: 1vh;
   background-color: var(--text-input-color);
 }
@@ -29,6 +27,5 @@
 
 .date-container {
   display: inline-flex;
-  padding-left: auto;
-  padding-right: 2vw;
+  float: right;
 }
