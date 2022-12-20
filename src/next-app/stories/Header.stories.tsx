@@ -2,6 +2,7 @@ import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import Header from '../components/Header';
+import { BsFilter } from 'react-icons/bs';
 
 export default {
   title: 'Example/Header',
@@ -21,3 +22,25 @@ WithTitle.args = {
 
 export const WithoutTitle = Template.bind({});
 WithoutTitle.args = {};
+
+export const RightIcon = Template.bind({});
+RightIcon.args = {
+  title: 'Test Page',
+  rightIcon: BsFilter,
+};
+
+export const BurgerMenu = Template.bind({});
+BurgerMenu.args = {
+  title: 'Test Page',
+  burgerMenu: [
+    {
+      option: 'Option A',
+      onClick() {
+        alert('Option A clicked');
+      },
+    },
+    {
+      option: 'Option B',
+    },
+  ],
+};
