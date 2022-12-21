@@ -57,6 +57,7 @@ const Header = (props: HeaderProps) => {
                           handlers.close();
                         }}
                         disabled={!item.onClick}
+                        key={item.option}
                       >
                         {item.option}
                       </button>
