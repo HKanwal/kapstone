@@ -1,7 +1,5 @@
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import styles from '../styles/components/Dropdown.module.css';
-import TextInput, { TextInputRef } from './TextInput';
-import Select from 'react';
 
 type DropdownProps = {
   name?: string;
@@ -12,16 +10,7 @@ type DropdownProps = {
   onSelect?: (item: string) => void;
 };
 
-let collapseTimout: NodeJS.Timeout;
-
 const Dropdown = (props: DropdownProps) => {
-  const [selectedItem, setSelectedItem] = useState('');
-  const [expanded, setExpanded] = useState(false);
-  const items = useMemo(() => Array.from(new Set(props.items)), [props.items]);
-  const inputRef = useRef<TextInputRef>(null);
-
-  useEffect(() => {}, []);
-
   const handleSelect = (item: string) => {
     props.onSelect && props.onSelect(item);
   };

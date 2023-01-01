@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import styles from '../styles/components/Card.module.css';
 
 type CardProps = {
-  key: number;
   name: string;
   status?: string;
   price?: string;
