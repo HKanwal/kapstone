@@ -14,6 +14,13 @@
   transform: translate(0px, -50%);
 }
 
+.title {
+  font-size: var(--title-font-size);
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+  font-weight: bold;
+}
+
 .right-btn-container {
   position: absolute;
   top: 50%;
@@ -21,9 +28,52 @@
   transform: translate(0px, -50%);
 }
 
-.title {
-  font-size: var(--title-font-size);
-  padding-top: 2vh;
-  padding-bottom: 2vh;
-  font-weight: bold;
+.burger-menu-container-container {
+  display: flex;
+  height: 0;
+  justify-content: flex-end;
+}
+
+.burger-menu-container {
+  position: relative;
+  height: 0;
+  width: 0;
+}
+
+.burger-menu {
+  position: absolute;
+  padding-top: 2vmin;
+  padding-bottom: 2vmin;
+  top: 10px;
+  left: 0;
+  transform: translate(-100%, 0);
+  border-radius: 2vmin;
+  box-shadow: 0 0 0.2em 0.01em #888888;
+}
+
+.burger-item {
+  border: 0px;
+  background-color: white;
+  width: 100%;
+  padding-top: 2vmin;
+  padding-bottom: 2vmin;
+  padding-left: 4vmin;
+  padding-right: 4vmin;
+  margin: 0;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  font-size: var(--font-size);
+}
+
+.burger-item:enabled:hover {
+  cursor: pointer;
+}
+
+.burger-item:enabled:active {
+  opacity: 0.5;
+}
+
+.burger-item:disabled {
+  opacity: 0.5;
 }
