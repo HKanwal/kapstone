@@ -1,0 +1,40 @@
+.card {
+  position: relative;
+  height: 100%;
+  padding-bottom: 100px;
+  margin-bottom: 10px;
+  /* padding-left: 10vw; */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+  padding: 3vw;
+  background-color: #f3f6ff;
+}
+
+.card-title {
+  display: inline-flex;
+  text-align: left;
+  font-weight: bold;
+  margin-bottom: 3vw;
+}
+
+.left-content {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.right-content {
+  display: flex;
+  flex-direction: column;
+  float: right;
+  overflow: hidden;
+  text-align: right;
+}
+
+.card-content {
+  margin-bottom: 3vw;
+}
+
+.blank-space {
+  margin-bottom: 6vw;
+}

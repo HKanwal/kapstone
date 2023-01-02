@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "drf_standardized_errors",
+    "drf_spectacular",
     "djoser",
     "phonenumber_field",
     "accounts.apps.AccountsConfig",
@@ -150,6 +151,14 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler",
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Sayyara Automotive Matcher API',
+    'DESCRIPTION': 'An app to promote communcation between mechanics and customers.',
+    'VERSION': '0.0.1',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 DRF_STANDARDIZED_ERRORS = {"ENABLE_IN_DEBUG_FOR_UNHANDLED_EXCEPTIONS": True}
