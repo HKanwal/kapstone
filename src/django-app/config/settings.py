@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "quotes.apps.QuotesConfig",
     "vehicles.apps.VehiclesConfig",
     "corsheaders",
+    "nested_admin",
 ]
 
 MIDDLEWARE = [
