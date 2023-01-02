@@ -5,6 +5,7 @@ import styles from '../styles/pages/QuoteRequestList.module.css';
 import QuoteRequestCard from '../components/QuoteRequestCard';
 import { useRouter } from 'next/router';
 import apiUrl from '../constants/api-url';
+import { IoIosAdd } from 'react-icons/io';
 
 const QuoteRequestListPage: NextPage = () => {
   const router = useRouter();
@@ -44,13 +45,17 @@ const QuoteRequestListPage: NextPage = () => {
     setQuoteRequestCards(cards);
   }, []);
 
+  const handleAddClick = () => {
+    router.push('/quote-request');
+  }
+
   return (
     <div className={styles.container}>
-      <Header title="Quote Requests" />
-      <div className={styles["card-container"]}>
+      <Header title="Quote Requests" rightIcon={IoIosAdd} onRightIconClick={handleAddClick} />
+      < div className={styles["card-container"]} >
         {quoteRequestCards}
       </div>
-    </div>
+    </div >
   )
 };
 

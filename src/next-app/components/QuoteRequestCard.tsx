@@ -1,4 +1,6 @@
 import styles from '../styles/components/QuoteRequestCard.module.css';
+import { useRouter } from 'next/router';
+import React from 'react';
 
 type QuoteRequestProps = {
   id: number;
@@ -10,13 +12,20 @@ const QuoteRequestCard = (props: QuoteRequestProps) => {
   let descriptionLabel = props.description;
   const tempDate = new Date(props.dateCreated);
   const tempDateString = tempDate.toDateString();
-  const dateLabel = `Date: ${tempDateString}`
-  if (props.description.length > 60) {
-    descriptionLabel = `${props.description.slice(0, 60)}...`
+  const dateLabel = `Date: ${tempDateString}`;
+  const router = useRouter();
+  const url = '/quote-request-details';
+
+  if (props.description.length > 45) {
+    descriptionLabel = `${props.description.slice(0, 45)}...`
   }
   return (
     <div key={props.id} className={styles.card} onClick={() => {
-      console.log(props.id); // Call quote request view page and pass id once clicked
+      router.push(
+        {
+          pathname: 'quote-request-details',
+          query: { id: props.id },
+        })
     }}>
       <div className={styles["description-container"]}>
         {descriptionLabel}
