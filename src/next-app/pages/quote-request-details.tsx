@@ -8,10 +8,14 @@ import FieldLabel from '../components/FieldLabel';
 import TextInput from '../components/TextInput';
 import Card from '../components/Card';
 import { quotes } from '../data/QuoteData';
+import { useRouter } from 'next/router'
 
-const QuoteRequestDetailsPage: NextPage = () => {
+const QuoteRequestDetailsPage: NextPage = (props) => {
   const [status, setStatus] = useState('All');
   const [sortItem, setSortItem] = useState('Date');
+  const router = useRouter();
+  console.log(router.query);
+
   function noChange(): void {
     throw new Error('Function not implemented.');
   }
@@ -44,21 +48,21 @@ const QuoteRequestDetailsPage: NextPage = () => {
             )}
             {status != 'All' && status != 'Accepted'
               ? quotes
-                  .filter((quote) => quote.status == status)
-                  .sort((a, b) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
-                  .map((item, index) => {
-                    return (
-                      <Card
-                        key={index}
-                        name={item['shop-name']}
-                        status={item.status}
-                        date={item.date}
-                        price={item.price}
-                      />
-                    );
-                  })
+                .filter((quote) => quote.status == status)
+                .sort((a, b) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
+                .map((item, index) => {
+                  return (
+                    <Card
+                      key={index}
+                      name={item['shop-name']}
+                      status={item.status}
+                      date={item.date}
+                      price={item.price}
+                    />
+                  );
+                })
               : status == 'Accepted' && sortItem == 'Date'
-              ? quotes
+                ? quotes
                   .filter((quote) => quote.status == status)
                   .sort((a, b) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
                   .map((item, index) => {
@@ -72,34 +76,34 @@ const QuoteRequestDetailsPage: NextPage = () => {
                       />
                     );
                   })
-              : status == 'Accepted' && sortItem == 'Price'
-              ? quotes
-                  .filter((quote) => quote.status == status)
-                  .sort((a, b) => (a.price && b.price && a.price > b.price ? 1 : -1))
-                  .map((item, index) => {
-                    return (
-                      <Card
-                        key={index}
-                        name={item['shop-name']}
-                        status={item.status}
-                        date={item.date}
-                        price={item.price}
-                      />
-                    );
-                  })
-              : quotes
-                  .sort((a, b) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
-                  .map((item, index) => {
-                    return (
-                      <Card
-                        key={index}
-                        name={item['shop-name']}
-                        status={item.status}
-                        date={item.date}
-                        price={item.price}
-                      />
-                    );
-                  })}
+                : status == 'Accepted' && sortItem == 'Price'
+                  ? quotes
+                    .filter((quote) => quote.status == status)
+                    .sort((a, b) => (a.price && b.price && a.price > b.price ? 1 : -1))
+                    .map((item, index) => {
+                      return (
+                        <Card
+                          key={index}
+                          name={item['shop-name']}
+                          status={item.status}
+                          date={item.date}
+                          price={item.price}
+                        />
+                      );
+                    })
+                  : quotes
+                    .sort((a, b) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
+                    .map((item, index) => {
+                      return (
+                        <Card
+                          key={index}
+                          name={item['shop-name']}
+                          status={item.status}
+                          date={item.date}
+                          price={item.price}
+                        />
+                      );
+                    })}
           </div>
         </div>
 
