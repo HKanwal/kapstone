@@ -20,7 +20,7 @@ type QuoteProps = {
   dueDate: string,
 };
 
-const Quote: NextPage<QuoteProps, {}> = (props) => {
+const Quote: NextPage = (props) => {
   const router = useRouter();
   console.log(router.query);
 
