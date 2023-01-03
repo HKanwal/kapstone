@@ -1,10 +1,6 @@
 from django.contrib import admin
 from .models import *
-
-
-@admin.register(Shop)
-class ShopAdmin(admin.ModelAdmin):
-    list_display = ("name", "shop_owner")
+import nested_admin
 
 
 @admin.register(Invitation)
@@ -31,10 +27,58 @@ class ServicePartAdmin(admin.ModelAdmin):
 
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
-    list_display = ("shop", "customer", "date", "time", "duration")
+    list_display = ("customer", "shop", "status", "start_time", "end_time")
+
+
+@admin.register(AppointmentSlot)
+class AppointmentSlotAdmin(admin.ModelAdmin):
+    list_display = (
+        "shop",
+        "num_slots",
+        "booked_slots",
+    )
+    fields = (
+        "shop",
+        "appointment",
+        "start_time",
+        "end_time",
+        "num_slots",
+        "booked_slots",
+    )
+    readonly_fields = ["booked_slots"]
+
+
+class ShopAvailabilitySlotInline(nested_admin.NestedStackedInline):
+    model = ShopAvailabilitySlot
+    extra = 0
+
+
+@admin.register(ShopAvailability)
+class ShopAvailabilityAdmin(nested_admin.NestedModelAdmin):
+    list_display = (
+        "shop",
+        "date",
+    )
+    fields = (
+        "shop",
+        "date",
+    )
+
+    inlines = [ShopAvailabilitySlotInline]
+
+
+class ShopAvailabilityInline(nested_admin.NestedStackedInline):
+    model = ShopAvailability
+    extra = 0
+    inlines = [ShopAvailabilitySlotInline]
+
+
+@admin.register(Shop)
+class ShopAdmin(nested_admin.NestedModelAdmin):
+    list_display = ("name", "shop_owner")
+    inlines = [ShopAvailabilityInline]
+
 
 @admin.register(WorkOrder)
 class WorkOrderAdmin(admin.ModelAdmin):
     list_display = ("shop", "appointment", "employee", "grand_total")
-
-
