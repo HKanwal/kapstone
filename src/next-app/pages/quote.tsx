@@ -5,7 +5,6 @@ import styles from '../styles/pages/Quote.module.css';
 import { useRouter } from 'next/router';
 import apiUrl from '../constants/api-url';
 import TextField from '../components/TextField';
-import { TextInput } from '@mantine/core';
 import Button from '../components/Button';
 
 type QuoteProps = {
@@ -23,7 +22,7 @@ type QuoteProps = {
 
 const Quote: NextPage<QuoteProps, {}> = (props) => {
   const router = useRouter();
-  const data = router.query;
+  console.log(router.query);
 
   const [quoteData, setQuoteData] = useState({} as QuoteProps);
 
@@ -38,12 +37,13 @@ const Quote: NextPage<QuoteProps, {}> = (props) => {
     cost: '803.05',
     estimatedTime: '1 Week',
     dueDate: '2022-12-28T00:00:00Z',
+    shopNumber: '123456789'
   };
 
   useEffect(() => {
     const tempData = sampleData;
-    if (tempData.description.length > 35) {
-      tempData.description = `${tempData.description.slice(0, 35)}...`
+    if (tempData.description.length > 30) {
+      tempData.description = `${tempData.description.slice(0, 30)}...`
     }
     const dateString = new Date(sampleData.date).toDateString();
     tempData.date = dateString;
@@ -54,9 +54,17 @@ const Quote: NextPage<QuoteProps, {}> = (props) => {
     setQuoteData(tempData);
   }, []);
 
+  const handleCallClick = () => {
+    window.open(`tel:${sampleData.shopNumber}`);
+  }
+
   return (
     <div className={styles.container}>
-      <Header title={`Quote - ${quoteData.description}`} />
+      <Header title={`Quote - ${quoteData.description}`} burgerMenu={[{
+        option: "Call Shop", onClick() {
+          handleCallClick();
+        },
+      }]} />
       <div className={styles["quote-container"]}>
         <div className={styles["status-container"]}>
           <label>
