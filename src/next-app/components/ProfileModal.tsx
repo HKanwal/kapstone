@@ -1,11 +1,7 @@
 import styles from '../styles/components/ProfileModal.module.css';
-import Button from './Button';
+import ButtonLink from './ButtonLink';
 
 const ProfileModal = () => {
-  const goToProfile = () => {
-    window.location.href = '#';
-  };
-
   return (
     <div className={styles.container}>
       <h2>Shop Name</h2>
@@ -14,7 +10,7 @@ const ProfileModal = () => {
       <p>Phone Number</p>
       <p>Email Address</p>
       <div className={styles['profile-btn']}>
-        <Button title="Profile" width="80%" onClick={goToProfile} />
+        <ButtonLink title="Profile" width="80%" href="/shop/profile" />
       </div>
     </div>
   );
