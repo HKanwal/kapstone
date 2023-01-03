@@ -10,6 +10,7 @@ type TextMultiFieldProps = {
   width?: string | number;
   onChange?: (newVals: string[]) => void;
   inputType?: string;
+  disabled?: boolean;
 
   /** When any of the inputs lost focus */
   onBlur?: () => void;
@@ -69,6 +70,7 @@ const TextMultiField = (props: TextMultiFieldProps) => {
                 onRemove={i > 0 ? () => removeTextInput(i) : undefined}
                 error={i === 0 && props.error}
                 onBlur={handleBlur}
+                disabled={props.disabled}
               />
             </div>
           );

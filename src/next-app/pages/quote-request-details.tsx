@@ -44,21 +44,22 @@ const QuoteRequestDetailsPage: NextPage = () => {
             )}
             {status != 'All' && status != 'Accepted'
               ? quotes
-                  .filter((quote) => quote.status == status)
-                  .sort((a, b) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
-                  .map((item, index) => {
-                    return (
-                      <Card
-                        key={index}
-                        name={item['shop-name']}
-                        status={item.status}
-                        date={item.date}
-                        price={item.price}
-                      />
-                    );
-                  })
+                .filter((quote) => quote.status == status)
+                .sort((a, b) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
+                .map((item, index) => {
+                  return (
+                    <Card
+                      key={index}
+                      name={item['shop-name']}
+                      status={item.status}
+                      date={item.date}
+                      price={item.price}
+                      id={item.id}
+                    />
+                  );
+                })
               : status == 'Accepted' && sortItem == 'Date'
-              ? quotes
+                ? quotes
                   .filter((quote) => quote.status == status)
                   .sort((a, b) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
                   .map((item, index) => {
@@ -69,37 +70,40 @@ const QuoteRequestDetailsPage: NextPage = () => {
                         status={item.status}
                         date={item.date}
                         price={item.price}
+                        id={item.id}
                       />
                     );
                   })
-              : status == 'Accepted' && sortItem == 'Price'
-              ? quotes
-                  .filter((quote) => quote.status == status)
-                  .sort((a, b) => (a.price && b.price && a.price > b.price ? 1 : -1))
-                  .map((item, index) => {
-                    return (
-                      <Card
-                        key={index}
-                        name={item['shop-name']}
-                        status={item.status}
-                        date={item.date}
-                        price={item.price}
-                      />
-                    );
-                  })
-              : quotes
-                  .sort((a, b) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
-                  .map((item, index) => {
-                    return (
-                      <Card
-                        key={index}
-                        name={item['shop-name']}
-                        status={item.status}
-                        date={item.date}
-                        price={item.price}
-                      />
-                    );
-                  })}
+                : status == 'Accepted' && sortItem == 'Price'
+                  ? quotes
+                    .filter((quote) => quote.status == status)
+                    .sort((a, b) => (a.price && b.price && a.price > b.price ? 1 : -1))
+                    .map((item, index) => {
+                      return (
+                        <Card
+                          key={index}
+                          name={item['shop-name']}
+                          status={item.status}
+                          date={item.date}
+                          price={item.price}
+                          id={item.id}
+                        />
+                      );
+                    })
+                  : quotes
+                    .sort((a, b) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
+                    .map((item, index) => {
+                      return (
+                        <Card
+                          key={index}
+                          name={item['shop-name']}
+                          status={item.status}
+                          date={item.date}
+                          price={item.price}
+                          id={item.id}
+                        />
+                      );
+                    })}
           </div>
         </div>
 
