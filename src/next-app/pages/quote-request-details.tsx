@@ -8,8 +8,10 @@ import FieldLabel from '../components/FieldLabel';
 import TextInput from '../components/TextInput';
 import Card from '../components/Card';
 import { quotes } from '../data/QuoteData';
+import { useRouter } from 'next/router';
 
 const QuoteRequestDetailsPage: NextPage = () => {
+  const router = useRouter();
   const [status, setStatus] = useState('All');
   const [sortItem, setSortItem] = useState('Date');
   function noChange(): void {
@@ -17,7 +19,18 @@ const QuoteRequestDetailsPage: NextPage = () => {
   }
   return (
     <div className={styles.container}>
-      <Header title="Quote Request - " />
+      <Header
+        title="Quote Request - "
+        burgerMenu={[
+          {
+            option: 'Edit',
+            onClick() {
+              router.push('/quote-request-edit');
+            },
+          },
+          { option: 'Delete' },
+        ]}
+      />
       <div className={styles.content}>
         <div className={styles['field-container']}>
           <div className={styles['date-container']}>
