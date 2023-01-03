@@ -10,8 +10,6 @@ import TextArea from '../components/TextArea';
 import DropdownField from '../components/DropdownField';
 import FieldLabel from '../components/FieldLabel';
 import Link from '../components/Link';
-import DatePickerField from '../components/DatePickerField';
-import TimeRangeField from '../components/TimeRangeField';
 
 interface carModels {
   [make: string]: string[];
@@ -126,7 +124,7 @@ const QuoteRequestEditPage: NextPage = () => {
               </div>
             </>
           ) : null}
-          {make && make !== 'Other' ? (
+          {make !== 'Other' ? (
             <div className={styles['field-container']}>
               <DropdownField
                 name="Model"
@@ -137,16 +135,14 @@ const QuoteRequestEditPage: NextPage = () => {
               />
             </div>
           ) : null}
-          {model || customModel ? (
-            <div className={styles['field-container']}>
-              <TextField
-                name="Model Year"
-                placeholder={modelYear}
-                onChange={setModelYear}
-                inputType="number"
-              />
-            </div>
-          ) : null}
+          <div className={styles['field-container']}>
+            <TextField
+              name="Model Year"
+              placeholder={modelYear}
+              onChange={setModelYear}
+              inputType="number"
+            />
+          </div>
         </div>
         <div className={styles.section}>
           <span className={styles['section-header']}>Contact Information</span>
