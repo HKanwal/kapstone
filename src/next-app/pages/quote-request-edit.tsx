@@ -111,29 +111,18 @@ const QuoteRequestEditPage: NextPage = () => {
           >
             <DropdownField
               name="Manufacturer"
-              placeholder="Enter manufacturer..."
+              placeholder={make}
               items={makesList}
               onSelect={setMake}
-              required
             />
           </div>
           {make === 'Other' ? (
             <>
               <div className={styles['field-container']}>
-                <TextField
-                  name=""
-                  placeholder="Enter vehicle manufacturer"
-                  onChange={setCustomMake}
-                  required
-                />
+                <TextField name="" placeholder={customMake} onChange={setCustomMake} />
               </div>
               <div className={styles['field-container']}>
-                <TextField
-                  name="Model"
-                  placeholder="Enter vehicle model"
-                  onChange={setCustomModel}
-                  required
-                />
+                <TextField name="Model" placeholder={customModel} onChange={setCustomModel} />
               </div>
             </>
           ) : null}
@@ -141,11 +130,10 @@ const QuoteRequestEditPage: NextPage = () => {
             <div className={styles['field-container']}>
               <DropdownField
                 name="Model"
-                placeholder="Enter model..."
+                placeholder={model}
                 items={modelsList[make]}
                 selectedItems={model.length > 0 ? [model] : []}
                 onSelect={setModel}
-                required
               />
             </div>
           ) : null}
@@ -153,9 +141,8 @@ const QuoteRequestEditPage: NextPage = () => {
             <div className={styles['field-container']}>
               <TextField
                 name="Model Year"
-                placeholder="Enter vehicle model year"
+                placeholder={modelYear}
                 onChange={setModelYear}
-                required
                 inputType="number"
               />
             </div>
@@ -164,37 +151,21 @@ const QuoteRequestEditPage: NextPage = () => {
         <div className={styles.section}>
           <span className={styles['section-header']}>Contact Information</span>
           <div className={styles['field-container']}>
-            <TextField
-              name="First Name"
-              placeholder="Enter your first name"
-              onChange={setFirstName}
-              required
-            />
+            <TextField name="First Name" placeholder={firstName} onChange={setFirstName} />
           </div>
           <div className={styles['field-container']}>
-            <TextField
-              name="Last Name"
-              placeholder="Enter your last name"
-              onChange={setLastName}
-              required
-            />
+            <TextField name="Last Name" placeholder={lastName} onChange={setLastName} />
           </div>
           <div className={styles['field-container']}>
-            <TextField
-              name="Phone Number"
-              placeholder="Enter your phone number"
-              onChange={setPhoneNumber}
-              required
-            />
+            <TextField name="Phone Number" placeholder={phoneNumber} onChange={setPhoneNumber} />
           </div>
           <div className={styles['field-container']}>
             <TextField
               name="Email"
-              placeholder="Enter your email"
+              placeholder={email}
               onChange={setEmail}
               onBlur={handleEmailBlur}
               errors={emailErrors}
-              required
             />
           </div>
           <div className={styles['field-container']}>
@@ -225,7 +196,7 @@ const QuoteRequestEditPage: NextPage = () => {
             />
           </div>
           <div className={styles['field-container']}>
-            <TextArea name="Notes" placeholder="Enter any additional notes" onChange={setNotes} />
+            <TextArea name="Notes" placeholder={notes} onChange={setNotes} />
           </div>
           <div className={styles['field-container']}>
             <div className={styles['images-field-container']}>
@@ -253,12 +224,12 @@ const QuoteRequestEditPage: NextPage = () => {
           </div>
         </div>
         <Button
-          title="Create"
+          title="Update"
           disabled={!valid}
           width="80%"
           onClick={() => {
             console.log(
-              'TODO: handle submit by verifying form, sending API request, and redirecting to find-shop'
+              'TODO: handle submit by verifying form, sending API request, and redirecting to quote request details'
             );
           }}
         />
