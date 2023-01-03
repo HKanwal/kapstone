@@ -9,7 +9,6 @@ User = get_user_model()
 
 from .models import ShopOwnerData, EmployeeData, CustomerData
 from shops.models import Invitation, Shop
-from shops.serializers import ShopSerializer
 
 
 class UserCreateSerializer(BaseUserCreateSerializer):
@@ -71,19 +70,32 @@ class UserCreateSerializer(BaseUserCreateSerializer):
             return user
 
 
+class UserViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("username", "first_name", "last_name", "email", "phone_number")
+        read_only_fields = ("username", "first_name", "last_name", "email", "phone_number")
+
+
 class ShopOwnerDataSerializer(serializers.ModelSerializer):
+    user = UserViewSerializer()
+
     class Meta:
         model = ShopOwnerData
         fields = "__all__"
 
 
 class EmployeeDataSerializer(serializers.ModelSerializer):
+    user = UserViewSerializer()
+
     class Meta:
         model = EmployeeData
         fields = "__all__"
 
 
 class CustomerDataSerializer(serializers.ModelSerializer):
+    user = UserViewSerializer()
+
     class Meta:
         model = CustomerData
         fields = "__all__"
