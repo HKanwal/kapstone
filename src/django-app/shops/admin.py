@@ -25,27 +25,31 @@ class ServicePartAdmin(admin.ModelAdmin):
     list_display = ("service", "part", "quantity")
 
 
+class AppointmentSlotInline(admin.StackedInline):
+    model = Appointment.appointmentslot_set.through
+    extra = 0
+
+
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
     list_display = ("customer", "shop", "status", "start_time", "end_time")
+    inlines = [AppointmentSlotInline]
 
 
 @admin.register(AppointmentSlot)
 class AppointmentSlotAdmin(admin.ModelAdmin):
-    list_display = (
-        "shop",
-        "num_slots",
-        "booked_slots",
-    )
+    list_display = ("shop", "num_slots", "booked_slots", "start_time", "end_time")
+    list_filter = ("shop",)
     fields = (
         "shop",
-        "appointment",
+        "appointments",
         "start_time",
         "end_time",
         "num_slots",
         "booked_slots",
     )
-    readonly_fields = ["booked_slots"]
+    readonly_fields = ["num_slots", "booked_slots"]
+    ordering = ["start_time"]
 
 
 class ShopAvailabilitySlotInline(nested_admin.NestedStackedInline):
