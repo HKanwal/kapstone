@@ -1,5 +1,7 @@
 import uuid
 from django.db import models, transaction
+from datetime import datetime
+import pytz
 
 from django.utils.translation import gettext as _
 from django.apps import apps
@@ -157,10 +159,9 @@ class Appointment(models.Model):
 
 class AppointmentSlot(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
-    appointment = models.ManyToManyField(Appointment, blank=True)
+    appointments = models.ManyToManyField(Appointment, blank=True)
     start_time = models.DateTimeField(null=False)
     end_time = models.DateTimeField(null=False)
-    num_slots = models.PositiveIntegerField()
 
     @property
     def duration(self):
@@ -168,7 +169,11 @@ class AppointmentSlot(models.Model):
 
     @property
     def booked_slots(self):
-        return self.appointment.count()
+        return self.appointments.count()
+
+    @property
+    def num_slots(self):
+        return min(self.shop.num_bays, self.shop.num_employees)
 
     @property
     def is_available(self):
@@ -177,6 +182,30 @@ class AppointmentSlot(models.Model):
     @property
     def num_available_slots(self):
         return self.num_slots - self.booked_slots
+
+    def get_current_plus_duration(self, duration):
+        utc = pytz.UTC
+
+        mod = ((duration.total_seconds() % 3600) // 60) % 15
+        extra = duration if mod == 0 else duration + timedelta(minutes=15 - mod)
+
+        min_end_time = min(
+            utc.localize(datetime.combine(self.end_time.date(), datetime.max.time())),
+            self.start_time + extra,
+        )
+        slots = AppointmentSlot.objects.filter(
+            shop=self.shop, start_time__gte=self.start_time, end_time__lte=min_end_time
+        ).order_by("start_time")
+        slot_list = [slot for slot in slots if slot.is_available]
+
+        if (
+            slots.count() > 0
+            and len(slot_list) == slots.count()
+            and slots.last().end_time - slots.first().start_time >= duration
+        ):
+            return slots
+        else:
+            return None
 
     class Meta:
         verbose_name = "Appointment Slot"
@@ -193,7 +222,7 @@ class AppointmentSlot(models.Model):
         ]
 
     def __str__(self):
-        return f"Slot from {self.start_time} to {self.end_time} - {self.booked_slots}"
+        return f"Slot from {self.start_time} to {self.end_time}"
 
 
 class ShopAvailability(models.Model):
@@ -222,6 +251,10 @@ class ShopAvailabilitySlot(models.Model):
     start_time = models.TimeField(null=False)
     end_time = models.TimeField(null=False)
     shop_availability = models.ForeignKey(ShopAvailability, on_delete=models.CASCADE)
+
+    @property
+    def date(self):
+        return self.shop_availability.date
 
     class Meta:
         verbose_name = "Availability Slot"
