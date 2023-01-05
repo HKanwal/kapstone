@@ -185,27 +185,6 @@ class AppointmentSlotViewSet(viewsets.ModelViewSet):
         except:
             return queryset
 
-    # def _filter_by_duration(self, queryset):
-    #     try:
-    #         duration_minutes = int(self.request.GET.get("minutes", 0))
-    #         if duration_minutes != 0:
-    #             print("HERE")
-    #             duration = timedelta(minutes=duration_minutes)
-    #             print(duration)
-
-    #             for slot in list(queryset):
-    #                 # print("A")
-    #                 # print(slot)
-    #                 q = slot.get_current_plus_duration(duration)
-    #                 if q is not None:
-    #                     print(list(q))
-    #             print("HELLO")
-
-    #         return queryset
-    #     except:
-    #         print("OH")
-    #         return queryset
-
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = self._filter_by_shop(queryset)
