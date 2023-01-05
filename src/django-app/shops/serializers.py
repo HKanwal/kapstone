@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Shop, Address, Invitation, Service
+from .models import Shop, Address, Invitation, Service, AppointmentSlot, Appointment
 from accounts.serializers import UserViewSerializer
 
 
@@ -40,3 +40,38 @@ class InvitationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invitation
         fields = "__all__"
+
+
+class AppointmentSerializer(serializers.ModelSerializer):
+    customer = UserViewSerializer()
+    shop = ShopOverviewSerializer()
+    start_time = serializers.SerializerMethodField()
+    end_time = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Appointment
+        fields = "__all__"
+
+    def get_start_time(self, obj):
+        return obj.start_time
+
+    def get_end_time(self, obj):
+        return obj.end_time
+
+
+class AppointmentCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Appointment
+        fields = "__all__"
+
+
+class AppointmentSlotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AppointmentSlot
+        fields = "__all__"
+
+
+class AppointmentSlotListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AppointmentSlot
+        fields = ("id", "shop", "start_time", "end_time")
