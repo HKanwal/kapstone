@@ -2,7 +2,6 @@ from django.db import models
 from django.utils.translation import gettext as _
 from shops.models import Shop
 from accounts.models import Customer
-from misc.models import Image
 
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -29,7 +28,6 @@ class QuoteRequest(models.Model):
     #These are allowed to be null, as right now there are no shops or users in the system to assign them to.
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)
-    images = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True)
     preferred_phone_number = PhoneNumberField(blank=True)
     preferred_email = models.EmailField(_("email address"), max_length=255, blank=True, null=True)
     description = models.CharField(_("description"), max_length = 1000)

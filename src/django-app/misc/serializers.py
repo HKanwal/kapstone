@@ -1,11 +1,13 @@
 from rest_framework import serializers
 
-from .models import Image
+from .models import ImageQuote
+from quotes.models import QuoteRequest
 
-class ImageSerializer(serializers.ModelSerializer):
+class ImageQuoteSerializer(serializers.ModelSerializer):
     title = serializers.CharField(max_length=100)
     photo = serializers.ImageField()
+    quote_request = serializers.PrimaryKeyRelatedField(queryset=QuoteRequest.objects.all())
 
     class Meta:
-        model = Image
+        model = ImageQuote
         fields = '__all__'
