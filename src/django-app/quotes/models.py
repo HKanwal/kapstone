@@ -3,6 +3,8 @@ from django.utils.translation import gettext as _
 from shops.models import Shop
 from accounts.models import Customer
 
+from phonenumber_field.modelfields import PhoneNumberField
+
 class Quote(models.Model):
     class Status(models.TextChoices):
         NEW_QUOTE = "new_quote", "New Quote"
@@ -26,8 +28,8 @@ class QuoteRequest(models.Model):
     #These are allowed to be null, as right now there are no shops or users in the system to assign them to.
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)
-    preferred_date = models.DateField(_("preferred date"), blank=True)
-    preferred_time = models.TimeField(_("preferred time"), blank=True)
+    preferred_phone_number = PhoneNumberField(blank=True)
+    preferred_email = models.EmailField(_("email address"), max_length=255, blank=True, null=True)
     description = models.CharField(_("description"), max_length = 1000)
 
     class Meta:
