@@ -5,6 +5,7 @@ from accounts.models import Customer
 
 from phonenumber_field.modelfields import PhoneNumberField
 
+
 class Quote(models.Model):
     class Status(models.TextChoices):
         NEW_QUOTE = "new_quote", "New Quote"
@@ -15,19 +16,27 @@ class Quote(models.Model):
 
     quote_request = models.OneToOneField("QuoteRequest", on_delete=models.CASCADE)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
-    status = models.CharField(_("status"), max_length=12, choices=Status.choices, default=Status.NEW_QUOTE)
+    status = models.CharField(
+        _("status"), max_length=12, choices=Status.choices, default=Status.NEW_QUOTE
+    )
     price = models.DecimalField(_("price"), max_digits=19, decimal_places=2)
-    estimated_time= models.CharField(_("estimated time"), max_length=255)
-    expiry_date= models.DateField(_("expiry date"))
+    estimated_time = models.CharField(_("estimated time"), max_length=255)
+    expiry_date = models.DateField(_("expiry date"))
 
     class Meta:
         verbose_name = "Quote"
         verbose_name_plural = "Quotes"
 
+    def __str__(self):
+        return f'Shop "{self.shop.name}" to User "{self.quote_request.user.username}": ${self.price}'
+
+
 class QuoteRequest(models.Model):
-    #These are allowed to be null, as right now there are no shops or users in the system to assign them to.
+    # These are allowed to be null, as right now there are no shops or users in the system to assign them to.
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)
+    preferred_date = models.DateField(_("preferred date"), blank=True)
+    preferred_time = models.TimeField(_("preferred time"), blank=True)
     preferred_phone_number = PhoneNumberField(blank=True)
     preferred_email = models.EmailField(_("email address"), max_length=255, blank=True, null=True)
     description = models.CharField(_("description"), max_length = 1000)
@@ -35,3 +44,6 @@ class QuoteRequest(models.Model):
     class Meta:
         verbose_name = "Quote Request"
         verbose_name_plural = "Quote Requests"
+
+    def __str__(self):
+        return f'User "{self.user.username}" to Shop "{self.shop.name}": {self.description}'
