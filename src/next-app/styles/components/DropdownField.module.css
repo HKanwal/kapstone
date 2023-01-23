@@ -4,9 +4,8 @@
   width: 100%;
 }
 
-.name {
-  color: var(--text-grey-color);
-  font-weight: 400;
+.name-container {
+  margin-bottom: 1.5vh;
 }
 
 .chips-container {
@@ -18,17 +17,11 @@
 .chip-container {
   margin-left: 2%;
   margin-right: 2%;
-  margin-top: 1vh;
-}
-
-.asterisk {
-  color: red;
-  padding-left: 0.2em;
+  margin-bottom: 1.5vh;
 }
 
 .input-container {
   position: relative;
-  margin-top: 1.5vh;
 }
 
 .chevron-container {
@@ -51,6 +44,7 @@
   z-index: 1;
   max-height: 30vh;
   overflow: scroll;
+  overflow-x: hidden;
 }
 
 .item {

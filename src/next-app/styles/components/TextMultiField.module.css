@@ -4,18 +4,8 @@
   width: 100%;
 }
 
-.name {
-  color: var(--text-grey-color);
-  font-weight: 400;
-}
-
 .text-input-container {
   margin-top: 1vh;
-}
-
-.asterisk {
-  color: red;
-  padding-left: 0.2em;
 }
 
 .link-container {

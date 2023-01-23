@@ -1,3 +1,4 @@
+import { ButtonHTMLAttributes } from 'react';
 import styles from '../styles/components/Button.module.css';
 
 type ButtonProps = {
@@ -5,6 +6,7 @@ type ButtonProps = {
   width?: string | number;
   onClick?: () => void;
   disabled?: boolean;
+  type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
 };
 
 const Button = (props: ButtonProps) => {
@@ -16,6 +18,7 @@ const Button = (props: ButtonProps) => {
 
   return (
     <button
+      type={props.type ?? 'button'}
       className={styles.button}
       style={{ width: props.width }}
       onClick={handleClick}

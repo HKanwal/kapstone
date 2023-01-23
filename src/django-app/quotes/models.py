@@ -3,6 +3,8 @@ from django.utils.translation import gettext as _
 from shops.models import Shop
 from accounts.models import Customer
 
+from phonenumber_field.modelfields import PhoneNumberField
+
 
 class Quote(models.Model):
     class Status(models.TextChoices):
@@ -35,7 +37,9 @@ class QuoteRequest(models.Model):
     user = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)
     preferred_date = models.DateField(_("preferred date"), blank=True)
     preferred_time = models.TimeField(_("preferred time"), blank=True)
-    description = models.CharField(_("description"), max_length=1000)
+    preferred_phone_number = PhoneNumberField(blank=True)
+    preferred_email = models.EmailField(_("email address"), max_length=255, blank=True, null=True)
+    description = models.CharField(_("description"), max_length = 1000)
 
     class Meta:
         verbose_name = "Quote Request"
