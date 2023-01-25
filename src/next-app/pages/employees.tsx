@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import Header from '../components/Header';
 import styles from '../styles/pages/Employees.module.css';
 import EmployeeCard from '../components/EmployeeCard';
@@ -30,24 +30,16 @@ const EmployeesPage: NextPage = () => {
     router.push('/invite');
   };
 
-  const handleFilterChange = (value: string, itemName: string) => {
-    if (itemName === 'name') {
-      setEmployeeFilter((prevEmployeeFilter) => ({
-        ...prevEmployeeFilter,
-        name: value,
-      }));
-    } else if (itemName === 'phone') {
-      setEmployeeFilter((prevEmployeeFilter) => ({
-        ...prevEmployeeFilter,
-        phone: value,
-      }));
-    } else if (itemName === 'email') {
-      setEmployeeFilter((prevEmployeeFilter) => ({
-        ...prevEmployeeFilter,
-        email: value,
-      }));
-    }
-    console.log(employeeFilter);
+  const handleFilterChange = (field: string) => {
+    return (newValue: string) => {
+      setEmployeeFilter((prev) => {
+        return {
+          ...prev,
+          [field]: newValue,
+        };
+      });
+      console.log(employeeFilter);
+    };
   };
 
   return (
@@ -56,16 +48,26 @@ const EmployeesPage: NextPage = () => {
       <div className={styles['field-container']}>
         <div className={styles['filter-container']}>
           <FieldLabel label="Filter By" />
-          <TextField
-            name=""
-            placeholder="Name"
-            onChange={(item) => handleFilterChange(item, 'name')}
-          />
+          <TextField name="" placeholder="Name" onChange={handleFilterChange('name')} />
         </div>
         <div className={styles['card-container']}>
-          {employees.map((employee) => {
-            return <EmployeeCard key={employee.id} id={Number(employee.id)} name={employee.user} />;
-          })}
+          {employeeFilter.name != ''
+            ? employees
+                .filter((employee) => employee.user == employeeFilter.name)
+                .map((employee) => {
+                  return (
+                    <EmployeeCard key={employee.id} id={Number(employee.id)} name={employee.user} />
+                  );
+                })
+            : employees.map((employee) => {
+                return (
+                  <EmployeeCard
+                    key={employee.id}
+                    id={Number(employee.id)}
+                    name={String(employee.user)}
+                  />
+                );
+              })}
         </div>
       </div>
     </div>
