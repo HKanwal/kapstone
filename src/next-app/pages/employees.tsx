@@ -59,37 +59,25 @@ const EmployeesPage: NextPage = () => {
           <TextField name="" placeholder="Email" onChange={handleFilterChange('email')} />
         </div>
         <div className={styles['card-container']}>
-          {employeeFilter.name != '' || employeeFilter.phone != null
-            ? employees
-                .filter((employee) => {
-                  for (let field in employeeFilter) {
-                    if (employeeFilter[field] != '' && employee.user != employeeFilter[field])
-                      return false;
-                  }
-                  return true;
-                })
-                .map((employee) => {
-                  return (
-                    <EmployeeCard
-                      key={employee.id}
-                      id={Number(employee.id)}
-                      name={employee.user}
-                      phone={employee.user}
-                      email={employee.user}
-                    />
-                  );
-                })
-            : employees.map((employee) => {
-                return (
-                  <EmployeeCard
-                    key={employee.id}
-                    id={Number(employee.id)}
-                    name={employee.user}
-                    phone={employee.user}
-                    email={employee.user}
-                  />
-                );
-              })}
+          {employees
+            .filter((employee) => {
+              for (let field in employeeFilter) {
+                if (employeeFilter[field] != '' && employee.user != employeeFilter[field])
+                  return false;
+              }
+              return true;
+            })
+            .map((employee) => {
+              return (
+                <EmployeeCard
+                  key={employee.id}
+                  id={Number(employee.id)}
+                  name={employee.user}
+                  phone={employee.user}
+                  email={employee.user}
+                />
+              );
+            })}
         </div>
       </div>
     </div>

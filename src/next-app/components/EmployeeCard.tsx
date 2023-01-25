@@ -11,8 +11,8 @@ type EmployeeProps = {
 
 const EmployeeCard = (props: EmployeeProps) => {
   const nameLabel = `Name: ${props.name}`;
-  const phoneLabel = `Name: ${props.phone}`;
-  const emailLabel = `Name: ${props.email}`;
+  const phoneLabel = `Phone Number: ${props.phone}`;
+  const emailLabel = `Email: ${props.email}`;
   const router = useRouter();
   const url = '/employee-details';
 

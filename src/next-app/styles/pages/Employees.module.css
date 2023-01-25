@@ -12,15 +12,17 @@
 }
 
 .card-container {
-  padding-left: 2vw;
-  padding-right: 2vw;
+  align-items: center;
+  justify-content: center;
+  padding-left: 4vw;
+  padding-right: 4vw;
   padding-top: 5vh;
   padding-bottom: 5vh;
 }
 
 .filter-container {
   display: inline-block;
-  padding-left: 2vw;
-  padding-right: 2vw;
+  padding-left: 4vw;
+  padding-right: 4vw;
   padding-bottom: 1vh;
 }
