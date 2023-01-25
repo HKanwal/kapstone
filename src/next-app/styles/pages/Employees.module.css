@@ -1,0 +1,26 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.field-container {
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding-bottom: 3vh;
+}
+
+.card-container {
+  padding-left: 2vw;
+  padding-right: 2vw;
+  padding-top: 5vh;
+  padding-bottom: 5vh;
+}
+
+.filter-container {
+  display: inline-block;
+  padding-left: 2vw;
+  padding-right: 2vw;
+  padding-bottom: 1vh;
+}
