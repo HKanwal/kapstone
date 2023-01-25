@@ -5,14 +5,14 @@ import React from 'react';
 type EmployeeProps = {
   id: number;
   name: string;
-  //   phoneNumber: string;
-  //   email: string;
+  phone: string;
+  email: string;
 };
 
 const EmployeeCard = (props: EmployeeProps) => {
   const nameLabel = `Name: ${props.name}`;
-  //const phoneNumberLabel = `Name: ${props.phoneNumber}`;
-  //const emailLabel = `Name: ${props.email}`;
+  const phoneLabel = `Name: ${props.phone}`;
+  const emailLabel = `Name: ${props.email}`;
   const router = useRouter();
   const url = '/employee-details';
 
@@ -28,8 +28,8 @@ const EmployeeCard = (props: EmployeeProps) => {
       }}
     >
       <div className={styles['body-container']}>{nameLabel}</div>
-      <div className={styles['body-container']}>{nameLabel}</div>
-      <div className={styles['body-container']}>{nameLabel}</div>
+      <div className={styles['body-container']}>{phoneLabel}</div>
+      <div className={styles['body-container']}>{emailLabel}</div>
     </div>
   );
 };

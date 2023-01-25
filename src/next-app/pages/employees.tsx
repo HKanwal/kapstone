@@ -11,9 +11,16 @@ import SingleTextField from '../components/SingleTextField';
 import TextField from '../components/TextField';
 
 const EmployeesPage: NextPage = () => {
+  type filter = {
+    [key: string]: any;
+  };
   const router = useRouter();
   const [employees, setEmployees] = useState<any[]>([]);
-  const [employeeFilter, setEmployeeFilter] = useState({ name: '', phone: '', email: '' });
+  const [employeeFilter, setEmployeeFilter] = useState<filter>({
+    name: '',
+    phone: '',
+    email: '',
+  });
 
   useEffect(() => {
     fetch(`${apiUrl}/accounts/shop-owner/`, {
@@ -38,7 +45,6 @@ const EmployeesPage: NextPage = () => {
           [field]: newValue,
         };
       });
-      console.log(employeeFilter);
     };
   };
 
@@ -49,14 +55,28 @@ const EmployeesPage: NextPage = () => {
         <div className={styles['filter-container']}>
           <FieldLabel label="Filter By" />
           <TextField name="" placeholder="Name" onChange={handleFilterChange('name')} />
+          <TextField name="" placeholder="Phone Number" onChange={handleFilterChange('phone')} />
+          <TextField name="" placeholder="Email" onChange={handleFilterChange('email')} />
         </div>
         <div className={styles['card-container']}>
-          {employeeFilter.name != ''
+          {employeeFilter.name != '' || employeeFilter.phone != null
             ? employees
-                .filter((employee) => employee.user == employeeFilter.name)
+                .filter((employee) => {
+                  for (let field in employeeFilter) {
+                    if (employeeFilter[field] != '' && employee.user != employeeFilter[field])
+                      return false;
+                  }
+                  return true;
+                })
                 .map((employee) => {
                   return (
-                    <EmployeeCard key={employee.id} id={Number(employee.id)} name={employee.user} />
+                    <EmployeeCard
+                      key={employee.id}
+                      id={Number(employee.id)}
+                      name={employee.user}
+                      phone={employee.user}
+                      email={employee.user}
+                    />
                   );
                 })
             : employees.map((employee) => {
@@ -64,7 +84,9 @@ const EmployeesPage: NextPage = () => {
                   <EmployeeCard
                     key={employee.id}
                     id={Number(employee.id)}
-                    name={String(employee.user)}
+                    name={employee.user}
+                    phone={employee.user}
+                    email={employee.user}
                   />
                 );
               })}
