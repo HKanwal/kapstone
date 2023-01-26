@@ -19,7 +19,7 @@ export const NavbarData = [
   },
   {
     title: 'Employees',
-    path: '/invite',
+    path: '/employees',
     icon: <IoIcons.IoMdPeople />,
   },
   {
