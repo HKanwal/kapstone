@@ -10,12 +10,17 @@ import TextArea from '../components/TextArea';
 import DropdownField from '../components/DropdownField';
 import FieldLabel from '../components/FieldLabel';
 import Link from '../components/Link';
+import axios from 'axios';
+import apiUrl from '../constants/api-url';
+import { useRouter } from 'next/router';
 
 interface carModels {
   [make: string]: string[];
 }
 
 const QuoteRequestEditPage: NextPage = () => {
+  const router = useRouter();
+  const { id } = router.query;
   const [make, setMake] = useState('');
   const [customMake, setCustomMake] = useState('');
   const [model, setModel] = useState('');
@@ -56,6 +61,17 @@ const QuoteRequestEditPage: NextPage = () => {
   }
 
   useEffect(() => {
+    const getQuoteRequest = async () => {
+      try {
+        const res = await axios.get(`${apiUrl}/quotes/quote-requests/`);
+        //setQuoteRequest(res.data);
+        console.log(res.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getQuoteRequest();
+
     let makes: string[] = [];
     let models: carModels = {};
     carData.carData.forEach((entry) => {

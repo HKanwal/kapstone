@@ -1,6 +1,6 @@
 /* eslint-disable indent */
 import type { NextPage } from 'next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import styles from '../styles/pages/QuoteRequestDetails.module.css';
 import Dropdown from '../components/Dropdown';
@@ -9,14 +9,41 @@ import TextInput from '../components/TextInput';
 import Card from '../components/Card';
 import { quotes } from '../data/QuoteData';
 import { useRouter } from 'next/router';
+import apiUrl from '../constants/api-url';
+import axios from 'axios';
 
 const QuoteRequestDetailsPage: NextPage = () => {
   const router = useRouter();
+  const { id } = router.query;
   const [status, setStatus] = useState('All');
   const [sortItem, setSortItem] = useState('Date');
   function noChange(): void {
     throw new Error('Function not implemented.');
   }
+
+  useEffect(() => {
+    const getQuoteRequest = async () => {
+      try {
+        const res = await axios.get(`${apiUrl}/quotes/quote-requests/`);
+        //setQuoteRequest(res.data);
+        console.log(res.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    const getQuotes = async () => {
+      try {
+        const res = await axios.get(`${apiUrl}/quotes/quotes/`);
+        //setQuotes(res.data);
+        console.log(res.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getQuoteRequest();
+    getQuotes();
+  }, []);
+
   return (
     <div className={styles.container}>
       <Header
