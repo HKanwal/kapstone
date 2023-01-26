@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 import apiUrl from '../constants/api-url';
 import { IoIosAdd } from 'react-icons/io';
 import FieldLabel from '../components/FieldLabel';
-import SingleTextField from '../components/SingleTextField';
 import TextField from '../components/TextField';
 
 const EmployeesPage: NextPage = () => {
