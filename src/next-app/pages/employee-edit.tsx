@@ -6,22 +6,16 @@ import Header from '../components/Header';
 import styles from '../styles/pages/CreateEmployee.module.css';
 import apiUrl from '../constants/api-url';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 
 type info = {
-  [key: string]: string;
+  [key: string]: any;
 };
 
 const EmployeeEditPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const [initialValues, setInitialValues] = useState<info>({
-    fullName: '',
-    address: '',
-    salary: '',
-    vacation: '',
-    sickDays: '',
-    dateJoined: '',
-  });
+  const [employee, setEmployee] = useState<info>([]);
   const [fullName, setFullName] = useState('');
   const [address, setAddress] = useState('');
   const [salary, setSalary] = useState('');
@@ -30,29 +24,21 @@ const EmployeeEditPage: NextPage = () => {
   const [dateJoined, setDateJoined] = useState('');
 
   useEffect(() => {
-    fetch(`${apiUrl}/accounts/shop-owner/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setInitialValues({
-          fullName: String(data.user),
-          address: String(data.user),
-          salary: String(data.user),
-          vacation: String(data.user),
-          sickDays: String(data.user),
-          dateJoined: String(data.user),
-        });
-      });
-    setFullName(initialValues.fullName);
-    setAddress(initialValues.address);
-    setSalary(initialValues.salary);
-    setVacation(initialValues.vacation);
-    setSickDays(initialValues.sickDays);
-    setDateJoined(initialValues.dateJoined);
+    const getEmployee = async () => {
+      try {
+        const res = await axios.get(`${apiUrl}/accounts/shop-owner/${id}`);
+        setEmployee(res.data);
+        setFullName(String(res.data.user));
+        setAddress(String(res.data.user));
+        setSalary(String(res.data.user));
+        setVacation(String(res.data.user));
+        setSickDays(String(res.data.user));
+        setDateJoined(String(res.data.user));
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getEmployee();
   }, []);
 
   let valid = false;
@@ -79,7 +65,7 @@ const EmployeeEditPage: NextPage = () => {
               name="Name"
               placeholder={fullName}
               onChange={(input) => {
-                input.length > 0 ? setFullName(input) : setFullName(initialValues.fullName);
+                input.length > 0 ? setFullName(input) : setFullName(String(employee.user));
               }}
             />
           </div>
@@ -88,7 +74,7 @@ const EmployeeEditPage: NextPage = () => {
               name="Address"
               placeholder={address}
               onChange={(input) => {
-                input.length > 0 ? setAddress : setAddress(initialValues.Address);
+                input.length > 0 ? setAddress : setAddress(String(employee.user));
               }}
             />
           </div>
@@ -97,7 +83,7 @@ const EmployeeEditPage: NextPage = () => {
               name="Salary"
               placeholder={salary}
               onChange={(input) => {
-                input.length > 0 ? setSalary : setSalary(initialValues.salary);
+                input.length > 0 ? setSalary : setSalary(String(employee.user));
               }}
             />
           </div>
@@ -106,7 +92,7 @@ const EmployeeEditPage: NextPage = () => {
               name="Vacation"
               placeholder={vacation}
               onChange={(input) => {
-                input.length > 0 ? setVacation : setVacation(initialValues.vacation);
+                input.length > 0 ? setVacation : setVacation(String(employee.user));
               }}
             />
           </div>
@@ -115,7 +101,7 @@ const EmployeeEditPage: NextPage = () => {
               name="Sick Days"
               placeholder={sickDays}
               onChange={(input) => {
-                input.length > 0 ? setSickDays : setSickDays(initialValues.sickDays);
+                input.length > 0 ? setSickDays : setSickDays(String(employee.user));
               }}
             />
           </div>
@@ -124,7 +110,7 @@ const EmployeeEditPage: NextPage = () => {
               name="Date Joined"
               placeholder={dateJoined}
               onChange={(input) => {
-                input.length > 0 ? setDateJoined : setDateJoined(initialValues.dateJoined);
+                input.length > 0 ? setDateJoined : setDateJoined(String(employee.user));
               }}
             />
           </div>

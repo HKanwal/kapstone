@@ -8,6 +8,7 @@ import apiUrl from '../constants/api-url';
 import { IoIosAdd } from 'react-icons/io';
 import FieldLabel from '../components/FieldLabel';
 import TextField from '../components/TextField';
+import axios from 'axios';
 
 const EmployeesPage: NextPage = () => {
   type filter = {
@@ -22,14 +23,15 @@ const EmployeesPage: NextPage = () => {
   });
 
   useEffect(() => {
-    fetch(`${apiUrl}/accounts/shop-owner/`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => setEmployees(data));
+    const getAllEmployees = async () => {
+      try {
+        const res = await axios.get(`${apiUrl}/accounts/shop-owner/`);
+        setEmployees(res.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getAllEmployees();
   }, []);
 
   const handleAddClick = () => {

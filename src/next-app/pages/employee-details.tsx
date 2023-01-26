@@ -7,6 +7,7 @@ import FieldLabel from '../components/FieldLabel';
 import TextInput from '../components/TextInput';
 import { useRouter } from 'next/router';
 import apiUrl from '../constants/api-url';
+import axios from 'axios';
 
 type info = {
   [key: string]: any;
@@ -19,14 +20,15 @@ const EmployeeDetailsPage: NextPage = () => {
   const [employee, setEmployee] = useState<info>([]);
 
   useEffect(() => {
-    fetch(`${apiUrl}/accounts/shop-owner/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => setEmployee(data));
+    const getEmployee = async () => {
+      try {
+        const res = await axios.get(`${apiUrl}/accounts/shop-owner/${id}`);
+        setEmployee(res.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getEmployee();
   }, []);
 
   function noChange(): void {
