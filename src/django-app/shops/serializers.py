@@ -40,6 +40,7 @@ class InvitationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invitation
         fields = "__all__"
+        read_only_fields = ("UUID",)
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
