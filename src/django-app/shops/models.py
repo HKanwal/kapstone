@@ -38,6 +38,11 @@ class Shop(models.Model):
     )
 
     @property
+    def employees(self):
+        EmployeeData = apps.get_model("accounts", "EmployeeData")
+        return EmployeeData.objects.filter(shop__pk=self.pk).values_list("user", flat=True)
+
+    @property
     def num_employees(self):
         EmployeeData = apps.get_model("accounts", "EmployeeData")
         return EmployeeData.objects.filter(shop__pk=self.pk).count()
