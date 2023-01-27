@@ -33,4 +33,11 @@ class QuoteRequestSerializer(serializers.ModelSerializer):
             "preferred_time",
             "description",
         )
-        read_only_fields = ["customer"]
+        read_only_fields = ["customer", "shop"]
+
+
+class QuoteRequestWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuoteRequest
+        fields = ("shop", "user", "preferred_date", "preferred_time", "description")
+        read_only_fields = ["user"]
