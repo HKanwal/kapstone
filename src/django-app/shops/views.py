@@ -21,24 +21,30 @@ from .serializers import (
     AppointmentSlotListSerializer,
 )
 from .models import Shop, Address, Invitation, Service, AppointmentSlot, Appointment
+from config.permissions import IsShopOwner, IsOwner, IsShopOwnerOrEmployee
+from .permissions import InvitationPermissions, ServicePostPermissions
 
 
 class ShopViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsShopOwner]
     queryset = Shop.objects.all().order_by("name")
     serializer_class = ShopSerializer
 
 
 class AddressViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsOwner]
     queryset = Address.objects.all().order_by("street")
     serializer_class = AddressSerializer
 
 
 class InvitationViewSet(viewsets.ModelViewSet):
+    permission_classes = [InvitationPermissions]
     queryset = Invitation.objects.all()
     serializer_class = InvitationSerializer
 
 
 class ServiceViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsShopOwnerOrEmployee & ServicePostPermissions]
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
 
