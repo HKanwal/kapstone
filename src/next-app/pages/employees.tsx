@@ -18,7 +18,7 @@ const EmployeesPage: NextPage = () => {
   const [employees, setEmployees] = useState<any[]>([]);
   const [employeeFilter, setEmployeeFilter] = useState<filter>({
     name: '',
-    phone: '',
+    phone_number: '',
     email: '',
   });
 
@@ -43,7 +43,7 @@ const EmployeesPage: NextPage = () => {
       setEmployeeFilter((prev) => {
         return {
           ...prev,
-          [field]: newValue,
+          [field]: newValue.toLowerCase(),
         };
       });
     };
@@ -56,14 +56,26 @@ const EmployeesPage: NextPage = () => {
         <div className={styles['filter-container']}>
           <FieldLabel label="Filter By" />
           <TextField name="" placeholder="Name" onChange={handleFilterChange('name')} />
-          <TextField name="" placeholder="Phone Number" onChange={handleFilterChange('phone')} />
+          <TextField
+            name=""
+            placeholder="Phone Number"
+            onChange={handleFilterChange('phone_number')}
+          />
           <TextField name="" placeholder="Email" onChange={handleFilterChange('email')} />
         </div>
         <div className={styles['card-container']}>
           {employees
             .filter((employee) => {
               for (let field in employeeFilter) {
-                if (employeeFilter[field] != '' && employee.user != employeeFilter[field])
+                if (
+                  employeeFilter[field] != '' &&
+                  (field === 'name'
+                    ? !(
+                        employee.user.first_name.toLowerCase().includes(employeeFilter[field]) ||
+                        employee.user.last_name.toLowerCase().includes(employeeFilter[field])
+                      )
+                    : !employee.user[field].toLowerCase().includes(employeeFilter[field]))
+                )
                   return false;
               }
               return true;
@@ -73,9 +85,9 @@ const EmployeesPage: NextPage = () => {
                 <EmployeeCard
                   key={employee.id}
                   id={Number(employee.id)}
-                  name={employee.user}
-                  phone={employee.user}
-                  email={employee.user}
+                  name={employee.user.first_name + ' ' + employee.user.last_name}
+                  phone={employee.user.phone_number}
+                  email={employee.user.email}
                 />
               );
             })}
