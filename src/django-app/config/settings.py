@@ -153,15 +153,18 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+    ),
     "EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler",
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Sayyara Automotive Matcher API',
-    'DESCRIPTION': 'An app to promote communcation between mechanics and customers.',
-    'VERSION': '0.0.1',
-    'SERVE_INCLUDE_SCHEMA': False,
+    "TITLE": "Sayyara Automotive Matcher API",
+    "DESCRIPTION": "An app to promote communcation between mechanics and customers.",
+    "VERSION": "0.0.1",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 DRF_STANDARDIZED_ERRORS = {"ENABLE_IN_DEBUG_FOR_UNHANDLED_EXCEPTIONS": True}
@@ -199,8 +202,8 @@ STATIC_ROOT = Path(BASE_DIR).joinpath("staticfiles")
 STATICFILES_DIRS = (Path(BASE_DIR).joinpath("static"),)
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
