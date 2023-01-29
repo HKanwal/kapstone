@@ -16,7 +16,8 @@ const EmployeeEditPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const [employee, setEmployee] = useState<info>([]);
-  const [fullName, setFullName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [address, setAddress] = useState('');
   const [salary, setSalary] = useState('');
   const [vacation, setVacation] = useState('');
@@ -28,12 +29,13 @@ const EmployeeEditPage: NextPage = () => {
       try {
         const res = await axios.get(`${apiUrl}/accounts/shop-owner/${id}`);
         setEmployee(res.data);
-        setFullName(String(res.data.user));
-        setAddress(String(res.data.user));
-        setSalary(String(res.data.user));
-        setVacation(String(res.data.user));
-        setSickDays(String(res.data.user));
-        setDateJoined(String(res.data.user));
+        setFirstName(String(res.data.user.first_name));
+        setLastName(String(res.data.user.last_name));
+        setAddress(' ');
+        setSalary(' ');
+        setVacation(' ');
+        setSickDays(' ');
+        setDateJoined(' ');
       } catch (e) {
         console.log(e);
       }
@@ -43,7 +45,8 @@ const EmployeeEditPage: NextPage = () => {
 
   let valid = false;
   if (
-    fullName.length > 0 &&
+    firstName.length > 0 &&
+    lastName.length > 0 &&
     address.length > 0 &&
     salary.length > 0 &&
     vacation.length > 0 &&
@@ -63,9 +66,14 @@ const EmployeeEditPage: NextPage = () => {
           <div className={styles['field-container']}>
             <TextField
               name="Name"
-              placeholder={fullName}
+              placeholder={firstName + ' ' + lastName}
               onChange={(input) => {
-                input.length > 0 ? setFullName(input) : setFullName(String(employee.user));
+                input.length > 0
+                  ? input.split(' ').length > 1
+                    ? (setFirstName(input.split(' ')[0]), setLastName(input.split(' ')[1]))
+                    : (setFirstName(String(input.split(' ')[0])), setLastName(' '))
+                  : (setFirstName(String(employee.user.first_name)),
+                    setLastName(String(employee.user.last_name)));
               }}
             />
           </div>
@@ -74,7 +82,7 @@ const EmployeeEditPage: NextPage = () => {
               name="Address"
               placeholder={address}
               onChange={(input) => {
-                input.length > 0 ? setAddress : setAddress(String(employee.user));
+                input.length > 0 ? setAddress : setAddress(' ');
               }}
             />
           </div>
@@ -83,7 +91,7 @@ const EmployeeEditPage: NextPage = () => {
               name="Salary"
               placeholder={salary}
               onChange={(input) => {
-                input.length > 0 ? setSalary : setSalary(String(employee.user));
+                input.length > 0 ? setSalary : setSalary(' ');
               }}
             />
           </div>
@@ -92,7 +100,7 @@ const EmployeeEditPage: NextPage = () => {
               name="Vacation"
               placeholder={vacation}
               onChange={(input) => {
-                input.length > 0 ? setVacation : setVacation(String(employee.user));
+                input.length > 0 ? setVacation : setVacation(' ');
               }}
             />
           </div>
@@ -101,7 +109,7 @@ const EmployeeEditPage: NextPage = () => {
               name="Sick Days"
               placeholder={sickDays}
               onChange={(input) => {
-                input.length > 0 ? setSickDays : setSickDays(String(employee.user));
+                input.length > 0 ? setSickDays : setSickDays(' ');
               }}
             />
           </div>
@@ -110,7 +118,7 @@ const EmployeeEditPage: NextPage = () => {
               name="Date Joined"
               placeholder={dateJoined}
               onChange={(input) => {
-                input.length > 0 ? setDateJoined : setDateJoined(String(employee.user));
+                input.length > 0 ? setDateJoined : setDateJoined(' ');
               }}
             />
           </div>
@@ -120,7 +128,7 @@ const EmployeeEditPage: NextPage = () => {
           disabled={!valid}
           width="80%"
           onClick={() => {
-            console.log(fullName);
+            console.log(firstName + ' ' + lastName);
           }}
         />
       </div>

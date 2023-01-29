@@ -31,6 +31,7 @@ const EmployeeDetailsPage: NextPage = () => {
     getEmployee();
   }, []);
 
+  console.log(employee);
   function noChange(): void {
     throw new Error('Function not implemented.');
   }
@@ -76,11 +77,11 @@ const EmployeeDetailsPage: NextPage = () => {
           </div>
           <div className={styles['field-container']}>
             <FieldLabel label="Vacations Taken" />
-            <TextInput value={employee.user} disabled onChange={noChange} />
+            <TextInput value={''} disabled onChange={noChange} />
           </div>
           <div className={styles['field-container']}>
             <FieldLabel label="Date Joined" />
-            <TextInput value={employee.user} disabled onChange={noChange} />
+            <TextInput value={''} disabled onChange={noChange} />
           </div>
         </div>
       </div>
