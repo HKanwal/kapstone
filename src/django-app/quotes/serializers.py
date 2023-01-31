@@ -48,5 +48,5 @@ class QuoteRequestSerializer(serializers.ModelSerializer):
         uploaded_images = validated_data.pop("uploaded_images")
         quote_request = QuoteRequest.objects.create(**validated_data)
         for image in uploaded_images:
-            QR_image = ImageQuote.objects.create(quote_request=quote_request, image=image)
+            QR_image = ImageQuote.objects.create(quote_request=quote_request, photo=image)
         return quote_request
