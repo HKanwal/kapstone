@@ -1,19 +1,53 @@
 from rest_framework import serializers
 
-from .models import Shop, Address, Invitation, Service, AppointmentSlot, Appointment
+from .models import (
+    Shop,
+    Address,
+    Invitation,
+    Service,
+    ServicePart,
+    AppointmentSlot,
+    Appointment,
+    WorkOrder,
+)
 from accounts.serializers import UserViewSerializer
+from vehicles.serializers import PartSerializer
+
+
+class ServicePartSerializer(serializers.ModelSerializer):
+    price = serializers.DecimalField(default=0, max_digits=10, decimal_places=2)
+    quantity = serializers.IntegerField(default=1)
+
+    class Meta:
+        model = ServicePart
+        fields = "__all__"
+        read_only_fields = ("id",)
 
 
 class ServiceSerializer(serializers.ModelSerializer):
+    price = serializers.DecimalField(default=0, max_digits=10, decimal_places=2)
+    parts = PartSerializer(many=True)
+
     class Meta:
         model = Service
         fields = "__all__"
+        read_only_fields = ("id",)
+
+
+class ServiceUpdateSerializer(serializers.ModelSerializer):
+    price = serializers.DecimalField(default=0, max_digits=10, decimal_places=2)
+
+    class Meta:
+        model = Service
+        fields = "__all__"
+        read_only_fields = ("id", "shop")
 
 
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields = "__all__"
+        read_only_fields = ("id",)
 
 
 class ShopSerializer(serializers.ModelSerializer):
@@ -87,3 +121,15 @@ class AppointmentSlotListSerializer(serializers.ModelSerializer):
     class Meta:
         model = AppointmentSlot
         fields = ("id", "shop", "start_time", "end_time")
+
+
+class WorkOrderSerializer(serializers.ModelSerializer):
+    odometer_reading_before = serializers.IntegerField(default=0)
+    odometer_reading_after = serializers.IntegerField(default=0)
+    discount = serializers.DecimalField(max_digits=5, decimal_places=2, default=0)
+    grand_total = serializers.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    class Meta:
+        model = WorkOrder
+        fields = "__all__"
+        read_only_fields = ("id",)
