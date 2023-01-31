@@ -17,9 +17,20 @@ const EmployeeDetailsPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const [employee, setEmployee] = useState<info>([]);
+  const [employee, setEmployee] = useState<info>({
+    id: '',
+    user: {
+      id: '',
+      username: '',
+      first_name: '',
+      last_name: '',
+      email: '',
+      phone_number: '',
+    },
+  });
 
   useEffect(() => {
+    if (!id) return;
     const getEmployee = async () => {
       try {
         const res = await axios.get(`${apiUrl}/accounts/shop-owner/${id}`);
@@ -29,9 +40,8 @@ const EmployeeDetailsPage: NextPage = () => {
       }
     };
     getEmployee();
-  }, []);
+  }, [id]);
 
-  console.log(employee);
   function noChange(): void {
     throw new Error('Function not implemented.');
   }
@@ -59,21 +69,25 @@ const EmployeeDetailsPage: NextPage = () => {
           <span className={styles['section-header']}>Employee Details</span>
           <div className={styles['field-container']}>
             <FieldLabel label="Name" />
-            <TextInput value={employee.user} disabled onChange={noChange} />
+            <TextInput
+              value={employee.user.first_name + ' ' + employee.user.last_name}
+              disabled
+              onChange={noChange}
+            />
           </div>
 
           <div className={styles['field-container']}>
             <FieldLabel label="Phone Number" />
-            <TextInput value={employee.user} disabled onChange={noChange} />
+            <TextInput value={employee.user.phone_number} disabled onChange={noChange} />
           </div>
 
           <div className={styles['field-container']}>
             <FieldLabel label="Email" />
-            <TextInput value={employee.user} disabled onChange={noChange} />
+            <TextInput value={employee.user.email} disabled onChange={noChange} />
           </div>
           <div className={styles['field-container']}>
             <FieldLabel label="Salary" />
-            <TextInput value={employee.user} disabled onChange={noChange} />
+            <TextInput value={employee.salary} disabled onChange={noChange} />
           </div>
           <div className={styles['field-container']}>
             <FieldLabel label="Vacations Taken" />

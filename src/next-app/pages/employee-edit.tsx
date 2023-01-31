@@ -7,6 +7,7 @@ import styles from '../styles/pages/CreateEmployee.module.css';
 import apiUrl from '../constants/api-url';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import { userAgent } from 'next/server';
 
 type info = {
   [key: string]: any;
@@ -18,7 +19,7 @@ const EmployeeEditPage: NextPage = () => {
   const [employee, setEmployee] = useState<info>([]);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [address, setAddress] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [salary, setSalary] = useState('');
   const [vacation, setVacation] = useState('');
   const [sickDays, setSickDays] = useState('');
@@ -31,7 +32,7 @@ const EmployeeEditPage: NextPage = () => {
         setEmployee(res.data);
         setFirstName(String(res.data.user.first_name));
         setLastName(String(res.data.user.last_name));
-        setAddress(' ');
+        setPhoneNumber(String(res.data.user.phone_number) + ' ');
         setSalary(' ');
         setVacation(' ');
         setSickDays(' ');
@@ -47,7 +48,7 @@ const EmployeeEditPage: NextPage = () => {
   if (
     firstName.length > 0 &&
     lastName.length > 0 &&
-    address.length > 0 &&
+    phoneNumber.length > 0 &&
     salary.length > 0 &&
     vacation.length > 0 &&
     sickDays.length > 0 &&
@@ -55,6 +56,33 @@ const EmployeeEditPage: NextPage = () => {
   ) {
     valid = true;
   }
+
+  const updateEmployee = async () => {
+    // console.log(firstName + ' ' + lastName);
+    // setEmployee((prevEmployee) => {
+    //   return {
+    //     ...prevEmployee,
+    //     user: {
+    //       ...prevEmployee.user,
+    //       first_name: firstName,
+    //       last_name: lastName,
+    //       phone_number: phoneNumber,
+    //     },
+    //   };
+    // });
+    // console.log(employee);
+    try {
+      const res = await axios.put(`${apiUrl}/accounts/shop-owner/${id}`, {
+        user: {
+          first_name: firstName,
+          last_name: lastName,
+          phone_number: phoneNumber,
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -79,10 +107,10 @@ const EmployeeEditPage: NextPage = () => {
           </div>
           <div className={styles['field-container']}>
             <TextField
-              name="Address"
-              placeholder={address}
+              name="Phone Number"
+              placeholder={phoneNumber}
               onChange={(input) => {
-                input.length > 0 ? setAddress : setAddress(' ');
+                input.length > 0 ? setPhoneNumber : setPhoneNumber(employee.user.phone_number);
               }}
             />
           </div>
@@ -128,7 +156,11 @@ const EmployeeEditPage: NextPage = () => {
           disabled={!valid}
           width="80%"
           onClick={() => {
-            console.log(firstName + ' ' + lastName);
+            updateEmployee();
+            router.push({
+              pathname: 'employee-details',
+              query: { id: id },
+            });
           }}
         />
       </div>
