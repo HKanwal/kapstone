@@ -1,5 +1,6 @@
 import type { NextPage } from 'next';
 import Button from '../components/Button';
+import DropdownField from '../components/DropdownField';
 import TextField from '../components/TextField';
 import Header from '../components/Header';
 import styles from '../styles/pages/CreateAccount.module.css';
@@ -7,6 +8,8 @@ import { useMutation } from 'react-query';
 import { RegistrationErrResponse, registrationFn } from '../utils/api';
 import { useRouter } from 'next/router';
 import { useForm } from '../hooks/useForm';
+
+type accountTypes = 'shop_owner' | 'employee' | 'customer';
 
 const CreateAccountPage: NextPage = () => {
   const router = useRouter();
@@ -21,6 +24,7 @@ const CreateAccountPage: NextPage = () => {
       email: '',
       username: '',
       password: '',
+      type: '',
     },
     validationSchema: {
       firstName: ['required'],
@@ -29,22 +33,32 @@ const CreateAccountPage: NextPage = () => {
       email: ['required', 'email'],
       username: ['required'],
       password: ['required'],
+      type: ['required']
     },
     onSubmit: (values, setErrors) => {
+      console.log(values);
+      let accountType = 'customer' as accountTypes;
+
+      if (values.type === 'Shop Owner') {
+        accountType = 'shop_owner';
+      }
       mutation.mutate(
         {
           email: values.email,
           username: values.username,
           password: values.password,
           re_password: values.password,
-          type: 'shop_owner',
+          type: accountType,
           first_name: values.firstName || undefined,
           last_name: values.lastName || undefined,
         },
         {
           onSuccess(data, variables, context) {
             if (data.ok) {
-              router.push('/create-shop');
+              if (accountType === 'shop_owner') {
+                router.push('/create-shop');
+              }
+              router.push('dashboard');
             } else {
               data.json().then((response: RegistrationErrResponse) => {
                 let errors: { email: string[]; username: string[]; password: string[] } = {
@@ -135,6 +149,15 @@ const CreateAccountPage: NextPage = () => {
             onChange={form.handleChange('password')}
             errors={form.errors.password.length === 0 ? undefined : new Set(form.errors.password)}
             onBlur={form.handleBlur('password')}
+            required
+          />
+        </div>
+        <div className={styles['field-container']}>
+          <DropdownField
+            name="Type"
+            placeholder="Select Account Type"
+            items={['Customer', 'Shop Owner']}
+            onSelect={form.handleChange('type')}
             required
           />
         </div>
