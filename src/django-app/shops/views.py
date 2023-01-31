@@ -16,14 +16,26 @@ from .serializers import (
     ShopWriteSerializer,
     AddressSerializer,
     InvitationSerializer,
+    ServicePartSerializer,
     ServiceSerializer,
+    ServiceUpdateSerializer,
     AppointmentSerializer,
     AppointmentCreateSerializer,
     AppointmentSlotSerializer,
     AppointmentSlotListSerializer,
+    WorkOrderSerializer,
 )
-from .models import Shop, Address, Invitation, Service, AppointmentSlot, Appointment
-from .policies import ShopAccessPolicy
+from .models import (
+    Shop,
+    Address,
+    Invitation,
+    Service,
+    ServicePart,
+    AppointmentSlot,
+    Appointment,
+    WorkOrder,
+)
+from .policies import ShopAccessPolicy, AddressAccessPolicy, ServiceAccessPolicy
 
 
 class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
@@ -39,7 +51,8 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         return ShopSerializer
 
 
-class AddressViewSet(viewsets.ModelViewSet):
+class AddressViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
+    access_policy = AddressAccessPolicy
     queryset = Address.objects.all().order_by("street")
     serializer_class = AddressSerializer
 
@@ -49,9 +62,22 @@ class InvitationViewSet(viewsets.ModelViewSet):
     serializer_class = InvitationSerializer
 
 
-class ServiceViewSet(viewsets.ModelViewSet):
+class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
+    access_policy = ServiceAccessPolicy
     queryset = Service.objects.all()
-    serializer_class = ServiceSerializer
+
+    def get_queryset(self):
+        return self.access_policy.scope_queryset(self.request, self.queryset)
+
+    def get_serializer_class(self):
+        if self.action in ["update", "partial_update"]:
+            return ServiceUpdateSerializer
+        return ServiceSerializer
+
+
+class ServicePartViewSet(viewsets.ModelViewSet):
+    queryset = ServicePart.objects.all()
+    serializer_class = ServicePartSerializer
 
 
 class AppointmentViewSet(viewsets.ModelViewSet):
@@ -219,3 +245,8 @@ class AppointmentSlotViewSet(viewsets.ModelViewSet):
                 serializer = self.get_serializer_class()(q_set, many=True)
                 query_list.append(serializer.data)
         return Response({"slots": query_list})
+
+
+class WorkOrderViewSet(viewsets.ModelViewSet):
+    queryset = WorkOrder.objects.all()
+    serializer_class = WorkOrderSerializer
