@@ -44,3 +44,81 @@ class ShopAccessPolicy(AccessPolicy):
 
     def is_owner(self, request, view, action):
         return request.user == Shop.objects.get(id=view.kwargs.get("pk")).shop_owner
+
+
+class AddressAccessPolicy(AccessPolicy):
+    statements = [
+        {
+            "action": ["list", "retrieve"],
+            "principal": "*",
+            "effect": "allow",
+        },
+        {
+            "action": ["create"],
+            "principal": "authenticated",
+            "effect": "allow",
+        },
+        {
+            "action": ["partial_update", "destroy"],
+            "principal": "authenticated",
+            "effect": "allow",
+            # TODO: add condition to allow only the creators of an address
+            # This requires adding field to address for the user
+        },
+        {
+            "action": ["update"],
+            "principal": "*",
+            "effect": "deny",
+        },
+    ]
+
+
+class ServiceAccessPolicy(AccessPolicy):
+    statements = [
+        {
+            "action": ["list", "retrieve"],
+            "principal": "*",
+            "effect": "allow",
+        },
+        {
+            "action": ["create"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition_expression": [
+                "(user_type_is_shop_owner or user_type_is_employee)"
+            ],
+        },
+        {
+            "action": ["partial_update", "destroy"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition": ["is_shop_related"],
+        },
+        {
+            "action": ["update"],
+            "principal": "*",
+            "effect": "deny",
+        },
+    ]
+
+    @classmethod
+    def scope_queryset(cls, request, qs):
+        if request.user.is_authenticated:
+            if request.user.type == "shop_owner":
+                return qs.filter(shop__shop_owner=request.user)
+            elif request.user.type == "employee":
+                employee_shop = EmployeeData.objects.get(user=request.user).shop
+                return qs.filter(shop=employee_shop)
+        return qs
+
+    def user_type_is_shop_owner(self, request, view, action):
+        return request.user.type == "shop_owner"
+
+    def user_type_is_employee(self, request, view, action):
+        return request.user.type == "employee"
+
+    def is_shop_related(self, request, view, action):
+        service = view.get_object()
+        return service.shop.shop_owner == request.user or service.shop.has_employee(
+            request.user.id
+        )
