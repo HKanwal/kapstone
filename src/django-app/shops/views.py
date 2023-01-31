@@ -6,12 +6,14 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
+from rest_access_policy import AccessViewSetMixin
 
 from datetime import datetime, timedelta
 import json
 
 from .serializers import (
     ShopSerializer,
+    ShopWriteSerializer,
     AddressSerializer,
     InvitationSerializer,
     ServiceSerializer,
@@ -21,11 +23,20 @@ from .serializers import (
     AppointmentSlotListSerializer,
 )
 from .models import Shop, Address, Invitation, Service, AppointmentSlot, Appointment
+from .policies import ShopAccessPolicy
 
 
-class ShopViewSet(viewsets.ModelViewSet):
+class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
+    access_policy = ShopAccessPolicy
     queryset = Shop.objects.all().order_by("name")
-    serializer_class = ShopSerializer
+
+    def get_queryset(self):
+        return self.access_policy.scope_queryset(self.request, self.queryset)
+
+    def get_serializer_class(self):
+        if self.action in ["create", "update", "partial_update"]:
+            return ShopWriteSerializer
+        return ShopSerializer
 
 
 class AddressViewSet(viewsets.ModelViewSet):
