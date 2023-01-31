@@ -30,6 +30,18 @@ class ShopSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ShopWriteSerializer(serializers.ModelSerializer):
+    shop_owner = serializers.PrimaryKeyRelatedField(
+        read_only=True, default=serializers.CurrentUserDefault()
+    )
+    num_bays = serializers.IntegerField(default=0, initial=0)
+
+    class Meta:
+        model = Shop
+        fields = "__all__"
+        read_only_fields = ("id", "shop_owner")
+
+
 class ShopOverviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shop
