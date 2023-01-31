@@ -6,7 +6,7 @@ from .serializers import (
     QuoteRequestSerializer,
     QuoteSerializer,
     QuoteRequestWriteSerializer,
-    QuoteWriteSerializer
+    QuoteWriteSerializer,
 )
 from .models import Quote, QuoteRequest
 from .policies import QuoteAccessPolicy, QuoteRequestAccessPolicy
@@ -20,7 +20,7 @@ class QuoteViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         return self.access_policy.scope_queryset(self.request, self.queryset)
 
     def get_serializer_class(self):
-        if self.action in ["create", "update"]:
+        if self.action in ["create", "update", "partial_update"]:
             return QuoteWriteSerializer
         return QuoteSerializer
 
@@ -33,6 +33,6 @@ class QuoteRequestViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         return self.access_policy.scope_queryset(self.request, self.queryset)
 
     def get_serializer_class(self):
-        if self.action in ["create", "update"]:
+        if self.action in ["create", "update", "partial_update"]:
             return QuoteRequestWriteSerializer
         return QuoteRequestSerializer
