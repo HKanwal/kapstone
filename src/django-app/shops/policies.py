@@ -122,3 +122,96 @@ class ServiceAccessPolicy(AccessPolicy):
         return service.shop.shop_owner == request.user or service.shop.has_employee(
             request.user.id
         )
+
+
+class AppointmentAccessPolicy(AccessPolicy):
+    statements = [
+        {
+            "action": ["list", "retrieve"],
+            "principal": "authenticated",
+            "effect": "allow",
+        },
+        {
+            "action": ["create"],
+            "principal": "authenticated",
+            "effect": "allow",
+        },
+        {
+            "action": ["partial_update", "destroy"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition_expression": ["(is_owner or is_shop_related)"],
+        },
+        {
+            "action": ["update"],
+            "principal": "*",
+            "effect": "deny",
+        },
+    ]
+
+    @classmethod
+    def scope_queryset(cls, request, qs):
+        if request.user.type == "shop_owner":
+            return qs.filter(shop__shop_owner=request.user)
+        elif request.user.type == "employee":
+            employee_shop = EmployeeData.objects.get(user=request.user).shop
+            return qs.filter(shop=employee_shop)
+        elif request.user.type == "customer":
+            return qs.filter(customer=request.user)
+        return qs
+
+    def is_shop_related(self, request, view, action):
+        appointment = view.get_object()
+        return (
+            appointment.shop.shop_owner == request.user
+            or appointment.shop.has_employee(request.user.id)
+        )
+
+    def is_owner(self, request, view, action):
+        appointment = view.get_object()
+        return request.user == appointment.customer
+
+
+class AppointmentSlotAccessPolicy(AccessPolicy):
+    statements = [
+        {
+            "action": ["list", "retrieve"],
+            "principal": "*",
+            "effect": "allow",
+        },
+        {
+            "action": ["create", "destroy"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition": ["is_shop_related"],
+        },
+        {
+            "action": ["partial_update"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition": ["is_shop_related"],
+        },
+        {
+            "action": ["update"],
+            "principal": "*",
+            "effect": "deny",
+        },
+    ]
+
+    @classmethod
+    def scope_queryset(cls, request, qs):
+        if request.user.is_authenticated:
+            if request.user.type == "shop_owner":
+                return qs.filter(shop__shop_owner=request.user)
+            elif request.user.type == "employee":
+                employee_shop = EmployeeData.objects.get(user=request.user).shop
+                return qs.filter(shop=employee_shop)
+        return qs
+
+    def is_shop_related(self, request, view, action):
+        if action == "create":
+            shop = Shop.objects.get(id=request.data.get("shop"))
+        else:
+            appointment_slot = view.get_object()
+            shop = appointment_slot.shop
+        return shop.shop_owner == request.user or shop.has_employee(request.user.id)
