@@ -1,6 +1,8 @@
 from djoser.serializers import (
     UserCreatePasswordRetypeSerializer as BaseUserCreateSerializer,
 )
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from djoser.serializers import TokenSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from django.db import transaction
@@ -106,3 +108,10 @@ class CustomerDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerData
         fields = "__all__"
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        data["user_type"] = self.user.type
+        return data
