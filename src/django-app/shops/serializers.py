@@ -109,12 +109,28 @@ class AppointmentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = "__all__"
+        read_only_fields = ("id",)
+
+
+class AppointmentUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Appointment
+        fields = "__all__"
+        read_only_fields = ("id", "shop", "customer")
 
 
 class AppointmentSlotSerializer(serializers.ModelSerializer):
     class Meta:
         model = AppointmentSlot
         fields = "__all__"
+        read_only_fields = ("id",)
+
+
+class AppointmentSlotUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AppointmentSlot
+        fields = "__all__"
+        read_only_fields = ("id", "shop")
 
 
 class AppointmentSlotListSerializer(serializers.ModelSerializer):
