@@ -21,8 +21,10 @@ from .serializers import (
     ServiceUpdateSerializer,
     AppointmentSerializer,
     AppointmentCreateSerializer,
+    AppointmentUpdateSerializer,
     AppointmentSlotSerializer,
     AppointmentSlotListSerializer,
+    AppointmentSlotUpdateSerializer,
     WorkOrderSerializer,
 )
 from .models import (
@@ -35,7 +37,13 @@ from .models import (
     Appointment,
     WorkOrder,
 )
-from .policies import ShopAccessPolicy, AddressAccessPolicy, ServiceAccessPolicy
+from .policies import (
+    ShopAccessPolicy,
+    AddressAccessPolicy,
+    ServiceAccessPolicy,
+    AppointmentAccessPolicy,
+    AppointmentSlotAccessPolicy,
+)
 
 
 class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
@@ -80,14 +88,22 @@ class ServicePartViewSet(viewsets.ModelViewSet):
     serializer_class = ServicePartSerializer
 
 
-class AppointmentViewSet(viewsets.ModelViewSet):
+class AppointmentViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
+    access_policy = AppointmentAccessPolicy
     queryset = Appointment.objects.all()
-    serializer_class = AppointmentSerializer
+
+    def get_queryset(self):
+        queryset = self.access_policy.scope_queryset(self.request, self.queryset)
+        queryset = self._filter_by_shop(queryset)
+        queryset = self._filter_by_status(queryset)
+        return queryset
 
     def get_serializer_class(self):
-        if self.action == "create":
+        if self.action in ["create"]:
             return AppointmentCreateSerializer
-        return super().get_serializer_class()
+        elif self.action in ["update", "partial_update"]:
+            return AppointmentUpdateSerializer
+        return AppointmentSerializer
 
     def _filter_by_shop(self, queryset):
         shop_id = self.request.GET.get("shop")
@@ -102,12 +118,6 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             return queryset.filter(status=status)
         else:
             return queryset
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        queryset = self._filter_by_shop(queryset)
-        queryset = self._filter_by_status(queryset)
-        return queryset
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
@@ -178,14 +188,24 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             )
 
 
-class AppointmentSlotViewSet(viewsets.ModelViewSet):
+class AppointmentSlotViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
+    access_policy = AppointmentSlotAccessPolicy
     queryset = AppointmentSlot.objects.all()
-    serializer_class = AppointmentSlotSerializer
 
     def get_serializer_class(self):
-        if self.action == "list":
+        if self.action in ["list"]:
             return AppointmentSlotListSerializer
+        elif self.action in ["update", "partial_update"]:
+            return AppointmentSlotUpdateSerializer
         return AppointmentSlotSerializer
+
+    def get_queryset(self):
+        queryset = self.access_policy.scope_queryset(self.request, self.queryset)
+        queryset = self._filter_by_shop(queryset)
+        queryset = self._filter_by_start_date(queryset)
+        queryset = self._filter_by_end_date(queryset)
+        queryset = self._filter_by_available_appointments(queryset)
+        return queryset
 
     def _filter_by_shop(self, queryset):
         shop_id = self.request.GET.get("shop")
@@ -221,14 +241,6 @@ class AppointmentSlotViewSet(viewsets.ModelViewSet):
                 return queryset
         except:
             return queryset
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        queryset = self._filter_by_shop(queryset)
-        queryset = self._filter_by_start_date(queryset)
-        queryset = self._filter_by_end_date(queryset)
-        queryset = self._filter_by_available_appointments(queryset)
-        return queryset
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
