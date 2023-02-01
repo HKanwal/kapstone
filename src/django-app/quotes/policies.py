@@ -68,7 +68,10 @@ class QuoteAccessPolicy(AccessPolicy):
         )
 
     def has_quote_create_permission(self, request, view, action):
-        quote_request = QuoteRequest.objects.get(id=request.data.get("quote_request"))
+        quote_request_id = request.data.get("quote_request", None)
+        if quote_request_id is None:
+            return False
+        quote_request = QuoteRequest.objects.get(id=quote_request_id)
         shop = quote_request.shop
         return (
             request.user.type == "shop_owner" and shop.shop_owner == request.user
@@ -122,7 +125,7 @@ class QuoteRequestAccessPolicy(AccessPolicy):
         quote_request = view.get_object()
         return (
             quote_request.shop.shop_owner == request.user
-            or request.user.id in quote_request.shop.employees
+            or quote_request.shop.has_employee(request.user.id)
         )
 
     def is_owner(self, request, view, action):
