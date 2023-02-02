@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '../styles/components/Navbar.module.css';
 import Button from './Button';
 import ProfileModal from './ProfileModal';
@@ -7,13 +7,14 @@ import Link from 'next/link';
 import { CustomerNavbarData, ShopOwnerNavbarData } from '../constants/NavbarData';
 import { IconContext } from 'react-icons';
 import Cookies from 'js-cookie';
-import { AuthContext, accountTypes, Jwt } from '../utils/api';
+import { Jwt } from '../utils/api';
 import { useRouter } from 'next/router';
 
 type NavbarProps = {
   authData: Jwt;
-  setAuthData: (jwt: Jwt) => void;
   onLogin: (jwt: Jwt) => void;
+  headerName: string;
+  modalBody: JSX.Element[];
 }
 
 const Navbar = (props: NavbarProps) => {
@@ -67,7 +68,7 @@ const Navbar = (props: NavbarProps) => {
           </div>
           <div className={styles['btn-contianer']}>
             <IoMdContact className={styles['profile-btn']} onClick={toggleProfile} />
-            {profile ? <ProfileModal authData={props.authData} setAuthData={props.setAuthData} onLogin={props.onLogin} /> : null}
+            {profile ? <ProfileModal headerName={props.headerName} modalBody={props.modalBody} /> : null}
             <div className={styles['logout-btn']}>
               <Button title={buttonText} width="120%" onClick={logout} />
             </div>
