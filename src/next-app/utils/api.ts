@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { createContext, useState } from 'react';
 import apiUrl from '../constants/api-url';
 
 /** Mutations */
@@ -40,9 +40,10 @@ type LoginBody = {
 type Jwt = {
   refresh: string;
   access: string;
+  user_type: 'shop_owner' | 'employee' | 'customer';
 };
 
-const AuthContext = createContext({ refresh: '', access: '' });
+const AuthContext = createContext<Jwt>({ refresh: '', access: '', user_type: 'customer'});
 
 function loginFn(loginBody: LoginBody) {
   return fetch(`${apiUrl}/auth/jwt/create/`, {

@@ -1,13 +1,48 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import styles from '../styles/components/Navbar.module.css';
 import Button from './Button';
 import ProfileModal from './ProfileModal';
 import { IoMdMenu, IoMdContact } from 'react-icons/io';
 import Link from 'next/link';
-import { NavbarData } from '../constants/NavbarData';
+import { CustomerNavbarData, ShopOwnerNavbarData } from '../constants/NavbarData';
 import { IconContext } from 'react-icons';
+import Cookies from 'js-cookie';
+import { AuthContext } from '../utils/api';
+import { useRouter } from 'next/router';
 
-function Navbar() {
+type NavbarProps = {
+};
+
+const Navbar = (props: NavbarProps) => {
+  const router = useRouter();
+  const [authData, setAuthData] = useState(useContext(AuthContext));
+  const [NavbarData, setNavBarData] = useState(CustomerNavbarData);
+  const [buttonText, setButtonText] = useState("Login");
+
+  useEffect(() => {
+    if (authData.access !== '') {
+      setButtonText("Logout");
+      if (authData.user_type === 'shop_owner') {
+
+      }
+    } else if (Cookies.get('access') && Cookies.get('access') !== '') {
+      setButtonText("Logout");
+      setAuthData(
+        {
+          'access': Cookies.get('access'),
+          'refresh': Cookies.get('refresh'),
+          'user_type': Cookies.get('user_type'),
+        }
+      )
+    }
+
+    if (authData.user_type === 'shop_owner') {
+      setNavBarData(ShopOwnerNavbarData);
+    } else {
+      setNavBarData(CustomerNavbarData);
+    }
+  })
+
   const [sidebar, setSidebar] = useState(false);
 
   const [profile, setProfile] = useState(false);
@@ -17,7 +52,14 @@ function Navbar() {
   const toggleProfile = () => setProfile((prevProfile) => !prevProfile);
 
   const logout = () => {
-    window.location.href = '/';
+    if (buttonText === 'Login') {
+      router.push('/login');
+    }
+
+    Cookies.remove('access');
+    Cookies.remove('refresh');
+    Cookies.remove('user_type');
+    router.push('/');
   };
 
   return (
@@ -31,7 +73,7 @@ function Navbar() {
             <IoMdContact className={styles['profile-btn']} onClick={toggleProfile} />
             {profile ? <ProfileModal /> : null}
             <div className={styles['logout-btn']}>
-              <Button title="Logout" width="120%" onClick={logout} />
+              <Button title={buttonText} width="120%" onClick={logout} />
             </div>
           </div>
         </div>
