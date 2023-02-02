@@ -14,6 +14,7 @@ from shops.models import Invitation, Shop
 
 class UserCreateSerializer(BaseUserCreateSerializer):
     invite_key = serializers.UUIDField(write_only=True, required=False)
+    tokens = serializers.SerializerMethodField(method_name="get_tokens")
 
     class Meta(BaseUserCreateSerializer.Meta):
         model = User
@@ -25,7 +26,16 @@ class UserCreateSerializer(BaseUserCreateSerializer):
             "last_name",
             "type",
             "invite_key",
+            "tokens",
         )
+
+    def get_tokens(self, obj):
+        refresh = TokenObtainPairSerializer.get_token(obj)
+        tokens = {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }
+        return tokens
 
     def validate(self, attrs):
         """
