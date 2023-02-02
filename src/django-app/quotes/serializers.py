@@ -44,6 +44,7 @@ class QuoteRequestSerializer(serializers.ModelSerializer):
             "preferred_date",
             "preferred_time",
             "description",
+            "vehicle",
         )
         read_only_fields = ("id", "customer", "shop")
 
@@ -62,6 +63,7 @@ class QuoteRequestWriteSerializer(serializers.ModelSerializer):
             "preferred_date",
             "preferred_time",
             "description",
+            "vehicle",
         )
         read_only_fields = ("id",)
         extra_kwargs = {"customer": {"source": "user"}}
