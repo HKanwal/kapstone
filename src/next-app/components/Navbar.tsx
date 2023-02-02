@@ -12,12 +12,12 @@ import { useRouter } from 'next/router';
 
 type NavbarProps = {
   authData: Jwt;
+  setAuthData: (jwt: Jwt) => void;
   onLogin: (jwt: Jwt) => void;
 }
 
-const Navbar = (props: any) => {
+const Navbar = (props: NavbarProps) => {
   const router = useRouter();
-  // const [authData, setAuthData] = useState(useContext(AuthContext));
   const [NavbarData, setNavBarData] = useState(CustomerNavbarData);
   const [buttonText, setButtonText] = useState("Login");
   const [sidebar, setSidebar] = useState(false);

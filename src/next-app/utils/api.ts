@@ -73,7 +73,6 @@ const refreshToken = (props: refreshTokenProps) => {
       'Content-Type': 'application/json; charset=UTF-8',
     },
   }).then((response) => response.json().then((response) => {
-    console.log(response);
     props.setAuthData(
       {
         'access': response.access,

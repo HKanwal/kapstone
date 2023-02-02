@@ -7,14 +7,6 @@ import { AuthContext, accountTypes } from '../utils/api';
 import apiUrl from '../constants/api-url';
 import Cookies from 'js-cookie';
 
-// export async function getServerSideProps(context: any) {
-//   console.log('test0', AuthContext);
-//   console.log('test0');
-//   return {
-//     props: { message: "Welcome to the About Page" },
-//   }
-// }
-
 const Dashboard: NextPage = (props: any) => {
   const [authData, setAuthData] = useState(useContext(AuthContext));
 
@@ -30,32 +22,6 @@ const Dashboard: NextPage = (props: any) => {
       )
     }
   }, [])
-
-  // useEffect(() => {
-  //   fetch(`${apiUrl}/auth/users/me`, {
-  //     method: 'GET',
-  //     headers: {
-  //       'Authorization': `JWT ${props.authData.access}`,
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //     },
-  //   }).then((response) => response.json().then((response) => {
-  //     console.log(response);
-  //     if (response.type === 'client_error' && response.errors[0].code === 'token_not_valid') {
-  //       fetch(`${apiUrl}/auth/jwt/refresh`, {
-  //         method: 'POST',
-  //         body: JSON.stringify(
-  //           { 'refresh': props.authData.refresh }
-  //         ),
-  //         headers: {
-  //           'Content-Type': 'application/json; charset=UTF-8',
-  //         },
-  //       }).then((response) => response.json().then((response) => {
-  //         console.log(response);
-  //         props.onLogin(response);
-  //       }))
-  //     }
-  //   }))
-  // })
 
   return (
     <div id={styles.wrapper}>

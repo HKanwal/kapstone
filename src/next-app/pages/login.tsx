@@ -35,7 +35,6 @@ const LoginPage: NextPage<LoginPageProps, {}> = (props) => {
         { username: values.username, password: values.password },
         {
           onSuccess(data, variables, context) {
-            console.log(data);
             if (data.ok) {
               data.json().then((response: Jwt) => {
                 props.onLogin(response);

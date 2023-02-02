@@ -38,7 +38,6 @@ const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
       type: ['required']
     },
     onSubmit: (values, setErrors) => {
-      console.log(values);
       let accountType = 'customer' as accountTypes;
 
       if (values.type === 'Shop Owner') {
