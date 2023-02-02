@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { CustomerNavbarData, ShopOwnerNavbarData } from '../constants/NavbarData';
 import { IconContext } from 'react-icons';
 import Cookies from 'js-cookie';
-import { AuthContext } from '../utils/api';
+import { AuthContext, accountTypes } from '../utils/api';
 import { useRouter } from 'next/router';
 
 type NavbarProps = {
@@ -29,9 +29,9 @@ const Navbar = (props: NavbarProps) => {
       setButtonText("Logout");
       setAuthData(
         {
-          'access': Cookies.get('access'),
-          'refresh': Cookies.get('refresh'),
-          'user_type': Cookies.get('user_type'),
+          'access': Cookies.get('access') as string,
+          'refresh': Cookies.get('refresh') as string,
+          'user_type': Cookies.get('user_type') as accountTypes,
         }
       )
     }

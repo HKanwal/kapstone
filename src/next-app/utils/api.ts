@@ -1,6 +1,8 @@
 import { createContext, useState } from 'react';
 import apiUrl from '../constants/api-url';
 
+export type accountTypes = 'shop_owner' | 'employee' | 'customer';
+
 /** Mutations */
 
 type RegistrationBody = {
@@ -10,7 +12,7 @@ type RegistrationBody = {
   re_password: string;
   first_name?: string;
   last_name?: string;
-  type: 'shop_owner' | 'employee' | 'customer';
+  type: accountTypes;
 };
 
 type RegistrationErrResponse = {
@@ -40,7 +42,7 @@ type LoginBody = {
 type Jwt = {
   refresh: string;
   access: string;
-  user_type: 'shop_owner' | 'employee' | 'customer';
+  user_type: accountTypes;
 };
 
 const AuthContext = createContext<Jwt>({ refresh: '', access: '', user_type: 'customer'});

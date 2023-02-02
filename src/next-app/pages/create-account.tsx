@@ -5,13 +5,15 @@ import TextField from '../components/TextField';
 import Header from '../components/Header';
 import styles from '../styles/pages/CreateAccount.module.css';
 import { useMutation } from 'react-query';
-import { RegistrationErrResponse, registrationFn } from '../utils/api';
+import { RegistrationErrResponse, registrationFn, Jwt, accountTypes } from '../utils/api';
 import { useRouter } from 'next/router';
 import { useForm } from '../hooks/useForm';
 
-type accountTypes = 'shop_owner' | 'employee' | 'customer';
+type CreateAccountPageProps = {
+  onLogin: (jwt: Jwt) => void;
+};
 
-const CreateAccountPage: NextPage = () => {
+const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
   const router = useRouter();
   const mutation = useMutation({
     mutationFn: registrationFn,
@@ -54,6 +56,8 @@ const CreateAccountPage: NextPage = () => {
         },
         {
           onSuccess(data, variables, context) {
+            console.log(data);
+            // props.onLogin(data); Use onLogin function to set JWT data and cookies
             if (data.ok) {
               if (accountType === 'shop_owner') {
                 router.push('/create-shop');
