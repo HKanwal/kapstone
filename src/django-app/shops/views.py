@@ -43,6 +43,7 @@ from .policies import (
     ServiceAccessPolicy,
     AppointmentAccessPolicy,
     AppointmentSlotAccessPolicy,
+    WorkOrderAccessPolicy,
 )
 
 
@@ -259,6 +260,13 @@ class AppointmentSlotViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         return Response({"slots": query_list})
 
 
-class WorkOrderViewSet(viewsets.ModelViewSet):
+class WorkOrderViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
+    access_policy = WorkOrderAccessPolicy
     queryset = WorkOrder.objects.all()
     serializer_class = WorkOrderSerializer
+
+    def get_queryset(self):
+        return self.access_policy.scope_queryset(self.request, self.queryset)
+
+    def get_serializer_class(self):
+        return WorkOrderSerializer
