@@ -57,5 +57,39 @@ function loginFn(loginBody: LoginBody) {
   });
 }
 
+type refreshTokenProps = {
+  authData: Jwt;
+  setAuthData: (jwt: Jwt) => void;
+  onLogin: (jwt: Jwt) => void;
+}
+
+const refreshToken = (props: refreshTokenProps) => {
+  fetch(`${apiUrl}/auth/jwt/refresh`, {
+    method: 'POST',
+    body: JSON.stringify(
+      { 'refresh': props.authData.refresh }
+    ),
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  }).then((response) => response.json().then((response) => {
+    console.log(response);
+    props.setAuthData(
+      {
+        'access': response.access,
+        'refresh': props.authData.refresh,
+        'user_type': props.authData.user_type,
+      }
+    )
+    props.onLogin(
+      {
+        'access': response.access,
+        'refresh': props.authData.refresh,
+        'user_type': props.authData.user_type,
+      }
+    )
+  }))
+}
+
 export type { RegistrationBody, RegistrationErrResponse, LoginBody, Jwt };
-export { registrationFn, loginFn, AuthContext };
+export { registrationFn, loginFn, AuthContext, refreshToken };

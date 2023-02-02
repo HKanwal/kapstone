@@ -7,51 +7,47 @@ import Link from 'next/link';
 import { CustomerNavbarData, ShopOwnerNavbarData } from '../constants/NavbarData';
 import { IconContext } from 'react-icons';
 import Cookies from 'js-cookie';
-import { AuthContext, accountTypes } from '../utils/api';
+import { AuthContext, accountTypes, Jwt } from '../utils/api';
 import { useRouter } from 'next/router';
 
 type NavbarProps = {
-};
+  authData: Jwt;
+  onLogin: (jwt: Jwt) => void;
+}
 
-const Navbar = (props: NavbarProps) => {
+const Navbar = (props: any) => {
   const router = useRouter();
-  const [authData, setAuthData] = useState(useContext(AuthContext));
+  // const [authData, setAuthData] = useState(useContext(AuthContext));
   const [NavbarData, setNavBarData] = useState(CustomerNavbarData);
   const [buttonText, setButtonText] = useState("Login");
+  const [sidebar, setSidebar] = useState(false);
+  const [profile, setProfile] = useState(false);
 
   useEffect(() => {
-    if (authData.access !== '') {
+    if (props.authData.access !== '') {
       setButtonText("Logout");
-      if (authData.user_type === 'shop_owner') {
-
-      }
     } else if (Cookies.get('access') && Cookies.get('access') !== '') {
       setButtonText("Logout");
-      setAuthData(
-        {
-          'access': Cookies.get('access') as string,
-          'refresh': Cookies.get('refresh') as string,
-          'user_type': Cookies.get('user_type') as accountTypes,
-        }
-      )
     }
-
-    if (authData.user_type === 'shop_owner') {
+    if (props.authData.user_type === 'shop_owner') {
       setNavBarData(ShopOwnerNavbarData);
+    } else if (props.authData.user_type === 'employee') {
+      // Need to figure out Employee Navbar Data
+      // setNavBarData(EmployeeNavbarData)
     } else {
       setNavBarData(CustomerNavbarData);
     }
-  })
-
-  const [sidebar, setSidebar] = useState(false);
-
-  const [profile, setProfile] = useState(false);
+  }, [props.authData])
 
   const toggleSidebar = () => setSidebar((prevSidebar) => !prevSidebar);
-
   const toggleProfile = () => setProfile((prevProfile) => !prevProfile);
 
   const logout = () => {
+    props.onLogin({
+      'access': '',
+      'refresh': '',
+      'user_type': 'customer',
+    })
     if (buttonText === 'Login') {
       router.push('/login');
     }
@@ -71,7 +67,7 @@ const Navbar = (props: NavbarProps) => {
           </div>
           <div className={styles['btn-contianer']}>
             <IoMdContact className={styles['profile-btn']} onClick={toggleProfile} />
-            {profile ? <ProfileModal /> : null}
+            {profile ? <ProfileModal authData={props.authData} setAuthData={props.setAuthData} onLogin={props.onLogin} /> : null}
             <div className={styles['logout-btn']}>
               <Button title={buttonText} width="120%" onClick={logout} />
             </div>
