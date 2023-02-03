@@ -55,13 +55,20 @@ const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
         },
         {
           onSuccess(data, variables, context) {
-            console.log(data);
-            // props.onLogin(data); Use onLogin function to set JWT data and cookies
             if (data.ok) {
+              data.json().then((response) => {
+                console.log(response);
+                props.onLogin({
+                  'access': response.tokens.access,
+                  'refresh': response.tokens.refresh,
+                  'user_type': response.type,
+                })
+              })
               if (accountType === 'shop_owner') {
                 router.push('/create-shop');
+              } else {
+                router.push('dashboard');
               }
-              router.push('dashboard');
             } else {
               data.json().then((response: RegistrationErrResponse) => {
                 let errors: { email: string[]; username: string[]; password: string[] } = {
