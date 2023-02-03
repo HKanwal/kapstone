@@ -1,7 +1,6 @@
 from djoser.serializers import (
     UserCreatePasswordRetypeSerializer as BaseUserCreateSerializer,
 )
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from django.db import transaction
@@ -14,7 +13,6 @@ from shops.models import Invitation, Shop
 
 class UserCreateSerializer(BaseUserCreateSerializer):
     invite_key = serializers.UUIDField(write_only=True, required=False)
-    tokens = serializers.SerializerMethodField(method_name="get_tokens")
 
     class Meta(BaseUserCreateSerializer.Meta):
         model = User
@@ -26,16 +24,7 @@ class UserCreateSerializer(BaseUserCreateSerializer):
             "last_name",
             "type",
             "invite_key",
-            "tokens",
         )
-
-    def get_tokens(self, obj):
-        refresh = TokenObtainPairSerializer.get_token(obj)
-        tokens = {
-            "refresh": str(refresh),
-            "access": str(refresh.access_token),
-        }
-        return tokens
 
     def validate(self, attrs):
         """
@@ -117,10 +106,3 @@ class CustomerDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerData
         fields = "__all__"
-
-
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    def validate(self, attrs):
-        data = super().validate(attrs)
-        data["user_type"] = self.user.type
-        return data

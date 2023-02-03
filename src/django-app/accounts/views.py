@@ -1,11 +1,9 @@
 from rest_framework import viewsets
-from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .serializers import (
     ShopOwnerDataSerializer,
     EmployeeDataSerializer,
     CustomerDataSerializer,
-    CustomTokenObtainPairSerializer,
 )
 from .models import ShopOwnerData, EmployeeData, CustomerData
 
@@ -23,7 +21,3 @@ class EmployeeDataViewSet(viewsets.ModelViewSet):
 class CustomerDataViewSet(viewsets.ModelViewSet):
     queryset = CustomerData.objects.all()
     serializer_class = CustomerDataSerializer
-
-
-class CustomTokenObtainPairView(TokenObtainPairView):
-    serializer_class = CustomTokenObtainPairSerializer
