@@ -26,27 +26,25 @@ const Dashboard: NextPage<DashboardPageProps, {}> = (props) => {
         }
       )
     }
-  }, [])
 
-  useEffect(() => {
     if (authData.user_type === 'shop_owner') {
       setHeaderName('Shop Name');
       setModalBody(
         [
-          <p>Address Line 1</p>,
-          <p>Address Line 2</p>,
-          <p>Phone Number</p>,
-          <p>Email Address</p>,
+          <p key='1'>Address Line 1</p>,
+          <p key='2'>Address Line 2</p>,
+          <p key='3'>Phone Number</p>,
+          <p key='4'>Email Address</p>,
         ]
       )
     } else if (authData.user_type === 'employee') {
       setHeaderName('Shop Name');
       setModalBody(
         [
-          <p>Address Line 1</p>,
-          <p>Address Line 2</p>,
-          <p>Phone Number</p>,
-          <p>Email Address</p>,
+          <p key='1'>Address Line 1</p>,
+          <p key='2'>Address Line 2</p>,
+          <p key='3'>Phone Number</p>,
+          <p key='4'>Email Address</p>,
         ]
       )
     } else {
