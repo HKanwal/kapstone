@@ -6,29 +6,62 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
+from rest_access_policy import AccessViewSetMixin
 
 from datetime import datetime, timedelta
 import json
 
 from .serializers import (
     ShopSerializer,
+    ShopWriteSerializer,
     AddressSerializer,
     InvitationSerializer,
+    ServicePartSerializer,
     ServiceSerializer,
+    ServiceUpdateSerializer,
     AppointmentSerializer,
     AppointmentCreateSerializer,
+    AppointmentUpdateSerializer,
     AppointmentSlotSerializer,
     AppointmentSlotListSerializer,
+    AppointmentSlotUpdateSerializer,
+    WorkOrderSerializer,
 )
-from .models import Shop, Address, Invitation, Service, AppointmentSlot, Appointment
+from .models import (
+    Shop,
+    Address,
+    Invitation,
+    Service,
+    ServicePart,
+    AppointmentSlot,
+    Appointment,
+    WorkOrder,
+)
+from .policies import (
+    ShopAccessPolicy,
+    AddressAccessPolicy,
+    ServiceAccessPolicy,
+    AppointmentAccessPolicy,
+    AppointmentSlotAccessPolicy,
+    WorkOrderAccessPolicy,
+)
 
 
-class ShopViewSet(viewsets.ModelViewSet):
+class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
+    access_policy = ShopAccessPolicy
     queryset = Shop.objects.all().order_by("name")
-    serializer_class = ShopSerializer
+
+    def get_queryset(self):
+        return self.access_policy.scope_queryset(self.request, self.queryset)
+
+    def get_serializer_class(self):
+        if self.action in ["create", "update", "partial_update"]:
+            return ShopWriteSerializer
+        return ShopSerializer
 
 
-class AddressViewSet(viewsets.ModelViewSet):
+class AddressViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
+    access_policy = AddressAccessPolicy
     queryset = Address.objects.all().order_by("street")
     serializer_class = AddressSerializer
 
@@ -38,19 +71,40 @@ class InvitationViewSet(viewsets.ModelViewSet):
     serializer_class = InvitationSerializer
 
 
-class ServiceViewSet(viewsets.ModelViewSet):
+class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
+    access_policy = ServiceAccessPolicy
     queryset = Service.objects.all()
-    serializer_class = ServiceSerializer
 
-
-class AppointmentViewSet(viewsets.ModelViewSet):
-    queryset = Appointment.objects.all()
-    serializer_class = AppointmentSerializer
+    def get_queryset(self):
+        return self.access_policy.scope_queryset(self.request, self.queryset)
 
     def get_serializer_class(self):
-        if self.action == "create":
+        if self.action in ["update", "partial_update"]:
+            return ServiceUpdateSerializer
+        return ServiceSerializer
+
+
+class ServicePartViewSet(viewsets.ModelViewSet):
+    queryset = ServicePart.objects.all()
+    serializer_class = ServicePartSerializer
+
+
+class AppointmentViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
+    access_policy = AppointmentAccessPolicy
+    queryset = Appointment.objects.all()
+
+    def get_queryset(self):
+        queryset = self.access_policy.scope_queryset(self.request, self.queryset)
+        queryset = self._filter_by_shop(queryset)
+        queryset = self._filter_by_status(queryset)
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action in ["create"]:
             return AppointmentCreateSerializer
-        return super().get_serializer_class()
+        elif self.action in ["update", "partial_update"]:
+            return AppointmentUpdateSerializer
+        return AppointmentSerializer
 
     def _filter_by_shop(self, queryset):
         shop_id = self.request.GET.get("shop")
@@ -65,12 +119,6 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             return queryset.filter(status=status)
         else:
             return queryset
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        queryset = self._filter_by_shop(queryset)
-        queryset = self._filter_by_status(queryset)
-        return queryset
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
@@ -141,14 +189,24 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             )
 
 
-class AppointmentSlotViewSet(viewsets.ModelViewSet):
+class AppointmentSlotViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
+    access_policy = AppointmentSlotAccessPolicy
     queryset = AppointmentSlot.objects.all()
-    serializer_class = AppointmentSlotSerializer
 
     def get_serializer_class(self):
-        if self.action == "list":
+        if self.action in ["list"]:
             return AppointmentSlotListSerializer
+        elif self.action in ["update", "partial_update"]:
+            return AppointmentSlotUpdateSerializer
         return AppointmentSlotSerializer
+
+    def get_queryset(self):
+        queryset = self.access_policy.scope_queryset(self.request, self.queryset)
+        queryset = self._filter_by_shop(queryset)
+        queryset = self._filter_by_start_date(queryset)
+        queryset = self._filter_by_end_date(queryset)
+        queryset = self._filter_by_available_appointments(queryset)
+        return queryset
 
     def _filter_by_shop(self, queryset):
         shop_id = self.request.GET.get("shop")
@@ -185,14 +243,6 @@ class AppointmentSlotViewSet(viewsets.ModelViewSet):
         except:
             return queryset
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        queryset = self._filter_by_shop(queryset)
-        queryset = self._filter_by_start_date(queryset)
-        queryset = self._filter_by_end_date(queryset)
-        queryset = self._filter_by_available_appointments(queryset)
-        return queryset
-
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         duration_minutes = int(self.request.GET.get("minutes", 0))
@@ -208,3 +258,15 @@ class AppointmentSlotViewSet(viewsets.ModelViewSet):
                 serializer = self.get_serializer_class()(q_set, many=True)
                 query_list.append(serializer.data)
         return Response({"slots": query_list})
+
+
+class WorkOrderViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
+    access_policy = WorkOrderAccessPolicy
+    queryset = WorkOrder.objects.all()
+    serializer_class = WorkOrderSerializer
+
+    def get_queryset(self):
+        return self.access_policy.scope_queryset(self.request, self.queryset)
+
+    def get_serializer_class(self):
+        return WorkOrderSerializer

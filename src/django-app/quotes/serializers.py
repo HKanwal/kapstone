@@ -18,15 +18,25 @@ class QuoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quote
         fields = "__all__"
+        read_only_fields = ("id", "shop", "quote_request")
+
+
+class QuoteWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quote
+        fields = "__all__"
+        read_only_fields = ("id", "shop")
+
+    def validate(self, data):
+        quote_request = data["quote_request"]
+        data["shop"] = quote_request.shop
+        return data
 
 
 class QuoteRequestSerializer(serializers.ModelSerializer):
     shop = ShopOverviewSerializer()
     customer = UserViewSerializer(source="user")
     images = ImageQuoteSerializer(many=True, read_only=True)
-    uploaded_images = serializers.ListField(
-        child = serializers.ImageField(max_length = 1000000, allow_empty_file = False, use_url = False),
-        write_only=True)
 
     class Meta:
         model = QuoteRequest
@@ -40,13 +50,44 @@ class QuoteRequestSerializer(serializers.ModelSerializer):
             "preferred_email",
             "description",
             "images",
-            "uploaded_images"
+            "vehicle",
         )
-        read_only_fields = ["customer"]
-    
+        read_only_fields = ("id", "customer", "shop")
+
+
+class QuoteRequestWriteSerializer(serializers.ModelSerializer):
+    customer = serializers.PrimaryKeyRelatedField(
+        read_only=True, default=serializers.CurrentUserDefault()
+    )
+    images = ImageQuoteSerializer(many=True, read_only=True)
+    uploaded_images = serializers.ListField(
+        child=serializers.ImageField(
+            max_length=1000000, allow_empty_file=False, use_url=False
+        ),
+        write_only=True,
+    )
+
+    class Meta:
+        model = QuoteRequest
+        fields = (
+            "id",
+            "shop",
+            "customer",
+            "preferred_date",
+            "preferred_time",
+            "description",
+            "images",
+            "uploaded_images",
+            "vehicle",
+        )
+        read_only_fields = ("id",)
+        extra_kwargs = {"customer": {"source": "user"}}
+
     def create(self, validated_data):
         uploaded_images = validated_data.pop("uploaded_images")
         quote_request = QuoteRequest.objects.create(**validated_data)
         for image in uploaded_images:
-            QR_image = ImageQuote.objects.create(quote_request=quote_request, photo=image)
+            QR_image = ImageQuote.objects.create(
+                quote_request=quote_request, photo=image
+            )
         return quote_request
