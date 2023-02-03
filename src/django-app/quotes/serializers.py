@@ -4,6 +4,8 @@ from .models import Quote, QuoteRequest
 from shops.models import Shop
 from shops.serializers import ShopOverviewSerializer
 from accounts.serializers import UserViewSerializer
+from misc.models import ImageQuote
+from misc.serializers import ImageQuoteSerializer
 
 
 class QuoteSerializer(serializers.ModelSerializer):
@@ -34,6 +36,7 @@ class QuoteWriteSerializer(serializers.ModelSerializer):
 class QuoteRequestSerializer(serializers.ModelSerializer):
     shop = ShopOverviewSerializer()
     customer = UserViewSerializer(source="user")
+    images = ImageQuoteSerializer(many=True, read_only=True)
 
     class Meta:
         model = QuoteRequest
@@ -43,7 +46,10 @@ class QuoteRequestSerializer(serializers.ModelSerializer):
             "customer",
             "preferred_date",
             "preferred_time",
+            "preferred_phone_number",
+            "preferred_email",
             "description",
+            "images",
             "vehicle",
         )
         read_only_fields = ("id", "customer", "shop")
@@ -52,6 +58,13 @@ class QuoteRequestSerializer(serializers.ModelSerializer):
 class QuoteRequestWriteSerializer(serializers.ModelSerializer):
     customer = serializers.PrimaryKeyRelatedField(
         read_only=True, default=serializers.CurrentUserDefault()
+    )
+    images = ImageQuoteSerializer(many=True, read_only=True)
+    uploaded_images = serializers.ListField(
+        child=serializers.ImageField(
+            max_length=1000000, allow_empty_file=False, use_url=False
+        ),
+        write_only=True,
     )
 
     class Meta:
@@ -63,7 +76,18 @@ class QuoteRequestWriteSerializer(serializers.ModelSerializer):
             "preferred_date",
             "preferred_time",
             "description",
+            "images",
+            "uploaded_images",
             "vehicle",
         )
         read_only_fields = ("id",)
         extra_kwargs = {"customer": {"source": "user"}}
+
+    def create(self, validated_data):
+        uploaded_images = validated_data.pop("uploaded_images")
+        quote_request = QuoteRequest.objects.create(**validated_data)
+        for image in uploaded_images:
+            QR_image = ImageQuote.objects.create(
+                quote_request=quote_request, photo=image
+            )
+        return quote_request
