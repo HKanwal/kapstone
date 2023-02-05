@@ -141,7 +141,8 @@ const EmployeeEditPage: NextPage = () => {
           disabled={!valid}
           width="80%"
           onClick={() => {
-            updateEmployee();
+            //updateEmployee();
+            console.log(employee);
             router.push({
               pathname: 'employee-details',
               query: { id: id },
