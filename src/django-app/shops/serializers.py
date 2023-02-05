@@ -144,8 +144,34 @@ class WorkOrderSerializer(serializers.ModelSerializer):
     odometer_reading_after = serializers.IntegerField(default=0)
     discount = serializers.DecimalField(max_digits=5, decimal_places=2, default=0)
     grand_total = serializers.DecimalField(max_digits=10, decimal_places=2, default=0)
+    appointment = AppointmentSerializer()
+    employee = UserViewSerializer()
 
     class Meta:
         model = WorkOrder
         fields = "__all__"
         read_only_fields = ("id",)
+
+
+class WorkOrderUpdateSerializer(serializers.ModelSerializer):
+    odometer_reading_before = serializers.IntegerField(default=0)
+    odometer_reading_after = serializers.IntegerField(default=0)
+    discount = serializers.DecimalField(max_digits=5, decimal_places=2, default=0)
+    grand_total = serializers.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    class Meta:
+        model = WorkOrder
+        fields = "__all__"
+        read_only_fields = ("id", "shop")
+
+
+class WorkOrderCreateSerializer(serializers.ModelSerializer):
+    odometer_reading_before = serializers.IntegerField(default=0)
+    odometer_reading_after = serializers.IntegerField(default=0)
+    discount = serializers.DecimalField(max_digits=5, decimal_places=2, default=0)
+    grand_total = serializers.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    class Meta:
+        model = WorkOrder
+        fields = "__all__"
+        read_only_fields = "id"
