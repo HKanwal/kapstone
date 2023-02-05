@@ -8,6 +8,7 @@ import TextInput from '../components/TextInput';
 import { useRouter } from 'next/router';
 import apiUrl from '../constants/api-url';
 import axios from 'axios';
+import employeeData from '../data/employeeData.json';
 
 type info = {
   [key: string]: any;
@@ -33,8 +34,12 @@ const EmployeeDetailsPage: NextPage = () => {
     if (!id) return;
     const getEmployee = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/accounts/shop-owner/${id}`);
-        setEmployee(res.data);
+        //const res = await axios.get(`${apiUrl}/accounts/employee/${id}`);
+        employeeData.employeeData.map((employee) => {
+          if (employee.id === Number(id)) {
+            setEmployee(employee);
+          }
+        });
       } catch (e) {
         console.log(e);
       }

@@ -9,12 +9,14 @@ import { IoIosAdd } from 'react-icons/io';
 import FieldLabel from '../components/FieldLabel';
 import TextField from '../components/TextField';
 import axios from 'axios';
+import employeeData from '../data/employeeData.json';
 
 const EmployeesPage: NextPage = () => {
   type filter = {
     [key: string]: any;
   };
   const router = useRouter();
+  const shop = 0;
   const [employees, setEmployees] = useState<any[]>([]);
   const [employeeFilter, setEmployeeFilter] = useState<filter>({
     name: '',
@@ -25,8 +27,8 @@ const EmployeesPage: NextPage = () => {
   useEffect(() => {
     const getAllEmployees = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/accounts/shop-owner/`);
-        setEmployees(res.data);
+        //const res = await axios.get(`${apiUrl}/accounts/employee/`);
+        setEmployees(employeeData.employeeData);
       } catch (e) {
         console.log(e);
       }

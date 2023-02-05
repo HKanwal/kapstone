@@ -7,7 +7,7 @@ import styles from '../styles/pages/CreateEmployee.module.css';
 import apiUrl from '../constants/api-url';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import { userAgent } from 'next/server';
+import employeeData from '../data/employeeData.json';
 
 type info = {
   [key: string]: any;
@@ -26,17 +26,22 @@ const EmployeeEditPage: NextPage = () => {
   const [dateJoined, setDateJoined] = useState('');
 
   useEffect(() => {
+    if (!id) return;
     const getEmployee = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/accounts/shop-owner/${id}`);
-        setEmployee(res.data);
-        setFirstName(String(res.data.user.first_name));
-        setLastName(String(res.data.user.last_name));
-        setPhoneNumber(String(res.data.user.phone_number) + ' ');
-        setSalary(' ');
-        setVacation(' ');
-        setSickDays(' ');
-        setDateJoined(' ');
+        //const res = await axios.get(`${apiUrl}/accounts/shop-owner/${id}`);
+        employeeData.employeeData.map((employee) => {
+          if (employee.id === Number(id)) {
+            setEmployee(employee);
+            setFirstName(String(employee.user.first_name));
+            setLastName(String(employee.user.last_name));
+            setPhoneNumber(String(employee.user.phone_number) + ' ');
+            setSalary(String(employee.salary));
+            setVacation(' ');
+            setSickDays(' ');
+            setDateJoined(' ');
+          }
+        });
       } catch (e) {
         console.log(e);
       }
@@ -44,41 +49,21 @@ const EmployeeEditPage: NextPage = () => {
     getEmployee();
   }, []);
 
-  let valid = false;
-  if (
-    firstName.length > 0 &&
-    lastName.length > 0 &&
-    phoneNumber.length > 0 &&
-    salary.length > 0 &&
-    vacation.length > 0 &&
-    sickDays.length > 0 &&
-    dateJoined.length > 0
-  ) {
-    valid = true;
-  }
+  let valid = true;
+  // if (
+  //   firstName.length > 0 &&
+  //   lastName.length > 0 &&
+  //   phoneNumber.length > 0 &&
+  //   salary.length > 0 &&
+  //   vacation.length > 0 &&
+  //   sickDays.length > 0 &&
+  //   dateJoined.length > 0
+  // ) {
+  //   valid = true;
+  // }
 
   const updateEmployee = async () => {
-    // console.log(firstName + ' ' + lastName);
-    // setEmployee((prevEmployee) => {
-    //   return {
-    //     ...prevEmployee,
-    //     user: {
-    //       ...prevEmployee.user,
-    //       first_name: firstName,
-    //       last_name: lastName,
-    //       phone_number: phoneNumber,
-    //     },
-    //   };
-    // });
-    // console.log(employee);
     try {
-      const res = await axios.put(`${apiUrl}/accounts/shop-owner/${id}`, {
-        user: {
-          first_name: firstName,
-          last_name: lastName,
-          phone_number: phoneNumber,
-        },
-      });
     } catch (e) {
       console.log(e);
     }
