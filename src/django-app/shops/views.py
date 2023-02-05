@@ -26,6 +26,8 @@ from .serializers import (
     AppointmentSlotListSerializer,
     AppointmentSlotUpdateSerializer,
     WorkOrderSerializer,
+    WorkOrderCreateSerializer,
+    WorkOrderUpdateSerializer,
 )
 from .models import (
     Shop,
@@ -269,4 +271,8 @@ class WorkOrderViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         return self.access_policy.scope_queryset(self.request, self.queryset)
 
     def get_serializer_class(self):
+        if self.action in ["update", "partial_update"]:
+            return WorkOrderUpdateSerializer
+        elif self.action in ["create"]:
+            return WorkOrderCreateSerializer
         return WorkOrderSerializer
