@@ -35,3 +35,43 @@ a {
     background: black;
   }
 } */
+
+.flex {
+  display: flex;
+}
+
+.flex-row {
+  flex-direction: column;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.row-gap-large {
+  row-gap: 8px;
+}
+
+.row-gap-small {
+  row-gap: 4px;
+}
+
+.gap {
+  gap: 10px;
+}
+
+.wrapper {
+  padding: 0 20px 0 20px;
+}
+
+.card {
+  margin: 2px;
+  padding: 16px;
+  background-color: #f3f6fe;
+  border-radius: 12px;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
