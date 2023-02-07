@@ -44,6 +44,10 @@ class Shop(models.Model):
             return False
         return self == employee.shop
 
+    def get_employees(self):
+        EmployeeData = apps.get_model("accounts", "EmployeeData")
+        return EmployeeData.objects.filter(shop__pk=self.pk)
+
     @property
     def employees(self):
         EmployeeData = apps.get_model("accounts", "EmployeeData")
