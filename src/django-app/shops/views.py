@@ -7,6 +7,9 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_access_policy import AccessViewSetMixin
+from rest_framework.decorators import action
+
+from accounts.serializers import EmployeeDataSerializer
 
 from datetime import datetime, timedelta
 import json
@@ -60,6 +63,13 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         if self.action in ["create", "update", "partial_update"]:
             return ShopWriteSerializer
         return ShopSerializer
+
+    @action(detail=True, methods=["get"])
+    def employees(self, request, *args, **kwargs):
+        shop = self.get_object()
+        serializer = EmployeeDataSerializer(shop.get_employees(), many=True)
+        return Response(serializer.data)
+
 
 
 class AddressViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
