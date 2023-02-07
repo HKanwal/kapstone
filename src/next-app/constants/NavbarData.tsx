@@ -24,7 +24,7 @@ export const NavbarData = [
   },
   {
     title: 'Work Orders',
-    path: '#',
+    path: '/work-orders',
     icon: <IoIcons.IoMdCalculator />,
   },
   {
