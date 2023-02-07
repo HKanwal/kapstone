@@ -174,4 +174,4 @@ class WorkOrderCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkOrder
         fields = "__all__"
-        read_only_fields = "id"
+        read_only_fields = ("id",)
