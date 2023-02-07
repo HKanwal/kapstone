@@ -15,7 +15,7 @@ const WorkOrdersList: NextPage = ({ workOrders }: any) => {
           {workOrders.map((workOrder: any) => {
             return (
               <Link href={`/work-orders/${workOrder.id}`} key={workOrder.id}>
-                <a className="card">
+                <a className="card hover-scale-up active-scale-down">
                   <div className="flex flex-row row-gap-small">
                     <span>
                       <b>Customer</b>: @{workOrder.appointment.customer?.username}
@@ -61,7 +61,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async () => {
     console.log(error);
     return {
       props: {
-        data: [],
+        workOrders: [],
       },
     };
   }
