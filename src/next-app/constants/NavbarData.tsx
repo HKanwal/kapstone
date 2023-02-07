@@ -9,7 +9,7 @@ export const NavbarData = [
   },
   {
     title: 'Services',
-    path: '#',
+    path: '/create-service',
     icon: <IoIcons.IoMdConstruct />,
   },
   {
