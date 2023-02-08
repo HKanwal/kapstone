@@ -1,23 +1,22 @@
-import type { NextPage } from 'next';
+import type { NextPage, GetServerSideProps } from 'next';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import Button from '../components/Button';
-import TextField from '../components/TextField';
-import Header from '../components/Header';
+import Button from '../../components/Button';
+import axios from 'axios';
+import TextField from '../../components/TextField';
+import Header from '../../components/Header';
 import styles from '../styles/pages/QuoteRequest.module.css';
-import TextArea from '../components/TextArea';
-import DropdownField from '../components/DropdownField';
-import FieldLabel from '../components/FieldLabel';
-import Link from '../components/Link';
+import DropdownField from '../../components/DropdownField';
+import apiUrl from '../../constants/api-url';
 
-const ServicesPage: NextPage = () => {
+const ServicesPage: NextPage = ({ parts }: any) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
-  const [parts, setParts] = useState([]);
+  const [specifiedParts, setParts] = useState([]);
   const [isActive, setIsActive] = useState('Inactive');
 
   let valid = false;
-  if (name.length > 0 && description.length > 0 && price.length > 0 && parts.length > 0) {
+  if (name.length > 0 && description.length > 0 && price.length > 0 && specifiedParts.length > 0) {
     valid = true;
   }
 
@@ -56,8 +55,8 @@ const ServicesPage: NextPage = () => {
             <DropdownField
               type="multi-select"
               name="Required Parts"
-              placeholder="Enter services..."
-              items={['Muffler', 'Headlight', 'Bumper']}
+              placeholder="Enter parts..."
+              items={parts.map((part: any) => part.name)}
             />
           </div>
           <div className={styles['field-container']}>
@@ -74,12 +73,34 @@ const ServicesPage: NextPage = () => {
           disabled={!valid}
           width="80%"
           onClick={() => {
-            console.log('TODO: handle submit');
+            console.log();
           }}
         />
       </div>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<{}> = async () => {
+  try {
+    const token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc2MjQ0OTgzLCJqdGkiOiIxZDg4MTJhYTg5ZmI0N2JjYjFlODU3ODU4NWZjMDNjMyIsInVzZXJfaWQiOjE0OH0.vZ8GjUqu9NUbGX4um7MSoCWI6OQVZrFDZQmJ6I57tlI';
+    const parts = await axios.get(`${apiUrl}/shops/service-parts/`, {
+      headers: { Authorization: `JWT ${token}` },
+    });
+    return {
+      props: {
+        parts: parts.data,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      props: {
+        parts: [],
+      },
+    };
+  }
 };
 
 export default ServicesPage;
