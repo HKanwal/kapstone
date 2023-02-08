@@ -4,7 +4,7 @@ import Button from '../../components/Button';
 import axios from 'axios';
 import TextField from '../../components/TextField';
 import Header from '../../components/Header';
-import styles from '../styles/pages/QuoteRequest.module.css';
+import styles from '../../styles/pages/QuoteRequest.module.css';
 import DropdownField from '../../components/DropdownField';
 import apiUrl from '../../constants/api-url';
 
