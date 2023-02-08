@@ -1,0 +1,19 @@
+.card {
+  margin-bottom: 5vh;
+  width: 100%;
+  height: 10%;
+  padding: 5vh;
+  padding-left: 2vw;
+  border-width: 1mm;
+  border-radius: 1vh;
+  background-color: var(--text-input-color);
+}
+
+.description-container {
+  display: inline-flex;
+}
+
+.date-container {
+  display: inline-flex;
+  float: right;
+}
