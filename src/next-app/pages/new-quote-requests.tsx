@@ -4,12 +4,7 @@ import Header from '../components/Header';
 import styles from '../styles/pages/NewQuoteRequests.module.css';
 import QuoteRequestCard from '../components/QuoteRequestCard';
 import { useRouter } from 'next/router';
-import apiUrl from '../constants/api-url';
-import { IoIosAdd } from 'react-icons/io';
-import FieldLabel from '../components/FieldLabel';
 import TextField from '../components/TextField';
-import axios from 'axios';
-import Dropdown from '../components/Dropdown';
 //import quoteRequestsData from '../data/newQuoteRequestData.json';
 
 const sampleQuoteRequests = [
