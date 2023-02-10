@@ -78,7 +78,7 @@ const CardSelect = (props: CardSelectProps) => {
   );
 };
 
-const WorkOrdersList: NextPage = ({ workOrder, employees }: any) => {
+const WorkOrdersDetail: NextPage = ({ workOrder, employees }: any) => {
   const [inEdit, setInEdit] = useState(false);
   const form = useFormik({
     initialValues: {
@@ -211,4 +211,4 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   }
 };
 
-export default WorkOrdersList;
+export default WorkOrdersDetail;
