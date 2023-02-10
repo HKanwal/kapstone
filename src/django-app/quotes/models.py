@@ -62,6 +62,3 @@ class QuoteRequest(models.Model):
         user_name = self.user.username if self.user else "Null User"
         shop_name = self.shop.name if self.shop else "Null Shop"
         return f'User "{user_name}" to Shop "{shop_name}": "{self.description}"'
-
-    
-
