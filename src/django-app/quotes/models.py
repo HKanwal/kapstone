@@ -45,6 +45,15 @@ class QuoteRequest(models.Model):
     description = models.CharField(_("description"), max_length=1000)
     vehicle = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True)
 
+    @property
+    def status(self):
+        try:
+            quote = Quote.objects.get(quote_request__id=self.id)
+            return quote.status
+        except:
+            return "Not Accepted"
+
+
     class Meta:
         verbose_name = "Quote Request"
         verbose_name_plural = "Quote Requests"
@@ -53,3 +62,6 @@ class QuoteRequest(models.Model):
         user_name = self.user.username if self.user else "Null User"
         shop_name = self.shop.name if self.shop else "Null Shop"
         return f'User "{user_name}" to Shop "{shop_name}": "{self.description}"'
+
+    
+

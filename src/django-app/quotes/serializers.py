@@ -37,6 +37,7 @@ class QuoteRequestSerializer(serializers.ModelSerializer):
     shop = ShopOverviewSerializer()
     customer = UserViewSerializer(source="user")
     images = ImageQuoteSerializer(many=True, read_only=True)
+    status = serializers.SerializerMethodField()
 
     class Meta:
         model = QuoteRequest
@@ -51,8 +52,12 @@ class QuoteRequestSerializer(serializers.ModelSerializer):
             "description",
             "images",
             "vehicle",
+            "status",
         )
         read_only_fields = ("id", "customer", "shop")
+
+    def get_status():
+        return QuoteRequest.status
 
 
 class QuoteRequestWriteSerializer(serializers.ModelSerializer):
