@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { useState } from 'react';
 import { AuthContext, Jwt } from '../utils/api';
 import { MantineProvider } from '@mantine/core';
+import NextNProgress from 'nextjs-progressbar';
 
 const queryClient = new QueryClient();
 
@@ -80,6 +81,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
             />
           </Head>
+          <NextNProgress color="#72DAB1" showOnShallow />
           <Component {...pageProps} onLogin={handleLogin} />
         </AuthContext.Provider>
       </QueryClientProvider>
