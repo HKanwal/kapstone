@@ -37,6 +37,18 @@ class Shop(models.Model):
         _("shop hours"), max_length=255, null=True, blank=True
     )
 
+    def has_employee(self, employee_id):
+        EmployeeData = apps.get_model("accounts", "EmployeeData")
+        employee = EmployeeData.objects.filter(user__id=employee_id).first()
+        if employee is None:
+            return False
+        return self == employee.shop
+
+    @property
+    def employees(self):
+        EmployeeData = apps.get_model("accounts", "EmployeeData")
+        return EmployeeData.objects.filter(shop__pk=self.pk).values_list("user", flat=True)
+
     @property
     def num_employees(self):
         EmployeeData = apps.get_model("accounts", "EmployeeData")
