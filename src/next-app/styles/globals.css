@@ -90,6 +90,21 @@ a {
   font-size: var(--font-size);
 }
 
+.mantine-MultiSelect-input {
+  border: 0;
+  padding-left: 1em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  border-radius: 0.8em;
+  font-size: var(--font-size);
+}
+
+.mantine-MultiSelect-value {
+  height: 32px;
+  font-size: var(--font-size);
+  background-color: #fff;
+}
+
 .input.select {
   width: 100%;
   padding-right: 1em;
