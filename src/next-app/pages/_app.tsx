@@ -6,17 +6,22 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { useState } from 'react';
 import { AuthContext, Jwt } from '../utils/api';
 import { MantineProvider } from '@mantine/core';
+import Cookies from 'js-cookie';
 
 const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [jwt, setJwt] = useState<Jwt>({
-    refresh: '',
     access: '',
+    refresh: '',
+    user_type: 'customer',
   });
 
   const handleLogin = (jwt: Jwt) => {
     setJwt(jwt);
+    Cookies.set("access", jwt.access);
+    Cookies.set("refresh", jwt.refresh);
+    Cookies.set("user_type", jwt.user_type);
   };
 
   return (

@@ -1,23 +1,62 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '../styles/components/Navbar.module.css';
 import Button from './Button';
 import ProfileModal from './ProfileModal';
 import { IoMdMenu, IoMdContact } from 'react-icons/io';
 import Link from 'next/link';
-import { NavbarData } from '../constants/NavbarData';
+import { CustomerNavbarData, ShopOwnerNavbarData } from '../constants/NavbarData';
 import { IconContext } from 'react-icons';
+import Cookies from 'js-cookie';
+import { Jwt } from '../utils/api';
+import { useRouter } from 'next/router';
 
-function Navbar() {
+type NavbarProps = {
+  authData: Jwt;
+  onLogin: (jwt: Jwt) => void;
+  headerName: string;
+  modalBody: JSX.Element[];
+}
+
+const Navbar = (props: NavbarProps) => {
+  const router = useRouter();
+  const [NavbarData, setNavBarData] = useState(CustomerNavbarData);
+  const [buttonText, setButtonText] = useState("Login");
   const [sidebar, setSidebar] = useState(false);
-
   const [profile, setProfile] = useState(false);
 
-  const toggleSidebar = () => setSidebar((prevSidebar) => !prevSidebar);
+  useEffect(() => {
+    if (props.authData.access !== '') {
+      setButtonText("Logout");
+    } else if (Cookies.get('access') && Cookies.get('access') !== '') {
+      setButtonText("Logout");
+    }
+    if (props.authData.user_type === 'shop_owner') {
+      setNavBarData(ShopOwnerNavbarData);
+    } else if (props.authData.user_type === 'employee') {
+      // Need to figure out Employee Navbar Data
+      // setNavBarData(EmployeeNavbarData)
+    } else {
+      setNavBarData(CustomerNavbarData);
+    }
+  }, [props.authData])
 
+  const toggleSidebar = () => setSidebar((prevSidebar) => !prevSidebar);
   const toggleProfile = () => setProfile((prevProfile) => !prevProfile);
 
   const logout = () => {
-    window.location.href = '/';
+    props.onLogin({
+      'access': '',
+      'refresh': '',
+      'user_type': 'customer',
+    })
+    if (buttonText === 'Login') {
+      router.push('/login');
+    }
+
+    Cookies.remove('access');
+    Cookies.remove('refresh');
+    Cookies.remove('user_type');
+    router.push('/');
   };
 
   return (
@@ -29,9 +68,9 @@ function Navbar() {
           </div>
           <div className={styles['btn-contianer']}>
             <IoMdContact className={styles['profile-btn']} onClick={toggleProfile} />
-            {profile ? <ProfileModal /> : null}
+            {profile ? <ProfileModal headerName={props.headerName} modalBody={props.modalBody} /> : null}
             <div className={styles['logout-btn']}>
-              <Button title="Logout" width="120%" onClick={logout} />
+              <Button title={buttonText} width="120%" onClick={logout} />
             </div>
           </div>
         </div>
