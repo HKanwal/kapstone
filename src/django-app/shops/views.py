@@ -64,12 +64,44 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
             return ShopWriteSerializer
         return ShopSerializer
 
+    def partial_update(self, request, *args, **kwargs):
+        try:
+            with transaction.atomic():
+                shop = self.get_object()
+                shop_services = request.data.pop("shop_services", None)
+                if shop_services is not None:
+                    Service.objects.filter(
+                        id__in=shop_services, shop__id=shop.id
+                    ).update(active=True)
+                    Service.objects.filter(shop__id=shop.id).exclude(
+                        id__in=shop_services
+                    ).update(active=False)
+
+                address = request.data.pop("address", None)
+                if address is not None:
+                    address_object = Address.objects.get(id=address.get("id"))
+                    address_serializer = AddressSerializer(
+                        address_object, data=address, partial=True
+                    )
+                    if address_serializer.is_valid(raise_exception=True):
+                        address_serializer.save()
+
+                shop_serializer = ShopWriteSerializer(
+                    shop, data=request.data, partial=True
+                )
+                if shop_serializer.is_valid(raise_exception=True):
+                    shop_serializer.save()
+                return Response(shop_serializer.data)
+        except Exception as err:
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
     @action(detail=True, methods=["get"])
     def employees(self, request, *args, **kwargs):
         shop = self.get_object()
         serializer = EmployeeDataSerializer(shop.get_employees(), many=True)
         return Response(serializer.data)
-
 
 
 class AddressViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
