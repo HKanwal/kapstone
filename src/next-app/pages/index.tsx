@@ -25,7 +25,7 @@ const Home: NextPage = () => {
           />
           <span className={styles.or}>OR</span>
           <Button
-            title="Login as a Shop Owner"
+            title="Login"
             onClick={() => {
               router.push('/login');
             }}
