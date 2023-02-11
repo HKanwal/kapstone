@@ -99,7 +99,7 @@ const WorkOrdersDetail: NextPage = ({ workOrder, employees }: any) => {
               <h2 className="form-header">Work Order Information</h2>
               <div className={`card${inEdit ? 'edit' : ''}`} style={{ marginBottom: '12px' }}>
                 <CardTextField
-                  fieldValue={form.values.appointment.customer.username}
+                  fieldValue={`@${form.values.appointment.customer.username}`}
                   fieldName="appointment.customer.username"
                   fieldLabel="Customer"
                   fieldType="string"
