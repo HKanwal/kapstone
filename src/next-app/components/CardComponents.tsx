@@ -1,6 +1,7 @@
 import { ChangeEventHandler } from 'react';
 import { Field } from 'formik';
 import FieldLabel from './FieldLabel';
+import { MultiSelect } from '@mantine/core';
 
 type CardTextFieldProps = {
   fieldValue: string | ReadonlyArray<string> | number | undefined;
@@ -11,6 +12,19 @@ type CardTextFieldProps = {
   fieldDisabled?: boolean | undefined;
   error?: any;
   onChange: ChangeEventHandler<HTMLInputElement> | undefined;
+};
+
+type CardMultiSelectProps = {
+  fieldLabel: string;
+  fieldData: any[];
+  fieldValues: string[] | undefined;
+  fieldPlaceholder?: string | undefined;
+  fieldRequired?: boolean | undefined;
+  fieldDisabled?: boolean | undefined;
+  fieldSearchable?: boolean | undefined;
+  error?: any;
+  onChange: ((value: string[]) => void) | undefined;
+  className?: string | undefined;
 };
 
 type CardTextAreaProps = {
@@ -83,6 +97,26 @@ export const CardSelect = (props: CardSelectProps) => {
       >
         {props.options}
       </Field>
+      <div className="flex flex-col">
+        <span className="error">{props.error}</span>
+      </div>
+    </div>
+  );
+};
+
+export const CardMultiSelect = (props: CardMultiSelectProps) => {
+  return (
+    <div className={`card-field flex flex-col row-gap-small`}>
+      <FieldLabel label={props.fieldLabel} required={props.fieldRequired} />
+      <MultiSelect
+        data={props.fieldData}
+        value={props.fieldValues}
+        onChange={props.onChange}
+        placeholder={props.fieldPlaceholder}
+        searchable={props.fieldSearchable}
+        disabled={props.fieldDisabled}
+        className={props.className}
+      />
       <div className="flex flex-col">
         <span className="error">{props.error}</span>
       </div>
