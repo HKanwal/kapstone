@@ -67,9 +67,6 @@ const sampleQuoteRequests = [
 ];
 
 const NewQuoteRequestsPage: NextPage = () => {
-  type filter = {
-    [key: string]: any;
-  };
   const router = useRouter();
   const shop = '0';
   const pathName = 'view-quote-request';
@@ -81,7 +78,6 @@ const NewQuoteRequestsPage: NextPage = () => {
       try {
         //const res = await axios.get(`${apiUrl}/accounts/newQuoteRequest/`);
         setNewQuoteRequests(sampleQuoteRequests);
-        console.log(String(newQuoteRequests[0].shop.id) == shop);
       } catch (e) {
         console.log(e);
       }
