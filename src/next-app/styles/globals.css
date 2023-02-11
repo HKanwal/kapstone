@@ -95,6 +95,10 @@ a {
   padding-right: 1em;
 }
 
+.input.select:disabled {
+  color: #222;
+}
+
 .input:focus {
   outline: 1px solid var(--primary-color);
 }
@@ -126,4 +130,9 @@ a {
 .active-scale-down:active {
   scale: 98%;
   transition: all 0.2s ease-in-out;
+}
+
+.error {
+  color: var(--red-color);
+  margin-top: 2%;
 }
