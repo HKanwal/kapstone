@@ -1,105 +1,17 @@
 import type { NextPage, GetServerSideProps } from 'next';
-import axios from 'axios';
-import Header from '../../components/Header';
-import apiUrl from '../../constants/api-url';
-import { useFormik, Field, FormikProvider } from 'formik';
-import FieldLabel from '../../components/FieldLabel';
-import { ChangeEventHandler, useState } from 'react';
-import Button from '../../components/Button';
-import { GrFormEdit, GrFormClose } from 'react-icons/gr';
 import { useRouter } from 'next/router';
 import * as yup from 'yup';
+import axios from 'axios';
+import { useFormik, FormikProvider } from 'formik';
+import { useState } from 'react';
+import { GrFormEdit, GrFormClose } from 'react-icons/gr';
+import { CardTextField, CardTextArea, CardSelect } from '../../components/CardComponents';
+import Header from '../../components/Header';
+import apiUrl from '../../constants/api-url';
+import Button from '../../components/Button';
 
 const token =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc2MjQ0OTgzLCJqdGkiOiIxZDg4MTJhYTg5ZmI0N2JjYjFlODU3ODU4NWZjMDNjMyIsInVzZXJfaWQiOjE0OH0.vZ8GjUqu9NUbGX4um7MSoCWI6OQVZrFDZQmJ6I57tlI';
-
-type CardTextFieldProps = {
-  fieldValue: string | ReadonlyArray<string> | number | undefined;
-  fieldName: string;
-  fieldLabel: string;
-  fieldType: string;
-  fieldRequired?: boolean | undefined;
-  fieldDisabled?: boolean | undefined;
-  error?: any;
-  onChange: ChangeEventHandler<HTMLInputElement> | undefined;
-};
-
-type CardTextAreaProps = {
-  fieldValue: string | ReadonlyArray<string> | number | undefined;
-  fieldName: string;
-  fieldLabel: string;
-  fieldRows?: number | undefined;
-  fieldRequired?: boolean | undefined;
-  fieldDisabled?: boolean | undefined;
-  error?: any;
-  onChange: ChangeEventHandler<HTMLTextAreaElement> | undefined;
-};
-
-type CardSelectProps = {
-  fieldName: string;
-  fieldLabel: string;
-  fieldRequired?: boolean | undefined;
-  fieldDisabled?: boolean | undefined;
-  options: ReadonlyArray<string> | undefined;
-  error?: any;
-};
-
-const CardTextField = (props: CardTextFieldProps) => {
-  return (
-    <div className={`card-field flex flex-col row-gap-small`}>
-      <FieldLabel label={props.fieldLabel} required={props.fieldRequired} />
-      <input
-        className="input"
-        name={props.fieldName}
-        value={props.fieldValue}
-        type={props.fieldType}
-        onChange={props.onChange}
-        disabled={props.fieldDisabled}
-      />
-      <div className="flex flex-col">
-        <span className="error">{props.error}</span>
-      </div>
-    </div>
-  );
-};
-
-const CardTextArea = (props: CardTextAreaProps) => {
-  return (
-    <div className={`card-field flex flex-col row-gap-small`}>
-      <FieldLabel label={props.fieldLabel} required={props.fieldRequired} />
-      <textarea
-        className="input textarea"
-        name={props.fieldName}
-        value={props.fieldValue}
-        onChange={props.onChange}
-        disabled={props.fieldDisabled}
-        rows={props.fieldRows}
-      />
-      <div className="flex flex-col">
-        <span className="error">{props.error}</span>
-      </div>
-    </div>
-  );
-};
-
-const CardSelect = (props: CardSelectProps) => {
-  return (
-    <div className={`card-field flex flex-col row-gap-small`}>
-      <FieldLabel label={props.fieldLabel} required={props.fieldRequired} />
-      <Field
-        name={props.fieldName}
-        as="select"
-        className="input select"
-        disabled={props.fieldDisabled}
-      >
-        {props.options}
-      </Field>
-      <div className="flex flex-col">
-        <span className="error">{props.error}</span>
-      </div>
-    </div>
-  );
-};
 
 const WorkOrdersDetail: NextPage = ({ workOrder, employees }: any) => {
   const router = useRouter();
