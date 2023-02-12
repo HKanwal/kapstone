@@ -83,6 +83,11 @@ class ShopAdmin(nested_admin.NestedModelAdmin):
     inlines = [ShopAvailabilityInline]
 
 
+@admin.register(ShopHours)
+class ShopHoursAdmin(admin.ModelAdmin):
+    list_display = ("shop", "day")
+
+
 @admin.register(WorkOrder)
 class WorkOrderAdmin(admin.ModelAdmin):
     list_display = ("shop", "appointment", "employee", "grand_total")
