@@ -69,7 +69,7 @@ const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
           {
             option: 'Respond',
             onClick() {
-              router.push({ pathname: 'quote-response', query: { id } });
+              router.push({ pathname: '/quote-response', query: { id } });
             },
           },
           {
