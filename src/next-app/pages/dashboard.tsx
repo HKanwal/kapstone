@@ -6,8 +6,6 @@ import styles from '../styles/pages/Dashboard.module.css';
 import { AuthContext, Jwt, accountTypes, refreshToken } from '../utils/api';
 import apiUrl from '../constants/api-url';
 import Cookies from 'js-cookie';
-// @ts-ignore
-import * as cookie from 'cookie';
 import axios from 'axios';
 
 type DashboardPageProps = {

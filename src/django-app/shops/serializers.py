@@ -115,6 +115,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
     shop = ShopOverviewSerializer()
     start_time = serializers.SerializerMethodField()
     end_time = serializers.SerializerMethodField()
+    status_display = serializers.SerializerMethodField()
 
     class Meta:
         model = Appointment
@@ -125,6 +126,9 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
     def get_end_time(self, obj):
         return obj.end_time
+
+    def get_status_display(self, obj):
+        return obj.get_status_display()
 
 
 class AppointmentCreateSerializer(serializers.ModelSerializer):
