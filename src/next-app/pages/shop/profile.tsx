@@ -10,6 +10,7 @@ import {
   CardTextArea,
   CardSelect,
   CardMultiSelect,
+  CardHoursField,
 } from '../../components/CardComponents';
 import Header from '../../components/Header';
 import apiUrl from '../../constants/api-url';
@@ -24,6 +25,7 @@ const ProfilePage: NextPage = ({ shop }: any) => {
   const [inEdit, setInEdit] = useState(false);
   const [errors, setErrors] = useState([]);
   const [services, setServices] = useState(shop?.shop_services ?? []);
+  const [shopHours, setShopHours] = useState(shop?.shophours_set ?? []);
   const schema = yup.object().shape({
     name: yup.string().required(),
     num_bays: yup.number().optional(),
@@ -66,6 +68,7 @@ const ProfilePage: NextPage = ({ shop }: any) => {
           country: values.address.country,
           postal_code: values.address.postal_code,
         },
+        shophours_set: shopHours,
       };
       try {
         const res = await axios.patch(`${apiUrl}/shops/shops/${shopId}/`, valuesToSend, {
@@ -75,7 +78,7 @@ const ProfilePage: NextPage = ({ shop }: any) => {
           router.reload();
         }
       } catch (error: any) {
-        setErrors(error.response.data.errors);
+        setErrors(error.response.data?.errors);
         scrollTo(0, 0);
       }
     },
@@ -90,7 +93,7 @@ const ProfilePage: NextPage = ({ shop }: any) => {
       />
       <div className="wrapper">
         <div className="flex flex-row row-gap-large">
-          {errors.length > 0 && (
+          {errors?.length > 0 && (
             <div className="flex flex-col row-gap-small">
               {errors.map((error: any, index) => {
                 return (
@@ -140,6 +143,34 @@ const ProfilePage: NextPage = ({ shop }: any) => {
                   fieldSearchable
                   fieldDisabled={!inEdit}
                   className="input-multiselect"
+                />
+                <CardHoursField
+                  fieldLabel="Shop Hours"
+                  fieldRequired
+                  hours={shopHours}
+                  fieldDisabled={!inEdit}
+                  onChange={(event: any, index: number) => {
+                    const newShopHours = [...shopHours];
+                    newShopHours[index].day = event.currentTarget.value.toLowerCase();
+                    setShopHours(newShopHours);
+                  }}
+                  onTimeChange={(time: any, type: string, index: number) => {
+                    console.log(time, type, index);
+                    const newShopHours = [...shopHours];
+                    newShopHours[index][type] = time;
+                    setShopHours(newShopHours);
+                    console.log(newShopHours);
+                  }}
+                  onCreate={(day: any) => {
+                    const newShopHours = [...shopHours];
+                    newShopHours.push(day);
+                    setShopHours(newShopHours);
+                  }}
+                  onDelete={(index: number) => {
+                    const newShopHours = [...shopHours];
+                    newShopHours.splice(index, 1);
+                    setShopHours(newShopHours);
+                  }}
                 />
                 <CardTextField
                   fieldValue={form.values.num_bays}
