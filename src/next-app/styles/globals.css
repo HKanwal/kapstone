@@ -48,6 +48,14 @@ a {
   flex-direction: column;
 }
 
+.justify-content-center {
+  justify-content: center;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
 .row-gap-large {
   row-gap: 8px;
 }
@@ -150,4 +158,65 @@ a {
 .error {
   color: var(--red-color);
   margin-top: 2%;
+}
+
+.hours-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.hour-field {
+  padding: 0.3rem 0.5rem 0.5rem 0.5rem;
+  margin: 12px;
+  background-color: white;
+  border: 1.5px solid black;
+  border-radius: 12px;
+  text-align: center;
+  min-height: 100px;
+}
+
+.hour-header {
+  color: #3fdeae;
+  font-weight: bold;
+}
+
+.mantine-NativeSelect-input {
+  color: #3fdeae;
+  font-weight: bold;
+  font-size: var(--font-size);
+  padding-left: 12px;
+  padding-right: 12px;
+  text-align: center;
+  background-color: white !important;
+}
+
+.mantine-NativeSelect-input:disabled {
+  color: #3fdeae;
+  font-weight: bold;
+  font-size: var(--font-size);
+  padding-left: 12px;
+  padding-right: 12px;
+  text-align: center;
+  opacity: 1;
+  background-color: transparent;
+}
+
+.mantine-NativeSelect-input:disabled + .mantine-NativeSelect-rightSection {
+  display: none;
+}
+
+.mantine-TimeInput-controls {
+  justify-content: center;
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.delete-button {
+  background-color: #eee;
+  border: none;
+  padding: 5px;
+  border-radius: 16px;
+  margin-top: 10px;
 }
