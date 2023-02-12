@@ -2,6 +2,8 @@ from rest_framework import serializers
 
 from .models import (
     Shop,
+    ShopHours,
+    ShopAvailability,
     Address,
     Invitation,
     Service,
@@ -50,11 +52,24 @@ class AddressSerializer(serializers.ModelSerializer):
         read_only_fields = ("id",)
 
 
+class ShopAvailabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShopAvailability
+        fields = "__all__"
+
+
+class ShopHoursSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShopHours
+        fields = "__all__"
+
+
 class ShopSerializer(serializers.ModelSerializer):
     shop_owner = UserViewSerializer()
     address = AddressSerializer()
     num_employees = serializers.SerializerMethodField()
     shop_services = ServiceSerializer(many=True)
+    shophours_set = ShopHoursSerializer(many=True, read_only=True)
 
     def get_num_employees(self, obj):
         return obj.num_employees
