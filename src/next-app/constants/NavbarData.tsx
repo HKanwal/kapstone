@@ -22,7 +22,7 @@ export const CustomerNavbarData = [
     path: '/quote-request',
     icon: <IoIcons.IoMdFiling />,
   },
-]
+];
 
 export const ShopOwnerNavbarData = [
   {
@@ -56,3 +56,7 @@ export const ShopOwnerNavbarData = [
     icon: <IoIcons.IoMdFiling />,
   },
 ];
+
+export const EmployeeNavbarData = ShopOwnerNavbarData.filter(
+  (item) => !['Employees'].includes(item.title)
+);
