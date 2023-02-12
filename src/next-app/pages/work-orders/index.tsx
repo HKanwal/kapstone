@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Moment from 'react-moment';
 import 'moment-timezone';
 import apiUrl from '../../constants/api-url';
+// @ts-ignore
+import * as cookie from 'cookie';
 
 const WorkOrdersList: NextPage = ({ workOrders }: any) => {
   return (
@@ -14,7 +16,7 @@ const WorkOrdersList: NextPage = ({ workOrders }: any) => {
         <div className="flex flex-row row-gap-large">
           {workOrders.map((workOrder: any) => {
             return (
-              <Link href={`/work-orders/${workOrder.id}`} key={workOrder.id}>
+              <Link href={`/work-orders/${workOrder.id}`} key={workOrder.id} legacyBehavior>
                 <a className="card hover-scale-up active-scale-down">
                   <div className="flex flex-row row-gap-small">
                     <span>
@@ -45,12 +47,12 @@ const WorkOrdersList: NextPage = ({ workOrders }: any) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<{}> = async () => {
+export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
+  const parsedCookies = cookie.parse(context.req.headers.cookie);
+  const access_token = parsedCookies.access;
   try {
-    const token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc2MjQ0OTgzLCJqdGkiOiIxZDg4MTJhYTg5ZmI0N2JjYjFlODU3ODU4NWZjMDNjMyIsInVzZXJfaWQiOjE0OH0.vZ8GjUqu9NUbGX4um7MSoCWI6OQVZrFDZQmJ6I57tlI';
     const workOrders = await axios.get(`${apiUrl}/shops/work-orders/`, {
-      headers: { Authorization: `JWT ${token}` },
+      headers: { Authorization: `JWT ${access_token}` },
     });
     return {
       props: {
