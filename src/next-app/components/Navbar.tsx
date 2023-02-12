@@ -4,7 +4,11 @@ import Button from './Button';
 import ProfileModal from './ProfileModal';
 import { IoMdMenu, IoMdContact } from 'react-icons/io';
 import Link from 'next/link';
-import { CustomerNavbarData, ShopOwnerNavbarData } from '../constants/NavbarData';
+import {
+  CustomerNavbarData,
+  EmployeeNavbarData,
+  ShopOwnerNavbarData,
+} from '../constants/NavbarData';
 import { IconContext } from 'react-icons';
 import Cookies from 'js-cookie';
 import { Jwt } from '../utils/api';
@@ -36,7 +40,7 @@ const Navbar = (props: NavbarProps) => {
       setNavBarData(ShopOwnerNavbarData);
     } else if (props.authData.user_type === 'employee') {
       // Need to figure out Employee Navbar Data
-      // setNavBarData(EmployeeNavbarData)
+      setNavBarData(EmployeeNavbarData);
     } else {
       setNavBarData(CustomerNavbarData);
     }
@@ -88,14 +92,14 @@ const Navbar = (props: NavbarProps) => {
           <ul className={styles['nav-menu-items']} onClick={toggleSidebar}>
             {NavbarData.map((item, index) => {
               return (
-                <li key={index} className={styles['nav-text']}>
-                  <Link href={item.path}>
+                <Link href={item.path} key={index}>
+                  <li className={styles['nav-text']}>
                     <div>
                       {item.icon}
                       <span className={styles['nav-text-item']}>{item.title}</span>
                     </div>
-                  </Link>
-                </li>
+                  </li>
+                </Link>
               );
             })}
           </ul>
