@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from '../styles/components/Navbar.module.css';
 import Button from './Button';
 import ProfileModal from './ProfileModal';
-import { IoMdMenu, IoMdContact } from 'react-icons/io';
+import { IoMdMenu, IoMdContact, IoIosCloseCircleOutline } from 'react-icons/io';
 import Link from 'next/link';
 import {
   CustomerNavbarData,
@@ -70,7 +70,9 @@ const Navbar = (props: NavbarProps) => {
       <IconContext.Provider value={{ color: '#000' }}>
         <div className={styles.navbar}>
           <div className={sidebar ? styles['menu-bars-active'] : styles['menu-bars']}>
-            <IoMdMenu onClick={toggleSidebar} />
+            <span onClick={toggleSidebar}>
+              {sidebar ? <IoIosCloseCircleOutline /> : <IoMdMenu />}
+            </span>
           </div>
           <div className={styles['btn-contianer']}>
             <IoMdContact className={styles['profile-btn']} onClick={toggleProfile} />
