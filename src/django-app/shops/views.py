@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.db import transaction
 from django.core.exceptions import ValidationError
+from django.apps import apps
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
@@ -126,6 +127,28 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         shop = self.get_object()
         serializer = EmployeeDataSerializer(shop.get_employees(), many=True)
         return Response(serializer.data)
+
+    @action(detail=False, methods=["get"])
+    def me(self, request, *args, **kwargs):
+        try:
+            queryset = self.get_queryset()
+            if request.user.type == "shop_owner":
+                shop = queryset.filter(shop_owner=request.user).first()
+            elif request.user.type == "employee":
+                EmployeeData = apps.get_model("accounts", "EmployeeData")
+                employee = EmployeeData.objects.filter(user=request.user).first()
+                shop = employee.shop
+            else:
+                raise ValidationError(
+                    "Only shop owners and employees can access this endpoint"
+                )
+            serializer = ShopSerializer(shop, context={"request": request})
+            return Response(serializer.data)
+        except Exception as e:
+            logging.error(traceback.format_exc())
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class AddressViewSet(AccessViewSetMixin, viewsets.ModelViewSet):

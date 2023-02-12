@@ -28,10 +28,15 @@ class ShopAccessPolicy(AccessPolicy):
             "effect": "deny",
         },
         {
+            "action": ["me"],
+            "principal": "authenticated",
+            "effect": "allow",
+        },
+        {
             "action": ["employees"],
             "principal": "authenticated",
             "effect": "allow",
-        }
+        },
     ]
 
     @classmethod
