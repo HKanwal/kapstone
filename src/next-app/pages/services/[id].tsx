@@ -47,7 +47,7 @@ const ServicesDetail: NextPage = ({ service, parts }: any) => {
         description: values.description,
         price: values.price,
         active: values.active === 'Active' ? true : false,
-        parts: serviceParts,
+        parts: serviceParts.map((part: any) => part.id),
       };
       const access_token = Cookies.get('access');
       try {
@@ -122,9 +122,15 @@ const ServicesDetail: NextPage = ({ service, parts }: any) => {
                   fieldData={parts.map((part: any) => {
                     return { value: part.id.toString(), label: part.name };
                   })}
-                  fieldValues={parts.map((part: any) => {
-                    return part.id.toString();
-                  })}
+                  fieldValues={parts
+                    .filter((part: any) => {
+                      return service.parts.some(
+                        (servicePart: any) => servicePart.part.toString() == part.id.toString()
+                      );
+                    })
+                    .map((part: any) => {
+                      return part.id.toString();
+                    })}
                   onChange={(values) => {
                     const newParts = parts.map((part: any) => {
                       if (values.includes(part.id.toString())) {
