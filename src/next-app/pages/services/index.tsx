@@ -3,6 +3,7 @@ import axios from 'axios';
 import Header from '../../components/Header';
 import Link from 'next/link';
 import apiUrl from '../../constants/api-url';
+// @ts-ignore
 import * as cookie from 'cookie';
 
 const ServicesList: NextPage = ({ services }: any) => {

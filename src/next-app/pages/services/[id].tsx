@@ -14,6 +14,7 @@ import {
 import Header from '../../components/Header';
 import apiUrl from '../../constants/api-url';
 import Button from '../../components/Button';
+// @ts-ignore
 import * as cookie from 'cookie';
 import Cookies from 'js-cookie';
 
