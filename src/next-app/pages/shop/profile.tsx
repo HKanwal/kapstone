@@ -5,13 +5,7 @@ import axios from 'axios';
 import { useFormik, FormikProvider } from 'formik';
 import { useState } from 'react';
 import { GrFormEdit, GrFormClose } from 'react-icons/gr';
-import {
-  CardTextField,
-  CardTextArea,
-  CardSelect,
-  CardMultiSelect,
-  CardHoursField,
-} from '../../components/CardComponents';
+import { CardTextField, CardMultiSelect, CardHoursField } from '../../components/CardComponents';
 import Header from '../../components/Header';
 import apiUrl from '../../constants/api-url';
 import Button from '../../components/Button';
