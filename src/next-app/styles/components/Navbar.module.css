@@ -1,6 +1,6 @@
 .navbar {
   /* background-color: #f3f6ff; */
-  height: 10vh;
+  height: 75px;
   display: flex;
   justify-content: space-between;
   /* overflow: hidden; */
@@ -12,19 +12,22 @@
 .menu-bars {
   font-size: 8vmin;
   background: none;
-  padding-top: 1.5vh;
-  padding-left: 4vh;
-  padding-right: 4.5vh;
-  height: 10vh;
+  line-height: 6vmin;
+  height: 100%;
+  width: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .menu-bars-active {
-  background-color: #f3f6ff;
   font-size: 8vmin;
-  padding-top: 1.5vh;
-  padding-left: 4vh;
-  padding-right: 4.5vh;
-  height: 10vh;
+  line-height: 6vmin;
+  height: 100%;
+  width: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .menu-bars:hover {
@@ -55,7 +58,7 @@
   margin-bottom: 2vh;
   font-size: 8vmin;
   background: none;
-  padding-top: 1.5vh;
+  /* padding-top: 1.5vh; */
   padding-right: 4vh;
   height: 10vh;
   position: relative;
@@ -83,19 +86,23 @@
   position: absolute;
   top: 0;
   left: -100%;
+  width: 100%;
   transition: transform 0.3s ease-in-out;
 }
 
 .nav-menu-active {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin: 2.5%;
   background-color: #f3f6ff;
-  width: 45vh;
-  height: 100vh;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   position: absolute;
   left: 0;
   transition: transform 0.3s ease-in-out;
+  width: 95%;
 }
 
 .nav-text-item {
@@ -109,6 +116,7 @@
   padding: 1vh 0vh 1vh 3vh;
   list-style: none;
   height: 9vh;
+  width: 100%;
 }
 
 .nav-text:hover {
@@ -121,7 +129,7 @@
 }
 
 .nav-menu-items {
-  width: 45vh;
+  width: 100%;
   list-style: none;
   overflow: hidden;
   padding: 0;
