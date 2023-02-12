@@ -15,20 +15,22 @@ type NavbarProps = {
   onLogin: (jwt: Jwt) => void;
   headerName: string;
   modalBody: JSX.Element[];
-}
+  profileURL: string;
+  showProfileButton: boolean;
+};
 
 const Navbar = (props: NavbarProps) => {
   const router = useRouter();
   const [NavbarData, setNavBarData] = useState(CustomerNavbarData);
-  const [buttonText, setButtonText] = useState("Login");
+  const [buttonText, setButtonText] = useState('Login');
   const [sidebar, setSidebar] = useState(false);
   const [profile, setProfile] = useState(false);
 
   useEffect(() => {
     if (props.authData.access !== '') {
-      setButtonText("Logout");
+      setButtonText('Logout');
     } else if (Cookies.get('access') && Cookies.get('access') !== '') {
-      setButtonText("Logout");
+      setButtonText('Logout');
     }
     if (props.authData.user_type === 'shop_owner') {
       setNavBarData(ShopOwnerNavbarData);
@@ -38,17 +40,17 @@ const Navbar = (props: NavbarProps) => {
     } else {
       setNavBarData(CustomerNavbarData);
     }
-  }, [props.authData])
+  }, [props.authData]);
 
   const toggleSidebar = () => setSidebar((prevSidebar) => !prevSidebar);
   const toggleProfile = () => setProfile((prevProfile) => !prevProfile);
 
   const logout = () => {
     props.onLogin({
-      'access': '',
-      'refresh': '',
-      'user_type': 'customer',
-    })
+      access: '',
+      refresh: '',
+      user_type: 'customer',
+    });
     if (buttonText === 'Login') {
       router.push('/login');
     }
@@ -68,7 +70,14 @@ const Navbar = (props: NavbarProps) => {
           </div>
           <div className={styles['btn-contianer']}>
             <IoMdContact className={styles['profile-btn']} onClick={toggleProfile} />
-            {profile ? <ProfileModal headerName={props.headerName} modalBody={props.modalBody} /> : null}
+            {profile ? (
+              <ProfileModal
+                headerName={props.headerName}
+                modalBody={props.modalBody}
+                profileURL={props.profileURL}
+                showProfileButton={props.showProfileButton}
+              />
+            ) : null}
             <div className={styles['logout-btn']}>
               <Button title={buttonText} width="120%" onClick={logout} />
             </div>
@@ -94,6 +103,6 @@ const Navbar = (props: NavbarProps) => {
       </IconContext.Provider>
     </div>
   );
-}
+};
 
 export default Navbar;
