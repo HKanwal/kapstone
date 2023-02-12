@@ -13,10 +13,13 @@ from accounts.serializers import EmployeeDataSerializer
 
 from datetime import datetime, timedelta
 import json
+import traceback
+import logging
 
 from .serializers import (
     ShopSerializer,
     ShopWriteSerializer,
+    ShopAvailabilitySerializer,
     AddressSerializer,
     InvitationSerializer,
     ServicePartSerializer,
@@ -34,6 +37,8 @@ from .serializers import (
 )
 from .models import (
     Shop,
+    ShopAvailability,
+    ShopHours,
     Address,
     Invitation,
     Service,
@@ -85,6 +90,25 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                     )
                     if address_serializer.is_valid(raise_exception=True):
                         address_serializer.save()
+
+                shop_hours = request.data.pop("shophours_set", None)
+                if shop_hours is not None:
+                    for shop_hour in shop_hours:
+                        try:
+                            obj, created = ShopHours.objects.update_or_create(
+                                shop=shop,
+                                day=shop_hour.get("day", None),
+                                defaults={
+                                    "from_time": shop_hour.get("from_time", None),
+                                    "to_time": shop_hour.get("to_time", None),
+                                },
+                            )
+                        except Exception as e:
+                            logging.error(traceback.format_exc())
+                    shop_hours_days = [i.get("day") for i in shop_hours]
+                    ShopHours.objects.filter(shop=shop).exclude(
+                        day__in=shop_hours_days
+                    ).delete()
 
                 shop_serializer = ShopWriteSerializer(
                     shop, data=request.data, partial=True
@@ -318,3 +342,9 @@ class WorkOrderViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         elif self.action in ["create"]:
             return WorkOrderCreateSerializer
         return WorkOrderSerializer
+
+
+class ShopAvailabilityViewSet(viewsets.ModelViewSet):
+    # access_policy = ShopAvailabilityAccessPolicy
+    queryset = ShopAvailability.objects.all()
+    serializer_class = ShopAvailabilitySerializer
