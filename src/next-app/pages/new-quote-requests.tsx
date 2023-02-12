@@ -1,83 +1,106 @@
 import type { NextPage } from 'next';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
 import Header from '../components/Header';
 import styles from '../styles/pages/NewQuoteRequests.module.css';
 import QuoteRequestCard from '../components/QuoteRequestCard';
 import { useRouter } from 'next/router';
 import TextField from '../components/TextField';
 //import quoteRequestsData from '../data/newQuoteRequestData.json';
+import { AuthContext } from '../utils/api';
+import Cookies from 'js-cookie';
+import { accountTypes } from '../utils/api';
+import axios from 'axios';
+import apiUrl from '../constants/api-url';
 
 const sampleQuoteRequests = [
   {
     id: 0,
     shop: {
-      id: 0,
-      name: 'string',
+      id: 1,
+      name: '',
     },
     customer: {
       id: 0,
-      username: 'string',
-      first_name: 'string',
-      last_name: 'string',
-      email: 'user@example.com',
-      phone_number: 'string',
+      username: '',
+      first_name: '',
+      last_name: '',
+      email: '',
+      phone_number: '',
     },
-    preferred_date: '2023-02-08',
-    preferred_time: 'string',
-    preferred_phone_number: 'string',
-    preferred_email: 'user@example.com',
-    description: 'string',
+    preferred_date: new Date().toISOString().slice(0, 10),
+    preferred_time: '',
+    preferred_phone_number: '',
+    preferred_email: '',
+    description: 'Quote Request',
     images: [
       {
         id: 0,
-        photo: 'string',
+        photo: '',
         quote_request: 0,
       },
     ],
-    vehicle: 'string',
-  },
-  {
-    id: 1,
-    shop: {
-      id: 0,
-      name: 'string',
-    },
-    customer: {
-      id: 1,
-      username: 'string1',
-      first_name: 'string1',
-      last_name: 'string1',
-      email: 'user@example.com',
-      phone_number: 'string1',
-    },
-    preferred_date: '2123-12-18',
-    preferred_time: 'string1',
-    preferred_phone_number: 'string1',
-    preferred_email: 'user@example.com',
-    description: 'string1',
-    images: [
-      {
-        id: 1,
-        photo: 'string1',
-        quote_request: 1,
-      },
-    ],
-    vehicle: 'string1',
+    vehicle: '',
+    status: '',
   },
 ];
 
 const NewQuoteRequestsPage: NextPage = () => {
   const router = useRouter();
-  const shop = '0';
+  let userID: number | null = null;
+  let shopID: number | null = 1;
+  const [authData, setAuthData] = useState(useContext(AuthContext));
   const pathName = 'view-quote-request';
-  const [newQuoteRequests, setNewQuoteRequests] = useState<any[]>([]);
+  const [newQuoteRequests, setNewQuoteRequests] = useState<any[]>(sampleQuoteRequests);
   const [QRFilter, setQRFilter] = useState('');
+
+  if (authData.access !== '') {
+  } else if (Cookies.get('access') && Cookies.get('access') !== '') {
+    setAuthData({
+      access: Cookies.get('access') as string,
+      refresh: Cookies.get('refresh') as string,
+      user_type: Cookies.get('user_type') as accountTypes,
+    });
+  }
+
+  if (['shop_owner', 'employee'].includes(authData.user_type)) {
+    fetch(`${apiUrl}/auth/users/me`, {
+      method: 'GET',
+      headers: {
+        Authorization: `JWT ${authData.access}`,
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    }).then((response) =>
+      response.json().then((response) => {
+        userID = response.id;
+      })
+    );
+    // axios.get(`${apiUrl}/shops/shops/`).then((response) => {
+    //   const shops = response.data;
+    //   console.log(shops);
+    //   shopID = shops.filter((shop: { shop_owner: { id: number | null } }) => {
+    //     if (shop.shop_owner.id == shopID) return true;
+    //     else return false;
+    //   }).id;
+    // });
+  }
 
   useEffect(() => {
     const getAllNewQuoteRequests = async () => {
       try {
-        //const res = await axios.get(`${apiUrl}/accounts/newQuoteRequest/`);
-        setNewQuoteRequests(sampleQuoteRequests);
+        fetch(`${apiUrl}/quotes/quote-requests`, {
+          method: 'GET',
+          headers: {
+            Authorization: `JWT ${authData.access}`,
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+        }).then((response) =>
+          response.json().then((response) => {
+            if (!typeof response.data === undefined) {
+              setNewQuoteRequests(response.data);
+            }
+          })
+        );
+        console.log(newQuoteRequests);
       } catch (e) {
         console.log(e);
       }
@@ -99,7 +122,7 @@ const NewQuoteRequestsPage: NextPage = () => {
         <div className={styles['card-container']}>
           {newQuoteRequests
             .filter((newQuoteRequest) => {
-              if (String(newQuoteRequest.shop.id) == shop) return true;
+              if (newQuoteRequest.shop.id == shopID) return true;
               else return false;
             })
             .filter((newQuoteRequest) => {
