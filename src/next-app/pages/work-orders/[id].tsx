@@ -9,9 +9,9 @@ import { CardTextField, CardTextArea, CardSelect } from '../../components/CardCo
 import Header from '../../components/Header';
 import apiUrl from '../../constants/api-url';
 import Button from '../../components/Button';
-
-const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc3MDI0NTU2LCJqdGkiOiI2ZDEzY2I0ZWUyMWE0MWE3YTI0MTBmMDMxYWQxYzA5NSIsInVzZXJfaWQiOjE0MX0.367Y4E9-80CO86CgB8JGttMKL10l3ayNeWSFYigIIbU';
+import Cookies from 'js-cookie';
+// @ts-ignore
+import * as cookie from 'cookie';
 
 const WorkOrdersDetail: NextPage = ({ workOrder, employees }: any) => {
   const router = useRouter();
@@ -60,9 +60,11 @@ const WorkOrdersDetail: NextPage = ({ workOrder, employees }: any) => {
         employee: values.employee.id,
       };
 
+      const access_token = Cookies.get('access');
+
       try {
         const res = await axios.patch(`${apiUrl}/shops/work-orders/${id}/`, valuesToSend, {
-          headers: { Authorization: `JWT ${token}` },
+          headers: { Authorization: `JWT ${access_token}` },
         });
         if (res.status === 200) {
           router.reload();
@@ -179,12 +181,14 @@ const WorkOrdersDetail: NextPage = ({ workOrder, employees }: any) => {
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   const { id } = context.query;
+  const parsedCookies = cookie.parse(context.req.headers.cookie);
+  const access_token = parsedCookies.access;
   try {
     const workOrder = await axios.get(`${apiUrl}/shops/work-orders/${id}`, {
-      headers: { Authorization: `JWT ${token}` },
+      headers: { Authorization: `JWT ${access_token}` },
     });
     const employees = await axios.get(`${apiUrl}/shops/shops/3/employees`, {
-      headers: { Authorization: `JWT ${token}` },
+      headers: { Authorization: `JWT ${access_token}` },
     });
     return {
       props: {
