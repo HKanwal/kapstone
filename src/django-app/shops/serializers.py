@@ -70,9 +70,16 @@ class ShopSerializer(serializers.ModelSerializer):
     num_employees = serializers.SerializerMethodField()
     shop_services = ServiceSerializer(many=True)
     shophours_set = ShopHoursSerializer(many=True, read_only=True)
+    has_edit_permission = serializers.SerializerMethodField()
 
     def get_num_employees(self, obj):
         return obj.num_employees
+
+    def get_has_edit_permission(self, obj):
+        user = self.context["request"].user
+        is_shop_owner = user == obj.shop_owner
+        is_authenticated = user.is_authenticated
+        return is_authenticated and is_shop_owner
 
     class Meta:
         model = Shop
@@ -161,6 +168,14 @@ class WorkOrderSerializer(serializers.ModelSerializer):
     grand_total = serializers.DecimalField(max_digits=10, decimal_places=2, default=0)
     appointment = AppointmentSerializer()
     employee = UserViewSerializer()
+    has_edit_permission = serializers.SerializerMethodField()
+
+    def get_has_edit_permission(self, obj):
+        user = self.context["request"].user
+        is_shop_owner = user == obj.shop.shop_owner
+        is_employee = obj.shop.has_employee(user.id)
+        is_authenticated = user.is_authenticated
+        return is_authenticated and (is_shop_owner or is_employee)
 
     class Meta:
         model = WorkOrder
