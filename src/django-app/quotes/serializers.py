@@ -37,6 +37,7 @@ class QuoteRequestSerializer(serializers.ModelSerializer):
     shop = ShopOverviewSerializer()
     customer = UserViewSerializer(source="user")
     images = ImageQuoteSerializer(many=True, read_only=True)
+    status = serializers.SerializerMethodField()
 
     class Meta:
         model = QuoteRequest
@@ -51,8 +52,12 @@ class QuoteRequestSerializer(serializers.ModelSerializer):
             "description",
             "images",
             "vehicle",
+            "status",
         )
         read_only_fields = ("id", "customer", "shop")
+
+    def get_status():
+        return QuoteRequest.status
 
 
 class QuoteRequestWriteSerializer(serializers.ModelSerializer):
@@ -65,6 +70,8 @@ class QuoteRequestWriteSerializer(serializers.ModelSerializer):
             max_length=1000000, allow_empty_file=False, use_url=False
         ),
         write_only=True,
+        allow_null=True,
+        default=[],
     )
 
     class Meta:
@@ -81,13 +88,17 @@ class QuoteRequestWriteSerializer(serializers.ModelSerializer):
             "vehicle",
         )
         read_only_fields = ("id",)
-        extra_kwargs = {"customer": {"source": "user"}}
+        extra_kwargs = {
+            "customer": {"source": "user"},
+            "uploaded_images": {"required": False},
+        }
 
     def create(self, validated_data):
-        uploaded_images = validated_data.pop("uploaded_images")
+        uploaded_images = validated_data.pop("uploaded_images", None)
         quote_request = QuoteRequest.objects.create(**validated_data)
-        for image in uploaded_images:
-            QR_image = ImageQuote.objects.create(
-                quote_request=quote_request, photo=image
-            )
+        if uploaded_images is not None:
+            for image in uploaded_images:
+                QR_image = ImageQuote.objects.create(
+                    quote_request=quote_request, photo=image
+                )
         return quote_request

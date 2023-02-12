@@ -1,7 +1,30 @@
 import React from 'react';
 import * as IoIcons from 'react-icons/io';
 
-export const NavbarData = [
+export const CustomerNavbarData = [
+  {
+    title: 'Home',
+    path: '/dashboard',
+    icon: <IoIcons.IoMdHome />,
+  },
+  {
+    title: 'Shop Search',
+    path: '/shop-results',
+    icon: <IoIcons.IoMdMap />,
+  },
+  {
+    title: 'Appointments',
+    path: '#',
+    icon: <IoIcons.IoMdCalendar />,
+  },
+  {
+    title: 'Quote Requests',
+    path: '/quote-request',
+    icon: <IoIcons.IoMdFiling />,
+  },
+]
+
+export const ShopOwnerNavbarData = [
   {
     title: 'Home',
     path: '/dashboard',
