@@ -82,7 +82,7 @@ const ProfilePage: NextPage = ({ shop }: any) => {
     <div className="container">
       <Header
         title={`Shop Profile`}
-        rightIcon={inEdit ? GrFormClose : GrFormEdit}
+        rightIcon={shop.has_edit_permission ? (inEdit ? GrFormClose : GrFormEdit) : undefined}
         onRightIconClick={() => setInEdit(!inEdit)}
       />
       <div className="wrapper">
@@ -226,23 +226,15 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     const shop = await axios.get(`${apiUrl}/shops/shops/${shopId}/`, {
       headers: { Authorization: `JWT ${token}` },
     });
-    // const services = await axios.get(`http://127.0.0.1:8000/shops/services/?shop=${shopId}`);
-    // const employees = await axios.get(`${apiUrl}/shops/shops/services/?shop=${shopId}`, {
-    //   headers: { Authorization: `JWT ${token}` },
-    // });
     return {
       props: {
         shop: shop.data,
-        // employees: employees.data,
       },
     };
   } catch (error) {
     console.log(error);
     return {
-      props: {
-        shop: {},
-        // employees: [],
-      },
+      notFound: true,
     };
   }
 };

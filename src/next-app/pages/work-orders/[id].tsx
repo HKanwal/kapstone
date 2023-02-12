@@ -11,7 +11,7 @@ import apiUrl from '../../constants/api-url';
 import Button from '../../components/Button';
 
 const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc2MjQ0OTgzLCJqdGkiOiIxZDg4MTJhYTg5ZmI0N2JjYjFlODU3ODU4NWZjMDNjMyIsInVzZXJfaWQiOjE0OH0.vZ8GjUqu9NUbGX4um7MSoCWI6OQVZrFDZQmJ6I57tlI';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc3MDI0NTU2LCJqdGkiOiI2ZDEzY2I0ZWUyMWE0MWE3YTI0MTBmMDMxYWQxYzA5NSIsInVzZXJfaWQiOjE0MX0.367Y4E9-80CO86CgB8JGttMKL10l3ayNeWSFYigIIbU';
 
 const WorkOrdersDetail: NextPage = ({ workOrder, employees }: any) => {
   const router = useRouter();
@@ -78,7 +78,7 @@ const WorkOrdersDetail: NextPage = ({ workOrder, employees }: any) => {
     <div className="container">
       <Header
         title={`Work Order: #${workOrder.id}`}
-        rightIcon={inEdit ? GrFormClose : GrFormEdit}
+        rightIcon={workOrder.has_edit_permission ? (inEdit ? GrFormClose : GrFormEdit) : undefined}
         onRightIconClick={() => setInEdit(!inEdit)}
       />
       <div className="wrapper">
@@ -195,10 +195,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   } catch (error) {
     console.log(error);
     return {
-      props: {
-        workOrder: {},
-        employees: [],
-      },
+      notFound: true,
     };
   }
 };
