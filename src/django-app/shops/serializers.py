@@ -29,6 +29,14 @@ class ServicePartSerializer(serializers.ModelSerializer):
 class ServiceSerializer(serializers.ModelSerializer):
     price = serializers.DecimalField(default=0, max_digits=10, decimal_places=2)
     parts = PartSerializer(many=True)
+    has_edit_permission = serializers.SerializerMethodField()
+
+    def get_has_edit_permission(self, obj):
+        user = self.context["request"].user
+        is_shop_owner = user == obj.shop.shop_owner
+        is_employee = obj.shop.has_employee(user.id)
+        is_authenticated = user.is_authenticated
+        return is_authenticated and (is_shop_owner or is_employee)
 
     class Meta:
         model = Service
