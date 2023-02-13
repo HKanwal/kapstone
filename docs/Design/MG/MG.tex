@@ -15,7 +15,6 @@
     linkcolor=red,
     urlcolor=blue
 }
-
 \input{../../Comments}
 \input{../../Common}
 
@@ -34,7 +33,7 @@
 \begin{document}
 
 \title{Module Guide for \progname{}} 
-\author{Author Name}
+\author{\authname}
 \date{\today}
 
 \maketitle
@@ -43,11 +42,10 @@
 
 \section{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
+\begin{tabularx}{\textwidth}{p{4cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+January 18th, 2023 & 0.0 & Rev 0\\
 \bottomrule
 \end{tabularx}
 
@@ -66,15 +64,15 @@ This section records information for easy reference.
   \midrule 
   AC & Anticipated Change\\
   DAG & Directed Acyclic Graph \\
+  FR & Functional Requirement\\
   M & Module \\
   MG & Module Guide \\
   OS & Operating System \\
-  R & Requirement\\
-  SC & Scientific Computing \\
+  PWA & Progressive Web Application \\
+  \progname & PWA for maintenance appointment scheduling for vehicle owners\\
   SRS & Software Requirements Specification\\
-  \progname & Explanation of program name\\
   UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
+  UI & User Interface \\
   \bottomrule
 \end{tabular}\\
 
@@ -125,7 +123,7 @@ potential readers of this document are as follows:
   important for a maintainer to update the relevant sections of the document
   after changes have been made.
 \item Designers: Once the module guide has been written, it can be used to
-  check for consistency, feasibility and flexibility. Designers can verify the
+  check for consistency, feasibility, and flexibility. Designers can verify the
   system in various ways, such as consistency among modules, feasibility of the
   decomposition, and flexibility of the design.
 \end{itemize}
@@ -157,11 +155,11 @@ adapted here is called design for
 change.
 
 \begin{description}
-\item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
-  hardware on which the software is running.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
-  initial input data.
-\item ...
+\item[\refstepcounter{acnum} \actheacnum \label{acLayout}:] The layout of the UI components on the
+screens
+\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The fields of the various forms (eg. maybe vehicle make becomes no longer required when creating a quote request)
+\item[\refstepcounter{acnum} \actheacnum \label{acTheme}:] The theme (color palette) or the app
+\item[\refstepcounter{acnum} \actheacnum \label{acBrand}:] The branding of the app (logos and name)
 \end{description}
 
 \subsection{Unlikely Changes} \label{SecUchange}
@@ -174,9 +172,9 @@ will potentially need to be modified. Hence, it is not intended that these
 decisions will be changed.
 
 \begin{description}
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
-  (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
-\item ...
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Change in framework or stack (we will be sticking with NextJS, Django, PostgreSQL)
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Changing from PWA to Native
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Change in platform
 \end{description}
 
 \section{Module Hierarchy} \label{SecMH}
@@ -187,34 +185,54 @@ below, which are leaves in the hierarchy tree, are the modules that will
 actually be implemented.
 
 \begin{description}
-\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item ...
+%\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
+\item [\refstepcounter{mnum} \mthemnum \label{mUI}:] UI Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAuth}:] Authentication Module
+\item [\refstepcounter{mnum} \mthemnum \label{mDashboard}:] Dashboard Module
+\item [\refstepcounter{mnum} \mthemnum \label{mShopCreation}:] Shop Creation Module
+\item [\refstepcounter{mnum} \mthemnum \label{mQuoteRequest}:] Quote Request Module
+\item [\refstepcounter{mnum} \mthemnum \label{mQuote}:] Quote Module
+\item [\refstepcounter{mnum} \mthemnum \label{mChat}:] Chat Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAccountInfo}:] Account Information Module
+\item [\refstepcounter{mnum} \mthemnum \label{mWorkOrder}:] Work Order Module
+\item [\refstepcounter{mnum} \mthemnum \label{mService}:] Service Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAppointment}:] Appointment Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAvailableAppointments}:] Available Appointments Module
+\item [\refstepcounter{mnum} \mthemnum \label{mUpdateAppointments}:] Update Appointments Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAppointmentSlots}:] Appointment Slots Module
+\item [\refstepcounter{mnum} \mthemnum \label{mUpdateAppointmentSlots}:] Update Appointment Slots Module
 \end{description}
 
 
-\begin{table}[h!]
+\begin{table}[htbp]
 \centering
 \begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
 \toprule
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding Module} & ~ \\
+{Hardware-Hiding Module} & N/A \\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\ 
-& ?\\
+\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module}
+& UI Module (\mref{mUI})\\
+& Authentication Module (\mref{mAuth})\\ 
+& Dashboard Module (\mref{mDashboard})\\
+& Shop Creation Module (\mref{mShopCreation})\\ 
+& Quote Request Module (\mref{mQuoteRequest})\\ 
+& Quote Module (\mref{mQuote})\\
+& Chat Module (\mref{mChat})\\ 
+& Account Information Module (\mref{mAccountInfo})\\
+& Work Order Module (\mref{mWorkOrder})\\
+& Service Module (\mref{mService})\\
+& Appointment Module (\mref{mAppointment})\\ 
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
-& ?\\
-& ?\\
+\multirow{3}{0.3\textwidth}{Software Decision Module}
+& Available Appointments Module (\mref{mAvailableAppointments})\\
+& Update Appointments Module (\mref{mUpdateAppointments})\\
+& Appointment Slots Module (\mref{mAppointmentSlots})\\
+& Update Appointment Slots Module (\mref{mUpdateAppointmentSlots})\\
 \bottomrule
 
 \end{tabular}
@@ -225,17 +243,8 @@ actually be implemented.
 \section{Connection Between Requirements and Design} \label{SecConnection}
 
 The design of the system is intended to satisfy the requirements developed in
-the SRS. In this stage, the system is decomposed into modules. The connection
-between requirements and modules is listed in Table \ref{TblRT}.
-
-\wss{The intention of this section is to document decisions that are made
-  ``between'' the requirements and the design.  To satisfy some requirements,
-  design decisions need to be made.  Rather than make these decisions implicit,
-  they are explicitly recorded here.  For instance, if a program has security
-  requirements, a specific design decision may be made to satisfy those
-  requirements with a password.  In scientific examples, the choice of algorithm
-could potentially go here, if that is a decision that is exposed by the
-interface.}
+the \href{https://github.com/HKanwal/kapstone/blob/main/docs/SRS/SRS.pdf}{SRS}. In this stage, the system is decomposed into modules. The connection
+between requirements and modules is listed in Table~\ref{TblRT}.
 
 \section{Module Decomposition} \label{SecMD}
 
@@ -253,16 +262,9 @@ Only the leaf modules in the hierarchy have to be implemented. If a dash
 (\emph{--}) is shown, this means that the module is not a leaf and will not have
 to be implemented.
 
-\subsection{Hardware Hiding Modules (\mref{mHH})}
+\subsection{Hardware Hiding Modules}
 
-\begin{description}
-\item[Secrets:]The data structure and algorithm used to implement the virtual
-  hardware.
-\item[Services:]Serves as a virtual hardware used by the rest of the
-  system. This module provides the interface between the hardware and the
-  software. So, the system can use it to display outputs or to accept inputs.
-\item[Implemented By:] OS
-\end{description}
+Since we are building a high-level web app that is already highly abstracted away from hardware concerns, we do not have any hardware hiding modules.
 
 \subsection{Behaviour-Hiding Module}
 
@@ -276,34 +278,133 @@ to be implemented.
 \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Input Format Module (\mref{mInput})}
+\subsubsection{UI Module \mref{mUI}}
 
 \begin{description}
-\item[Secrets:]The format and structure of the input data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+\item[Secrets:] Component UI logic.
+\item[Services:] Encapsulates information pertaining to the look of all UI components and handles their logic and states
+\item[Implemented By:] Frontend
+\item[Type of Module:] Abstract Object
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Authentication Module \mref{mAuth}}
 
+\begin{description}
+\item[Secrets:]User credential authenticity
+\item[Services:]Allows user to create unique credentials and authenticates user, allowing them to log in
+\item[Implemented By:] Frontend
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Dashboard Module \mref{mDashboard}}
+
+\begin{description}
+\item[Secrets:]Page access of logged in user
+\item[Services:]Allows user to locate pages they have access to depending on account type
+\item[Implemented By:] Frontend
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Shop Creation Module \mref{mShopCreation}}
+
+\begin{description}
+\item[Secrets:]Shop Creation form data state
+\item[Services:]Submission of form will send request to backend to create shop or show error.
+\item[Implemented By:] Frontend
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Quote Request Module \mref{mQuoteRequest}}
+
+\begin{description}
+\item[Secrets:]Quote request data for users
+\item[Services:]Vehicle owners can create, edit, view and delete quote requests
+\item[Implemented By:] Frontend
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Quote Module \mref{mQuote}}
+
+\begin{description}
+\item[Secrets:]Quote data for user
+\item[Services:]Shop owners can create, edit, view and delete quotes
+\item[Implemented By:] Frontend
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Chat Page Module \mref{mChat}}
+
+\begin{description}
+\item[Secrets:]Message history data
+\item[Services:]To send a message, sends a request to the backend which updates the chat of both parties.
+\item[Implemented By:] Frontend
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Account Information Module \mref{mAccountInfo}}
+
+\begin{description}
+\item[Secrets:]User account data
+\item[Services:]All users are able to manage personal account info and shop owners can alo manage employee account data
+\item[Implemented By:] Frontend
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Work Order Module \mref{mWorkOrder}}
+
+\begin{description}
+\item[Secrets:]Work order data for shop
+\item[Services:]Shop owners/employees can view and edit work orders
+\item[Implemented By:] Frontend
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Service Module \mref{mService}}
+
+\begin{description}
+\item[Secrets:]Service type data
+\item[Services:]Shop owners/employees can create, edit, view and delete shop services
+\item[Implemented By:] Frontend
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Appointment Module \mref{mAppointment}}
+
+\begin{description}
+\item[Secrets:]User appointment data
+\item[Services:]Data of all the appointments is received from the backend. Users are able to manage appointments and view appointment information.
+\item[Implemented By:] Frontend
+\item[Type of Module:] Abstract Object
+\end{description}
 
 \subsection{Software Decision Module}
-
+\subsubsection{Available Appointments Module \mref{mAvailableAppointments}}
 \begin{description}
-\item[Secrets:] The design decision based on mathematical theorems, physical
-  facts, or programming considerations. The secrets of this module are
-  \emph{not} described in the SRS.
-\item[Services:] Includes data structure and algorithms used in the system that
-  do not provide direct interaction with the user. 
-  % Changes in these modules are more likely to be motivated by a desire to
-  % improve performance than by externally imposed changes.
-\item[Implemented By:] --
+\item[Secrets:]Algorithm for finding available appointments.
+\item[Services:]Finds available appointment slots given a range of dates and a duration.
+\item[Implemented By:] Python
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Update Appointments Module \mref{mUpdateAppointments}}
+\begin{description}
+\item[Secrets:]Algorithm to update existing appointments.
+\item[Services:]Updates/cancels existing appointments automatically when a change occurs in the shop's available hours or in the number of employees.
+\item[Implemented By:] Python
+\end{description}
+
+\subsubsection{Appointment Slots Module \mref{mAppointmentSlots}}
+\begin{description}
+\item[Secrets:]Algorithm to generate appointment slots.
+\item[Services:]Generates appointment slots based on a shop's hours and the available employees and bays.
+\item[Implemented By:] Python
+\end{description}
+
+\subsubsection{Update Appointment Slots Module \mref{mUpdateAppointmentSlots}}
+\begin{description}
+\item[Secrets:]Algorithm to update/delete appointment slots.
+\item[Services:]Updates/deletes appointment slots if a change in the shop hours or employees results in overbooking.
+\item[Implemented By:] Python
+\end{description}
 
 \section{Traceability Matrix} \label{SecTM}
 
@@ -318,17 +419,36 @@ requirements and between the modules and the anticipated changes.
 \toprule
 \textbf{Req.} & \textbf{Modules}\\
 \midrule
-R1 & \mref{mHH}, \mref{mInput}, \mref{mParams}, \mref{mControl}\\
-R2 & \mref{mInput}, \mref{mParams}\\
-R3 & \mref{mVerify}\\
-R4 & \mref{mOutput}, \mref{mControl}\\
-R5 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R6 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R7 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R8 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R9 & \mref{mVerifyOut}\\
-R10 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}\\
-R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
+FR1 & \mref{mUI}, \mref{mShopCreation}\\
+FR2 & \mref{mUI}, \mref{mAuth}, \mref{mAccountInfo}\\
+FR3 & \mref{mUI}, \mref{mAuth}, \mref{mAccountInfo}\\
+FR4 & \mref{mUI}, \mref{mAuth}, \mref{mAccountInfo}\\
+FR5 & \mref{mUI},\mref{mAccountInfo}\\
+FR6 & \mref{mUI}, \mref{mAccountInfo}\\
+FR7 & \mref{mUI}, \mref{mAccountInfo}\\
+FR8 & \mref{mUI}, \mref{mAuth}\\
+FR9 & \mref{mUI}, \mref{mAuth}\\
+FR10 & \mref{mUI}, \mref{mQuote}\\
+FR11 & \mref{mUI}, \mref{mQuote}\\
+FR12 & \mref{mUI}, \mref{mAppointment}, \mref{mAvailableAppointments}, \mref{mUpdateAppointments}, \mref{mAppointmentSlots}, \mref{mUpdateAppointmentSlots}\\
+FR13 & \mref{mUI}, \mref{mAuth}, \mref{mAccountInfo}\\
+FR14 & \mref{mUI}, \mref{mAccountInfo}\\
+FR15 & \mref{mUI}, \mref{mWorkOrder}\\
+FR16 & \mref{mUI}, \mref{mWorkOrder}\\
+FR17 & \mref{mUI}, \mref{mAccountInfo}\\
+FR18 & \mref{mUI}, \mref{mAppointment}, \mref{mAvailableAppointments}, \mref{mUpdateAppointments}\\
+FR19 & \mref{mUI}, \mref{mAccountInfo}, \mref{mUpdateAppointments}, \mref{mUpdateAppointmentSlots}\\
+FR20 & \mref{mUI}, \mref{mAppointment}, \mref{mAvailableAppointments}, \mref{mUpdateAppointments}, \mref{mAppointmentSlots}, \mref{mUpdateAppointmentSlots}\\
+FR21 & \mref{mUI}, \mref{mWorkOrder}, \mref{mChat}\\
+FR22 & \mref{mUI}, \mref{mQuote}\\
+FR23 & \mref{mUI}, \mref{mWorkOrder}\\
+FR24 & \mref{mUI}, \mref{mChat}\\
+FR25 & \mref{mWorkOrder}\\
+FR26 & \mref{mWorkOrder}\\
+FR27 & \mref{mUI}, \mref{mWorkOrder}\\
+FR28 & \mref{mUI}, \mref{mAppointment}\\
+FR29 & \mref{mUI}, \mref{mQuoteRequest}\\
+FR30 & \mref{mQuoteRequest}\\
 \bottomrule
 \end{tabular}
 \caption{Trace Between Requirements and Modules}
@@ -341,18 +461,10 @@ R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
 \toprule
 \textbf{AC} & \textbf{Modules}\\
 \midrule
-\acref{acHardware} & \mref{mHH}\\
-\acref{acInput} & \mref{mInput}\\
-\acref{acParams} & \mref{mParams}\\
-\acref{acVerify} & \mref{mVerify}\\
-\acref{acOutput} & \mref{mOutput}\\
-\acref{acVerifyOut} & \mref{mVerifyOut}\\
-\acref{acODEs} & \mref{mODEs}\\
-\acref{acEnergy} & \mref{mEnergy}\\
-\acref{acControl} & \mref{mControl}\\
-\acref{acSeqDS} & \mref{mSeqDS}\\
-\acref{acSolver} & \mref{mSolver}\\
-\acref{acPlot} & \mref{mPlot}\\
+\acref{acLayout} & \mref{mUI}\\
+\acref{acInput} & \mref{mShopCreation}, \mref{mQuoteRequest}, \mref{mQuote}, \mref{mService}\\
+\acref{acTheme} & \mref{mUI}\\
+\acref{acBrand} & \mref{mUI}\\
 \bottomrule
 \end{tabular}
 \caption{Trace Between Anticipated Changes and Modules}
@@ -374,7 +486,7 @@ because they use modules from the lower levels.
 
 \begin{figure}[H]
 \centering
-%\includegraphics[width=0.7\textwidth]{UsesHierarchy.png}
+\includegraphics[width=1\textwidth]{UsesHierarchy.png}
 \caption{Use hierarchy among modules}
 \label{FigUH}
 \end{figure}
@@ -384,4 +496,5 @@ because they use modules from the lower levels.
 \bibliographystyle {plainnat}
 \bibliography{../../../refs/References}
 
+\newpage{}
 \end{document}
