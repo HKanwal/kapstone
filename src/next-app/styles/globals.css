@@ -222,3 +222,7 @@ a {
   border-radius: 16px;
   margin-top: 10px;
 }
+
+.padding-bottom-zero {
+  padding-bottom: 0 !important;
+}
