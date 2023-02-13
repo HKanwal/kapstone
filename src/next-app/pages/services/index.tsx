@@ -10,25 +10,25 @@ const ServicesList: NextPage = ({ services }: any) => {
   const servicesList = services.map((service: any) => {
     return (
       <Link href={`/services/${service.id}`} key={service.id}>
-        <a className="card hover-scale-up active-scale-down">
+        <div className="card hover-scale-up active-scale-down">
           <div className="flex flex-row row-gap-small">
             <span>
-              <b>Service Name</b>: @{service.name}
+              <b>Service Name</b>: {service.name}
             </span>
             <span>
-              <b>Price</b>: @{service.price}
+              <b>Price</b>: {service.price}
             </span>
             <span>
-              <b>Description</b>: @
-              {service.description.length > 30
-                ? service.description.slice(0, 30) + '...'
+              <b>Description</b>:{' '}
+              {service.description.length > 45
+                ? service.description.slice(0, 45) + '...'
                 : service.description}
             </span>
             <span className="capitalize">
-              <b>Status</b>: {service.isActive}
+              <b>Status</b>: {service.isActive ? 'Active' : 'Inactive'}
             </span>
           </div>
-        </a>
+        </div>
       </Link>
     );
   });
