@@ -27,7 +27,7 @@ class ServicePartSerializer(serializers.ModelSerializer):
 
 class ServiceSerializer(serializers.ModelSerializer):
     price = serializers.DecimalField(default=0, max_digits=10, decimal_places=2)
-    parts = ServicePartSerializer(many=True)
+    parts = PartSerializer(many=True)
     has_edit_permission = serializers.SerializerMethodField()
 
     def get_has_edit_permission(self, obj):
