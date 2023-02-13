@@ -24,6 +24,7 @@ class Quote(models.Model):
     price = models.DecimalField(_("price"), max_digits=19, decimal_places=2)
     estimated_time = models.CharField(_("estimated time"), max_length=255)
     expiry_date = models.DateField(_("expiry date"))
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
 
     class Meta:
         verbose_name = "Quote"
@@ -45,6 +46,7 @@ class QuoteRequest(models.Model):
     )
     description = models.CharField(_("description"), max_length=1000)
     vehicle = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
 
     @property
     def status(self):
