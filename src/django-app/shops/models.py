@@ -23,8 +23,10 @@ from .validators import validate_nonzero
 
 class Shop(models.Model):
     shop_owner = models.ForeignKey("accounts.ShopOwner", on_delete=models.CASCADE)
-    # shop_email = models.EmailField(_("shop's email address"), max_length=255, null=True)
-    # shop_phone_numbers = ArrayField(PhoneNumberField(blank=True), blank=True)
+    shop_email = models.EmailField(
+        _("shop's email address"), max_length=255, blank=True, null=True
+    )
+    shop_phone_number = PhoneNumberField(blank=True, null=True)
     address = models.OneToOneField("Address", on_delete=models.PROTECT)
     name = models.CharField(_("shop name"), max_length=255, unique=True)
     num_bays = models.IntegerField(
@@ -47,7 +49,9 @@ class Shop(models.Model):
     @property
     def employees(self):
         EmployeeData = apps.get_model("accounts", "EmployeeData")
-        return EmployeeData.objects.filter(shop__pk=self.pk).values_list("user", flat=True)
+        return EmployeeData.objects.filter(shop__pk=self.pk).values_list(
+            "user", flat=True
+        )
 
     @property
     def num_employees(self):

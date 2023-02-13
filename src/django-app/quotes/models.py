@@ -11,6 +11,7 @@ class Quote(models.Model):
     class Status(models.TextChoices):
         NEW_QUOTE = "new_quote", "New Quote"
         ACCEPTED = "accepted", "Accepted"
+        REJECTED = "rejected", "Rejected"
         IN_PROGRESS = "in_progress", "In Progress"
         DONE = "done", "Done"
         REWORK = "rework", "Rework"
@@ -52,7 +53,6 @@ class QuoteRequest(models.Model):
             return quote.status
         except:
             return "Not Accepted"
-
 
     class Meta:
         verbose_name = "Quote Request"
