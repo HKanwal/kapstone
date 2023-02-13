@@ -35,7 +35,7 @@ const ServicesDetail: NextPage = ({ service, parts, shop }: any) => {
       name: service.name,
       description: service.description,
       price: service.price,
-      active: service.active == 'true' ? 'Active' : 'Inactive',
+      active: service.active === true ? 'Active' : 'Inactive',
     },
     validationSchema: schema,
     onSubmit: async (values) => {
@@ -47,6 +47,13 @@ const ServicesDetail: NextPage = ({ service, parts, shop }: any) => {
         active: values.active === 'Active' ? true : false,
         parts: serviceParts.map((part: any) => part.id),
       };
+      setParts(
+        parts.filter((part: any) => {
+          return service.parts.some(
+            (servicePart: any) => servicePart.id.toString() == part.id.toString()
+          );
+        })
+      );
       const access_token = Cookies.get('access');
       try {
         const res = await axios.patch(`${apiUrl}/shops/services/${id}/`, valuesToSend, {
@@ -120,19 +127,13 @@ const ServicesDetail: NextPage = ({ service, parts, shop }: any) => {
                   fieldData={parts.map((part: any) => {
                     return { value: part.id.toString(), label: part.name };
                   })}
-                  fieldValues={parts
-                    .filter((part: any) => {
-                      return service.parts.some(
-                        (servicePart: any) => servicePart.id.toString() == part.id.toString()
-                      );
-                    })
-                    .map((part: any) => {
-                      return part.id.toString();
-                    })}
+                  fieldValues={serviceParts.map((part: any) => {
+                    return part.id.toString();
+                  })}
                   onChange={(values) => {
-                    const newParts = parts.map((part: any) => {
+                    const newParts = parts.filter((part: any) => {
                       if (values.includes(part.id.toString())) {
-                        return part;
+                        return true;
                       }
                     });
                     setParts(newParts);
@@ -145,7 +146,13 @@ const ServicesDetail: NextPage = ({ service, parts, shop }: any) => {
                 <CardSelect
                   fieldName="active"
                   fieldLabel="Status"
-                  options={['Active', 'Inactive']}
+                  options={['Active', 'Inactive'].map((op: any) => {
+                    return (
+                      <option key={op} value={op}>
+                        {op}
+                      </option>
+                    );
+                  })}
                   fieldRequired
                   fieldDisabled={!inEdit}
                   error={form.errors.active}
@@ -174,7 +181,6 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     const shop = await axios.get(`${apiUrl}/shops/shops/me/`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
-    console.log(service.data.active);
     return {
       props: {
         service: service.data,

@@ -25,7 +25,7 @@ const ServicesList: NextPage = ({ services }: any) => {
                 : service.description}
             </span>
             <span className="capitalize">
-              <b>Status</b>: {service.isActive ? 'Active' : 'Inactive'}
+              <b>Status</b>: {service.active ? 'Active' : 'Inactive'}
             </span>
           </div>
         </div>
