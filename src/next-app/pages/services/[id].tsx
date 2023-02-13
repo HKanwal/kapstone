@@ -21,7 +21,7 @@ import Cookies from 'js-cookie';
 const token =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc3MDI0NTU2LCJqdGkiOiI2ZDEzY2I0ZWUyMWE0MWE3YTI0MTBmMDMxYWQxYzA5NSIsInVzZXJfaWQiOjE0MX0.367Y4E9-80CO86CgB8JGttMKL10l3ayNeWSFYigIIbU';
 
-const ServicesDetail: NextPage = ({ service, parts }: any) => {
+const ServicesDetail: NextPage = ({ service, parts, shop }: any) => {
   const router = useRouter();
   const { id } = router.query;
   const [inEdit, setInEdit] = useState(false);
@@ -43,6 +43,7 @@ const ServicesDetail: NextPage = ({ service, parts }: any) => {
     validationSchema: schema,
     onSubmit: async (values) => {
       const valuesToSend = {
+        shop: shop.id,
         name: values.name,
         description: values.description,
         price: values.price,
@@ -167,16 +168,20 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   const parsedCookies = cookie.parse(context.req.headers.cookie);
   const access_token = parsedCookies.access;
   try {
-    const service = await axios.get(`${apiUrl}/services/${id}`, {
+    const service = await axios.get(`${apiUrl}/services/${id}/`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
-    const parts = await axios.get(`${apiUrl}/vehicles/parts`, {
+    const parts = await axios.get(`${apiUrl}/vehicles/parts/`, {
+      headers: { Authorization: `JWT ${access_token}` },
+    });
+    const shop = await axios.get(`${apiUrl}/shops/shops/me/`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
     return {
       props: {
         service: service.data,
         parts: parts.data,
+        shop: shop.data,
       },
     };
   } catch (error) {
