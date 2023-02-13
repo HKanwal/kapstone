@@ -58,17 +58,15 @@ const QuoteResponsePage: NextPage = ({ quoteRequest }: any) => {
 
   const handleSubmit = async () => {
     const valuesToSend = JSON.stringify({
-      id: id,
-      status: 'new_quote',
+      status: 'pending',
       price: price,
       estimated_time: estimatedTime,
       expiry_date: expiraryDate,
       quote_request: id,
-      shop: shopID,
     });
     try {
       const access_token = Cookies.get('access');
-      const res = await axios.put(`${apiUrl}/shops/work-orders/${id}/`, valuesToSend, {
+      const res = await axios.post(`${apiUrl}/quotes/quotes`, valuesToSend, {
         headers: { Authorization: `JWT ${access_token}` },
       });
       if (res.status === 200) {

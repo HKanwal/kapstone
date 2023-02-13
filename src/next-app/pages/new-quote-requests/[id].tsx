@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import apiUrl from '../../constants/api-url';
 import Cookies from 'js-cookie';
+// @ts-ignore
 import * as cookie from 'cookie';
 
 const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
