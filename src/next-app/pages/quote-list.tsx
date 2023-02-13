@@ -51,6 +51,7 @@ const QuoteListPage: NextPage = ({ quotes, quoteRequests }: any) => {
             return (
               <Card
                 key={quote.id}
+                id={quote.id}
                 name={quoteRequests.find((quoteRequest: any) => quoteRequest.id === 1).description}
                 status={quote.status === 'new_quote' ? 'Pending' : quote.status}
                 price={quote.price}
