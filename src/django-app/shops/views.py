@@ -182,22 +182,60 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
             with transaction.atomic():
                 data = request.data
                 parts = data.pop("parts", None)
-                shop = data.get("shop")
                 service_serializer = ServiceSerializer(data=data)
                 if service_serializer.is_valid(raise_exception=True):
-                    service_serializer.save()
+                    service = service_serializer.save()
                     if parts is not None:
                         service_parts_to_create = Part.objects.filter(
                             id__in=parts
                         )
                         for part in service_parts_to_create:
-                            service_part_serializer = ServicePartSerializer(shop=shop, part=part.pk, price=part.price, quantity=1)
+                            service_part_serializer = ServicePartSerializer(service=service, part=part.pk, price=part.price, quantity=1)
                             if service_part_serializer.is_valid(raise_exception=True):
                                 service_part_serializer.save()
                 return Response(service_serializer.data)
         except Exception as err:
             return Response(
-                {"status": False, "error_description": err.message},
+                {"status": False, "error_description": 'Failed to create service.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+    @transaction.atomic
+    def partial_update(self, request, *args, **kwargs):
+        try:
+            with transaction.atomic():
+                updated_service = self.get_object()
+                data = request.data
+                parts = data.pop("parts", None)
+                service_serializer = ServiceSerializer(updated_service, data=data, partial=True)
+                if service_serializer.is_valid(raise_exception=True):
+                    service_serializer.save()
+                    if parts is not None:
+                        service_parts_fetched = Part.objects.filter(
+                            id__in=parts
+                        )
+                        
+                        ServicePart.objects.filter(
+                            service=updated_service.pk
+                        ).exclude(
+                            id__in=[part.id for part in service_parts_fetched]
+                        ).delete()
+
+                        for part in service_parts_fetched:
+                            try:
+                                obj, created = ServicePart.objects.update_or_create(
+                                    service=updated_service,
+                                    part=part.pk,
+                                    defaults={
+                                        "price": part.price,
+                                        "quantity": 1
+                                    },
+                                )
+                            except Exception as err:
+                                logging.error(traceback.format_exc())
+                return Response(service_serializer.data)
+        except Exception as err:
+            return Response(
+                {"status": False, "error_description": 'Failed to update service.'},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
