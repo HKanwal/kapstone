@@ -14,7 +14,7 @@ const QuoteRequestDetailsPage: NextPage = (props) => {
   const [status, setStatus] = useState('All');
   const [sortItem, setSortItem] = useState('Date');
   const router = useRouter();
-  console.log(router.query);
+  const { id } = router.query;
 
   function noChange(): void {
     throw new Error('Function not implemented.');
