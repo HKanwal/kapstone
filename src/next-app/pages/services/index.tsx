@@ -3,10 +3,13 @@ import axios from 'axios';
 import Header from '../../components/Header';
 import Link from 'next/link';
 import apiUrl from '../../constants/api-url';
+import { useRouter } from 'next/router';
+import { GrAddCircle } from 'react-icons/gr';
 // @ts-ignore
 import * as cookie from 'cookie';
 
-const ServicesList: NextPage = ({ services }: any) => {
+const ServicesList: NextPage = ({ services, shop }: any) => {
+  const router = useRouter();
   const servicesList = services.map((service: any) => {
     return (
       <Link href={`/services/${service.id}`} key={service.id}>
@@ -34,7 +37,11 @@ const ServicesList: NextPage = ({ services }: any) => {
   });
   return (
     <div className="container">
-      <Header title="Shop Services" />
+      <Header
+        title="Shop Services"
+        rightIcon={shop.has_edit_permission ? GrAddCircle : undefined}
+        onRightIconClick={() => router.push('/services/create-service')}
+      />
       <div className="wrapper">
         <div className="flex flex-row row-gap-large">
           {servicesList.length > 0 ? servicesList : <p>No services found.</p>}
@@ -51,9 +58,13 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     const services = await axios.get(`${apiUrl}/shops/services/`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
+    const shop = await axios.get(`${apiUrl}/shops/shops/me/`, {
+      headers: { Authorization: `JWT ${access_token}` },
+    });
     return {
       props: {
         services: services.data,
+        shop: shop.data,
       },
     };
   } catch (error) {
