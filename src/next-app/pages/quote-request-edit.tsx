@@ -21,6 +21,8 @@ interface carModels {
 const QuoteRequestEditPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
+  const [quoteRequest, setQuoteRequest] = useState<any>({});
+  const [vehicle, setVehicle] = useState({});
   const [make, setMake] = useState('');
   const [customMake, setCustomMake] = useState('');
   const [model, setModel] = useState('');
@@ -63,14 +65,29 @@ const QuoteRequestEditPage: NextPage = () => {
   useEffect(() => {
     const getQuoteRequest = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/quotes/quote-requests/`);
-        //setQuoteRequest(res.data);
-        console.log(res.data);
+        const res = await axios.get(`${apiUrl}/quotes/quote-requests/${id}`);
+        setQuoteRequest(res.data);
+        setFirstName(res.data.customer.first_name);
+        setLastName(res.data.customer.last_name);
+        setEmail(res.data.customer.email);
+        setPhoneNumber(res.data.customer.phone_number);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    const getVehicle = async (vin: any) => {
+      try {
+        const res = await axios.get(`${apiUrl}/vehicles/vehicles/${vin}`);
+        setVehicle(res.data);
+        setMake(res.data.manufacturer);
+        setModel(res.data.model);
+        setModelYear(res.data.year);
       } catch (e) {
         console.log(e);
       }
     };
     getQuoteRequest();
+    getVehicle(quoteRequest.vehicle);
 
     let makes: string[] = [];
     let models: carModels = {};
@@ -114,7 +131,7 @@ const QuoteRequestEditPage: NextPage = () => {
 
   return (
     <div className={styles.container}>
-      <Header title="Edit Quote Request" />
+      <Header title="Edit Quote Request - " />
 
       <div className={styles.content}>
         <div className={styles.section}>

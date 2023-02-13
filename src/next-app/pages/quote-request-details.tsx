@@ -1,6 +1,6 @@
 /* eslint-disable indent */
-import type { NextPage } from 'next';
-import { useEffect, useState } from 'react';
+import type { GetServerSideProps, NextPage } from 'next';
+import { useContext, useEffect, useState } from 'react';
 import Header from '../components/Header';
 import styles from '../styles/pages/QuoteRequestDetails.module.css';
 import Dropdown from '../components/Dropdown';
@@ -11,43 +11,68 @@ import { quotes } from '../data/QuoteData';
 import { useRouter } from 'next/router';
 import apiUrl from '../constants/api-url';
 import axios from 'axios';
+import { AuthContext } from '../utils/api';
+import Cookies from 'js-cookie';
+import { accountTypes } from '../utils/api';
+// @ts-ignore
+import * as cookie from 'cookie';
 
-const QuoteRequestDetailsPage: NextPage = () => {
+const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: any) => {
   const router = useRouter();
   const { id } = router.query;
+  const [authData, setAuthData] = useState(useContext(AuthContext));
   const [status, setStatus] = useState('All');
   const [sortItem, setSortItem] = useState('Date');
+  let shopName = '';
+
   function noChange(): void {
     throw new Error('Function not implemented.');
   }
 
-  useEffect(() => {
-    const getQuoteRequest = async () => {
-      try {
-        const res = await axios.get(`${apiUrl}/quotes/quote-requests/`);
-        //setQuoteRequest(res.data);
-        console.log(res.data);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    const getQuotes = async () => {
-      try {
-        const res = await axios.get(`${apiUrl}/quotes/quotes/`);
-        //setQuotes(res.data);
-        console.log(res.data);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    getQuoteRequest();
-    getQuotes();
-  }, []);
+  if (authData.access !== '') {
+  } else if (Cookies.get('access') && Cookies.get('access') !== '') {
+    setAuthData({
+      access: Cookies.get('access') as string,
+      refresh: Cookies.get('refresh') as string,
+      user_type: Cookies.get('user_type') as accountTypes,
+    });
+  }
+
+  // useEffect(() => {
+  //   const getQuoteRequest = async () => {
+  //     try {
+  //       const res = await axios.get(`${apiUrl}/quotes/quote-requests/`);
+  //       //setQuoteRequest(res.data);
+  //       console.log(res.data);
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   };
+  //   const getQuotes = async () => {
+  //     try {
+  //       const res = await axios.get(`${apiUrl}/quotes/quotes/`);
+  //       //setQuotes(res.data);
+  //       console.log(res.data);
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   };
+  //   getQuoteRequest();
+  //   getQuotes();
+  // }, []);
+
+  const quotesList = quotes.filter((quote: any) => {
+    if (quote.quote_request === quoteRequest.id) {
+      return true;
+    } else {
+      return false;
+    }
+  });
 
   return (
     <div className={styles.container}>
       <Header
-        title="Quote Request - "
+        title={`Quote Request - ${quoteRequest.description}`}
         burgerMenu={[
           {
             option: 'Edit',
@@ -61,7 +86,7 @@ const QuoteRequestDetailsPage: NextPage = () => {
       <div className={styles.content}>
         <div className={styles['field-container']}>
           <div className={styles['date-container']}>
-            <span className={styles['date-text']}>Date:</span>
+            <span className={styles['date-text']}>Date: {quoteRequest.preferred_date}</span>
           </div>
         </div>
 
@@ -83,60 +108,104 @@ const QuoteRequestDetailsPage: NextPage = () => {
               <></>
             )}
             {status != 'All' && status != 'Accepted'
-              ? quotes
-                  .filter((quote) => quote.status == status)
-                  .sort((a, b) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
-                  .map((item, index) => {
+              ? quotesList
+                  .filter((quote: any) => quote.status == status)
+                  .sort((a: any, b: any) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
+                  .map((quote: any) => {
+                    fetch(`${apiUrl}/shops/shops/${quote.shop}`, {
+                      method: 'GET',
+                      headers: {
+                        Authorization: `JWT ${authData.access}`,
+                        'Content-Type': 'application/json; charset=UTF-8',
+                      },
+                    }).then((response) =>
+                      response.json().then((response) => {
+                        shopName = response.name;
+                      })
+                    );
                     return (
                       <Card
-                        key={index}
-                        name={item['shop-name']}
-                        status={item.status}
-                        date={item.date}
-                        price={item.price}
+                        key={quote.id}
+                        name={shopName}
+                        status={quote.status}
+                        date={quote.expiry_date}
+                        price={quote.price}
                       />
                     );
                   })
               : status == 'Accepted' && sortItem == 'Date'
-              ? quotes
-                  .filter((quote) => quote.status == status)
-                  .sort((a, b) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
-                  .map((item, index) => {
+              ? quotesList
+                  .filter((quote: any) => quote.status == status)
+                  .sort((a: any, b: any) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
+                  .map((quote: any) => {
+                    fetch(`${apiUrl}/shops/shops/${quote.shop}`, {
+                      method: 'GET',
+                      headers: {
+                        Authorization: `JWT ${authData.access}`,
+                        'Content-Type': 'application/json; charset=UTF-8',
+                      },
+                    }).then((response) =>
+                      response.json().then((response) => {
+                        shopName = response.name;
+                      })
+                    );
                     return (
                       <Card
-                        key={index}
-                        name={item['shop-name']}
-                        status={item.status}
-                        date={item.date}
-                        price={item.price}
+                        key={quote.id}
+                        name={shopName}
+                        status={quote.status}
+                        date={quote.expiry_date}
+                        price={quote.price}
                       />
                     );
                   })
               : status == 'Accepted' && sortItem == 'Price'
-              ? quotes
-                  .filter((quote) => quote.status == status)
-                  .sort((a, b) => (a.price && b.price && a.price > b.price ? 1 : -1))
-                  .map((item, index) => {
+              ? quotesList
+                  .filter((quote: any) => quote.status == status)
+                  .sort((a: any, b: any) => (a.price && b.price && a.price > b.price ? 1 : -1))
+                  .map((quote: any) => {
+                    fetch(`${apiUrl}/shops/shops/${quote.shop}`, {
+                      method: 'GET',
+                      headers: {
+                        Authorization: `JWT ${authData.access}`,
+                        'Content-Type': 'application/json; charset=UTF-8',
+                      },
+                    }).then((response) =>
+                      response.json().then((response) => {
+                        shopName = response.name;
+                      })
+                    );
                     return (
                       <Card
-                        key={index}
-                        name={item['shop-name']}
-                        status={item.status}
-                        date={item.date}
-                        price={item.price}
+                        key={quote.id}
+                        name={shopName}
+                        status={quote.status}
+                        date={quote.expiry_date}
+                        price={quote.price}
                       />
                     );
                   })
-              : quotes
-                  .sort((a, b) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
-                  .map((item, index) => {
+              : quotesList
+                  .sort((a: any, b: any) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
+                  .map((quote: any) => {
+                    fetch(`${apiUrl}/shops/shops/${quote.shop}`, {
+                      method: 'GET',
+                      headers: {
+                        Authorization: `JWT ${authData.access}`,
+                        'Content-Type': 'application/json; charset=UTF-8',
+                      },
+                    }).then((response) =>
+                      response.json().then((response) => {
+                        shopName = response.name;
+                      })
+                    );
                     return (
                       <Card
-                        key={index}
-                        name={item['shop-name']}
-                        status={item.status}
-                        date={item.date}
-                        price={item.price}
+                        key={quote.id}
+                        name={shopName}
+                        status={quote.status}
+                        date={quote.expiry_date}
+                        price={quote.price}
                       />
                     );
                   })}
@@ -147,17 +216,17 @@ const QuoteRequestDetailsPage: NextPage = () => {
           <span className={styles['section-header']}>Vehicle Information</span>
           <div className={styles['field-container']}>
             <FieldLabel label="Manufacturer" />
-            <TextInput value="" disabled onChange={noChange} />
+            <TextInput value={vehicle.manufacturer} disabled onChange={noChange} />
           </div>
 
           <div className={styles['field-container']}>
             <FieldLabel label="Model" />
-            <TextInput value="" disabled onChange={noChange} />
+            <TextInput value={vehicle.model} disabled onChange={noChange} />
           </div>
 
           <div className={styles['field-container']}>
             <FieldLabel label="Model Year" />
-            <TextInput value="" disabled onChange={noChange} />
+            <TextInput value={vehicle.year} disabled onChange={noChange} />
           </div>
         </div>
 
@@ -179,7 +248,7 @@ const QuoteRequestDetailsPage: NextPage = () => {
             <div className={styles['images-field-container']}>
               <FieldLabel label="Images" />
               <div className={styles['images-container']}>
-                <span className={styles['images-text']}>image1.jpg</span>
+                <span className={styles['no-images-text']}>no images uploaded</span>
               </div>
             </div>
           </div>
@@ -187,6 +256,35 @@ const QuoteRequestDetailsPage: NextPage = () => {
       </div>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
+  const { id } = context.query;
+  const parsedCookies = cookie.parse(String(context.req.headers.cookie));
+  const access_token = parsedCookies.access;
+  try {
+    const quotes = await axios.get(`${apiUrl}/quotes/quotes`, {
+      headers: { Authorization: `JWT ${access_token}` },
+    });
+    const quoteRequest = await axios.get(`${apiUrl}/quotes/quote-requests/${id}`, {
+      headers: { Authorization: `JWT ${access_token}` },
+    });
+    const vehicle = await axios.get(`${apiUrl}/vehicles/vehicles/${quoteRequest.data.vehicle}`, {
+      headers: { Authorization: `JWT ${access_token}` },
+    });
+    return {
+      props: {
+        quotes: quotes.data,
+        quoteRequest: quoteRequest.data,
+        vehicle: vehicle.data,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      notFound: true,
+    };
+  }
 };
 
 export default QuoteRequestDetailsPage;
