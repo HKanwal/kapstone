@@ -40,7 +40,6 @@ const Quote: NextPage = (props) => {
     )
   }
 
-
   const sampleData = {
     id: 0,
     description: 'This is a test description for an accepted quote',
