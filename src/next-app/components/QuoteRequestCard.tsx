@@ -6,7 +6,7 @@ type QuoteRequestProps = {
   id: number;
   description: string;
   dateCreated: string;
-  path: string;
+  path?: string;
 };
 
 const QuoteRequestCard = (props: QuoteRequestProps) => {
@@ -26,7 +26,7 @@ const QuoteRequestCard = (props: QuoteRequestProps) => {
       className={styles.card}
       onClick={() => {
         router.push({
-          pathname: props.path,
+          pathname: props.path ? props.path : 'quote-request-details',
           query: { id: props.id },
         });
       }}
