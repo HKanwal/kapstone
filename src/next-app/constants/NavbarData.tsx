@@ -42,8 +42,13 @@ export const ShopOwnerNavbarData = [
   },
   {
     title: 'Employees',
-    path: '/invite',
+    path: '#',
     icon: <IoIcons.IoMdPeople />,
+  },
+  {
+    title: 'Invitations',
+    path: '/invitations',
+    icon: <IoIcons.IoMdMan />,
   },
   {
     title: 'Work Orders',
@@ -58,5 +63,5 @@ export const ShopOwnerNavbarData = [
 ];
 
 export const EmployeeNavbarData = ShopOwnerNavbarData.filter(
-  (item) => !['Employees'].includes(item.title)
+  (item) => !['Employees', 'Invitations'].includes(item.title)
 );
