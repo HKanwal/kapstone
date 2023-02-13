@@ -1,4 +1,4 @@
-import type { NextPage, GetServerSideProps } from 'next';
+import type { NextPage, GetServerSideProps, GetStaticPaths } from 'next';
 import { useRouter } from 'next/router';
 import * as yup from 'yup';
 import axios from 'axios';
@@ -18,9 +18,6 @@ import Button from '../../components/Button';
 import * as cookie from 'cookie';
 import Cookies from 'js-cookie';
 
-const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc3MDI0NTU2LCJqdGkiOiI2ZDEzY2I0ZWUyMWE0MWE3YTI0MTBmMDMxYWQxYzA5NSIsInVzZXJfaWQiOjE0MX0.367Y4E9-80CO86CgB8JGttMKL10l3ayNeWSFYigIIbU';
-
 const ServicesDetail: NextPage = ({ service, parts, shop }: any) => {
   const router = useRouter();
   const { id } = router.query;
@@ -31,14 +28,14 @@ const ServicesDetail: NextPage = ({ service, parts, shop }: any) => {
     name: yup.string().required(),
     description: yup.string().required(),
     price: yup.number().positive().required(),
-    active: yup.boolean().required(),
+    active: yup.string().required(),
   });
   const form = useFormik({
     initialValues: {
       name: service.name,
       description: service.description,
       price: service.price,
-      active: service.active,
+      active: service.active == 'true' ? 'Active' : 'Inactive',
     },
     validationSchema: schema,
     onSubmit: async (values) => {
@@ -68,7 +65,7 @@ const ServicesDetail: NextPage = ({ service, parts, shop }: any) => {
   return (
     <div className="container">
       <Header
-        title={`Service: #${service.id}`}
+        title={`Service: ${service.name}`}
         rightIcon={service.has_edit_permission ? (inEdit ? GrFormClose : GrFormEdit) : undefined}
         onRightIconClick={() => setInEdit(!inEdit)}
       />
@@ -90,7 +87,7 @@ const ServicesDetail: NextPage = ({ service, parts, shop }: any) => {
               <h2 className="form-header">Service Information</h2>
               <div className={`card${inEdit ? 'edit' : ''}`} style={{ marginBottom: '12px' }}>
                 <CardTextField
-                  fieldValue={`@${form.values.name}`}
+                  fieldValue={`${form.values.name}`}
                   fieldName="name"
                   fieldLabel="Service Name"
                   fieldType="string"
@@ -100,7 +97,7 @@ const ServicesDetail: NextPage = ({ service, parts, shop }: any) => {
                   error={form.errors.name}
                 />
                 <CardTextArea
-                  fieldValue={`@${form.values.description}`}
+                  fieldValue={`${form.values.description}`}
                   fieldName="description"
                   fieldLabel="Description"
                   fieldRequired
@@ -126,7 +123,7 @@ const ServicesDetail: NextPage = ({ service, parts, shop }: any) => {
                   fieldValues={parts
                     .filter((part: any) => {
                       return service.parts.some(
-                        (servicePart: any) => servicePart.part.toString() == part.id.toString()
+                        (servicePart: any) => servicePart.id.toString() == part.id.toString()
                       );
                     })
                     .map((part: any) => {
@@ -168,7 +165,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   const parsedCookies = cookie.parse(context.req.headers.cookie);
   const access_token = parsedCookies.access;
   try {
-    const service = await axios.get(`${apiUrl}/services/${id}/`, {
+    const service = await axios.get(`${apiUrl}/shops/services/${id}/`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
     const parts = await axios.get(`${apiUrl}/vehicles/parts/`, {
@@ -177,6 +174,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     const shop = await axios.get(`${apiUrl}/shops/shops/me/`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
+    console.log(service.data.active);
     return {
       props: {
         service: service.data,
