@@ -92,7 +92,7 @@ class QuoteRequestAccessPolicy(AccessPolicy):
             "condition_expression": ["(is_shop_related or is_owner)"],
         },
         {
-            "action": ["create"],
+            "action": ["create", "bulk_create"],
             "principal": "authenticated",
             "effect": "allow",
             "condition": ["is_customer"],
