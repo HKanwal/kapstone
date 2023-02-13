@@ -1,3 +1,4 @@
+from copy import deepcopy
 from django.shortcuts import render
 from django.db import transaction
 from django.core.exceptions import ValidationError
@@ -51,6 +52,7 @@ from .models import (
 from .policies import (
     ShopAccessPolicy,
     AddressAccessPolicy,
+    InvitationAccessPolicy,
     ServiceAccessPolicy,
     AppointmentAccessPolicy,
     AppointmentSlotAccessPolicy,
@@ -157,9 +159,50 @@ class AddressViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
     serializer_class = AddressSerializer
 
 
-class InvitationViewSet(viewsets.ModelViewSet):
+class InvitationViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
+    access_policy = InvitationAccessPolicy
     queryset = Invitation.objects.all()
     serializer_class = InvitationSerializer
+
+    def get_queryset(self):
+        return self.access_policy.scope_queryset(self.request, self.queryset).order_by(
+            "-created_at"
+        )
+
+    @action(detail=False, methods=["post"])
+    def bulk_invite(self, request, *args, **kwargs):
+        try:
+            with transaction.atomic():
+                invitation = request.data
+
+                emails = invitation.pop("emails", None)
+
+                invitations = []
+                for email in emails:
+                    invite = deepcopy(invitation)
+                    invite["email"] = email
+                    invitations.append(invite)
+
+                serializer = InvitationSerializer(
+                    data=invitations, many=True, context={"request": request}
+                )
+                serializer.is_valid(raise_exception=True)
+                validated_data = serializer.validated_data
+
+                invitations = [Invitation(**data) for data in validated_data]
+                Invitation.objects.bulk_create(invitations)
+                return Response(
+                    {"message": f"{len(invitations)} invitations have been sent."},
+                    status=status.HTTP_201_CREATED,
+                )
+        except Exception as err:
+            logging.error(traceback.format_exc())
+            return Response(
+                {
+                    "status": False,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
