@@ -16,7 +16,8 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import apiUrl from '../constants/api-url';
 import { Router, useRouter } from 'next/router';
-import { Calendar } from '@mantine/dates';
+// @ts-ignore
+import * as cookie from 'cookie';
 
 const sampleQuoteRequest = {
   id: 0,
@@ -147,17 +148,13 @@ const QuoteResponsePage: NextPage = ({ quoteRequest }: any) => {
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   const { id } = context.query;
-  const access_token = Cookies.get('access');
+  console.log(id);
+  const parsedCookies = cookie.parse(String(context.req.headers.cookie));
+  const access_token = parsedCookies.access;
   try {
     const quoteRequest = await axios.get(`${apiUrl}/quotes/quote-requests/${id}`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
-    const vehicle = await axios.get(
-      `${apiUrl}/quotes/quote-requests/${quoteRequest.data.vehicle}`,
-      {
-        headers: { Authorization: `JWT ${access_token}` },
-      }
-    );
     return {
       props: {
         quoteRequest: quoteRequest.data,

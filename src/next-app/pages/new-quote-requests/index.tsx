@@ -10,12 +10,10 @@ import Cookies from 'js-cookie';
 import { accountTypes } from '../../utils/api';
 import axios from 'axios';
 import apiUrl from '../../constants/api-url';
-
+// @ts-ignore
 import * as cookie from 'cookie';
 
 const NewQuoteRequestsPage: NextPage = ({ quoteRequests }: any) => {
-  let userID: number | null = null;
-  let shopID: number = 1;
   const [authData, setAuthData] = useState(useContext(AuthContext));
   const [QRFilter, setQRFilter] = useState('');
 
@@ -28,30 +26,8 @@ const NewQuoteRequestsPage: NextPage = ({ quoteRequests }: any) => {
     });
   }
 
-  if (['shop_owner', 'employee'].includes(authData.user_type)) {
-    fetch(`${apiUrl}/auth/users/me`, {
-      method: 'GET',
-      headers: {
-        Authorization: `JWT ${authData.access}`,
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    }).then((response) =>
-      response.json().then((response) => {
-        userID = response.id;
-      })
-    );
-    // axios.get(`${apiUrl}/shops/shops/`).then((response) => {
-    //   const shops = response.data;
-    //   console.log(shops);
-    //   shopID = shops.filter((shop: { shop_owner: { id: number | null } }) => {
-    //     if (shop.shop_owner.id == shopID) return true;
-    //     else return false;
-    //   }).id;
-    // });
-  }
-
   const quoteRequestList = quoteRequests.filter((newQuoteRequest: any) => {
-    if (newQuoteRequest.shop.id == shopID) return true;
+    if (newQuoteRequest.status === 'Not Accepted') return true;
     else return false;
   });
 
@@ -72,7 +48,7 @@ const NewQuoteRequestsPage: NextPage = ({ quoteRequests }: any) => {
               if (
                 QRFilter != '' &&
                 !(
-                  newQuoteRequest.description.toLowerCase().startsWith(QRFilter) ||
+                  newQuoteRequest.description.toLowerCase().startsWith(QRFilter.toLowerCase()) ||
                   String(newQuoteRequest.id).startsWith(QRFilter)
                 )
               )
@@ -85,7 +61,7 @@ const NewQuoteRequestsPage: NextPage = ({ quoteRequests }: any) => {
                   key={newQuoteRequest.id}
                   id={Number(newQuoteRequest.id)}
                   description={newQuoteRequest.description}
-                  dateCreated={newQuoteRequest.preferred_date}
+                  dateCreated={String(new Date())}
                   path={`new-quote-requests/${newQuoteRequest.id}`}
                 />
               );

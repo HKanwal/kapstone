@@ -42,7 +42,7 @@ const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
         <div className={styles['field-container']}>
           <div className={styles['date-container']}>
             <span className={styles['date-text']}>ID: {quoteRequest.id}</span>
-            <span className={styles['date-text']}>Date: {quoteRequest.preferred_date}</span>
+            <span className={styles['date-text']}>Date: </span>
           </div>
         </div>
         <div className={styles.section}>
