@@ -13,8 +13,7 @@ import * as cookie from 'cookie';
 const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
   const router = useRouter();
   const { id } = router.query;
-  console.log(quoteRequest);
-  console.log(vehicle);
+
   function noChange(): void {
     throw new Error('Function not implemented.');
   }

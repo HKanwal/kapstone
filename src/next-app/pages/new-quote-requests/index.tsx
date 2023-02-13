@@ -18,7 +18,6 @@ const NewQuoteRequestsPage: NextPage = ({ quoteRequests }: any) => {
   let shopID: number = 1;
   const [authData, setAuthData] = useState(useContext(AuthContext));
   const [QRFilter, setQRFilter] = useState('');
-  console.log(quoteRequests);
 
   if (authData.access !== '') {
   } else if (Cookies.get('access') && Cookies.get('access') !== '') {
