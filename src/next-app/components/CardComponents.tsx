@@ -119,6 +119,9 @@ export const CardMultiSelect = (props: CardMultiSelectProps) => {
         searchable={props.fieldSearchable}
         disabled={props.fieldDisabled}
         className={props.className}
+        transitionDuration={150}
+        transition="pop-top-left"
+        transitionTimingFunction="ease"
       />
       <div className="flex flex-col">
         <span className="error">{props.error}</span>
