@@ -15,8 +15,6 @@ import { AuthContext } from '../utils/api';
 import Cookies from 'js-cookie';
 import { accountTypes } from '../utils/api';
 import axios from 'axios';
-// @ts-ignore
-import * as cookie from 'cookie';
 import { CardMultiSelect } from '../components/CardComponents';
 
 interface carModels {
