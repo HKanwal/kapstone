@@ -190,7 +190,7 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                             id__in=parts
                         )
                         for part in service_parts_to_create:
-                            service_part_serializer = ServicePartSerializer(service=service, part=part.pk, price=part.price, quantity=1)
+                            service_part_serializer = ServicePartSerializer(service=service, part=part, price=part.price, quantity=1)
                             if service_part_serializer.is_valid(raise_exception=True):
                                 service_part_serializer.save()
                 return Response(service_serializer.data)
@@ -199,6 +199,7 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                 {"status": False, "error_description": 'Failed to create service.'},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+    
     @transaction.atomic
     def partial_update(self, request, *args, **kwargs):
         try:
@@ -215,16 +216,16 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                         )
                         
                         ServicePart.objects.filter(
-                            service=updated_service.pk
+                            service__id=updated_service.pk
                         ).exclude(
-                            id__in=[part.id for part in service_parts_fetched]
+                            part__id__in=[part.id for part in service_parts_fetched]
                         ).delete()
 
                         for part in service_parts_fetched:
                             try:
                                 obj, created = ServicePart.objects.update_or_create(
                                     service=updated_service,
-                                    part=part.pk,
+                                    part=part,
                                     defaults={
                                         "price": part.price,
                                         "quantity": 1
