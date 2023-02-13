@@ -26,6 +26,7 @@ from .serializers import (
     ServicePartSerializer,
     ServiceSerializer,
     ServiceUpdateSerializer,
+    ServiceWriteSerializer,
     AppointmentSerializer,
     AppointmentCreateSerializer,
     AppointmentUpdateSerializer,
@@ -174,15 +175,18 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action in ["update", "partial_update"]:
             return ServiceUpdateSerializer
+        if self.action in ["create"]:
+            return ServiceWriteSerializer
         return ServiceSerializer
     
     @transaction.atomic
     def create(self, request, *args, **kwargs):
-        try:
             with transaction.atomic():
                 data = request.data
                 parts = data.pop("parts", None)
-                service_serializer = ServiceSerializer(data=data)
+                service_serializer = ServiceWriteSerializer(data=data)
+                service_serializer.is_valid(raise_exception=False)
+                print(service_serializer.errors)
                 if service_serializer.is_valid(raise_exception=True):
                     service = service_serializer.save()
                     if parts is not None:
@@ -190,15 +194,8 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                             id__in=parts
                         )
                         for part in service_parts_to_create:
-                            service_part_serializer = ServicePartSerializer(service=service, part=part, price=part.price, quantity=1)
-                            if service_part_serializer.is_valid(raise_exception=True):
-                                service_part_serializer.save()
+                            ServicePart.objects.create(service=service, part=part, quantity=1)
                 return Response(service_serializer.data)
-        except Exception as err:
-            return Response(
-                {"status": False, "error_description": 'Failed to create service.'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
     
     @transaction.atomic
     def partial_update(self, request, *args, **kwargs):
@@ -207,7 +204,7 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                 updated_service = self.get_object()
                 data = request.data
                 parts = data.pop("parts", None)
-                service_serializer = ServiceSerializer(updated_service, data=data, partial=True)
+                service_serializer = ServiceWriteSerializer(updated_service, data=data, partial=True)
                 if service_serializer.is_valid(raise_exception=True):
                     service_serializer.save()
                     if parts is not None:
@@ -227,7 +224,6 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                                     service=updated_service,
                                     part=part,
                                     defaults={
-                                        "price": part.price,
                                         "quantity": 1
                                     },
                                 )

@@ -17,7 +17,6 @@ from vehicles.serializers import PartSerializer
 
 
 class ServicePartSerializer(serializers.ModelSerializer):
-    price = serializers.DecimalField(default=0, max_digits=10, decimal_places=2)
     quantity = serializers.IntegerField(default=1)
 
     class Meta:
@@ -43,6 +42,20 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ("id",)
 
+class ServiceWriteSerializer(serializers.ModelSerializer):
+    price = serializers.DecimalField(default=0, max_digits=10, decimal_places=2)
+
+    def create(self, validated_data):
+        service = Service.objects.create(
+            **validated_data
+        )
+        return service
+
+    class Meta:
+        model = Service
+        fields ="__all__"
+        read_only_fields=("id",)
+
 
 class ServiceUpdateSerializer(serializers.ModelSerializer):
     price = serializers.DecimalField(default=0, max_digits=10, decimal_places=2)
@@ -50,7 +63,7 @@ class ServiceUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
         fields = "__all__"
-        read_only_fields = ("id", "shop")
+        read_only_fields = ("id", "parts")
 
 
 class AddressSerializer(serializers.ModelSerializer):
@@ -99,6 +112,12 @@ class ShopWriteSerializer(serializers.ModelSerializer):
         read_only=True, default=serializers.CurrentUserDefault()
     )
     num_bays = serializers.IntegerField(default=0, initial=0)
+
+    def create(self, validated_data):
+        shop = Shop.objects.create(
+            **validated_data, shop_owner=self.context["request"].user
+        )
+        return shop
 
     class Meta:
         model = Shop
