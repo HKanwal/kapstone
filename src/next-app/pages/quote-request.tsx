@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';
+import type { NextPage, GetServerSideProps } from 'next';
 import { ChangeEvent, useEffect, useRef, useState, useContext } from 'react';
 import Button from '../components/Button';
 import TextField from '../components/TextField';
@@ -14,12 +14,16 @@ import apiUrl from '../constants/api-url';
 import { AuthContext } from '../utils/api';
 import Cookies from 'js-cookie';
 import { accountTypes } from '../utils/api';
+import axios from 'axios';
+// @ts-ignore
+import * as cookie from 'cookie';
+import { CardMultiSelect } from '../components/CardComponents';
 
 interface carModels {
   [make: string]: string[];
 }
 
-const QuoteRequestPage: NextPage = () => {
+const QuoteRequestPage: NextPage = (props: any) => {
   const [authData, setAuthData] = useState(useContext(AuthContext));
   const [make, setMake] = useState('');
   const [customMake, setCustomMake] = useState('');
@@ -40,16 +44,15 @@ const QuoteRequestPage: NextPage = () => {
   const addImageInputRef = useRef<HTMLInputElement>(null);
   const [imgFiles, setImgFiles] = useState<File[]>([]);
   const [VIN, setVIN] = useState('');
+  const [shops, setShops] = useState([]);
 
   if (authData.access !== '') {
   } else if (Cookies.get('access') && Cookies.get('access') !== '') {
-    setAuthData(
-      {
-        'access': Cookies.get('access') as string,
-        'refresh': Cookies.get('refresh') as string,
-        'user_type': Cookies.get('user_type') as accountTypes,
-      }
-    )
+    setAuthData({
+      access: Cookies.get('access') as string,
+      refresh: Cookies.get('refresh') as string,
+      user_type: Cookies.get('user_type') as accountTypes,
+    });
   }
 
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
@@ -89,7 +92,8 @@ const QuoteRequestPage: NextPage = () => {
       emailErrors === undefined
     ) {
       valid = true;
-    } ``
+    }
+    ``;
   }, [make, model, customMake, customModel]);
 
   useEffect(() => {
@@ -197,6 +201,30 @@ const QuoteRequestPage: NextPage = () => {
           ) : null}
         </div>
         <div className={styles.section}>
+          <span className={styles['section-header']}>Shops</span>
+          <div className={styles['field-container'] + ' padding-bottom-zero'}>
+            <CardMultiSelect
+              fieldLabel="Shops"
+              fieldData={props.shops.map((shop: any) => {
+                return { value: shop.id.toString(), label: shop.name };
+              })}
+              fieldValues={shops.map((shop: any) => {
+                return shop.id.toString();
+              })}
+              onChange={(values) => {
+                const newShops = props.shops.filter((shop: any) => {
+                  return values.includes(shop.id.toString());
+                });
+                setShops(newShops);
+              }}
+              fieldPlaceholder="Select the shops"
+              fieldSearchable
+              fieldDisabled={false}
+              className="input-multiselect"
+            />
+          </div>
+        </div>
+        <div className={styles.section}>
           <span className={styles['section-header']}>Contact Information</span>
           <div className={styles['field-container']}>
             <TextField
@@ -260,7 +288,12 @@ const QuoteRequestPage: NextPage = () => {
             />
           </div>
           <div className={styles['field-container']}>
-            <TextArea name="Notes" placeholder="Enter any additional notes" onChange={setNotes} required />
+            <TextArea
+              name="Notes"
+              placeholder="Enter any additional notes"
+              onChange={setNotes}
+              required
+            />
           </div>
           <div className={styles['field-container']}>
             <div className={styles['images-field-container']}>
@@ -303,22 +336,22 @@ const QuoteRequestPage: NextPage = () => {
             fetch(`${apiUrl}/quotes/quote-requests/bulk_create/`, {
               method: 'POST',
               body: JSON.stringify({
-                'shops': [1, 4],
-                'description': notes,
-                'vehicle_vin': VIN,
-                'vehicle_make': make === 'Other' ? customMake : make,
-                'vehicle_model': model,
-                'vehicle_year': modelYear,
+                shops: shops.map((shop: any) => shop.id.toString()),
+                description: notes,
+                vehicle_vin: VIN,
+                vehicle_make: make === 'Other' ? customMake : make,
+                vehicle_model: model,
+                vehicle_year: modelYear,
               }),
               headers: {
-                'Authorization': `JWT ${authData.access}`,
+                Authorization: `JWT ${authData.access}`,
                 'Content-Type': 'application/json; charset=UTF-8',
               },
             }).then((response) => {
               console.log(response);
               response.json().then((response) => {
                 console.log(response);
-              })
+              });
             });
             console.log(
               'TODO: handle submit by verifying form, sending API request, and redirecting to find-shop'
@@ -328,6 +361,22 @@ const QuoteRequestPage: NextPage = () => {
       </div>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
+  try {
+    const shops = await axios.get(`${apiUrl}/shops/shops/`);
+    return {
+      props: {
+        shops: shops.data,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      notFound: true,
+    };
+  }
 };
 
 export default QuoteRequestPage;
