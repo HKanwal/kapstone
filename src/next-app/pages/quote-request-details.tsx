@@ -8,10 +8,14 @@ import FieldLabel from '../components/FieldLabel';
 import TextInput from '../components/TextInput';
 import Card from '../components/Card';
 import { quotes } from '../data/QuoteData';
+import { useRouter } from 'next/router'
 
-const QuoteRequestDetailsPage: NextPage = () => {
+const QuoteRequestDetailsPage: NextPage = (props) => {
   const [status, setStatus] = useState('All');
   const [sortItem, setSortItem] = useState('Date');
+  const router = useRouter();
+  console.log(router.query);
+
   function noChange(): void {
     throw new Error('Function not implemented.');
   }
