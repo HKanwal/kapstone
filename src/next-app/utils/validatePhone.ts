@@ -1,6 +1,5 @@
 const validatePhoneNumber = (phoneNumber: string) => {
-  console.log(phoneNumber.match("@^\d{10}$"))
-  if (phoneNumber.length === 10 && phoneNumber.match("^\d{10}$")) {
+  if (phoneNumber.length === 12 && phoneNumber.match(/^\+\d{11}$/)) {
     return true;
   } else {
     return false;

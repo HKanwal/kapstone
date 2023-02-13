@@ -35,7 +35,7 @@ function validateField(field: string, value: FieldValue, schema: ValidationFunct
   } else if (schema.includes('email') && value.length > 0 && !validateEmail(value)) {
     errors.push('Please enter a valid email.');
   } else if (schema.includes('phoneNumber') && value.length > 0 && !validatePhoneNumber(value)) {
-    errors.push('Please enter a valid 10 digit phone number. Ex: 123456789');
+    errors.push('Please enter a valid 11 digit phone number. Ex: +10123456789');
   }
   return errors;
 }
