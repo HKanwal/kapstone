@@ -46,7 +46,7 @@ type CardSelectProps = {
   fieldLabel: string;
   fieldRequired?: boolean | undefined;
   fieldDisabled?: boolean | undefined;
-  options: ReadonlyArray<string> | undefined;
+  options: any;
   error?: any;
 };
 
