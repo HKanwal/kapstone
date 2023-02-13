@@ -23,7 +23,15 @@ class QuoteAccessPolicy(AccessPolicy):
             "condition": ["has_quote_create_permission"],
         },
         {
-            "action": ["partial_update", "destroy"],
+            "action": ["partial_update"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition_expression": [
+                "(is_shop_related or (is_owner and is_editing_status))"
+            ],
+        },
+        {
+            "action": ["destroy"],
             "principal": "authenticated",
             "effect": "allow",
             "condition": ["is_shop_related"],
@@ -33,6 +41,12 @@ class QuoteAccessPolicy(AccessPolicy):
             "principal": "*",
             "effect": "deny",
         },
+        # {
+        #     "action": ["status"],
+        #     "principal": "authenticated",
+        #     "effect": "allow",
+        #     "condition_expression": ["(is_shop_related or is_owner)"],
+        # },
     ]
 
     @classmethod
@@ -66,6 +80,16 @@ class QuoteAccessPolicy(AccessPolicy):
             quote.shop.shop_owner == request.user
             or request.user.id in quote.shop.employees
         )
+
+    def is_editing_status(self, request, view, action):
+        status = request.data.pop("status", None)
+        if status is not None and not request.data:
+            return True
+        return False
+
+    def is_owner(self, request, view, action):
+        quote = view.get_object()
+        return quote.quote_request.user == request.user
 
     def has_quote_create_permission(self, request, view, action):
         quote_request_id = request.data.get("quote_request", None)
