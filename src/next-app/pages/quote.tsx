@@ -1,11 +1,12 @@
 import type { NextPage } from 'next';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Header from '../components/Header';
 import styles from '../styles/pages/Quote.module.css';
 import { useRouter } from 'next/router';
 import apiUrl from '../constants/api-url';
 import TextField from '../components/TextField';
 import Button from '../components/Button';
+import { AuthContext } from '../utils/api';
 
 type QuoteProps = {
   id: number;
@@ -23,6 +24,18 @@ type QuoteProps = {
 const Quote: NextPage = (props) => {
   const router = useRouter();
   console.log(router.query);
+
+  if (authData.access !== '') {
+  } else if (Cookies.get('access') && Cookies.get('access') !== '') {
+    setAuthData(
+      {
+        'access': Cookies.get('access') as string,
+        'refresh': Cookies.get('refresh') as string,
+        'user_type': Cookies.get('user_type') as accountTypes,
+      }
+    )
+  }
+
 
   const [quoteData, setQuoteData] = useState({} as QuoteProps);
 
