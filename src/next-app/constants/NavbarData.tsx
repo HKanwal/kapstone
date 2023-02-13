@@ -19,7 +19,7 @@ export const CustomerNavbarData = [
   },
   {
     title: 'Quote Requests',
-    path: '/quote-request',
+    path: '/quote-request-list',
     icon: <IoIcons.IoMdFiling />,
   },
 ];
@@ -57,7 +57,7 @@ export const ShopOwnerNavbarData = [
   },
   {
     title: 'Quotes',
-    path: '/quote-request',
+    path: '/quote-request-list',
     icon: <IoIcons.IoMdFiling />,
   },
 ];
