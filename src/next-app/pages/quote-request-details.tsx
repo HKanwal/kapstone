@@ -14,7 +14,7 @@ const QuoteRequestDetailsPage: NextPage = (props) => {
   const [status, setStatus] = useState('All');
   const [sortItem, setSortItem] = useState('Date');
   const router = useRouter();
-  console.log(router.query);
+  const { id } = router.query;
 
   function noChange(): void {
     throw new Error('Function not implemented.');
@@ -58,6 +58,7 @@ const QuoteRequestDetailsPage: NextPage = (props) => {
                       status={item.status}
                       date={item.date}
                       price={item.price}
+                      id={item.id}
                     />
                   );
                 })
@@ -73,6 +74,7 @@ const QuoteRequestDetailsPage: NextPage = (props) => {
                         status={item.status}
                         date={item.date}
                         price={item.price}
+                        id={item.id}
                       />
                     );
                   })
@@ -88,6 +90,7 @@ const QuoteRequestDetailsPage: NextPage = (props) => {
                           status={item.status}
                           date={item.date}
                           price={item.price}
+                          id={item.id}
                         />
                       );
                     })
@@ -101,6 +104,7 @@ const QuoteRequestDetailsPage: NextPage = (props) => {
                           status={item.status}
                           date={item.date}
                           price={item.price}
+                          id={item.id}
                         />
                       );
                     })}
