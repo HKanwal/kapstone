@@ -59,9 +59,10 @@ const QuoteRequestPage: NextPage = () => {
   };
 
   let valid = false;
+
   if (
-    make.length > 0 &&
-    model.length > 0 &&
+    (make === 'Other' ? customMake.length > 0 : make.length > 0) &&
+    (make === 'Other' ? customModel.length > 0 : make.length > 0) &&
     modelYear.length > 0 &&
     firstName.length > 0 &&
     lastName.length > 0 &&
@@ -73,6 +74,23 @@ const QuoteRequestPage: NextPage = () => {
   ) {
     valid = true;
   }
+
+  useEffect(() => {
+    if (
+      (make === 'Other' ? customMake.length > 0 : make.length > 0) &&
+      (make === 'Other' ? customModel.length > 0 : make.length > 0) &&
+      modelYear.length > 0 &&
+      firstName.length > 0 &&
+      lastName.length > 0 &&
+      phoneNumber.length > 0 &&
+      notes.length > 0 &&
+      VIN.length > 0 &&
+      email.length > 0 &&
+      emailErrors === undefined
+    ) {
+      valid = true;
+    } ``
+  }, [make, model, customMake, customModel]);
 
   useEffect(() => {
     let makes: string[] = [];
@@ -288,7 +306,7 @@ const QuoteRequestPage: NextPage = () => {
                 'shops': [1, 4],
                 'description': notes,
                 'vehicle_vin': VIN,
-                'vehicle_make': make,
+                'vehicle_make': make === 'Other' ? customMake : make,
                 'vehicle_model': model,
                 'vehicle_year': modelYear,
               }),

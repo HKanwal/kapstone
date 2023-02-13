@@ -1,0 +1,66 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.quote-container {
+  padding-left: 5vw;
+  padding-right: 5vw;
+  padding-top: 5vh;
+  padding-bottom: 5vh; 
+}
+
+.status-container {
+  padding-bottom: 5vh;
+}
+
+.cost-container {
+  display: inline-flex;
+  padding-bottom: 5vh;
+}
+
+.date-container {
+  display: inline-flex;
+  float: right;
+  padding-bottom: 5vh;
+}
+
+.field-container {
+  padding-bottom: 3vh;
+  width: 100%;
+}
+
+.section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 3vh;
+  margin-bottom: 5vh;
+}
+
+.section-header {
+  font-weight: bold;
+  font-size: var(--section-header-font-size);
+  width: 100%;
+  margin-bottom: 2vh;
+}
+
+.buttons-container {
+  padding-top: 2vh;
+}
+
+.reject-button {
+  display: inline-flex;
+  width: 50%;
+}
+
+.accept-button {
+  display: inline-flex;
+  width: 50%;
+}
+
+.error-page-container {
+  padding-top: 2vh;
+  padding-left: 35%;
+}
