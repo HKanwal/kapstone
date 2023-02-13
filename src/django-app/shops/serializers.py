@@ -70,12 +70,6 @@ class ShopWriteSerializer(serializers.ModelSerializer):
     )
     num_bays = serializers.IntegerField(default=0, initial=0)
 
-    def create(self, validated_data):
-        shop = Shop.objects.create(
-            **validated_data, shop_owner=self.context["request"].user
-        )
-        return shop
-
     class Meta:
         model = Shop
         fields = "__all__"
