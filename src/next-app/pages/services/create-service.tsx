@@ -88,10 +88,11 @@ const ServicesDetail: NextPage = ({ service, parts, shop }: any) => {
                   onChange={form.handleChange}
                   error={form.errors.name}
                 />
-                <CardTextArea
+                <CardTextField
                   fieldValue={`${form.values.description}`}
                   fieldName="description"
                   fieldLabel="Description"
+                  fieldType="string"
                   fieldRequired
                   onChange={form.handleChange}
                   error={form.errors.description}
