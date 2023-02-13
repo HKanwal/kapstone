@@ -56,25 +56,30 @@ const QuoteResponsePage: NextPage = ({ quoteRequest }: any) => {
   const [estimatedTime, setEstimatedTime] = useState('');
   const expiraryDate = '2025-01-01';
 
-  const handleSubmit = async () => {
-    const valuesToSend = JSON.stringify({
-      status: 'pending',
-      price: price,
-      estimated_time: estimatedTime,
-      expiry_date: expiraryDate,
-      quote_request: id,
-    });
-    try {
-      const access_token = Cookies.get('access');
-      const res = await axios.post(`${apiUrl}/quotes/quotes`, valuesToSend, {
-        headers: { Authorization: `JWT ${access_token}` },
-      });
-      if (res.status === 200) {
+  const handleSubmit = () => {
+    const access_token = Cookies.get('access');
+    fetch(`${apiUrl}/quotes/quotes/`, {
+      method: 'POST',
+      body: JSON.stringify({
+        status: 'new_quote',
+        price: price,
+        estimated_time: estimatedTime,
+        expiry_date: expiraryDate,
+        quote_request: id,
+      }),
+      headers: {
+        Authorization: `JWT ${access_token}`,
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    }).then((response) => {
+      console.log(response);
+      if (response.status === 201) {
         router.push({ pathname: '/new-quote-requests' });
       }
-    } catch (error: any) {
-      scrollTo(0, 0);
-    }
+      response.json().then((response) => {
+        console.log(response);
+      });
+    });
   };
 
   return (
