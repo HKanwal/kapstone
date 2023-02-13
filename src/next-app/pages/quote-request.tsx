@@ -39,6 +39,7 @@ const QuoteRequestPage: NextPage = () => {
   const [modelsList, setModelsList] = useState({} as carModels);
   const addImageInputRef = useRef<HTMLInputElement>(null);
   const [imgFiles, setImgFiles] = useState<File[]>([]);
+  const [VIN, setVIN] = useState('');
 
   if (authData.access !== '') {
   } else if (Cookies.get('access') && Cookies.get('access') !== '') {
@@ -65,6 +66,8 @@ const QuoteRequestPage: NextPage = () => {
     firstName.length > 0 &&
     lastName.length > 0 &&
     phoneNumber.length > 0 &&
+    notes.length > 0 &&
+    VIN.length > 0 &&
     email.length > 0 &&
     emailErrors === undefined
   ) {
@@ -111,7 +114,6 @@ const QuoteRequestPage: NextPage = () => {
       setEmailErrors(undefined);
     }
   };
-  console.log(notes);
 
   return (
     <div className={styles.container}>
@@ -240,7 +242,7 @@ const QuoteRequestPage: NextPage = () => {
             />
           </div>
           <div className={styles['field-container']}>
-            <TextArea name="Notes" placeholder="Enter any additional notes" onChange={setNotes} />
+            <TextArea name="Notes" placeholder="Enter any additional notes" onChange={setNotes} required />
           </div>
           <div className={styles['field-container']}>
             <div className={styles['images-field-container']}>
@@ -266,6 +268,14 @@ const QuoteRequestPage: NextPage = () => {
               </div>
             </div>
           </div>
+          <div className={styles['field-container']}>
+            <TextField
+              name="Vehicle ID Number"
+              placeholder="Enter your VIN"
+              onChange={setVIN}
+              required
+            />
+          </div>
         </div>
         <Button
           title="Create"
@@ -277,7 +287,7 @@ const QuoteRequestPage: NextPage = () => {
               body: JSON.stringify({
                 'shops': [1, 4],
                 'description': notes,
-                'vehicle_vin': '2',
+                'vehicle_vin': VIN,
                 'vehicle_make': make,
                 'vehicle_model': model,
                 'vehicle_year': modelYear,
