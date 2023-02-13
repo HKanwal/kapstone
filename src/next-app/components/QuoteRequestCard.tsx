@@ -5,15 +5,18 @@ import React from 'react';
 type QuoteRequestProps = {
   id: number;
   description: string;
-  dateCreated: string;
+  dateCreated?: string;
   path?: string;
 };
 
 const QuoteRequestCard = (props: QuoteRequestProps) => {
   let descriptionLabel = props.description;
-  const tempDate = new Date(props.dateCreated);
-  const tempDateString = tempDate.toDateString();
-  const dateLabel = `Date: ${tempDateString}`;
+  let dateLabel = '';
+  if (props.dateCreated) {
+    const tempDate = new Date(props.dateCreated);
+    const tempDateString = tempDate.toDateString();
+    dateLabel = `Date: ${tempDateString}`;
+  }
   const router = useRouter();
   const url = '/quote-request-details';
 
