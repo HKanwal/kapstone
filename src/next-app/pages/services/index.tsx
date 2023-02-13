@@ -1,10 +1,12 @@
 import type { NextPage, GetServerSideProps } from 'next';
 import axios from 'axios';
-import Header from '../../components/Header';
 import Link from 'next/link';
 import apiUrl from '../../constants/api-url';
 import { useRouter } from 'next/router';
 import { GrAddCircle } from 'react-icons/gr';
+import styles from '../../styles/components/Header.module.css';
+import IconButton from '../../components/IconButton';
+import { IoMdArrowBack } from 'react-icons/io';
 // @ts-ignore
 import * as cookie from 'cookie';
 
@@ -37,11 +39,15 @@ const ServicesList: NextPage = ({ services, shop }: any) => {
   });
   return (
     <div className="container">
-      <Header
-        title="Shop Services"
-        rightIcon={shop.has_edit_permission ? GrAddCircle : undefined}
-        onRightIconClick={() => router.push('/services/create-service')}
-      />
+      <div className={styles.header}>
+        <div className={styles['back-btn-container']}>
+          <IconButton icon={IoMdArrowBack} onClick={() => router.push('/dashboard')} />
+        </div>
+        <span className={styles.title}>Shop Services</span>
+        <div className={styles['right-btn-container']}>
+          <IconButton icon={GrAddCircle} onClick={() => router.push('/services/create-service')} />
+        </div>
+      </div>
       <div className="wrapper">
         <div className="flex flex-row row-gap-large">
           {servicesList.length > 0 ? servicesList : <p>No services found.</p>}
