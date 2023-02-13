@@ -11,11 +11,14 @@ import { accountTypes } from '../../utils/api';
 import axios from 'axios';
 import apiUrl from '../../constants/api-url';
 
+import * as cookie from 'cookie';
+
 const NewQuoteRequestsPage: NextPage = ({ quoteRequests }: any) => {
   let userID: number | null = null;
   let shopID: number = 1;
   const [authData, setAuthData] = useState(useContext(AuthContext));
   const [QRFilter, setQRFilter] = useState('');
+  console.log(quoteRequests);
 
   if (authData.access !== '') {
   } else if (Cookies.get('access') && Cookies.get('access') !== '') {
@@ -94,8 +97,9 @@ const NewQuoteRequestsPage: NextPage = ({ quoteRequests }: any) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<{}> = async () => {
-  const access_token = Cookies.get('access');
+export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
+  const parsedCookies = cookie.parse(String(context.req.headers.cookie));
+  const access_token = parsedCookies.access;
   try {
     const quoteRequests = await axios.get(`${apiUrl}/quotes/quote-requests/`, {
       headers: { Authorization: `JWT ${access_token}` },
@@ -109,37 +113,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async () => {
     console.log(error);
     return {
       props: {
-        quoteRequests: [
-          {
-            id: 0,
-            shop: {
-              id: 1,
-              name: 'string',
-            },
-            customer: {
-              id: 0,
-              username: 'string',
-              first_name: 'string',
-              last_name: 'string',
-              email: 'user@example.com',
-              phone_number: 'string',
-            },
-            preferred_date: '2023-02-12',
-            preferred_time: 'string',
-            preferred_phone_number: 'string',
-            preferred_email: 'user@example.com',
-            description: 'string',
-            images: [
-              {
-                id: 0,
-                photo: 'string',
-                quote_request: 0,
-              },
-            ],
-            vehicle: 'string',
-            status: 'string',
-          },
-        ],
+        quoteRequests: [],
       },
     };
   }

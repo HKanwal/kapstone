@@ -1,56 +1,14 @@
 /* eslint-disable indent */
 import type { GetServerSideProps, NextPage } from 'next';
-import { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import styles from '../../styles/pages/QuoteRequestDetails.module.css';
-import Dropdown from '../../components/Dropdown';
 import FieldLabel from '../../components/FieldLabel';
 import TextInput from '../../components/TextInput';
-import Card from '../../components/Card';
-import { quotes } from '../../data/QuoteData';
-import { useRouter } from 'next/router';
+import useRouter from 'next/router';
 import axios from 'axios';
 import apiUrl from '../../constants/api-url';
 import Cookies from 'js-cookie';
-
-const sampleQuoteRequest = {
-  id: 0,
-  shop: {
-    id: 1,
-    name: 'string',
-  },
-  customer: {
-    id: 0,
-    username: 'string',
-    first_name: 'string',
-    last_name: 'string',
-    email: 'user@example.com',
-    phone_number: 'string',
-  },
-  preferred_date: '2023-02-12',
-  preferred_time: 'string',
-  preferred_phone_number: 'string',
-  preferred_email: 'user@example.com',
-  description: 'string',
-  images: [
-    {
-      id: 0,
-      photo: 'string',
-      quote_request: 0,
-    },
-  ],
-  vehicle: 'string',
-  status: 'string',
-};
-
-const sampleVehicle = {
-  vin: 'string',
-  manufacturer: 'string',
-  model: 'string',
-  color: 'string',
-  year: 1950,
-  customer: 0,
-};
+import * as cookie from 'cookie';
 
 const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
   const router = useRouter();
@@ -153,17 +111,15 @@ const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   const { id } = context.query;
-  const access_token = Cookies.get('access');
+  const parsedCookies = cookie.parse(String(context.req.headers.cookie));
+  const access_token = parsedCookies.access;
   try {
     const quoteRequest = await axios.get(`${apiUrl}/quotes/quote-requests/${id}`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
-    const vehicle = await axios.get(
-      `${apiUrl}/quotes/quote-requests/${quoteRequest.data.vehicle}`,
-      {
-        headers: { Authorization: `JWT ${access_token}` },
-      }
-    );
+    const vehicle = await axios.get(`${apiUrl}/vehicles/vehicles/${quoteRequest.data.vehicle}`, {
+      headers: { Authorization: `JWT ${access_token}` },
+    });
     return {
       props: {
         quoteRequest: quoteRequest.data,
@@ -173,10 +129,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   } catch (error) {
     console.log(error);
     return {
-      props: {
-        quoteRequest: sampleQuoteRequest,
-        vehicle: sampleVehicle,
-      },
+      notFound: true,
     };
   }
 };
