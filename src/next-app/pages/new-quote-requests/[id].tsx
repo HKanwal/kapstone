@@ -4,7 +4,7 @@ import Header from '../../components/Header';
 import styles from '../../styles/pages/QuoteRequestDetails.module.css';
 import FieldLabel from '../../components/FieldLabel';
 import TextInput from '../../components/TextInput';
-import useRouter from 'next/router';
+import { useRouter } from 'next/router';
 import axios from 'axios';
 import apiUrl from '../../constants/api-url';
 import Cookies from 'js-cookie';
