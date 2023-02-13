@@ -25,6 +25,12 @@ type QuoteProps = {
 const Quote: NextPage = (props) => {
   const [quoteData, setQuoteData] = useState({} as QuoteProps);
   const [authData, setAuthData] = useState(useContext(AuthContext));
+  const [status, setStatus] = useState('');
+  const [shopName, setShopName] = useState('');
+  const [partCost, setPartCost] = useState('');
+  const [labourCost, setLabourCost] = useState('');
+  const [estimatedTime, setEstimatedTime] = useState('');
+  const [expiryDate, setExpiryDate] = useState('');
 
   const router = useRouter();
   const { id } = router.query;
@@ -51,10 +57,29 @@ const Quote: NextPage = (props) => {
     cost: '803.05',
     estimatedTime: '1 Week',
     dueDate: '2022-12-28T00:00:00Z',
-    shopNumber: '123456789'
+    shopNumber: '1234567890'
   };
 
   useEffect(() => {
+    fetch(`${apiUrl}/quotes/quotes/${id}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `JWT ${authData.access}`,
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    }).then((data) => {
+      console.log(data);
+      data.json().then((data) => {
+        console.log(data);
+        setStatus(data.status);
+        setShopName('Shop 123');
+        setPartCost(data.price);
+        setLabourCost(data.price);
+        setEstimatedTime(data.estimated_time);
+        setExpiryDate(data.expiry_date);
+      })
+    });
+
     const tempData = sampleData;
     if (tempData.description.length > 30) {
       tempData.description = `${tempData.description.slice(0, 30)}...`
@@ -69,7 +94,7 @@ const Quote: NextPage = (props) => {
   }, []);
 
   const handleCallClick = () => {
-    window.open(`tel:${sampleData.shopNumber}`);
+    window.open(`tel: ${sampleData.shopNumber}`);
   }
 
   if (id) {
@@ -83,12 +108,12 @@ const Quote: NextPage = (props) => {
         <div className={styles["quote-container"]}>
           <div className={styles["status-container"]}>
             <label>
-              {`Status: ${quoteData.status}`}
+              {`Status: ${status}`}
             </label>
           </div>
           <div className={styles["cost-container"]}>
             <label>
-              {`Cost: $${quoteData.cost}`}
+              {`Cost: $${parseInt(partCost) + parseInt(labourCost)}`}
             </label>
           </div>
           <div className={styles["date-container"]}>
@@ -99,7 +124,7 @@ const Quote: NextPage = (props) => {
           <div className={styles['field-container']}>
             <TextField
               name="Accepted By"
-              placeholder={quoteData.acceptedBy}
+              placeholder={shopName}
               disabled={true}
             />
           </div>
@@ -114,7 +139,7 @@ const Quote: NextPage = (props) => {
                 <div className={styles['field-container']}>
                   <TextField
                     name="Parts Cost:"
-                    placeholder={`$${quoteData.partCost}`}
+                    placeholder={`$${partCost}`}
                     disabled={true}
                   />
                 </div>) : null}
@@ -122,7 +147,7 @@ const Quote: NextPage = (props) => {
                 <div className={styles['field-container']}>
                   <TextField
                     name="Labour Cost:"
-                    placeholder={`$${quoteData.labourCost}`}
+                    placeholder={`$${labourCost}`}
                     disabled={true}
                   />
                 </div>) : null}
@@ -131,14 +156,14 @@ const Quote: NextPage = (props) => {
           <div className={styles['field-container']}>
             <TextField
               name="Estimated Time:"
-              placeholder={quoteData.estimatedTime}
+              placeholder={estimatedTime}
               disabled={true}
             />
           </div>
           <div className={styles['field-container']}>
             <TextField
               name="Quote Expires On:"
-              placeholder={quoteData.dueDate}
+              placeholder={expiryDate}
               disabled={true}
             />
           </div>
@@ -152,6 +177,11 @@ const Quote: NextPage = (props) => {
                   console.log(
                     'TODO: API call for rejecting quote'
                   );
+                  router.push(
+                    {
+                      pathname: 'quote-request-details',
+                      query: { id: id },
+                    })
                 }}
               />
             </div>
@@ -164,6 +194,11 @@ const Quote: NextPage = (props) => {
                   console.log(
                     'TODO: API call for accepting quote'
                   );
+                  router.push(
+                    {
+                      pathname: 'quote-request-details',
+                      query: { id: id },
+                    })
                 }}
               />
             </div>

@@ -16,6 +16,7 @@ const CreateShopPage: NextPage = () => {
     initialValues: {
       name: '',
       address: '',
+      phoneNumber: '',
       email: '',
       employees: '',
       serviceBays: '',
@@ -23,6 +24,7 @@ const CreateShopPage: NextPage = () => {
     validationSchema: {
       name: ['required'],
       address: ['required'],
+      phoneNumber: ['phoneNumber'],
       email: ['email'],
     },
     onSubmit: (values, setErrors) => {
@@ -52,11 +54,12 @@ const CreateShopPage: NextPage = () => {
           />
         </div>
         <div className={styles['field-container']}>
-          <TextMultiField
-            name="Shop Phone Number(s)"
+          <TextField
+            name="Shop Phone Number"
             placeholder="Enter your shop's phone number"
-            onChange={setPhoneNumbers}
-            multi="Add phone number"
+            onChange={form.handleChange('phoneNumber')}
+            onBlur={form.handleBlur('phoneNumber')}
+            errors={form.errors.phoneNumber.length > 0 ? new Set(form.errors.phoneNumber) : undefined}
           />
         </div>
         <div className={styles['field-container']}>

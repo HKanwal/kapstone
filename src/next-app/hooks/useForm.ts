@@ -1,11 +1,12 @@
 import { FormEvent, useEffect, useState } from 'react';
 import validateEmail from '../utils/validateEmail';
+import validatePhoneNumber from '../utils/validatePhone';
 
 type FieldValue = string;
 type Fields<F> = {
   [field in keyof F]: { value: FieldValue; errors: string[] };
 };
-type ValidationFunctions = 'required' | 'email';
+type ValidationFunctions = 'required' | 'email' | 'phoneNumber';
 
 function copyFields<F>(fields: Fields<F>) {
   return Object.entries<Fields<F>[keyof F]>(fields).reduce((a, [key, { value, errors }]) => {
@@ -33,6 +34,8 @@ function validateField(field: string, value: FieldValue, schema: ValidationFunct
     errors.push(`${toTitle(field)} is required.`);
   } else if (schema.includes('email') && value.length > 0 && !validateEmail(value)) {
     errors.push('Please enter a valid email.');
+  } else if (schema.includes('phoneNumber') && value.length > 0 && !validatePhoneNumber(value)) {
+    errors.push('Please enter a valid 10 digit phone number. Ex: 123456789');
   }
   return errors;
 }
