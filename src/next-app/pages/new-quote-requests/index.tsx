@@ -13,7 +13,7 @@ import apiUrl from '../../constants/api-url';
 
 const NewQuoteRequestsPage: NextPage = ({ quoteRequests }: any) => {
   let userID: number | null = null;
-  let shopID: number | null = 1;
+  let shopID: number = 1;
   const [authData, setAuthData] = useState(useContext(AuthContext));
   const [QRFilter, setQRFilter] = useState('');
 
