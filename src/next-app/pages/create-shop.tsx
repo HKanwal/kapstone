@@ -56,7 +56,7 @@ const CreateShopPage: NextPage = () => {
         <div className={styles['field-container']}>
           <TextField
             name="Shop Phone Number"
-            placeholder="Enter your shop's phone number"
+            placeholder="+10123456789"
             onChange={form.handleChange('phoneNumber')}
             onBlur={form.handleBlur('phoneNumber')}
             errors={form.errors.phoneNumber.length > 0 ? new Set(form.errors.phoneNumber) : undefined}
