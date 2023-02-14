@@ -194,6 +194,15 @@ const ProfilePage: NextPage = ({ shop }: any) => {
                   error={form.errors.address?.city}
                 />
                 <CardTextField
+                  fieldValue={form.values.address.province}
+                  fieldName="address.province"
+                  fieldLabel="Province"
+                  fieldType="string"
+                  fieldDisabled={!inEdit}
+                  onChange={form.handleChange}
+                  error={form.errors.address?.province}
+                />
+                <CardTextField
                   fieldValue={form.values.address.country}
                   fieldName="address.country"
                   fieldLabel="Country"
