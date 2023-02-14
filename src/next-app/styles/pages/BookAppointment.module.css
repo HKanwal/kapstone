@@ -14,6 +14,7 @@
   padding-top: 4vh;
   padding-bottom: 0vh;
   height: 100%;
+  overflow: hidden;
 }
 
 .date-selection {
@@ -26,6 +27,8 @@
   background-color: #f3f6ff;
   height: 100%;
   width: 100%;
+  padding-bottom: 8vh;
+  overflow: scroll;
 }
 
 .time-row {
@@ -33,13 +36,32 @@
   flex-direction: row;
 }
 
-.time {
+.time-container {
   width: 20vw;
-  text-align: right;
+  position: relative;
+}
+
+.time-inner-container {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  bottom: -50%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.time {
+  padding-right: 10%;
 }
 
 .slot {
   width: 80vw;
-  height: 20vh;
-  border: 1px solid black;
+  border-left: 1px solid black;
+}
+
+.sub-slot {
+  width: 100%;
+  height: 4vh;
+  border-bottom: 1px dotted black;
 }
