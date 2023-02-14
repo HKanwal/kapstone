@@ -73,7 +73,7 @@ const NewQuoteRequestsPage: NextPage = ({ quoteRequests }: any) => {
 };
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-  const parsedCookies = cookie.parse(String(context.req.headers.cookie));
+  const parsedCookies = cookie.parse(context.req.headers.cookie);
   const access_token = parsedCookies.access;
   try {
     const quoteRequests = await axios.get(`${apiUrl}/quotes/quote-requests/`, {
