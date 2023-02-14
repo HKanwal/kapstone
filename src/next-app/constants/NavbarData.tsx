@@ -32,7 +32,7 @@ export const ShopOwnerNavbarData = [
   },
   {
     title: 'Services',
-    path: '#',
+    path: '/services',
     icon: <IoIcons.IoMdConstruct />,
   },
   {
@@ -42,12 +42,17 @@ export const ShopOwnerNavbarData = [
   },
   {
     title: 'Employees',
-    path: '/invite',
+    path: '#',
     icon: <IoIcons.IoMdPeople />,
   },
   {
+    title: 'Invitations',
+    path: '/invitations',
+    icon: <IoIcons.IoMdMan />,
+  },
+  {
     title: 'Work Orders',
-    path: '#',
+    path: '/work-orders',
     icon: <IoIcons.IoMdCalculator />,
   },
   {
@@ -56,3 +61,7 @@ export const ShopOwnerNavbarData = [
     icon: <IoIcons.IoMdFiling />,
   },
 ];
+
+export const EmployeeNavbarData = ShopOwnerNavbarData.filter(
+  (item) => !['Employees', 'Invitations'].includes(item.title)
+);
