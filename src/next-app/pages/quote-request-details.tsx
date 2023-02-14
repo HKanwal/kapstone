@@ -100,7 +100,6 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle, shop
                         status={quote.status === 'new_quote' ? 'Pending' : quote.status}
                         date={quote.expiry_date}
                         price={quote.price}
-                        path={'/quote'}
                       />
                     );
                   })
