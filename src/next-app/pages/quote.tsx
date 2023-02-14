@@ -96,42 +96,45 @@ const Quote: NextPage = ({ quote, quoteRequest, shop }: any) => {
               ) : null}
             </div>
           ) : null}
+
           <div className={styles['field-container']}>
             <TextField name="Estimated Time:" placeholder={quote.estimated_time} disabled={true} />
           </div>
           <div className={styles['field-container']}>
             <TextField name="Quote Expires On:" placeholder={quote.expiry_date} disabled={true} />
           </div>
-          <div className={styles['buttons-container']}>
-            <div className={styles['reject-button']}>
-              <Button
-                title="Reject Quote"
-                width="80%"
-                backgroundColor="red"
-                onClick={() => {
-                  console.log('TODO: API call for rejecting quote');
-                  router.push({
-                    pathname: 'quote-request-details',
-                    query: { id: id },
-                  });
-                }}
-              />
+          {authData.user_type === 'customer' ? (
+            <div className={styles['buttons-container']}>
+              <div className={styles['reject-button']}>
+                <Button
+                  title="Reject Quote"
+                  width="80%"
+                  backgroundColor="red"
+                  onClick={() => {
+                    console.log('TODO: API call for rejecting quote');
+                    router.push({
+                      pathname: 'quote-request-details',
+                      query: { id: id },
+                    });
+                  }}
+                />
+              </div>
+              <div className={styles['accept-button']}>
+                <Button
+                  title="Accept Quote"
+                  margin="0 0 0 9vw"
+                  width="80%"
+                  onClick={() => {
+                    console.log('TODO: API call for accepting quote');
+                    router.push({
+                      pathname: 'quote-request-details',
+                      query: { id: quote.quote_request },
+                    });
+                  }}
+                />
+              </div>
             </div>
-            <div className={styles['accept-button']}>
-              <Button
-                title="Accept Quote"
-                margin="0 0 0 9vw"
-                width="80%"
-                onClick={() => {
-                  console.log('TODO: API call for accepting quote');
-                  router.push({
-                    pathname: 'quote-request-details',
-                    query: { id: quote.quote_request },
-                  });
-                }}
-              />
-            </div>
-          </div>
+          ) : null}
         </div>
       </div>
     );
