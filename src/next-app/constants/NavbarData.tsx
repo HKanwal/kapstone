@@ -57,7 +57,7 @@ export const ShopOwnerNavbarData = [
   },
   {
     title: 'Quotes',
-    path: '/quote-request-list',
+    path: '/quote-list',
     icon: <IoIcons.IoMdFiling />,
   },
 ];

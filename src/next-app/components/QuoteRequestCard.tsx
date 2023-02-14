@@ -6,6 +6,7 @@ type QuoteRequestProps = {
   id: number;
   description: string;
   dateCreated?: string;
+  path?: string;
 };
 
 const QuoteRequestCard = (props: QuoteRequestProps) => {
@@ -20,23 +21,22 @@ const QuoteRequestCard = (props: QuoteRequestProps) => {
   const url = '/quote-request-details';
 
   if (props.description.length > 45) {
-    descriptionLabel = `${props.description.slice(0, 45)}...`
+    descriptionLabel = `${props.description.slice(0, 45)}...`;
   }
   return (
-    <div key={props.id} className={styles.card} onClick={() => {
-      router.push(
-        {
-          pathname: 'quote-request-details',
+    <div
+      key={props.id}
+      className={styles.card}
+      onClick={() => {
+        router.push({
+          pathname: props.path ? props.path : 'quote-request-details',
           query: { id: props.id },
-        })
-    }}>
-      <div className={styles["description-container"]}>
-        {descriptionLabel}
-      </div>
-      <div className={styles["date-container"]}>
-        {dateLabel}
-      </div>
-    </div >
+        });
+      }}
+    >
+      <div className={styles['description-container']}>{descriptionLabel}</div>
+      <div className={styles['date-container']}>{dateLabel}</div>
+    </div>
   );
 };
 

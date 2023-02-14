@@ -59,7 +59,7 @@ const ServicesList: NextPage = ({ services, shop }: any) => {
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   try {
-    const parsedCookies = cookie.parse(context.req.headers.cookie);
+    const parsedCookies = cookie.parse(String(context.req.headers.cookie));
     const access_token = parsedCookies.access;
     const services = await axios.get(`${apiUrl}/shops/services/`, {
       headers: { Authorization: `JWT ${access_token}` },

@@ -105,7 +105,7 @@ const InvitationsList: NextPage = ({ invitations }: any) => {
 };
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-  const parsedCookies = cookie.parse(context.req.headers.cookie);
+  const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const access_token = parsedCookies.access;
   try {
     const invitations = await axios.get(`${apiUrl}/shops/invitations/`, {
