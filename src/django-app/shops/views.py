@@ -218,7 +218,12 @@ class InvitationViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                 validated_data = serializer.validated_data
 
                 invitations = [Invitation(**data) for data in validated_data]
-                Invitation.objects.bulk_create(invitations)
+                invitations = Invitation.objects.bulk_create(invitations)
+
+                # send invitation emails
+                for invitation in invitations:
+                    invitation.send_invitation()
+                    
                 return Response(
                     {"message": f"{len(invitations)} invitations have been sent."},
                     status=status.HTTP_201_CREATED,
