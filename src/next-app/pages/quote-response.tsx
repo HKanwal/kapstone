@@ -90,7 +90,7 @@ const QuoteResponsePage: NextPage = ({ quoteRequest }: any) => {
       <div className={styles.content}>
         <div className={styles.section}>
           <div className={styles['field-container']}>
-            <TextField name="Price" placeholder="Enter Price" onChange={setPrice} required />
+            <TextField name="Price ($)" placeholder="Enter Price" onChange={setPrice} required />
           </div>
           <div className={styles['field-container']}>
             <TextField

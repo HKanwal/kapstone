@@ -49,14 +49,18 @@ const Quote: NextPage = ({ quote, quoteRequest, shop }: any) => {
       <div className={styles.container}>
         <Header
           title={`Quote - ${quoteRequest.description}`}
-          burgerMenu={[
-            {
-              option: 'Call Shop',
-              onClick() {
-                handleCallClick();
-              },
-            },
-          ]}
+          burgerMenu={
+            authData.user_type === 'customer'
+              ? [
+                  {
+                    option: 'Call Shop',
+                    onClick() {
+                      handleCallClick();
+                    },
+                  },
+                ]
+              : undefined
+          }
         />
         <div className={styles['quote-container']}>
           <div className={styles['status-container']}>
@@ -103,7 +107,7 @@ const Quote: NextPage = ({ quote, quoteRequest, shop }: any) => {
           <div className={styles['field-container']}>
             <TextField name="Quote Expires On:" placeholder={quote.expiry_date} disabled={true} />
           </div>
-          {authData.user_type === 'customer' ? (
+          {authData.user_type === 'customer' && quote.status === 'new_quote' ? (
             <div className={styles['buttons-container']}>
               <div className={styles['reject-button']}>
                 <Button

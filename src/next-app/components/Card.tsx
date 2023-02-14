@@ -15,7 +15,7 @@ const Card = (props: CardProps) => {
   const router = useRouter();
 
   const handleClick = () => {
-    if (props.status === 'Pending') {
+    if (props.status === 'Pending' || props.status === 'Accepted') {
       router.push({
         pathname: '/quote',
         query: { id: props.id },

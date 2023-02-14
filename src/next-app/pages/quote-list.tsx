@@ -41,7 +41,17 @@ const QuoteListPage: NextPage = ({ quotes, quoteRequests }: any) => {
   console.log(quoteRequests.find((quoteRequest: any) => quoteRequest.id === 1));
   return (
     <div className={styles.container}>
-      <Header title="Quotes" />
+      <Header
+        title="Quotes"
+        burgerMenu={[
+          {
+            option: 'Home',
+            onClick() {
+              router.push('/dashboard');
+            },
+          },
+        ]}
+      />
       <div className={styles['field-container']}>
         <div className={styles['btn-container']}>
           <Button title="New Quote Requests" onClick={handleClick} width="100%" />
