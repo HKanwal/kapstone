@@ -41,7 +41,17 @@ const QuoteListPage: NextPage = ({ quotes, quoteRequests }: any) => {
   console.log(quoteRequests.find((quoteRequest: any) => quoteRequest.id === 1));
   return (
     <div className={styles.container}>
-      <Header title="Quotes" />
+      <Header
+        title="Quotes"
+        burgerMenu={[
+          {
+            option: 'Home',
+            onClick() {
+              router.push('/dashboard');
+            },
+          },
+        ]}
+      />
       <div className={styles['field-container']}>
         <div className={styles['btn-container']}>
           <Button title="New Quote Requests" onClick={handleClick} width="100%" />
@@ -52,7 +62,10 @@ const QuoteListPage: NextPage = ({ quotes, quoteRequests }: any) => {
               <Card
                 key={quote.id}
                 id={quote.id}
-                name={quoteRequests.find((quoteRequest: any) => quoteRequest.id === 1).description}
+                name={
+                  quoteRequests.find((quoteRequest: any) => quoteRequest.id === quote.quote_request)
+                    .description
+                }
                 status={quote.status === 'new_quote' ? 'Pending' : quote.status}
                 price={quote.price}
                 date={quote.expiry_date}

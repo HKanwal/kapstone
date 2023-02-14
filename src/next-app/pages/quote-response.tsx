@@ -75,7 +75,7 @@ const QuoteResponsePage: NextPage = ({ quoteRequest }: any) => {
     }).then((response) => {
       console.log(response);
       if (response.status === 201) {
-        router.push({ pathname: '/new-quote-requests' });
+        router.push({ pathname: '/quote-list' });
       }
       response.json().then((response) => {
         console.log(response);
@@ -90,7 +90,7 @@ const QuoteResponsePage: NextPage = ({ quoteRequest }: any) => {
       <div className={styles.content}>
         <div className={styles.section}>
           <div className={styles['field-container']}>
-            <TextField name="Price" placeholder="Enter Price" onChange={setPrice} required />
+            <TextField name="Price ($)" placeholder="Enter Price" onChange={setPrice} required />
           </div>
           <div className={styles['field-container']}>
             <TextField
@@ -164,7 +164,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     console.log(error);
     return {
       props: {
-        quoteRequest: sampleQuoteRequest,
+        quoteRequest: {},
       },
     };
   }
