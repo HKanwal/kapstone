@@ -58,10 +58,15 @@
 .slot {
   width: 80vw;
   border-left: 1px solid black;
+  border-bottom: 2px dotted black;
 }
 
 .sub-slot {
   width: 100%;
   height: 4vh;
   border-bottom: 1px dotted black;
+}
+
+.bookable {
+  background-color: var(--primary-color);
 }
