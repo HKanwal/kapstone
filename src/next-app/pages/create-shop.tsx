@@ -230,7 +230,7 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
 };
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-  const parsedCookies = cookie.parse(context.req.headers.cookie);
+  const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const user_type = parsedCookies.user_type;
   if (user_type === 'shop_owner') {
     return {

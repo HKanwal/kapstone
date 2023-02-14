@@ -72,7 +72,7 @@ const InvitePage: NextPage = ({ shop }: any) => {
 };
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-  const parsedCookies = cookie.parse(context.req.headers.cookie);
+  const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const access_token = parsedCookies.access;
   try {
     const shop = await axios.get(`${apiUrl}/shops/shops/me/`, {

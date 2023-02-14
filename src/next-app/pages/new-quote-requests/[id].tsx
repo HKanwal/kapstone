@@ -111,7 +111,7 @@ const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   const { id } = context.query;
-  const parsedCookies = cookie.parse(context.req.headers.cookie);
+  const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const access_token = parsedCookies.access;
   try {
     const quoteRequest = await axios.get(`${apiUrl}/quotes/quote-requests/${id}`, {
