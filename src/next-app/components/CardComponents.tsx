@@ -46,7 +46,7 @@ type CardSelectProps = {
   fieldLabel: string;
   fieldRequired?: boolean | undefined;
   fieldDisabled?: boolean | undefined;
-  options: ReadonlyArray<string> | undefined;
+  options: any;
   error?: any;
 };
 
@@ -119,6 +119,9 @@ export const CardMultiSelect = (props: CardMultiSelectProps) => {
         searchable={props.fieldSearchable}
         disabled={props.fieldDisabled}
         className={props.className}
+        transitionDuration={150}
+        transition="pop-top-left"
+        transitionTimingFunction="ease"
       />
       <div className="flex flex-col">
         <span className="error">{props.error}</span>

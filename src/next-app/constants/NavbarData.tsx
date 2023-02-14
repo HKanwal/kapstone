@@ -32,7 +32,7 @@ export const ShopOwnerNavbarData = [
   },
   {
     title: 'Services',
-    path: '#',
+    path: '/services',
     icon: <IoIcons.IoMdConstruct />,
   },
   {

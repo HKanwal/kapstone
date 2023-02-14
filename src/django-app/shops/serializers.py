@@ -17,7 +17,6 @@ from vehicles.serializers import PartSerializer
 
 
 class ServicePartSerializer(serializers.ModelSerializer):
-    price = serializers.DecimalField(default=0, max_digits=10, decimal_places=2)
     quantity = serializers.IntegerField(default=1)
 
     class Meta:
@@ -29,11 +28,33 @@ class ServicePartSerializer(serializers.ModelSerializer):
 class ServiceSerializer(serializers.ModelSerializer):
     price = serializers.DecimalField(default=0, max_digits=10, decimal_places=2)
     parts = PartSerializer(many=True)
+    has_edit_permission = serializers.SerializerMethodField()
+
+    def get_has_edit_permission(self, obj):
+        user = self.context["request"].user
+        is_shop_owner = user == obj.shop.shop_owner
+        is_employee = obj.shop.has_employee(user.id)
+        is_authenticated = user.is_authenticated
+        return is_authenticated and (is_shop_owner or is_employee)
 
     class Meta:
         model = Service
         fields = "__all__"
         read_only_fields = ("id",)
+
+class ServiceWriteSerializer(serializers.ModelSerializer):
+    price = serializers.DecimalField(default=0, max_digits=10, decimal_places=2)
+
+    def create(self, validated_data):
+        service = Service.objects.create(
+            **validated_data
+        )
+        return service
+
+    class Meta:
+        model = Service
+        fields ="__all__"
+        read_only_fields=("id",)
 
 
 class ServiceUpdateSerializer(serializers.ModelSerializer):
@@ -42,7 +63,7 @@ class ServiceUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
         fields = "__all__"
-        read_only_fields = ("id", "shop")
+        read_only_fields = ("id", "parts")
 
 
 class AddressSerializer(serializers.ModelSerializer):
@@ -91,6 +112,12 @@ class ShopWriteSerializer(serializers.ModelSerializer):
         read_only=True, default=serializers.CurrentUserDefault()
     )
     num_bays = serializers.IntegerField(default=0, initial=0)
+
+    def create(self, validated_data):
+        shop = Shop.objects.create(
+            **validated_data, shop_owner=self.context["request"].user
+        )
+        return shop
 
     class Meta:
         model = Shop
