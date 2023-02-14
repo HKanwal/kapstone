@@ -128,7 +128,7 @@ class ShopWriteSerializer(serializers.ModelSerializer):
 class ShopOverviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shop
-        fields = ("id", "name")
+        fields = ("id", "name", "shop_email", "shop_phone_number")
 
 
 class InvitationSerializer(serializers.ModelSerializer):

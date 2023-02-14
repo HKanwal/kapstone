@@ -11,6 +11,7 @@ class Quote(models.Model):
     class Status(models.TextChoices):
         NEW_QUOTE = "new_quote", "New Quote"
         ACCEPTED = "accepted", "Accepted"
+        REJECTED = "rejected", "Rejected"
         IN_PROGRESS = "in_progress", "In Progress"
         DONE = "done", "Done"
         REWORK = "rework", "Rework"
@@ -23,6 +24,7 @@ class Quote(models.Model):
     price = models.DecimalField(_("price"), max_digits=19, decimal_places=2)
     estimated_time = models.CharField(_("estimated time"), max_length=255)
     expiry_date = models.DateField(_("expiry date"))
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
 
     class Meta:
         verbose_name = "Quote"
@@ -44,6 +46,7 @@ class QuoteRequest(models.Model):
     )
     description = models.CharField(_("description"), max_length=1000)
     vehicle = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
 
     @property
     def status(self):
@@ -52,7 +55,6 @@ class QuoteRequest(models.Model):
             return quote.status
         except:
             return "Not Accepted"
-
 
     class Meta:
         verbose_name = "Quote Request"

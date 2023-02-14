@@ -8,31 +8,6 @@ from misc.models import ImageQuote
 from misc.serializers import ImageQuoteSerializer
 
 
-class QuoteSerializer(serializers.ModelSerializer):
-    shop = serializers.PrimaryKeyRelatedField(queryset=Shop.objects.all())
-    quote_request = serializers.PrimaryKeyRelatedField(
-        queryset=QuoteRequest.objects.all()
-    )
-    status = serializers.ChoiceField(choices=Quote.Status.choices)
-
-    class Meta:
-        model = Quote
-        fields = "__all__"
-        read_only_fields = ("id", "shop", "quote_request")
-
-
-class QuoteWriteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Quote
-        fields = "__all__"
-        read_only_fields = ("id", "shop")
-
-    def validate(self, data):
-        quote_request = data["quote_request"]
-        data["shop"] = quote_request.shop
-        return data
-
-
 class QuoteRequestSerializer(serializers.ModelSerializer):
     shop = ShopOverviewSerializer()
     customer = UserViewSerializer(source="user")
@@ -102,3 +77,31 @@ class QuoteRequestWriteSerializer(serializers.ModelSerializer):
                     quote_request=quote_request, photo=image
                 )
         return quote_request
+
+
+class QuoteSerializer(serializers.ModelSerializer):
+    shop = ShopOverviewSerializer()
+    quote_request = QuoteRequestSerializer()
+    status = serializers.ChoiceField(choices=Quote.Status.choices)
+    status_display = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Quote
+        fields = "__all__"
+        read_only_fields = ("id", "shop", "quote_request")
+
+    def get_status_display(self, obj):
+        return obj.get_status_display()
+
+
+class QuoteWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quote
+        fields = "__all__"
+        read_only_fields = ("id", "shop")
+
+    def validate(self, data):
+        if not self.partial:
+            quote_request = data["quote_request"]
+            data["shop"] = quote_request.shop
+        return data
