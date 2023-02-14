@@ -1,106 +1,258 @@
-import type { NextPage } from 'next';
-import { useState } from 'react';
-import Button from '../components/Button';
-import TextField from '../components/TextField';
-import TextMultiField from '../components/TextMultiField';
-import Header from '../components/Header';
-import styles from '../styles/pages/CreateShop.module.css';
-import DropdownField from '../components/DropdownField';
+import type { NextPage, GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import { useForm } from '../hooks/useForm';
+import * as yup from 'yup';
+import axios from 'axios';
+import { useFormik, FormikProvider } from 'formik';
+import { useState } from 'react';
+import { GrFormEdit, GrFormClose } from 'react-icons/gr';
+import { CardTextField, CardMultiSelect, CardHoursField } from '../components/CardComponents';
+import Header from '../components/Header';
+import apiUrl from '../constants/api-url';
+import Button from '../components/Button';
+// @ts-ignore
+import * as cookie from 'cookie';
+import Cookies from 'js-cookie';
 
-const CreateShopPage: NextPage = () => {
+const CreateShopPage: NextPage = ({ shop }: any) => {
   const router = useRouter();
-  const [phoneNumbers, setPhoneNumbers] = useState<string[]>(['']);
-  const form = useForm({
+  const [errors, setErrors] = useState([]);
+  const [services, setServices] = useState(shop?.shop_services ?? []);
+  const [shopHours, setShopHours] = useState(shop?.shophours_set ?? []);
+  const schema = yup.object().shape({
+    name: yup.string().required(),
+    num_bays: yup.number().optional(),
+    address: yup.object().shape({
+      street: yup.string().required(),
+      city: yup.string().required(),
+      province: yup.string().required(),
+      postal_code: yup.string().required(),
+      country: yup.string().required(),
+    }),
+  });
+  const form = useFormik({
     initialValues: {
-      name: '',
-      address: '',
-      phoneNumber: '',
-      email: '',
-      employees: '',
-      serviceBays: '',
+      name: shop.name,
+      num_bays: shop.num_bays,
+      address: {
+        street: shop.address.street,
+        city: shop.address.city,
+        province: shop.address.province,
+        country: shop.address.country,
+        postal_code: shop.address.postal_code,
+      },
     },
-    validationSchema: {
-      name: ['required'],
-      address: ['required'],
-      phoneNumber: ['phoneNumber'],
-      email: ['email'],
-    },
-    onSubmit: (values, setErrors) => {
-      router.push('/invite');
+    validationSchema: schema,
+    // validateOnChange: false,
+    onSubmit: async (values) => {
+      const valuesToSend = {
+        name: values.name,
+        // shop_services: services
+        //   .filter((service: any) => service.active)
+        //   .map((service: any) => service.id)
+        num_bays: values.num_bays,
+        address: {
+          street: values.address.street,
+          city: values.address.city,
+          province: values.address.province,
+          country: values.address.country,
+          postal_code: values.address.postal_code,
+        },
+        shophours_set: shopHours,
+      };
+      const access_token = Cookies.get('access');
+      try {
+        const res = await axios.post(`${apiUrl}/shops/shops/`, valuesToSend, {
+          headers: { Authorization: `JWT ${access_token}` },
+        });
+        if (res.status === 201) {
+          router.push(`/dashboard/`);
+        }
+      } catch (error: any) {
+        setErrors(error.response.data?.errors);
+        scrollTo(0, 0);
+      }
     },
   });
-
+  const inEdit = true;
   return (
-    <div className={styles.container}>
-      <Header title="Create New Shop" />
-
-      <form className={styles.content} onSubmit={form.handleSubmit}>
-        <div className={styles['field-container']}>
-          <TextField
-            name="Shop Name"
-            placeholder="Enter your shop's name"
-            onChange={form.handleChange('name')}
-            required
-          />
+    <div className="container">
+      <Header
+        title={`Create Shop`}
+        backButtonDisabled
+        rightIcon={GrFormClose}
+        onRightIconClick={() => router.push('/dashboard/')}
+      />
+      <div className="wrapper">
+        <div className="flex flex-row row-gap-large">
+          {errors?.length > 0 && (
+            <div className="flex flex-col row-gap-small">
+              {errors.map((error: any, index) => {
+                return (
+                  <span className="error" key={`error_${index}`}>
+                    {error.detail}
+                  </span>
+                );
+              })}
+            </div>
+          )}
+          <FormikProvider value={form}>
+            <form onSubmit={form.handleSubmit}>
+              <h2 className="form-header">Shop Details</h2>
+              <div className={`card${inEdit ? 'edit' : ''}`} style={{ marginBottom: '12px' }}>
+                <CardTextField
+                  fieldValue={form.values.name}
+                  fieldName="name"
+                  fieldLabel="Shop Name"
+                  fieldType="string"
+                  fieldRequired
+                  fieldDisabled={!inEdit}
+                  onChange={form.handleChange}
+                  error={form.errors.name}
+                />
+                {/* <CardMultiSelect
+                  fieldLabel="Shop Services"
+                  fieldData={services.map((service: any) => {
+                    return { value: service.id.toString(), label: service.name };
+                  })}
+                  fieldValues={services
+                    .filter((service: any) => service.active)
+                    .map((service: any) => {
+                      return service.id.toString();
+                    })}
+                  onChange={(values) => {
+                    const newServices = services.map((service: any) => {
+                      if (values.includes(service.id.toString())) {
+                        service.active = true;
+                      } else {
+                        service.active = false;
+                      }
+                      return service;
+                    });
+                    setServices(newServices);
+                  }}
+                  fieldPlaceholder="Select the services"
+                  fieldSearchable
+                  fieldDisabled={!inEdit}
+                  className="input-multiselect"
+                /> */}
+                <CardHoursField
+                  fieldLabel="Shop Hours"
+                  fieldRequired
+                  hours={shopHours}
+                  fieldDisabled={!inEdit}
+                  onChange={(event: any, index: number) => {
+                    const newShopHours = [...shopHours];
+                    newShopHours[index].day = event.currentTarget.value.toLowerCase();
+                    setShopHours(newShopHours);
+                  }}
+                  onTimeChange={(time: any, type: string, index: number) => {
+                    const newShopHours = [...shopHours];
+                    newShopHours[index][type] = time;
+                    setShopHours(newShopHours);
+                  }}
+                  onCreate={(day: any) => {
+                    const newShopHours = [...shopHours];
+                    newShopHours.push(day);
+                    setShopHours(newShopHours);
+                  }}
+                  onDelete={(index: number) => {
+                    const newShopHours = [...shopHours];
+                    newShopHours.splice(index, 1);
+                    setShopHours(newShopHours);
+                  }}
+                />
+                <CardTextField
+                  fieldValue={form.values.num_bays}
+                  fieldName="num_bays"
+                  fieldLabel="Number of Bays"
+                  fieldType="string"
+                  fieldDisabled={!inEdit}
+                  onChange={form.handleChange}
+                  error={form.errors.num_bays}
+                />
+                <CardTextField
+                  fieldValue={form.values.address.street}
+                  fieldName="address.street"
+                  fieldLabel="Street Address"
+                  fieldType="string"
+                  fieldDisabled={!inEdit}
+                  fieldRequired
+                  onChange={form.handleChange}
+                  error={form.errors.address?.street}
+                />
+                <CardTextField
+                  fieldValue={form.values.address.city}
+                  fieldName="address.city"
+                  fieldLabel="City"
+                  fieldType="string"
+                  fieldDisabled={!inEdit}
+                  fieldRequired
+                  onChange={form.handleChange}
+                  error={form.errors.address?.city}
+                />
+                <CardTextField
+                  fieldValue={form.values.address.province}
+                  fieldName="address.province"
+                  fieldLabel="Province"
+                  fieldType="string"
+                  fieldDisabled={!inEdit}
+                  onChange={form.handleChange}
+                  error={form.errors.address?.province}
+                />
+                <CardTextField
+                  fieldValue={form.values.address.country}
+                  fieldName="address.country"
+                  fieldLabel="Country"
+                  fieldType="string"
+                  fieldDisabled={!inEdit}
+                  fieldRequired
+                  onChange={form.handleChange}
+                  error={form.errors.address?.country}
+                />
+                <CardTextField
+                  fieldValue={form.values.address.postal_code}
+                  fieldName="address.postal_code"
+                  fieldLabel="Postal Code"
+                  fieldType="string"
+                  fieldDisabled={!inEdit}
+                  fieldRequired
+                  onChange={form.handleChange}
+                  error={form.errors.address?.postal_code}
+                />
+                {inEdit && <Button type="submit" title="Save" width={'100%'}></Button>}
+              </div>
+            </form>
+          </FormikProvider>
         </div>
-        <div className={styles['field-container']}>
-          <TextField
-            name="Shop Address"
-            placeholder="Enter your shop's address"
-            onChange={form.handleChange('address')}
-            required
-          />
-        </div>
-        <div className={styles['field-container']}>
-          <TextField
-            name="Shop Phone Number"
-            placeholder="+10123456789"
-            onChange={form.handleChange('phoneNumber')}
-            onBlur={form.handleBlur('phoneNumber')}
-            errors={form.errors.phoneNumber.length > 0 ? new Set(form.errors.phoneNumber) : undefined}
-          />
-        </div>
-        <div className={styles['field-container']}>
-          <TextField
-            name="Shop Email"
-            placeholder="Enter your shop's email"
-            onChange={form.handleChange('email')}
-            onBlur={form.handleBlur('email')}
-            errors={form.errors.email.length > 0 ? new Set(form.errors.email) : undefined}
-          />
-        </div>
-        <div className={styles['field-container']}>
-          <DropdownField
-            type="multi-select"
-            name="Services Offered"
-            placeholder="Enter services..."
-            items={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']}
-          />
-        </div>
-        <div className={styles['field-container']}>
-          <TextField
-            name="Number of Employees"
-            placeholder="Enter number of employees"
-            inputType="number"
-            onChange={form.handleChange('employees')}
-          />
-        </div>
-        <div className={styles['field-container']}>
-          <TextField
-            name="Number of Service Bays"
-            placeholder="Enter number of service bays"
-            inputType="number"
-            onChange={form.handleChange('serviceBays')}
-          />
-        </div>
-        <div className={styles['submit-container']}>
-          <Button type="submit" title="Create" disabled={!form.isValid} width="80%" />
-        </div>
-      </form>
+      </div>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
+  const parsedCookies = cookie.parse(context.req.headers.cookie);
+  const user_type = parsedCookies.user_type;
+  if (user_type === 'shop_owner') {
+    return {
+      props: {
+        shop: {
+          name: '',
+          num_bays: '',
+          address: {
+            street: '',
+            city: '',
+            province: '',
+            country: '',
+            postal_code: '',
+          },
+        },
+      },
+    };
+  }
+
+  return {
+    notFound: true,
+  };
 };
 
 export default CreateShopPage;
