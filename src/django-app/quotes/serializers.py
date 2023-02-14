@@ -56,8 +56,8 @@ class QuoteRequestSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ("id", "customer", "shop")
 
-    def get_status():
-        return QuoteRequest.status
+    def get_status(self, obj):
+        return obj.status
 
 
 class QuoteRequestWriteSerializer(serializers.ModelSerializer):

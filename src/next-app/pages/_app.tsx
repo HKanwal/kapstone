@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { useState } from 'react';
 import { AuthContext, Jwt } from '../utils/api';
 import { MantineProvider } from '@mantine/core';
+import NextNProgress from 'nextjs-progressbar';
 import Cookies from 'js-cookie';
 
 const queryClient = new QueryClient();
@@ -53,10 +54,6 @@ function MyApp({ Component, pageProps }: AppProps) {
             <link rel="manifest" href="/manifest.json" />
             <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#5bbad5" />
             <link rel="shortcut icon" href="/favicon.ico" />
-            <link
-              rel="stylesheet"
-              href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
-            />
             <meta name="twitter:card" content="summary" />
             <meta name="twitter:url" content="https://yourdomain.com" />
             <meta name="twitter:title" content="PWA App" />
@@ -85,6 +82,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
             />
           </Head>
+          <NextNProgress color="#72DAB1" showOnShallow />
           <Component {...pageProps} onLogin={handleLogin} />
         </AuthContext.Provider>
       </QueryClientProvider>

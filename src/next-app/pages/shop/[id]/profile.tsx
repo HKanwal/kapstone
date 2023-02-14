@@ -5,23 +5,27 @@ import axios from 'axios';
 import { useFormik, FormikProvider } from 'formik';
 import { useState } from 'react';
 import { GrFormEdit, GrFormClose } from 'react-icons/gr';
-import { CardTextField, CardMultiSelect, CardHoursField } from '../components/CardComponents';
-import Header from '../components/Header';
-import apiUrl from '../constants/api-url';
-import Button from '../components/Button';
+import { CardTextField, CardMultiSelect, CardHoursField } from '../../../components/CardComponents';
+import Header from '../../../components/Header';
+import apiUrl from '../../../constants/api-url';
+import Button from '../../../components/Button';
 // @ts-ignore
 import * as cookie from 'cookie';
 import Cookies from 'js-cookie';
 
-const CreateShopPage: NextPage = ({ shop }: any) => {
+const ProfilePage: NextPage = ({ shop }: any) => {
   const router = useRouter();
+  const { id } = router.query;
+  const [inEdit, setInEdit] = useState(false);
   const [errors, setErrors] = useState([]);
   const [services, setServices] = useState(shop?.shop_services ?? []);
   const [shopHours, setShopHours] = useState(shop?.shophours_set ?? []);
   const schema = yup.object().shape({
     name: yup.string().required(),
     num_bays: yup.number().optional(),
+    num_employees: yup.number().optional(),
     address: yup.object().shape({
+      id: yup.number().required().positive().integer(),
       street: yup.string().required(),
       city: yup.string().required(),
       province: yup.string().required(),
@@ -33,7 +37,9 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
     initialValues: {
       name: shop.name,
       num_bays: shop.num_bays,
+      num_employees: shop.num_employees,
       address: {
+        id: shop.address.id,
         street: shop.address.street,
         city: shop.address.city,
         province: shop.address.province,
@@ -42,15 +48,14 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
       },
     },
     validationSchema: schema,
-    // validateOnChange: false,
     onSubmit: async (values) => {
       const valuesToSend = {
         name: values.name,
-        // shop_services: services
-        //   .filter((service: any) => service.active)
-        //   .map((service: any) => service.id)
-        num_bays: values.num_bays,
+        shop_services: services
+          .filter((service: any) => service.active)
+          .map((service: any) => service.id),
         address: {
+          id: values.address.id,
           street: values.address.street,
           city: values.address.city,
           province: values.address.province,
@@ -61,11 +66,11 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
       };
       const access_token = Cookies.get('access');
       try {
-        const res = await axios.post(`${apiUrl}/shops/shops/`, valuesToSend, {
+        const res = await axios.patch(`${apiUrl}/shops/shops/${id}/`, valuesToSend, {
           headers: { Authorization: `JWT ${access_token}` },
         });
-        if (res.status === 201) {
-          router.push(`/dashboard/`);
+        if (res.status === 200) {
+          router.reload();
         }
       } catch (error: any) {
         setErrors(error.response.data?.errors);
@@ -73,14 +78,12 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
       }
     },
   });
-  const inEdit = true;
   return (
     <div className="container">
       <Header
-        title={`Create Shop`}
-        backButtonDisabled
-        rightIcon={GrFormClose}
-        onRightIconClick={() => router.push('/dashboard/')}
+        title={`Shop Profile`}
+        rightIcon={shop.has_edit_permission ? (inEdit ? GrFormClose : GrFormEdit) : undefined}
+        onRightIconClick={() => setInEdit(!inEdit)}
       />
       <div className="wrapper">
         <div className="flex flex-row row-gap-large">
@@ -109,7 +112,7 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
                   onChange={form.handleChange}
                   error={form.errors.name}
                 />
-                {/* <CardMultiSelect
+                <CardMultiSelect
                   fieldLabel="Shop Services"
                   fieldData={services.map((service: any) => {
                     return { value: service.id.toString(), label: service.name };
@@ -134,7 +137,7 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
                   fieldSearchable
                   fieldDisabled={!inEdit}
                   className="input-multiselect"
-                /> */}
+                />
                 <CardHoursField
                   fieldLabel="Shop Hours"
                   fieldRequired
@@ -146,9 +149,11 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
                     setShopHours(newShopHours);
                   }}
                   onTimeChange={(time: any, type: string, index: number) => {
+                    console.log(time, type, index);
                     const newShopHours = [...shopHours];
                     newShopHours[index][type] = time;
                     setShopHours(newShopHours);
+                    console.log(newShopHours);
                   }}
                   onCreate={(day: any) => {
                     const newShopHours = [...shopHours];
@@ -166,7 +171,7 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
                   fieldName="num_bays"
                   fieldLabel="Number of Bays"
                   fieldType="string"
-                  fieldDisabled={!inEdit}
+                  fieldDisabled={true}
                   onChange={form.handleChange}
                   error={form.errors.num_bays}
                 />
@@ -176,7 +181,6 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
                   fieldLabel="Street Address"
                   fieldType="string"
                   fieldDisabled={!inEdit}
-                  fieldRequired
                   onChange={form.handleChange}
                   error={form.errors.address?.street}
                 />
@@ -186,7 +190,6 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
                   fieldLabel="City"
                   fieldType="string"
                   fieldDisabled={!inEdit}
-                  fieldRequired
                   onChange={form.handleChange}
                   error={form.errors.address?.city}
                 />
@@ -205,7 +208,6 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
                   fieldLabel="Country"
                   fieldType="string"
                   fieldDisabled={!inEdit}
-                  fieldRequired
                   onChange={form.handleChange}
                   error={form.errors.address?.country}
                 />
@@ -215,7 +217,6 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
                   fieldLabel="Postal Code"
                   fieldType="string"
                   fieldDisabled={!inEdit}
-                  fieldRequired
                   onChange={form.handleChange}
                   error={form.errors.address?.postal_code}
                 />
@@ -230,29 +231,24 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
 };
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
+  const { id } = context.query;
   const parsedCookies = cookie.parse(String(context.req.headers.cookie));
-  const user_type = parsedCookies.user_type;
-  if (user_type === 'shop_owner') {
+  const access_token = parsedCookies.access;
+  try {
+    const shop = await axios.get(`${apiUrl}/shops/shops/${id}/`, {
+      headers: { Authorization: `JWT ${access_token}` },
+    });
     return {
       props: {
-        shop: {
-          name: '',
-          num_bays: '',
-          address: {
-            street: '',
-            city: '',
-            province: '',
-            country: '',
-            postal_code: '',
-          },
-        },
+        shop: shop.data,
       },
     };
+  } catch (error) {
+    console.log(error);
+    return {
+      notFound: true,
+    };
   }
-
-  return {
-    notFound: true,
-  };
 };
 
-export default CreateShopPage;
+export default ProfilePage;

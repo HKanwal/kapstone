@@ -18,18 +18,18 @@ type EmailsFieldProps = {
 
   /** Adds a red asterisk */
   required?: boolean;
+
+  emails: string[];
+  setEmails: (value: string[]) => void;
 };
 
 const EmailsField = (props: EmailsFieldProps) => {
   const [val, setVal] = useState<string>('');
-  const [chips, setChips] = useState<string[]>([]);
 
   const handleChange = (newVal: string) => {
     const l = newVal.length;
     if (l > 2 && newVal[l - 1] === ' ' && newVal[l - 2] !== ' ') {
-      setChips((prevChips) => {
-        return [...prevChips, newVal.trim()];
-      });
+      props.setEmails([...props.emails, newVal.trim()]);
       setVal('');
       props.onChange && props.onChange('');
     } else {
@@ -43,11 +43,11 @@ const EmailsField = (props: EmailsFieldProps) => {
   };
 
   const handleRemove = (item: string) => {
-    setChips((prevChips) => {
-      return prevChips.filter((si) => {
+    props.setEmails(
+      [...props.emails].filter((si) => {
         return si !== item;
-      });
-    });
+      })
+    );
   };
 
   return (
@@ -57,7 +57,7 @@ const EmailsField = (props: EmailsFieldProps) => {
         {props.required ? <span className={styles.asterisk}>*</span> : <></>}
       </span>
       <div className={styles['chips-container']}>
-        {chips.map((item) => {
+        {props.emails.map((item) => {
           return (
             <div className={styles['chip-container']} key={item}>
               <Chip text={item} onRemove={() => handleRemove(item)} />
