@@ -18,6 +18,8 @@ const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
   const mutation = useMutation({
     mutationFn: registrationFn,
   });
+  const { type, invitation_key } = router.query;
+  const employeeCreation = type === 'employee' && invitation_key !== undefined;
   const form = useForm({
     initialValues: {
       firstName: '',
@@ -26,7 +28,7 @@ const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
       email: '',
       username: '',
       password: '',
-      type: '',
+      type: employeeCreation ? 'Employee' : '',
     },
     validationSchema: {
       firstName: ['required'],
@@ -35,12 +37,14 @@ const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
       email: ['required', 'email'],
       username: ['required'],
       password: ['required'],
-      type: ['required']
+      type: employeeCreation ? undefined : ['required'],
     },
     onSubmit: (values, setErrors) => {
       let accountType = 'customer' as accountTypes;
-
-      if (values.type === 'Shop Owner') {
+      
+      if (employeeCreation) {
+        accountType = 'employee';
+      } else if (values.type === 'Shop Owner') {
         accountType = 'shop_owner';
       }
       mutation.mutate(
@@ -52,6 +56,7 @@ const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
           type: accountType,
           first_name: values.firstName || undefined,
           last_name: values.lastName || undefined,
+          invite_key: invitation_key || undefined,
         },
         {
           onSuccess(data, variables, context) {
@@ -59,11 +64,11 @@ const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
               data.json().then((response) => {
                 console.log(response);
                 props.onLogin({
-                  'access': response.tokens.access,
-                  'refresh': response.tokens.refresh,
-                  'user_type': response.type,
-                })
-              })
+                  access: response.tokens.access,
+                  refresh: response.tokens.refresh,
+                  user_type: response.type,
+                });
+              });
               if (accountType === 'shop_owner') {
                 router.push('/create-shop');
               } else {
@@ -93,7 +98,6 @@ const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
       );
     },
   });
-
   return (
     <div className={styles.container}>
       <Header title="Create New Account" />
@@ -162,15 +166,17 @@ const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
             required
           />
         </div>
-        <div className={styles['field-container']}>
-          <DropdownField
-            name="Type"
-            placeholder="Select Account Type"
-            items={['Customer', 'Shop Owner']}
-            onSelect={form.handleChange('type')}
-            required
-          />
-        </div>
+        {!employeeCreation && (
+          <div className={styles['field-container']}>
+            <DropdownField
+              name="Type"
+              placeholder="Select Account Type"
+              items={['Customer', 'Shop Owner']}
+              onSelect={form.handleChange('type')}
+              required
+            />
+          </div>
+        )}
         <div className={styles['submit-container']}>
           <Button type="submit" title="Create" disabled={!form.isValid} width="80%" />
         </div>
