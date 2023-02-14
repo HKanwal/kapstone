@@ -17,13 +17,12 @@ import { accountTypes } from '../utils/api';
 // @ts-ignore
 import * as cookie from 'cookie';
 
-const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: any) => {
+const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle, shops }: any) => {
   const router = useRouter();
   const { id } = router.query;
   const [authData, setAuthData] = useState(useContext(AuthContext));
   const [status, setStatus] = useState('All');
   const [sortItem, setSortItem] = useState('Date');
-  let shopName = '';
 
   function noChange(): void {
     throw new Error('Function not implemented.');
@@ -37,29 +36,6 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
       user_type: Cookies.get('user_type') as accountTypes,
     });
   }
-
-  // useEffect(() => {
-  //   const getQuoteRequest = async () => {
-  //     try {
-  //       const res = await axios.get(`${apiUrl}/quotes/quote-requests/`);
-  //       //setQuoteRequest(res.data);
-  //       console.log(res.data);
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   };
-  //   const getQuotes = async () => {
-  //     try {
-  //       const res = await axios.get(`${apiUrl}/quotes/quotes/`);
-  //       //setQuotes(res.data);
-  //       console.log(res.data);
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   };
-  //   getQuoteRequest();
-  //   getQuotes();
-  // }, []);
 
   const quotesList = quotes.filter((quote: any) => {
     if (quote.quote_request === quoteRequest.id) {
@@ -76,9 +52,9 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
         burgerMenu={[
           {
             option: 'Edit',
-            onClick() {
-              router.push('/quote-request-edit');
-            },
+            // onClick() {
+            //   router.push('/quote-request-edit');
+            // },
           },
           { option: 'Delete' },
         ]}
@@ -109,25 +85,19 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
             )}
             {status != 'All' && status != 'Accepted'
               ? quotesList
-                  .filter((quote: any) => quote.status == status)
+                  .filter((quote: any) =>
+                    quote.status == 'new_quote'
+                      ? status == 'Pending' && quote.status == 'new_quote'
+                      : quote.status == status
+                  )
                   .sort((a: any, b: any) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
                   .map((quote: any) => {
-                    fetch(`${apiUrl}/shops/shops/${quote.shop}`, {
-                      method: 'GET',
-                      headers: {
-                        Authorization: `JWT ${authData.access}`,
-                        'Content-Type': 'application/json; charset=UTF-8',
-                      },
-                    }).then((response) =>
-                      response.json().then((response) => {
-                        shopName = response.name;
-                      })
-                    );
                     return (
                       <Card
                         key={quote.id}
-                        name={shopName}
-                        status={quote.status}
+                        id={quote.id}
+                        name={shops.find((shop: any) => shop.id === quote.shop).name}
+                        status={quote.status === 'new_quote' ? 'Pending' : quote.status}
                         date={quote.expiry_date}
                         price={quote.price}
                       />
@@ -138,22 +108,12 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
                   .filter((quote: any) => quote.status == status)
                   .sort((a: any, b: any) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
                   .map((quote: any) => {
-                    fetch(`${apiUrl}/shops/shops/${quote.shop}`, {
-                      method: 'GET',
-                      headers: {
-                        Authorization: `JWT ${authData.access}`,
-                        'Content-Type': 'application/json; charset=UTF-8',
-                      },
-                    }).then((response) =>
-                      response.json().then((response) => {
-                        shopName = response.name;
-                      })
-                    );
                     return (
                       <Card
                         key={quote.id}
-                        name={shopName}
-                        status={quote.status}
+                        id={quote.id}
+                        name={shops.find((shop: any) => shop.id === quote.shop).name}
+                        status={quote.status === 'new_quote' ? 'Pending' : quote.status}
                         date={quote.expiry_date}
                         price={quote.price}
                       />
@@ -164,22 +124,12 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
                   .filter((quote: any) => quote.status == status)
                   .sort((a: any, b: any) => (a.price && b.price && a.price > b.price ? 1 : -1))
                   .map((quote: any) => {
-                    fetch(`${apiUrl}/shops/shops/${quote.shop}`, {
-                      method: 'GET',
-                      headers: {
-                        Authorization: `JWT ${authData.access}`,
-                        'Content-Type': 'application/json; charset=UTF-8',
-                      },
-                    }).then((response) =>
-                      response.json().then((response) => {
-                        shopName = response.name;
-                      })
-                    );
                     return (
                       <Card
                         key={quote.id}
-                        name={shopName}
-                        status={quote.status}
+                        id={quote.id}
+                        name={shops.find((shop: any) => shop.id === quote.shop).name}
+                        status={quote.status === 'new_quote' ? 'Pending' : quote.status}
                         date={quote.expiry_date}
                         price={quote.price}
                       />
@@ -188,22 +138,12 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
               : quotesList
                   .sort((a: any, b: any) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
                   .map((quote: any) => {
-                    fetch(`${apiUrl}/shops/shops/${quote.shop}`, {
-                      method: 'GET',
-                      headers: {
-                        Authorization: `JWT ${authData.access}`,
-                        'Content-Type': 'application/json; charset=UTF-8',
-                      },
-                    }).then((response) =>
-                      response.json().then((response) => {
-                        shopName = response.name;
-                      })
-                    );
                     return (
                       <Card
                         key={quote.id}
-                        name={shopName}
-                        status={quote.status}
+                        id={quote.id}
+                        name={shops.find((shop: any) => shop.id === quote.shop).name}
+                        status={quote.status === 'new_quote' ? 'Pending' : quote.status}
                         date={quote.expiry_date}
                         price={quote.price}
                       />
@@ -234,15 +174,15 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
           <span className={styles['section-header']}>Additional Information</span>
           <div className={styles['field-container']}>
             <FieldLabel label="Part Condition" />
-            <TextInput value="" disabled onChange={noChange} />
+            <TextInput value="No Preference" disabled onChange={noChange} />
           </div>
           <div className={styles['field-container']}>
             <FieldLabel label="Part Type" />
-            <TextInput value="" disabled onChange={noChange} />
+            <TextInput value="No Preference" disabled onChange={noChange} />
           </div>
           <div className={styles['field-container']}>
             <FieldLabel label="Notes" />
-            <TextInput value="" disabled onChange={noChange} />
+            <TextInput value={quoteRequest.description} disabled onChange={noChange} />
           </div>
           <div className={styles['field-container']}>
             <div className={styles['images-field-container']}>
@@ -272,11 +212,15 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     const vehicle = await axios.get(`${apiUrl}/vehicles/vehicles/${quoteRequest.data.vehicle}`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
+    const shops = await axios.get(`${apiUrl}/shops/shops/`, {
+      headers: { Authorization: `JWT ${access_token}` },
+    });
     return {
       props: {
         quotes: quotes.data,
         quoteRequest: quoteRequest.data,
         vehicle: vehicle.data,
+        shops: shops.data,
       },
     };
   } catch (error) {

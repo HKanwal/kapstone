@@ -11,18 +11,17 @@ type CardProps = {
 };
 
 const Card = (props: CardProps) => {
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
   const router = useRouter();
 
   const handleClick = () => {
-    if (props.status === 'Accepted') {
-      router.push(
-        {
-          pathname: 'quote',
-          query: { id: props.id },
-        })
+    if (props.status === 'Pending') {
+      router.push({
+        pathname: 'quote',
+        query: { id: props.id },
+      });
     }
-  }
+  };
 
   return (
     <div className={styles.card} onClick={handleClick}>

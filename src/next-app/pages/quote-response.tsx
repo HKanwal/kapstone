@@ -75,7 +75,7 @@ const QuoteResponsePage: NextPage = ({ quoteRequest }: any) => {
     }).then((response) => {
       console.log(response);
       if (response.status === 201) {
-        router.push({ pathname: '/new-quote-requests' });
+        router.push({ pathname: '/quote-list' });
       }
       response.json().then((response) => {
         console.log(response);
@@ -164,7 +164,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     console.log(error);
     return {
       props: {
-        quoteRequest: sampleQuoteRequest,
+        quoteRequest: {},
       },
     };
   }
