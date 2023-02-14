@@ -184,16 +184,25 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const access_token = parsedCookies.access;
   try {
-    const workOrder = await axios.get(`${apiUrl}/shops/work-orders/${id}`, {
-      headers: { Authorization: `JWT ${access_token}` },
-    });
-    const employees = await axios.get(`${apiUrl}/shops/shops/3/employees`, {
-      headers: { Authorization: `JWT ${access_token}` },
-    });
+    const { workOrder, employees }: any = await axios
+      .get(`${apiUrl}/shops/work-orders/${id}/`, {
+        headers: { Authorization: `JWT ${access_token}` },
+      })
+      .then((response: any) => {
+        return {
+          workOrder: response.data,
+          employees: axios.get(`${apiUrl}/shops/shops/${response.data.shop}/employees/`, {
+            headers: { Authorization: `JWT ${access_token}` },
+          }),
+        };
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     return {
       props: {
-        workOrder: workOrder.data,
-        employees: employees.data,
+        workOrder: workOrder,
+        employees: await employees.then((res: any) => res.data),
       },
     };
   } catch (error) {

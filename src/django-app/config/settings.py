@@ -172,7 +172,7 @@ DRF_STANDARDIZED_ERRORS = {"ENABLE_IN_DEBUG_FOR_UNHANDLED_EXCEPTIONS": True}
 
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("JWT",),
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=10), #temporary
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=10),  # temporary
 }
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -182,8 +182,10 @@ EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "NOT SET").strip()
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "NOT SET").strip()
 EMAIL_USE_TLS = True
 
-APP_URL = "http://127.0.0.1:8000"
-APP_REGISTRATION_ROUTE = "signup"
+APP_URL = "http://localhost:3000"
+if not DEBUG:
+    APP_URL = "https://kapstone-ten.vercel.app"
+APP_REGISTRATION_ROUTE = "create-account"
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
