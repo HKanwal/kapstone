@@ -124,6 +124,31 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+    def create(self, request, *args, **kwargs):
+        try:
+            with transaction.atomic():
+                print(request.data)
+                address = request.data.pop("address", None)
+                if address is not None and type(address) is dict:
+                    address_serializer = AddressSerializer(
+                        data=address, context={"request": request}
+                    )
+                    if address_serializer.is_valid(raise_exception=True):
+                        address = Address.objects.create(
+                            **address_serializer.validated_data
+                        )
+                        request.data["address"] = address.id
+                else:
+                    request.data["address"] = address
+
+                return super().create(request, *args, **kwargs)
+        except ValidationError as err:
+            logging.error(traceback.format_exc())
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+                message=err.message,
+            )
+
     @action(detail=True, methods=["get"])
     def employees(self, request, *args, **kwargs):
         shop = self.get_object()
