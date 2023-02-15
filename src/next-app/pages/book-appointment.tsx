@@ -3,9 +3,11 @@ import styles from '../styles/pages/BookAppointment.module.css';
 import { useRouter } from 'next/router';
 import Header from '../components/Header';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs'; // TODO: Change icons to left and right carets
+import { GrFormClose } from 'react-icons/gr';
 import IconButton from '../components/IconButton';
 import DatePicker from '../components/DatePicker';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
+import { Button } from '@mantine/core';
 
 function createEmptyArray(n: number): undefined[] {
   let a = [];
@@ -15,8 +17,14 @@ function createEmptyArray(n: number): undefined[] {
   return a;
 }
 
+type Slot = {
+  startTime: number;
+  endTime: number;
+  available: boolean;
+};
+
 // TODO: fetch this data from backend
-const availability = [
+const availability: Slot[] = [
   {
     startTime: 6.75,
     endTime: 7,
@@ -74,6 +82,92 @@ const availability = [
   },
 ];
 
+function findBookableSlots(appointmentLength: number): Slot[] {
+  let slots: Slot[] = [];
+  let availableCounter = 0; // # of available slots in a row
+
+  for (let i = 0; i < availability.length; i++) {
+    if (availability[i].available) {
+      availableCounter++;
+      if (availableCounter >= appointmentLength) {
+        slots.push(availability[i]);
+      }
+      if (availableCounter === appointmentLength) {
+        // TODO: backfill slots
+        for (let j = 1; j < appointmentLength; j++) {
+          slots.push(availability[i - j]);
+        }
+      }
+    } else {
+      availableCounter = 0;
+    }
+  }
+
+  return slots.sort((a, b) => {
+    if (a.startTime === b.startTime) {
+      return 0;
+    } else if (a.startTime > b.startTime) {
+      return 1;
+    } else {
+      return -1;
+    }
+  });
+}
+
+// number of timeslots for appointment
+// TODO: make this a prop or route param
+const appointmentLength = 3;
+const bookableSlots = findBookableSlots(appointmentLength);
+
+function isBookable(startTime: number): boolean {
+  return bookableSlots.find((slot) =>
+    (slot.startTime === startTime)
+  ) !== undefined;
+}
+
+function countBookableSlotsFrom(startTime: number): number {
+  let count = 0;
+
+  while (isBookable(startTime)) {
+    count++;
+    startTime += 0.25;
+  }
+
+  return count;
+}
+
+const Booking = ({ visible, onClose }: { visible: boolean, onClose: () => void }) => {
+  return (
+    <div className={styles.booking} style={{ height: 'calc(' + appointmentLength + '*4vh)', visibility: visible ? 'visible' : 'hidden' }}>
+      <div className={styles['booking-inner-container']}>
+        <div className={styles['booking-close-container']}>
+          <GrFormClose onClick={onClose} />
+        </div>
+        <span>Selected Booking</span>
+      </div>
+    </div>
+  )
+}
+
+type SubSlotProps = {
+  startTime: number;
+  booking: number;
+};
+
+const SubSlot = ({ startTime, onBookableClick, booking, onBookingClose }: { startTime: number, onBookableClick: (startTime: number) => void, booking: number | null, onBookingClose: () => void }) => {
+  const handleClick = () => {
+    if (isBookable(startTime)) {
+      onBookableClick(startTime);
+    }
+  }
+
+  return <div className={styles['sub-slot'] + (isBookable(startTime) ? ' ' + styles.bookable : '')} onClick={handleClick}>
+    {/* <div style={{ opacity: (booking === startTime) ? 1 : 0 }}> */}
+    <Booking onClose={onBookingClose} />
+    {/* </div> */}
+  </div>
+}
+
 const BookAppointmentPage: NextPage = () => {
   const router = useRouter();
   const [date, setDate] = useState(new Date());
@@ -87,9 +181,8 @@ const BookAppointmentPage: NextPage = () => {
   // minimum of 1 for aesthetic purposes
   const preSlots = (1 - startTime % 1) / 0.25 || 1;
 
-  // number of timeslots for appointment
-  // TODO: make this a prop or route param
-  const appointmentLength = 2;
+  // the start time of the selected booking
+  const [booking, setBooking] = useState<null | number>(null);
 
   const handleDateChange = (newDates: Date[]) => {
     setDate(newDates[0]);
@@ -111,9 +204,27 @@ const BookAppointmentPage: NextPage = () => {
     });
   };
 
+  const handleBookableClick = (startTime: number) => {
+    if (countBookableSlotsFrom(startTime) >= appointmentLength) {
+      setBooking(startTime);
+    } else {
+      setBooking(startTime - 0.25 * (appointmentLength - countBookableSlotsFrom(startTime)));
+    }
+  };
+
+  function clearBooking() {
+    alert('clearing booking');
+    setBooking(null);
+  }
+
+  useEffect(() => {
+    console.log(booking);
+  }, [booking]);
+
   return (
     <div className={styles.container}>
       <Header title="Book Appointment" />
+      <Button onClick={clearBooking} />
 
       <div className={styles.content}>
         <div className={styles['date-selection']}>
@@ -142,10 +253,10 @@ const BookAppointmentPage: NextPage = () => {
                 </div>
               </div>
               <div className={styles.slot}>
-                <div className={styles['sub-slot']}></div>
-                <div className={styles['sub-slot']}></div>
-                <div className={styles['sub-slot']}></div>
-                <div className={styles['sub-slot']}></div>
+                <SubSlot startTime={Math.ceil(startTime) + i} onBookableClick={handleBookableClick} booking={booking} onBookingClose={clearBooking} />
+                <SubSlot startTime={Math.ceil(startTime) + i + 0.25} onBookableClick={handleBookableClick} booking={booking} onBookingClose={clearBooking} />
+                <SubSlot startTime={Math.ceil(startTime) + i + 0.5} onBookableClick={handleBookableClick} booking={booking} onBookingClose={clearBooking} />
+                <SubSlot startTime={Math.ceil(startTime) + i + 0.75} onBookableClick={handleBookableClick} booking={booking} onBookingClose={clearBooking} />
               </div>
             </div>
           ))}
