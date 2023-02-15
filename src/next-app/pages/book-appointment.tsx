@@ -4,10 +4,10 @@ import { useRouter } from 'next/router';
 import Header from '../components/Header';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs'; // TODO: Change icons to left and right carets
 import { GrFormClose } from 'react-icons/gr';
+import { AiOutlineCheck } from 'react-icons/ai';
 import IconButton from '../components/IconButton';
 import DatePicker from '../components/DatePicker';
-import { useMemo, useState, useEffect } from 'react';
-import { Button } from '@mantine/core';
+import { useState, MouseEvent } from 'react';
 
 function createEmptyArray(n: number): undefined[] {
   let a = [];
@@ -137,11 +137,16 @@ function countBookableSlotsFrom(startTime: number): number {
 }
 
 const Booking = ({ visible, onClose }: { visible: boolean, onClose: () => void }) => {
+  const handleCloseClick = (e: MouseEvent<SVGElement>) => {
+    e.stopPropagation();
+    onClose();
+  }
+
   return (
     <div className={styles.booking} style={{ height: 'calc(' + appointmentLength + '*4vh)', visibility: visible ? 'visible' : 'hidden' }}>
       <div className={styles['booking-inner-container']}>
         <div className={styles['booking-close-container']}>
-          <GrFormClose onClick={onClose} />
+          <GrFormClose onClick={handleCloseClick} />
         </div>
         <span>Selected Booking</span>
       </div>
@@ -151,21 +156,23 @@ const Booking = ({ visible, onClose }: { visible: boolean, onClose: () => void }
 
 type SubSlotProps = {
   startTime: number;
-  booking: number;
+  booking: number | null;
+  onBookableClick: (startTime: number) => void;
+  onBookingClose: () => void;
 };
 
-const SubSlot = ({ startTime, onBookableClick, booking, onBookingClose }: { startTime: number, onBookableClick: (startTime: number) => void, booking: number | null, onBookingClose: () => void }) => {
+const SubSlot = ({ startTime, onBookableClick, booking, onBookingClose }: SubSlotProps) => {
   const handleClick = () => {
     if (isBookable(startTime)) {
       onBookableClick(startTime);
     }
   }
 
-  return <div className={styles['sub-slot'] + (isBookable(startTime) ? ' ' + styles.bookable : '')} onClick={handleClick}>
-    {/* <div style={{ opacity: (booking === startTime) ? 1 : 0 }}> */}
-    <Booking onClose={onBookingClose} />
-    {/* </div> */}
-  </div>
+  return (
+    <div className={styles['sub-slot'] + (isBookable(startTime) ? ' ' + styles.bookable : '')} onClick={handleClick}>
+      <Booking onClose={onBookingClose} visible={booking === startTime} />
+    </div>
+  );
 }
 
 const BookAppointmentPage: NextPage = () => {
@@ -212,19 +219,18 @@ const BookAppointmentPage: NextPage = () => {
     }
   };
 
-  function clearBooking() {
-    alert('clearing booking');
+  const clearBooking = () => {
     setBooking(null);
   }
 
-  useEffect(() => {
-    console.log(booking);
-  }, [booking]);
+  const handleConfirmClick = () => {
+    // TODO: determine whether user has quote or not and redirect to appropriate screen accordingly
+    // what uniquely identifies a quote? is there a quote id?
+  };
 
   return (
     <div className={styles.container}>
-      <Header title="Book Appointment" />
-      <Button onClick={clearBooking} />
+      <Header title="Book Appointment" rightIcon={booking === null ? undefined : AiOutlineCheck} rightIconStyle={{ fill: 'var(--primary-color)' }} onRightIconClick={handleConfirmClick} />
 
       <div className={styles.content}>
         <div className={styles['date-selection']}>

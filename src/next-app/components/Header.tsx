@@ -3,10 +3,12 @@ import { IconType } from 'react-icons';
 import styles from '../styles/components/Header.module.css';
 import IconButton from './IconButton';
 import { IoMdArrowBack } from 'react-icons/io';
+import { CSSProperties } from 'react';
 
 type HeaderProps = {
   title?: string;
   rightIcon?: IconType;
+  rightIconStyle?: CSSProperties
   onRightIconClick?: () => void;
 };
 
@@ -27,7 +29,7 @@ const Header = (props: HeaderProps) => {
       )}
       {!!props.rightIcon ? (
         <div className={styles['right-btn-container']}>
-          <IconButton icon={props.rightIcon} onClick={props.onRightIconClick} />
+          <IconButton icon={props.rightIcon} onClick={props.onRightIconClick} iconStyle={props.rightIconStyle} />
         </div>
       ) : (
         <></>
