@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_access_policy import PermittedPkRelatedField
 
 from .models import (
     Shop,
@@ -14,6 +15,7 @@ from .models import (
 )
 from accounts.serializers import UserViewSerializer
 from vehicles.serializers import PartSerializer
+from .policies import ShopAccessPolicy
 
 
 class ServicePartSerializer(serializers.ModelSerializer):
@@ -42,23 +44,28 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ("id",)
 
+
 class ServiceWriteSerializer(serializers.ModelSerializer):
     price = serializers.DecimalField(default=0, max_digits=10, decimal_places=2)
-
+    shop = PermittedPkRelatedField(
+        access_policy=ShopAccessPolicy, queryset=Shop.objects.all()
+    )
+    
     def create(self, validated_data):
-        service = Service.objects.create(
-            **validated_data
-        )
+        service = Service.objects.create(**validated_data)
         return service
 
     class Meta:
         model = Service
-        fields ="__all__"
-        read_only_fields=("id",)
+        fields = "__all__"
+        read_only_fields = ("id",)
 
 
 class ServiceUpdateSerializer(serializers.ModelSerializer):
     price = serializers.DecimalField(default=0, max_digits=10, decimal_places=2)
+    shop = PermittedPkRelatedField(
+        access_policy=ShopAccessPolicy, queryset=Shop.objects.all()
+    )
 
     class Meta:
         model = Service

@@ -223,7 +223,7 @@ class InvitationViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                 # send invitation emails
                 for invitation in invitations:
                     invitation.send_invitation()
-                    
+
                 return Response(
                     {"message": f"{len(invitations)} invitations have been sent."},
                     status=status.HTTP_201_CREATED,
@@ -251,25 +251,28 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         if self.action in ["create"]:
             return ServiceWriteSerializer
         return ServiceSerializer
-    
+
     @transaction.atomic
     def create(self, request, *args, **kwargs):
-            with transaction.atomic():
-                data = request.data
-                parts = data.pop("parts", None)
-                service_serializer = ServiceWriteSerializer(data=data)
-                service_serializer.is_valid(raise_exception=False)
-                print(service_serializer.errors)
-                if service_serializer.is_valid(raise_exception=True):
-                    service = service_serializer.save()
-                    if parts is not None:
-                        service_parts_to_create = Part.objects.filter(
-                            id__in=parts
+        with transaction.atomic():
+            data = request.data
+            parts = data.pop("parts", None)
+            service_serializer = ServiceWriteSerializer(
+                data=data,
+                context={"request": request},
+            )
+            service_serializer.is_valid(raise_exception=False)
+            print(service_serializer.errors)
+            if service_serializer.is_valid(raise_exception=True):
+                service = service_serializer.save()
+                if parts is not None:
+                    service_parts_to_create = Part.objects.filter(id__in=parts)
+                    for part in service_parts_to_create:
+                        ServicePart.objects.create(
+                            service=service, part=part, quantity=1
                         )
-                        for part in service_parts_to_create:
-                            ServicePart.objects.create(service=service, part=part, quantity=1)
-                return Response(service_serializer.data)
-    
+            return Response(service_serializer.data)
+
     @transaction.atomic
     def partial_update(self, request, *args, **kwargs):
         try:
@@ -277,14 +280,17 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                 updated_service = self.get_object()
                 data = request.data
                 parts = data.pop("parts", None)
-                service_serializer = ServiceWriteSerializer(updated_service, data=data, partial=True)
+                service_serializer = ServiceWriteSerializer(
+                    updated_service,
+                    data=data,
+                    partial=True,
+                    context={"request": request},
+                )
                 if service_serializer.is_valid(raise_exception=True):
                     service_serializer.save()
                     if parts is not None:
-                        service_parts_fetched = Part.objects.filter(
-                            id__in=parts
-                        )
-                        
+                        service_parts_fetched = Part.objects.filter(id__in=parts)
+
                         ServicePart.objects.filter(
                             service__id=updated_service.pk
                         ).exclude(
@@ -296,18 +302,15 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                                 obj, created = ServicePart.objects.update_or_create(
                                     service=updated_service,
                                     part=part,
-                                    defaults={
-                                        "quantity": 1
-                                    },
+                                    defaults={"quantity": 1},
                                 )
                             except Exception as err:
                                 logging.error(traceback.format_exc())
                 return Response(service_serializer.data)
         except Exception as err:
-            return Response(
-                {"status": False, "error_description": 'Failed to update service.'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            logging.error(traceback.format_exc())
+            raise err
+
 
 
 class ServicePartViewSet(viewsets.ModelViewSet):
