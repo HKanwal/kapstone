@@ -15,7 +15,9 @@ from .models import (
 )
 from accounts.serializers import UserViewSerializer
 from vehicles.serializers import PartSerializer
-from .policies import ShopAccessPolicy
+from .policies import ShopAccessPolicy, AppointmentAccessPolicy
+from quotes.policies import QuoteAccessPolicy
+from quotes.models import Quote
 
 
 class ServicePartSerializer(serializers.ModelSerializer):
@@ -50,7 +52,7 @@ class ServiceWriteSerializer(serializers.ModelSerializer):
     shop = PermittedPkRelatedField(
         access_policy=ShopAccessPolicy, queryset=Shop.objects.all()
     )
-    
+
     def create(self, validated_data):
         service = Service.objects.create(**validated_data)
         return service
@@ -226,6 +228,12 @@ class WorkOrderUpdateSerializer(serializers.ModelSerializer):
     odometer_reading_after = serializers.IntegerField(default=0)
     discount = serializers.DecimalField(max_digits=5, decimal_places=2, default=0)
     grand_total = serializers.DecimalField(max_digits=10, decimal_places=2, default=0)
+    quote = PermittedPkRelatedField(
+        access_policy=QuoteAccessPolicy, queryset=Quote.objects.all()
+    )
+    appointment = PermittedPkRelatedField(
+        access_policy=AppointmentAccessPolicy, queryset=Appointment.objects.all()
+    )
 
     class Meta:
         model = WorkOrder
@@ -238,6 +246,15 @@ class WorkOrderCreateSerializer(serializers.ModelSerializer):
     odometer_reading_after = serializers.IntegerField(default=0)
     discount = serializers.DecimalField(max_digits=5, decimal_places=2, default=0)
     grand_total = serializers.DecimalField(max_digits=10, decimal_places=2, default=0)
+    shop = PermittedPkRelatedField(
+        access_policy=ShopAccessPolicy, queryset=Shop.objects.all()
+    )
+    quote = PermittedPkRelatedField(
+        access_policy=QuoteAccessPolicy, queryset=Quote.objects.all()
+    )
+    appointment = PermittedPkRelatedField(
+        access_policy=AppointmentAccessPolicy, queryset=Appointment.objects.all()
+    )
 
     class Meta:
         model = WorkOrder
