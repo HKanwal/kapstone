@@ -40,7 +40,7 @@ urlcolor=cyan          % color of external links
 
 \title{Module Interface Specification for \progname{}}
 
-\author{Author Name}
+\author{\authname}
 
 \date{\today}
 
@@ -50,11 +50,10 @@ urlcolor=cyan          % color of external links
 
 \section{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
+\begin{tabularx}{\textwidth}{p{4cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+January 18th, 2023 & 0.0 & Rev 0 \\
 \bottomrule
 \end{tabularx}
 
@@ -62,9 +61,26 @@ Date 2 & 1.1 & Notes\\
 
 \section{Symbols, Abbreviations and Acronyms}
 
-See SRS Documentation at \wss{give url}
+See SRS Documentation at \href{https://github.com/HKanwal/kapstone/blob/main/docs/SRS/SRS.pdf}{SRS for Sayyara Automotive Matcher} \\
 
-\wss{Also add any additional symbols, abbreviations or acronyms}
+\noindent\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l} 
+  \toprule		
+  \textbf{symbol} & \textbf{description}\\
+  \midrule 
+  AC & Anticipated Change\\
+  DAG & Directed Acyclic Graph \\
+  FR & Functional Requirement\\
+  M & Module \\
+  MG & Module Guide \\
+  OS & Operating System \\
+  PWA & Progressive Web Application \\
+  \progname & PWA for maintenance appointment scheduling for vehicle owners\\
+  SRS & Software Requirements Specification\\
+  UC & Unlikely Change \\
+  UI & User Interface \\
+  \bottomrule
+\end{tabular}\\
 
 \newpage
 
@@ -77,21 +93,21 @@ See SRS Documentation at \wss{give url}
 \section{Introduction}
 
 The following document details the Module Interface Specifications for
-\wss{Fill in your project name and description}
+the Sayyara Automotive Matcher: An application designed to ease communcation between mechanics and potential clients.
 
 Complementary documents include the System Requirement Specifications
 and Module Guide.  The full documentation and implementation can be
-found at \url{...}.  \wss{provide the url for your repo}
+found at \url{https://github.com/HKanwal/kapstone}. 
 
 \section{Notation}
 
 \wss{You should describe your notation.  You can use what is below as
   a starting point.}
 
-The structure of the MIS for modules comes from \citet{HoffmanAndStrooper1995},
+The structure of the MIS for modules comes from \texit{Software Design, Automated Testing, and Maintenance: A Practical Approach} (Hoffman & Strooper, 1995),
 with the addition that template modules have been adapted from
-\cite{GhezziEtAl2003}.  The mathematical notation comes from Chapter 3 of
-\citet{HoffmanAndStrooper1995}.  For instance, the symbol := is used for a
+\texit{Fundamentals of Software Engineering} (Ghezzi et al., 2003).  The mathematical notation comes from Chapter 3 of
+\texit{Software Design, Automated Testing, and Maintenance: A Practical Approach}.  For instance, the symbol := is used for a
 multiple assignment statement and conditional rules follow the form $(c_1
 \Rightarrow r_1 | c_2 \Rightarrow r_2 | ... | c_n \Rightarrow r_n )$.
 
@@ -131,21 +147,28 @@ The following table is taken directly from the Module Guide document for this pr
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding} & ~ \\
+{Hardware-Hiding Module} & N/A \\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding} & Input Parameters\\
-& Output Format\\
-& Output Verification\\
-& Temperature ODEs\\
-& Energy Equations\\ 
-& Control Module\\
-& Specification Parameters Module\\
+\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module}
+& UI Module\\
+& Authentication Module\\ 
+& Dashboard Module\\
+& Shop Creation Module\\ 
+& Quote Request Module\\ 
+& Quote Module\\
+& Chat Module\\ 
+& Account Information Module\\
+& Work Order Module\\
+& Service Module\\
+& Appointment Module\\ 
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision} & {Sequence Data Structure}\\
-& ODE Solver\\
-& Plotting\\
+\multirow{3}{0.3\textwidth}{Software Decision Module}
+& Available Appointments Module\\
+& Update Appointments Module\\
+& Appointment Slots Module\\
+& Update Appointment Slots Module\\
 \bottomrule
 
 \end{tabular}
@@ -156,16 +179,12 @@ The following table is taken directly from the Module Guide document for this pr
 \newpage
 ~\newpage
 
-\section{MIS of \wss{Module Name}} \label{Module} \wss{Use labels for
-  cross-referencing}
-
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+%%---UI MODULE---%%
+\section{MIS of UI Module} \label{mUI}
 
 \subsection{Module}
 
-\wss{Short name for the module}
+UI Module
 
 \subsection{Uses}
 
@@ -174,14 +193,16 @@ The following table is taken directly from the Module Guide document for this pr
 
 \subsubsection{Exported Constants}
 
+None
+
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\begin{tabular}{p{4cm} p{4cm} p{4cm} p{2cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+useThemePlease & string, string & - & - \\
 \hline
 \end{tabular}
 \end{center}
@@ -190,42 +211,934 @@ The following table is taken directly from the Module Guide document for this pr
 
 \subsubsection{State Variables}
 
-\wss{Not all modules will have state variables.  State variables give the module
-  a memory.}
-
-\subsubsection{Environment Variables}
-
-\wss{This section is not necessary for all modules.  Its purpose is to capture
-  when the module has external interaction with the environment, such as for a
-  device driver, screen interface, keyboard, file, etc.}
+primaryColor: string \\
+secondaryColor: string
 
 \subsubsection{Assumptions}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
-
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent useThemePlease(primaryColor: string, secondaryColor: string):
 \begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
+\item transition: $\text{primaryColor} = primaryColor \land \text{secondaryColor} = secondaryColor$
+\item output: None 
+\item exception: None
 \end{itemize}
-
-\wss{A module without environment variables or state variables is unlikely to
-  have a state transition.  In this case a state transition can only occur if
-  the module is changing the state of another module.}
-
-\wss{Modules rarely have both a transition and an output.  In most cases you
-  will have one or the other.}
 
 \subsubsection{Local Functions}
 
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
+None
+
+\newpage
+
+%%---AUTHENTICATION MODULE---%%
+\section{MIS of Authentication Module} \label{mAuth}
+
+\subsection{Module}
+
+Authentication Module
+
+\subsection{Uses}
+
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{6cm} p{3cm} p{1cm} p{5cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+pleaseCheckTheseCredentials & string, string & bool & SomethinAintRightException \\
+pleaseRegisterMe & string, string & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+  
+username: string \\
+password: string
+
+\subsubsection{Environment Variables}
+
+\subsubsection{Assumptions}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent pleaseCheckTheseCredentials(username, password):
+\begin{itemize}
+\item transition: None 
+\item output: $\text{username} = username \land \text{password} = password$
+\item exception: $(\text{username} != username \lor \text{password} != password) \implies \text{SomethinAintRightException}$
+\end{itemize}
+
+\noindent pleaseRegisterMe(username, password):
+\begin{itemize}
+\item transition: $\text{username} = username \land \text{password} = password$ 
+\item output: None
+\item exception: None
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+None
+
+\newpage
+
+%%---DASHBOARD MODULE---%%
+\section{MIS of Dashboard Module} \label{mDashboard} \wss{Use labels for
+  cross-referencing}
+
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\subsection{Module}
+
+Dashboard
+
+\subsection{Uses}
+UI
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{4cm} p{3cm} p{3cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+getAccessiblePages & string &  &  \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+allPages: sequence of Pages \\
+accessiblePages: sequence of Pages
+
+
+\subsubsection{Environment Variables}
+
+
+\subsubsection{Assumptions}
+
+The arguments provided to access program will be of correct type.
+
+\subsubsection{Access Routine Semantics}
+
+\noindent getAccessiblePages(userType):
+\begin{itemize}
+\item transition: $(\forall i: \text{Page}| i \in \text{allPages} \land i.user = userType : \text{accessiblePages + i})$ 
+\item output: None
+\item exception: None
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+None
+
+\newpage
+
+%%---SHOP CREATION MODULE---%%
+\section{MIS of Shop Creation Module} \label{mShopCreation}
+
+\subsection{Module}
+
+ShopCreation
+
+\subsection{Uses}
+
+UI
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+newShop & sequence of strings &  & InvalidInfo \\
+updateShop & integer, sequence of strings &  & InvalidID, InvalidInfo \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\textit{shopInfo}: sequence of strings
+
+\subsubsection{Access Routine Semantics}
+
+\noindent newShop(input):
+\begin{itemize}
+\item transition: \textit{shopInfo} := \textit{input}
+\item output: \textit{out} := \textit{self}
+\item exception: ($\forall val \in |input| | invalidValue(val[i], i) \Rightarrow InvalidInfo$)
+\end{itemize}
+
+\noindent updateShop(shop, input):
+\begin{itemize}
+\item transition: \textit{shopInfo} := input
+\item output: none
+\item exceptions: ($invalidID(shop) \Rightarrow InvalidID$), ($\forall val \in |input| | invalidValue(val[i], i) \Rightarrow InvalidInfo$)
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\noindent invalidValue(s, i): Verifies that \textit{s} is a valid parameter for a shop's data at position \textit{i}.
+
+\noindent invalidID(shop): Verifies that the given shop ID corresponds with an existing shop in the API.
+
+\newpage
+
+%%---QUOTE REQUEST MODULE---%%
+\section{MIS of Quote Request Module} \label{mQuoteRequest}
+
+\subsection{Module}
+
+QR Module
+
+\subsection{Uses}
+
+UI
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{5cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+newQuoteRequest & sequence of strings &  & InvalidInfo \\
+updateQuoteRequest & integer, sequence of strings &  & InvalidID, InvalidInfo \\
+getQuoteRequest & integer & Quote Request & InvalidID \\
+sendQuoteRequest & integer & & InvalidID \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\textit{quoteRequestInfo}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent newQuoteRequest(input):
+\begin{itemize}
+\item transition: \textit{quoteRequestInfo} := \texit{input}
+\item output: \textit{out} := \textit{self}
+\item exception: ($\forall val \in |input| | invalidValue(val[i], i) \Rightarrow InvalidInfo$)
+\end{itemize}
+
+\noindent updateQuoteRequest(quoteRequest, input):
+\begin{itemize}
+\item transition: \textit{quoteRequestInfo} := input
+\item output: none
+\item exceptions: ($invalidID(quoteRequest) \Rightarrow InvalidID$), ($\forall val \in |input| | invalidValue(val[i], i) \Rightarrow InvalidInfo$)
+\end{itemize}
+
+\noindent getQuoteRequest(quoteRequest):
+\begin{itemize}
+\item transition: none
+\item output: \texit{out} := \texitit{quoteRequest}
+\item exceptions: ($invalidID(quoteRequest) \Rightarrow InvalidID$)
+\end{itemize}
+
+\noindent sendQuoteRequest(quoteRequest):
+\begin{itemize}
+\item transition: quoteRequest $\rightarrow$ \hyperref[mQuote]{Quote Module}
+\item output: none
+\item exceptions: ($invalidID(quoteRequest) \Rightarrow InvalidID$)
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\noindent invalidValue(s, i): Verifies that \textit{s} is a valid parameter for a shop's data at position \textit{i}.
+
+\noindent invalidID(quoteRequest): Verifies that the given quote request ID corresponds with an existing quote request in the API.
+
+\newpage
+
+%%---QUOTE MODULE---%%
+\section{MIS of Quote Module} \label{mQuote} \wss{Use labels for
+  cross-referencing}
+
+\subsection{Module}
+
+Quote
+
+\subsection{Uses}
+
+UI
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{5cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+newQuote & sequence of strings &  & InvalidInfo \\
+updateQuote & integer, sequence of strings &  & InvalidID, InvalidInfo \\
+getQuote & integer & Quote & InvalidID \\
+sendQuote & integer & & InvalidID \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\textit{quoteInfo}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent newQuote(input):
+\begin{itemize}
+\item transition: \textit{quoteInfo} := \texit{input}
+\item output: \textit{out} := \textit{self}
+\item exception: ($\forall val \in |input| | invalidValue(val[i], i) \Rightarrow InvalidInfo$)
+\end{itemize}
+
+\noindent updateQuote(quote, input):
+\begin{itemize}
+\item transition: \textit{quoteInfo} := input
+\item output: none
+\item exceptions: ($invalidID(quote) \Rightarrow InvalidID$), ($\forall val \in |input| | invalidValue(val[i], i) \Rightarrow InvalidInfo$)
+\end{itemize}
+
+\noindent getQuote(quote):
+\begin{itemize}
+\item transition: none
+\item output: \texit{out} := \texitit{quote}
+\item exceptions: ($invalidID(quote) \Rightarrow InvalidID$)
+\end{itemize}
+
+\noindent sendQuote(quote):
+\begin{itemize}
+\item transition: quote $\rightarrow$ \hyperref[mQuoteRequest]{Quote Request Module}
+\item output: none
+\item exceptions: ($invalidID(quote) \Rightarrow InvalidID$)
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\noindent invalidValue(s, i): Verifies that \textit{s} is a valid parameter for a shop's data at position \textit{i}.
+
+\noindent invalidID(quote): Verifies that the given quote ID corresponds with an existing quote in the API.
+
+\newpage
+
+%%---CHAT MODULE---%%
+\section{MIS of Chat Module} \label{mChat} \wss{Use labels for
+  cross-referencing}
+
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\subsection{Module}
+
+Chat
+
+\wss{Short name for the module}
+
+\subsection{Uses}
+
+UI
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+new Chat & string & Chat & \\
+SendMessage & string & & \\
+GetMessages & & sequence of strings & \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+recipient: string
+
+\subsubsection{Environment Variables}
+
+\subsubsection{Assumptions}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent new Chat(r):
+\begin{itemize}
+\item transition: \textit{recipient} := \textit{r}
+\item output:\textit{out} := \textit{self}
+\item exception: none
+\end{itemize}
+
+\noindent SendMessage(s):
+\begin{itemize}
+\item transition: send s to API
+\item exception: none
+\end{itemize}
+
+\noindent GetMessages():
+\begin{itemize}
+\item transition: get messages from API
+\item output: \textit{out} := sequence of strings
+\item exception: none
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+None
+
+\newpage
+
+%%---ACCOUNT INFORMATION MODULE---%%
+\section{MIS of Account Information Module} \label{mAccountInfo} \wss{Use labels for
+  cross-referencing}
+
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\subsection{Module}
+
+AccountInformation
+
+\subsection{Uses}
+
+UI
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{4cm} p{3cm} p{3cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+new AccountInformation & sequence of strings & AccountInformation & Invalid Information \\
+getInfo & & sequence of strings & \\
+edit & sequence of strings & & Invalid Information \\
+delete & & & \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+info: sequence of strings
+
+\subsubsection{Environment Variables}
+
+\subsubsection{Assumptions}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent new AccountInformation(i):
+\begin{itemize}
+\item transition: \textit{info} := \textit{i}
+\item output: \textit{out} := \textit{self}
+\item exception: (\forall val \in |i| | invalidValue(val[i], i) \Rightarrow InvalidInformation)
+\end{itemize}
+
+\hfill
+
+\noindent getInfo():
+\begin{itemize}
+\item output: \textit{out} := \textit{info}
+\item exception: None
+\end{itemize}
+
+\noindent edit(i):
+\begin{itemize}
+\item transition: \textit{info} := \textit{i}
+\item exception: (\forall val \in |i| | invalidValue(val[i], i) \Rightarrow InvalidInformation)
+\end{itemize}
+
+\hfill
+
+\noindent delete(i):
+\begin{itemize}
+\item transition:  \textit{info} := \textit{[]}
+\item exception: None
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+invalidValue(s,i): check that s is a valid value for a string in position i
+
+\newpage
+
+%%---WORK ORDER MODULE---%%
+\section{MIS of Work Order Module} \label{mWorkOrder}
+
+\subsection{Module}
+
+WorkOrder
+
+\subsection{Uses}
+UI
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{4cm} p{5cm} p{2cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+updateWorkOrder & int, sequnece of strings &  & InvalidID, InvalidInfo \\
+getWorkOrder & int & workOrder & InvalidID \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+workOrderInfo: sequence of strings
+
+\subsubsection{Environment Variables}
+
+None
+
+\subsubsection{Assumptions}
+
+None
+
+\subsubsection{Access Routine Semantics}
+
+\noindent updateWorkOrder(workOrder, input):
+\begin{itemize}
+\item transition: \textit{workOrderInfo} := \textit{input}
+\item output: none
+\item exception: ($invalidID(workOrder) \Rightarrow InvalidID$), ($\forall val \in |input| | invalidValue(val[i], i) \Rightarrow InvalidInfo$)
+\end{itemize}
+
+\noindent getWorkOrder(workOrder):
+\begin{itemize}
+\item transition: none
+\item output: \texit{out} := \texitit{workOrder}
+\item exceptions: ($invalidID(workOrder) \Rightarrow InvalidID$)
+\end{itemize}
+
+
+\subsubsection{Local Functions}
+
+\noindent invalidValue(s, i): Verifies that \textit{s} is a valid parameter for a shop's data at position \textit{i}.
+
+\noindent invalidID(workOrder): Verifies that the given work order ID corresponds with an existing work order in the API.
+
+\newpage
+
+%%---SERVICE MODULE---%%
+\section{MIS of Service Module} \label{mService}
+
+\subsection{Module}
+
+Service
+
+\subsection{Uses}
+
+UI
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{3cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+newService & sequence of strings &  & InvalidInfo \\
+updateService & int, sequence of strings &  & InvalidInfo, InvalidID \\
+getService & int & Service & InvalidID \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+serviceInfo: sequence of strings
+
+\subsubsection{Environment Variables}
+
+
+\subsubsection{Assumptions}
+None
+
+\subsubsection{Access Routine Semantics}
+
+\noindent newService(input):
+\begin{itemize}
+\item transition: \textit{serviceInfo} := \texit{input}
+\item output: \textit{out} := \textit{self}
+\item exception: ($\forall val \in |input| | invalidValue(val[i], i) \Rightarrow InvalidInfo$)
+\end{itemize}
+
+\noindent updateService(service, input):
+\begin{itemize}
+\item transition: \textit{serviceInfo} := input
+\item output: none
+\item exceptions: ($invalidID(service) \Rightarrow InvalidID$), ($\forall val \in |input| | invalidValue(val[i], i) \Rightarrow InvalidInfo$)
+\end{itemize}
+
+\noindent getService(service):
+\begin{itemize}
+\item transition: none
+\item output: \texit{out} := \texitit{service}
+\item exceptions: ($invalidID(service) \Rightarrow InvalidID$)
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\noindent invalidValue(s, i): Verifies that \textit{s} is a valid parameter for a shop's data at position \textit{i}.
+
+\noindent invalidID(service): Verifies that the given service ID corresponds with an existing service in the API.
+
+\newpage
+
+%%---APPOINTMENT MODULE---%%
+\section{MIS of Appointment Module} \label{mAppointment} \wss{Use labels for
+  cross-referencing}
+
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\subsection{Module}
+
+Appointment
+
+\subsection{Uses}
+
+UI
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+create & string, string & & \\
+get & string & string & \\
+edit & string, string & & \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+appointments: sequence of sequences of strings
+
+\subsubsection{Environment Variables}
+
+\subsubsection{Assumptions}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent create(name, time):
+\begin{itemize}
+\item transition: \textit{appointments} := \textit{appointments + [name,time]}
+\item exception: None
+\end{itemize}
+
+\noindent get(name):
+\begin{itemize}
+\item output: \textit{output} := \textit{appointments[i] where appointments[i][0] = name}
+\item exception: None
+\end{itemize}
+
+\noindent create(name, time):
+\begin{itemize}
+\item transition: \textit{appointments} := \textit{appointments + [name,time]}
+\item exception: None
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+None
+
+\newpage
+
+%%---AVAILABLE APPOINTMENTS MODULE---%%
+\section{MIS of Available Appointments Module} \label{mAvailableAppointments}
+
+\subsection{Module}
+Available Appointments
+
+\subsection{Uses}
+None
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None
+\subsubsection{Exported Access Programs}
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+list & String, Date, Date, Integer & Dictionary & None \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+None
+
+\subsubsection{Environment Variables}
+$apt\_slots$: Database table containing Appointment Slots (set)
+
+\subsubsection{Assumptions}
+None
+
+\subsubsection{Access Routine Semantics}
+\noindent list(shop, from, to, duration):
+\begin{itemize}
+\item transition: None
+\item output: 
+out := \{$e: AppointmentSlot \; | \; e \in apt\_slots \; \land \; e.from \ge from \; \land \; e.to \le to \; \land \; e.shop = shop : get\_slots(e, duration)$\}
+\item exception: None 
+\end{itemize}
+
+
+\subsubsection{Local Functions}
+get\_slots : AppointmentSlot $\times$ Duration $\rightarrow$ AppointmentSlotSet \\
+get\_slots(a, d) $\equiv$ $(s:AppointmentSlotSet \; | \; s[0] = a \; \land \; s[|s| \; - \; 1] = d : s)$
+
+\newpage
+
+%%---UPDATE APPOINTMENTS MODULE---%%
+\section{MIS of Update Appointments Module} \label{mUpdateAppointments}
+
+\subsection{Module}
+Update Appointments
+
+\subsection{Uses}
+None
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+update & String, Date & None & None \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+None
+
+\subsubsection{Environment Variables}
+$apt\_slots$: Database table containing Appointment Slots (set)
+
+\subsubsection{Assumptions}
+None
+
+\subsubsection{Access Routine Semantics}
+\noindent update(shop, date):
+\begin{itemize}
+\item transition: \\
+$(\forall i:AppointmentSlot \; | \; i \in apt\_slots \; \land \; i.date = date \; \land \; i.shop = shop \; \land \; i.is\_cancelled : cancel(i.appointments))$
+\item output: None
+\item exception: None
+\end{itemize}
+
+
+\subsubsection{Local Functions}
+cancel : set of Appointment $\rightarrow None$ \\
+cancel(s) $\equiv$ $(\forall j:Appointment| j \in s : j.cancel())$
+
+\newpage
+
+%%---APPOINTMENT SLOTS MODULE---%%
+\section{MIS of Appointment Slots Module} \label{mAppointmentSlots} 
+
+\subsection{Module}
+Appointment Slots
+
+\subsection{Uses}
+None
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None
+
+\subsubsection{Exported Access Programs}
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+generate & String, Date & None & None \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+None
+
+\subsubsection{Environment Variables}
+$apt\_slots$: Database table containing Appointment Slots (set)
+
+\subsubsection{Assumptions}
+None
+
+\subsubsection{Access Routine Semantics}
+\noindent generate(shop, date):
+\begin{itemize}
+\item transition: \\
+$apt\_slots := \text{apt\_slots} \; \cup \; \text{AppointmentSlotSet}(\langle e: ShopAvailability |: generate\_slots(e) \rangle)$
+\item output: None
+\item exception: None
+\end{itemize}
+
+\subsubsection{Local Functions}
+generate\_slots : ShopAvailability $\rightarrow$ set of AppointmentSlot \\
+generate\_slots(s) $\equiv$ $\{i:\mathbb{N}| i \in [s.start..s.end, s.step] : \text{new AppointmentSlot}(s.shop, i, i+s.step) \}$
+
+\newpage
+
+%%---UPDATE APPOINTMENT SLOTS MODULE---%%
+\section{MIS of Update Appointment Slots Module} \label{mUpdateAppointmentSlots}
+
+\subsection{Module}
+Update Appointment Slots
+
+\subsection{Uses}
+None
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None
+
+\subsubsection{Exported Access Programs}
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+update & String, Date & None & None \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+None
+
+\subsubsection{Environment Variables}
+$apt\_slots$: Database table containing Appointment Slots (set)
+
+\subsubsection{Assumptions}
+None
+
+\subsubsection{Access Routine Semantics}
+\noindent update(shop, date):
+\begin{itemize}
+\item transition: \\
+$apt\_slots := (\text{AppointmentSlotSet}(\langle e: AppointmentSlot | e.date = date \land e.shop = shop \land check\_hours(e, shop.hours, date): e \rangle))$
+\item output: None
+\item exception: None
+\end{itemize}
+
+\subsubsection{Local Functions}
+check\_hours : AppointmentSlot $\times$ set of ShopAvailability $\times$ Date $\rightarrow \mathbb{B}$ \\
+check\_hours(e, hours, date) $\equiv$ $(\exists i:\mathbb{N}| i \in [0..|hours|-1] : e.start \ge hours[i].start  \land e.end \le hours[i].end)$
 
 \newpage
 
@@ -234,7 +1147,7 @@ The following table is taken directly from the Module Guide document for this pr
 
 \newpage
 
-\section{Appendix} \label{Appendix}
+%\section{Appendix} \label{Appendix}
 
 \wss{Extra information if required}
 
