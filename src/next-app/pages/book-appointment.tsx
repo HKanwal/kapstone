@@ -116,13 +116,11 @@ function findBookableSlots(appointmentLength: number): Slot[] {
 
 // number of timeslots for appointment
 // TODO: make this a prop or route param
-const appointmentLength = 3;
+const appointmentLength = 2;
 const bookableSlots = findBookableSlots(appointmentLength);
 
 function isBookable(startTime: number): boolean {
-  return bookableSlots.find((slot) =>
-    (slot.startTime === startTime)
-  ) !== undefined;
+  return bookableSlots.find((slot) => slot.startTime === startTime) !== undefined;
 }
 
 function countBookableSlotsFrom(startTime: number): number {
@@ -136,14 +134,20 @@ function countBookableSlotsFrom(startTime: number): number {
   return count;
 }
 
-const Booking = ({ visible, onClose }: { visible: boolean, onClose: () => void }) => {
+const Booking = ({ visible, onClose }: { visible: boolean; onClose: () => void }) => {
   const handleCloseClick = (e: MouseEvent<SVGElement>) => {
     e.stopPropagation();
     onClose();
-  }
+  };
 
   return (
-    <div className={styles.booking} style={{ height: 'calc(' + appointmentLength + '*4vh)', visibility: visible ? 'visible' : 'hidden' }}>
+    <div
+      className={styles.booking}
+      style={{
+        height: 'calc(' + appointmentLength + '*4vh)',
+        visibility: visible ? 'visible' : 'hidden',
+      }}
+    >
       <div className={styles['booking-inner-container']}>
         <div className={styles['booking-close-container']}>
           <GrFormClose onClick={handleCloseClick} />
@@ -151,8 +155,8 @@ const Booking = ({ visible, onClose }: { visible: boolean, onClose: () => void }
         <span>Selected Booking</span>
       </div>
     </div>
-  )
-}
+  );
+};
 
 type SubSlotProps = {
   startTime: number;
@@ -166,14 +170,17 @@ const SubSlot = ({ startTime, onBookableClick, booking, onBookingClose }: SubSlo
     if (isBookable(startTime)) {
       onBookableClick(startTime);
     }
-  }
+  };
 
   return (
-    <div className={styles['sub-slot'] + (isBookable(startTime) ? ' ' + styles.bookable : '')} onClick={handleClick}>
+    <div
+      className={styles['sub-slot'] + (isBookable(startTime) ? ' ' + styles.bookable : '')}
+      onClick={handleClick}
+    >
       <Booking onClose={onBookingClose} visible={booking === startTime} />
     </div>
   );
-}
+};
 
 const BookAppointmentPage: NextPage = () => {
   const router = useRouter();
@@ -186,7 +193,7 @@ const BookAppointmentPage: NextPage = () => {
 
   // # of sub-slots before first xx:00 mark
   // minimum of 1 for aesthetic purposes
-  const preSlots = (1 - startTime % 1) / 0.25 || 1;
+  const preSlots = (1 - (startTime % 1)) / 0.25 || 1;
 
   // the start time of the selected booking
   const [booking, setBooking] = useState<null | number>(null);
@@ -221,7 +228,7 @@ const BookAppointmentPage: NextPage = () => {
 
   const clearBooking = () => {
     setBooking(null);
-  }
+  };
 
   const handleConfirmClick = () => {
     // TODO: determine whether user has quote or not and redirect to appropriate screen accordingly
@@ -230,7 +237,12 @@ const BookAppointmentPage: NextPage = () => {
 
   return (
     <div className={styles.container}>
-      <Header title="Book Appointment" rightIcon={booking === null ? undefined : AiOutlineCheck} rightIconStyle={{ fill: 'var(--primary-color)' }} onRightIconClick={handleConfirmClick} />
+      <Header
+        title="Book Appointment"
+        rightIcon={booking === null ? undefined : AiOutlineCheck}
+        rightIconStyle={{ fill: 'var(--primary-color)' }}
+        onRightIconClick={handleConfirmClick}
+      />
 
       <div className={styles.content}>
         <div className={styles['date-selection']}>
@@ -259,10 +271,30 @@ const BookAppointmentPage: NextPage = () => {
                 </div>
               </div>
               <div className={styles.slot}>
-                <SubSlot startTime={Math.ceil(startTime) + i} onBookableClick={handleBookableClick} booking={booking} onBookingClose={clearBooking} />
-                <SubSlot startTime={Math.ceil(startTime) + i + 0.25} onBookableClick={handleBookableClick} booking={booking} onBookingClose={clearBooking} />
-                <SubSlot startTime={Math.ceil(startTime) + i + 0.5} onBookableClick={handleBookableClick} booking={booking} onBookingClose={clearBooking} />
-                <SubSlot startTime={Math.ceil(startTime) + i + 0.75} onBookableClick={handleBookableClick} booking={booking} onBookingClose={clearBooking} />
+                <SubSlot
+                  startTime={Math.ceil(startTime) + i}
+                  onBookableClick={handleBookableClick}
+                  booking={booking}
+                  onBookingClose={clearBooking}
+                />
+                <SubSlot
+                  startTime={Math.ceil(startTime) + i + 0.25}
+                  onBookableClick={handleBookableClick}
+                  booking={booking}
+                  onBookingClose={clearBooking}
+                />
+                <SubSlot
+                  startTime={Math.ceil(startTime) + i + 0.5}
+                  onBookableClick={handleBookableClick}
+                  booking={booking}
+                  onBookingClose={clearBooking}
+                />
+                <SubSlot
+                  startTime={Math.ceil(startTime) + i + 0.75}
+                  onBookableClick={handleBookableClick}
+                  booking={booking}
+                  onBookingClose={clearBooking}
+                />
               </div>
             </div>
           ))}
