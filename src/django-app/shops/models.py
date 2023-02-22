@@ -23,8 +23,10 @@ from .validators import validate_nonzero
 
 class Shop(models.Model):
     shop_owner = models.ForeignKey("accounts.ShopOwner", on_delete=models.CASCADE)
-    # shop_email = models.EmailField(_("shop's email address"), max_length=255, null=True)
-    # shop_phone_numbers = ArrayField(PhoneNumberField(blank=True), blank=True)
+    shop_email = models.EmailField(
+        _("shop's email address"), max_length=255, blank=True, null=True
+    )
+    shop_phone_number = PhoneNumberField(blank=True, null=True)
     address = models.OneToOneField("Address", on_delete=models.PROTECT)
     name = models.CharField(_("shop name"), max_length=255, unique=True)
     num_bays = models.IntegerField(
@@ -44,10 +46,16 @@ class Shop(models.Model):
             return False
         return self == employee.shop
 
+    def get_employees(self):
+        EmployeeData = apps.get_model("accounts", "EmployeeData")
+        return EmployeeData.objects.filter(shop__pk=self.pk)
+
     @property
     def employees(self):
         EmployeeData = apps.get_model("accounts", "EmployeeData")
-        return EmployeeData.objects.filter(shop__pk=self.pk).values_list("user", flat=True)
+        return EmployeeData.objects.filter(shop__pk=self.pk).values_list(
+            "user", flat=True
+        )
 
     @property
     def num_employees(self):
@@ -235,6 +243,31 @@ class AppointmentSlot(models.Model):
 
     def __str__(self):
         return f"Slot from {self.start_time} to {self.end_time}"
+
+
+class ShopHours(models.Model):
+    class Day(models.TextChoices):
+        MONDAY = "monday", "Monday"
+        TUESDAY = "tuesday", "Tuesday"
+        WEDNESDAY = "wednesday", "Wednesday"
+        THURSDAY = "thursday", "Thursday"
+        FRIDAY = "friday", "Friday"
+        SUNDAY = "sunday", "Sunday"
+
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
+    day = models.CharField(max_length=10, choices=Day.choices, null=False)
+    from_time = models.TimeField(null=False)
+    to_time = models.TimeField(null=False)
+
+    class Meta:
+        verbose_name = "Shop Hours"
+        verbose_name_plural = "Shop Hours"
+        constraints = [
+            UniqueConstraint(fields=["shop", "day"], name="shop_day_unique_combination")
+        ]
+
+    def __str__(self):
+        return f"{self.shop} - {self.day}"
 
 
 class ShopAvailability(models.Model):

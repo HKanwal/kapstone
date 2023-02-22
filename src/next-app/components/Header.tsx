@@ -9,6 +9,7 @@ import { useClickOutside, useDisclosure } from '@mantine/hooks';
 type HeaderProps = {
   title?: string;
   rightIcon?: IconType;
+  backButtonDisabled?: boolean;
   onRightIconClick?: () => void;
   /**
    * Create burger menu using given items. Overrides rightIcon.
@@ -31,9 +32,11 @@ const Header = (props: HeaderProps) => {
 
   return (
     <div className={styles.header}>
-      <div className={styles['back-btn-container']}>
-        <IconButton icon={IoMdArrowBack} onClick={() => router.back()} />
-      </div>
+      {!props.backButtonDisabled && (
+        <div className={styles['back-btn-container']}>
+          <IconButton icon={IoMdArrowBack} onClick={() => router.back()} />
+        </div>
+      )}
       {!!props.title ? (
         <span className={styles.title}>{props.title}</span>
       ) : (

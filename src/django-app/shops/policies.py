@@ -1,6 +1,6 @@
 from rest_access_policy import AccessPolicy
 from accounts.models import EmployeeData
-from .models import Shop
+from .models import Shop, Invitation
 
 
 class ShopAccessPolicy(AccessPolicy):
@@ -27,6 +27,16 @@ class ShopAccessPolicy(AccessPolicy):
             "principal": "*",
             "effect": "deny",
         },
+        {
+            "action": ["me"],
+            "principal": "authenticated",
+            "effect": "allow",
+        },
+        {
+            "action": ["employees"],
+            "principal": "authenticated",
+            "effect": "allow",
+        },
     ]
 
     @classmethod
@@ -44,6 +54,50 @@ class ShopAccessPolicy(AccessPolicy):
 
     def is_owner(self, request, view, action):
         return request.user == Shop.objects.get(id=view.kwargs.get("pk")).shop_owner
+
+
+class InvitationAccessPolicy(AccessPolicy):
+    statements = [
+        {
+            "action": ["list", "retrieve"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition": ["user_type_is_shop_owner"],
+        },
+        {
+            "action": ["create", "bulk_invite"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition": ["user_type_is_shop_owner"],
+        },
+        {
+            "action": ["partial_update", "destroy"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition": ["is_shop_owner"],
+        },
+        {
+            "action": ["update"],
+            "principal": "*",
+            "effect": "deny",
+        },
+    ]
+
+    @classmethod
+    def scope_queryset(cls, request, qs):
+        if request.user.is_authenticated:
+            if request.user.type == "shop_owner":
+                return qs.filter(shop__shop_owner=request.user)
+        return qs
+
+    def user_type_is_shop_owner(self, request, view, action):
+        return request.user.type == "shop_owner"
+
+    def is_shop_owner(self, request, view, action):
+        return (
+            request.user
+            == Invitation.objects.get(pk=view.kwargs.get("pk")).shop.shop_owner
+        )
 
 
 class AddressAccessPolicy(AccessPolicy):

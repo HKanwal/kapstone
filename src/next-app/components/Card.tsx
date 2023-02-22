@@ -1,8 +1,10 @@
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import styles from '../styles/components/Card.module.css';
 
 type CardProps = {
   name: string;
+  id: number;
   status?: string;
   price?: string;
   date?: string;
@@ -10,9 +12,19 @@ type CardProps = {
 
 const Card = (props: CardProps) => {
   useEffect(() => {}, []);
+  const router = useRouter();
+
+  const handleClick = () => {
+    if (props.status === 'Pending' || props.status === 'Accepted') {
+      router.push({
+        pathname: '/quote',
+        query: { id: props.id },
+      });
+    }
+  };
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} onClick={handleClick}>
       <div className={styles['card-title']}>{props.name}</div>
       <div className={styles['right-content']}>
         {props.status ? (
