@@ -1,6 +1,12 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
-from .models import Invitation, ShopAvailabilitySlot, ShopAvailability, AppointmentSlot
+from .models import (
+    Invitation,
+    ShopAvailabilitySlot,
+    ShopAvailability,
+    AppointmentSlot,
+    Appointment,
+)
 from datetime import timedelta, datetime
 
 
@@ -8,6 +14,32 @@ from datetime import timedelta, datetime
 def send_email_invitation(sender, instance, created, *args, **kwargs):
     if created:
         instance.send_invitation()
+
+
+@receiver(pre_delete, sender=AppointmentSlot)
+def cancel_appointments(sender, instance, *args, **kwargs):
+    appointments = instance.appointments.all()
+    for appointment in appointments:
+        if appointment.status == Appointment.Status.PENDING:
+            appointment.cancel()
+
+            # get other AppointmentSlots with same appointment
+            other_appointment_slots = AppointmentSlot.objects.filter(
+                appointments__id=appointment.id,
+            )
+            for other_appointment_slot in other_appointment_slots:
+                # remove appointment from list
+                other_appointment_slot.appointments.remove(appointment)
+
+
+@receiver(pre_delete, sender=ShopAvailability)
+def delete_appointment_slots(sender, instance, *args, **kwargs):
+    slots = AppointmentSlot.objects.filter(
+        shop=instance.shop,
+        start_time__year=instance.date.year,
+        start_time__month=instance.date.month,
+        start_time__day=instance.date.day,
+    ).delete()
 
 
 @receiver(post_save, sender=ShopAvailabilitySlot)
