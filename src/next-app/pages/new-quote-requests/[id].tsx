@@ -84,7 +84,7 @@ const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
           </div>
           <div className={styles['field-container']}>
             <FieldLabel label="Notes" />
-            <TextInput value="" disabled />
+            <TextInput value={quoteRequest.description} disabled />
           </div>
           <div className={styles['field-container']}>
             <div className={styles['images-field-container']}>

@@ -18,44 +18,28 @@ import apiUrl from '../constants/api-url';
 import { Router, useRouter } from 'next/router';
 // @ts-ignore
 import * as cookie from 'cookie';
+import TextInput from '../components/TextInput';
 
-const sampleQuoteRequest = {
-  id: 0,
-  shop: {
-    id: 1,
-    name: 'string',
-  },
-  customer: {
-    id: 0,
-    username: 'string',
-    first_name: 'string',
-    last_name: 'string',
-    email: 'user@example.com',
-    phone_number: 'string',
-  },
-  preferred_date: '2023-02-12',
-  preferred_time: 'string',
-  preferred_phone_number: 'string',
-  preferred_email: 'user@example.com',
-  description: 'string',
-  images: [
-    {
-      id: 0,
-      photo: 'string',
-      quote_request: 0,
-    },
-  ],
-  vehicle: 'string',
-  status: 'string',
-};
-
-const QuoteResponsePage: NextPage = ({ quoteRequest }: any) => {
+const QuoteResponsePage: NextPage = ({ quoteRequest, shop }: any) => {
   const router = useRouter();
   const { id } = router.query;
-  const shopID: number = quoteRequest.shop.id;
+  const [service, setService] = useState('');
+  const [customService, setCustomService] = useState('');
   const [price, setPrice] = useState('');
+  const [labourCost, setLabourCost] = useState('');
   const [estimatedTime, setEstimatedTime] = useState('');
-  const expiraryDate = '2025-01-01';
+  const [expiraryDate, setExpiraryDate] = useState('2025-01-01');
+  const [partsList, setPartsList] = useState([]);
+  const [partsCost, setPartsCost] = useState('');
+
+  useEffect(() => {
+    if (!['Other', ''].includes(service)) {
+      setLabourCost(shop.shop_services.find((s: any) => s.name === service).price);
+    } else {
+      setLabourCost('');
+    }
+    setPrice(String(Number(labourCost) + Number(partsCost)));
+  });
 
   const handleSubmit = () => {
     const access_token = Cookies.get('access');
@@ -90,36 +74,69 @@ const QuoteResponsePage: NextPage = ({ quoteRequest }: any) => {
       <div className={styles.content}>
         <div className={styles.section}>
           <div className={styles['field-container']}>
-            <TextField name="Price ($)" placeholder="Enter Price" onChange={setPrice} required />
-          </div>
-          <div className={styles['field-container']}>
-            <TextField
-              name="Estimated Time"
-              placeholder="Enter Estimated Time"
-              onChange={setEstimatedTime}
+            <DropdownField
+              name="Service"
+              placeholder="Add Required Service"
+              items={shop.shop_services
+                .map((service: any) => {
+                  return service.name;
+                })
+                .concat('Other')}
+              onSelect={setService}
               required
             />
           </div>
-        </div>
-        {/* <div className={styles.section}>
-          <div className={styles['field-container']}>
-            <DropdownField
-              name="Services"
-              placeholder="Add Required Services"
-              items={serviceList}
-              type="multi-select"
-            />
-          </div>
+          {service === 'Other' ? (
+            <div className={styles['field-container']}>
+              <TextField
+                name="Custom Service"
+                placeholder="Enter Custom Service"
+                onChange={setCustomService}
+                required
+              />
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
         <div className={styles.section}>
-          <span className={styles['section-header']}>Part Information</span>
           <div className={styles['field-container']}>
-            <TextField name="Part Type" placeholder="Add Required Part Type" />
+            <FieldLabel label="Labour Cost ($)" required />
+            <TextInput
+              placeholder="Enter Labour Cost"
+              onChange={setLabourCost}
+              value={labourCost}
+            />
           </div>
-          <div className={styles['field-container']}>
-            <TextField name="Part Price" placeholder="Add Required Part Price" />
+          <div className={styles.section}>
+            <div className={styles['field-container']}>
+              <TextField
+                name="Estimated Time"
+                placeholder="Enter Estimated Time"
+                onChange={setEstimatedTime}
+                required
+              />
+            </div>
+          </div>
+          <div className={styles.section}>
+            <span className={styles['section-header']}>Part Information</span>
+            <div className={styles['field-container']}>
+              <TextField name="Parts Needed" placeholder="Add Required Part" />
+            </div>
+            <div className={styles['field-container']}>
+              <TextField name="Part Price" placeholder="Add Required Part Price" />
+            </div>
+          </div>
+          <div className={styles.section}>
+            <span className={styles['section-header']}>Additional Information</span>
+            <div className={styles['field-container']}>
+              <TextArea name="Notes" placeholder="Enter Notes" />
+            </div>
           </div>
         </div>
+        <span className={styles['section-header']}>Total Cost: ${price}</span>
+        {/* 
+        
         <div className={styles.section}>
           <div className={styles['field-container']}>
             <TextField name="Labour Cost" placeholder="Add Required Labour Cost" />
@@ -152,20 +169,22 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const access_token = parsedCookies.access;
   try {
+    const shop = await axios.get(`${apiUrl}/shops/shops/me`, {
+      headers: { Authorization: `JWT ${access_token}` },
+    });
     const quoteRequest = await axios.get(`${apiUrl}/quotes/quote-requests/${id}`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
     return {
       props: {
+        shop: shop.data,
         quoteRequest: quoteRequest.data,
       },
     };
   } catch (error) {
     console.log(error);
     return {
-      props: {
-        quoteRequest: {},
-      },
+      notFound: true,
     };
   }
 };
