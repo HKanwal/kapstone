@@ -24,6 +24,10 @@ const DatePicker = (props: DatePickerProps) => {
       } else {
         props.onChange(newValue);
       }
+
+      if (props.single) {
+        handlers.close();
+      }
     }
   };
 
