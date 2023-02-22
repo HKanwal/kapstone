@@ -62,6 +62,12 @@ class Shop(models.Model):
         EmployeeData = apps.get_model("accounts", "EmployeeData")
         return EmployeeData.objects.filter(shop__pk=self.pk).count()
 
+    def get_hours_for_day(self, day):
+        try:
+            return ShopHours.objects.get(shop=self, day=day)
+        except ShopHours.DoesNotExist:
+            return None
+
     class Meta:
         verbose_name = "Shop"
         verbose_name_plural = "Shops"
@@ -135,6 +141,7 @@ class Appointment(models.Model):
         DONE = "done", "Done"
         REWORK = "rework", "Rework"
         PENDING = "pending", "Pending"
+        CANCELLED = "cancelled", "Cancelled"
 
     status = models.CharField(
         _("status"), max_length=12, choices=Status.choices, default=Status.PENDING
@@ -168,6 +175,33 @@ class Appointment(models.Model):
         if last_slot is not None:
             return last_slot.end_time
         return None
+
+    def send_cancellation_email(self):
+        if self.customer.email is None:
+            return
+
+        subject = f"Cancellation of Appointment with {self.shop.name}"
+        context = {
+            "shop_name": self.shop.name,
+        }
+        text_email_template = "appointments/email/appointment_cancellation.txt"
+        html_email_template = "appointments/email/appointment_cancellation.html"
+        text_body = render_to_string(text_email_template, context)
+        html_body = render_to_string(html_email_template, context)
+
+        message = EmailMultiAlternatives(
+            subject=subject,
+            body=text_body,
+            from_email=settings.EMAIL_HOST_USER,
+            to=[self.customer.email],
+        )
+        message.attach_alternative(html_body, "text/html")
+        message.send(fail_silently=False)
+
+    def cancel(self):
+        self.status = Appointment.Status.CANCELLED
+        self.save()
+        self.send_cancellation_email()
 
     class Meta:
         verbose_name = "Appointment"
