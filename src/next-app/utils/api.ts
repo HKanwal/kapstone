@@ -87,5 +87,66 @@ const refreshToken = (props: refreshTokenProps) => {
   );
 };
 
-export type { RegistrationBody, RegistrationErrResponse, LoginBody, Jwt };
-export { registrationFn, loginFn, AuthContext, refreshToken };
+/** Queries */
+
+type AppointmentSlotsParams = {
+  shop: number;
+  /** In the format of YYYY-MM-DD */
+  startDate: string;
+  endDate: string;
+  availableOnly: boolean;
+  /** In increments of 15 */
+  minutes: number;
+};
+
+type AppointmentSlot = {
+  id: number;
+  shop: number;
+  start_time: string;
+  end_time: string;
+};
+
+type AppointmentSlotsResponse = {
+  slots: AppointmentSlot[][];
+};
+
+function getAppointmentSlots({
+  shop,
+  startDate,
+  endDate,
+  availableOnly,
+  minutes,
+}: AppointmentSlotsParams) {
+  let url =
+    apiUrl +
+    '/shops/appointment-slots/?shop=' +
+    shop +
+    '&start_date=' +
+    startDate +
+    '&end_date=' +
+    endDate +
+    '&available_only=' +
+    availableOnly +
+    '&minutes=' +
+    minutes;
+  return () => {
+    return fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    }).then((res) => {
+      return res.json() as Promise<AppointmentSlotsResponse>;
+    });
+  };
+}
+
+export type {
+  RegistrationBody,
+  RegistrationErrResponse,
+  LoginBody,
+  Jwt,
+  AppointmentSlotsParams,
+  AppointmentSlotsResponse,
+};
+export { registrationFn, loginFn, AuthContext, refreshToken, getAppointmentSlots };
