@@ -14,7 +14,6 @@ const EmployeeCard = (props: EmployeeProps) => {
   const phoneLabel = `Phone Number: ${props.phone}`;
   const emailLabel = `Email: ${props.email}`;
   const router = useRouter();
-  const url = '/employee-details';
 
   return (
     <div
@@ -22,8 +21,7 @@ const EmployeeCard = (props: EmployeeProps) => {
       className={styles.card}
       onClick={() => {
         router.push({
-          pathname: 'employee-details',
-          query: { id: props.id },
+          pathname: `employees/${props.id}`,
         });
       }}
     >

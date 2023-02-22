@@ -1,40 +1,28 @@
-import type { NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import Header from '../components/Header';
-import styles from '../styles/pages/Employees.module.css';
-import EmployeeCard from '../components/EmployeeCard';
+import Header from '../../components/Header';
+import styles from '../../styles/pages/Employees.module.css';
+import EmployeeCard from '../../components/EmployeeCard';
 import { useRouter } from 'next/router';
-import apiUrl from '../constants/api-url';
-import { IoIosAdd } from 'react-icons/io';
-import FieldLabel from '../components/FieldLabel';
-import TextField from '../components/TextField';
+import apiUrl from '../../constants/api-url';
+import { GrAddCircle } from 'react-icons/gr';
+import FieldLabel from '../../components/FieldLabel';
+import TextField from '../../components/TextField';
 import axios from 'axios';
-import employeeData from '../data/employeeData.json';
+// @ts-ignore
+import * as cookie from 'cookie';
 
-const EmployeesPage: NextPage = () => {
+const EmployeesPage: NextPage = ({ employees, shop }: any) => {
   type filter = {
     [key: string]: any;
   };
   const router = useRouter();
-  const shop = 0;
-  const [employees, setEmployees] = useState<any[]>([]);
+
   const [employeeFilter, setEmployeeFilter] = useState<filter>({
     name: '',
     phone_number: '',
     email: '',
   });
-
-  useEffect(() => {
-    const getAllEmployees = async () => {
-      try {
-        //const res = await axios.get(`${apiUrl}/accounts/employee/`);
-        setEmployees(employeeData.employeeData);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    getAllEmployees();
-  }, []);
 
   const handleAddClick = () => {
     router.push('/invite');
@@ -51,9 +39,14 @@ const EmployeesPage: NextPage = () => {
     };
   };
 
+  const employeesList = employees.filter((employee: any) => {
+    if (employee.shop === shop.id) return true;
+    else return false;
+  });
+
   return (
     <div className={styles.container}>
-      <Header title="Employees" rightIcon={IoIosAdd} onRightIconClick={handleAddClick} />
+      <Header title="Employees" rightIcon={GrAddCircle} onRightIconClick={handleAddClick} />
       <div className={styles['field-container']}>
         <div className={styles['filter-container']}>
           <FieldLabel label="Filter By" />
@@ -66,8 +59,8 @@ const EmployeesPage: NextPage = () => {
           <TextField name="" placeholder="Email" onChange={handleFilterChange('email')} />
         </div>
         <div className={styles['card-container']}>
-          {employees
-            .filter((employee) => {
+          {employeesList
+            .filter((employee: any) => {
               for (let field in employeeFilter) {
                 if (
                   employeeFilter[field] != '' &&
@@ -82,7 +75,16 @@ const EmployeesPage: NextPage = () => {
               }
               return true;
             })
-            .map((employee) => {
+            .sort((a: any, b: any) => {
+              if (a.user.first_name < b.user.first_name) {
+                return -1;
+              }
+              if (a.user.first_name > b.user.first_name) {
+                return 1;
+              }
+              return 0;
+            })
+            .map((employee: any) => {
               return (
                 <EmployeeCard
                   key={employee.id}
@@ -97,6 +99,32 @@ const EmployeesPage: NextPage = () => {
       </div>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
+  try {
+    const parsedCookies = cookie.parse(String(context.req.headers.cookie));
+    const access_token = parsedCookies.access;
+    const employees = await axios.get(`${apiUrl}/accounts/employee/`, {
+      headers: { Authorization: `JWT ${access_token}` },
+    });
+    const shop = await axios.get(`${apiUrl}/shops/shops/me/`, {
+      headers: { Authorization: `JWT ${access_token}` },
+    });
+    return {
+      props: {
+        employees: employees.data,
+        shop: shop.data,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      props: {
+        employees: [],
+      },
+    };
+  }
 };
 
 export default EmployeesPage;
