@@ -6,6 +6,9 @@ from shops.serializers import ShopOverviewSerializer
 from accounts.serializers import UserViewSerializer
 from misc.models import ImageQuote
 from misc.serializers import ImageQuoteSerializer
+from rest_access_policy import PermittedPkRelatedField
+from shops.policies import ShopAccessPolicy
+from .policies import QuoteRequestAccessPolicy
 
 
 class QuoteRequestSerializer(serializers.ModelSerializer):
@@ -47,6 +50,9 @@ class QuoteRequestWriteSerializer(serializers.ModelSerializer):
         write_only=True,
         allow_null=True,
         default=[],
+    )
+    shop = PermittedPkRelatedField(
+        access_policy=ShopAccessPolicy, queryset=Shop.objects.all()
     )
 
     class Meta:
@@ -95,6 +101,10 @@ class QuoteSerializer(serializers.ModelSerializer):
 
 
 class QuoteWriteSerializer(serializers.ModelSerializer):
+    quote_request = PermittedPkRelatedField(
+        access_policy=QuoteRequestAccessPolicy, queryset=QuoteRequest.objects.all()
+    )
+
     class Meta:
         model = Quote
         fields = "__all__"
