@@ -1,15 +1,12 @@
+// @ts-nocheck
 import type { NextPage, GetServerSideProps, GetStaticPaths } from 'next';
 import { useRouter } from 'next/router';
 import * as yup from 'yup';
 import axios from 'axios';
 import { useFormik, FormikProvider } from 'formik';
 import { useState } from 'react';
-import {
-  CardTextField,
-  CardTextArea,
-  CardSelect,
-  CardMultiSelect,
-} from '../../components/CardComponents';
+import { CardTextField, CardSelect, CardMultiSelect } from '../../components/CardComponents';
+import Modal from '../../components/Modal';
 import Header from '../../components/Header';
 import apiUrl from '../../constants/api-url';
 import Button from '../../components/Button';
@@ -17,16 +14,26 @@ import Button from '../../components/Button';
 import * as cookie from 'cookie';
 import Cookies from 'js-cookie';
 
-const ServicesDetail: NextPage = ({ service, parts, shop }: any) => {
+const ServicesDetail: NextPage = ({ parts, shop }: any) => {
   const router = useRouter();
   const [errors, setErrors] = useState([]);
   const [serviceParts, setParts] = useState([]);
+  const [partModal, setPartModal] = useState(false);
   const schema = yup.object().shape({
     name: yup.string().required(),
     description: yup.string().required(),
     price: yup.number().positive().required(),
     active: yup.string().required(),
   });
+  const partSchema = yup.object().shape({
+    name: yup.string().required(),
+    condition: yup.string(),
+    type: yup.string(),
+    price: yup.number().positive().required(),
+  });
+  const handlePartClose = () => {
+    setPartModal((prev) => !prev);
+  };
   const form = useFormik({
     initialValues: {
       name: '',
@@ -55,6 +62,35 @@ const ServicesDetail: NextPage = ({ service, parts, shop }: any) => {
       } catch (error: any) {
         setErrors(error.response.data.errors);
         scrollTo(0, 0);
+      }
+    },
+  });
+  const partForm = useFormik({
+    initialValues: {
+      name: '',
+      condition: 'new',
+      type: 'oem',
+      price: '',
+    },
+    validationSchema: partSchema,
+    onSubmit: async (values) => {
+      const valuesToSend = {
+        name: values.name,
+        condition: values.condition === 'New' ? 'new' : 'used',
+        type: values.type === 'OEM' ? 'oem' : 'aftermarket',
+        price: values.price,
+      };
+      const access_token = Cookies.get('access');
+      try {
+        const res = await axios.post(`${apiUrl}/vehicles/parts/`, valuesToSend, {
+          headers: { Authorization: `JWT ${access_token}` },
+        });
+        if (res.status === 201) {
+          handlePartClose();
+          router.reload();
+        }
+      } catch (error: any) {
+        setErrors(error.response.data.errors);
       }
     },
   });
@@ -126,6 +162,70 @@ const ServicesDetail: NextPage = ({ service, parts, shop }: any) => {
                   fieldSearchable
                   className="input-multiselect"
                 />
+                <div className="modal-wrapper">
+                  <Button title="Create New Part" onClick={handlePartClose}></Button>
+                  <Modal visible={partModal} onClose={handlePartClose} title="Create New Part">
+                    <div className="modal-content">
+                      <FormikProvider value={partForm}>
+                        <form onSubmit={partForm.handleSubmit}>
+                          <h2 className="form-header">Part Information</h2>
+                          <div className={`card edit`} style={{ marginBottom: '12px' }}>
+                            <CardTextField
+                              fieldValue={`${partForm.values.name}`}
+                              fieldName="name"
+                              fieldLabel="Part Name"
+                              fieldType="string"
+                              fieldRequired
+                              onChange={partForm.handleChange}
+                              error={partForm.errors.name}
+                            />
+                            <CardTextField
+                              fieldValue={`${partForm.values.price}`}
+                              fieldName="price"
+                              fieldLabel="Price ($)"
+                              fieldType="number"
+                              fieldRequired
+                              onChange={partForm.handleChange}
+                              error={partForm.errors.price}
+                            />
+                            <CardSelect
+                              fieldName="type"
+                              fieldLabel="Type"
+                              options={['OEM', 'Aftermarket'].map((op: any) => {
+                                return (
+                                  <option key={op} value={op}>
+                                    {op}
+                                  </option>
+                                );
+                              })}
+                              fieldRequired
+                              error={partForm.errors.type}
+                            />
+                            <CardSelect
+                              fieldName="condition"
+                              fieldLabel="Condition"
+                              options={['New', 'Used'].map((op: any) => {
+                                return (
+                                  <option key={op} value={op}>
+                                    {op}
+                                  </option>
+                                );
+                              })}
+                              fieldRequired
+                              error={partForm.errors.condition}
+                            />
+                            <Button
+                              type="button"
+                              title="Save"
+                              width={'100%'}
+                              onClick={partForm.handleSubmit}
+                            ></Button>
+                          </div>
+                        </form>
+                      </FormikProvider>
+                    </div>
+                  </Modal>
+                </div>
                 <CardSelect
                   fieldName="active"
                   fieldLabel="Status"
