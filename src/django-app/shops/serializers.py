@@ -18,6 +18,8 @@ from vehicles.serializers import PartSerializer
 from .policies import ShopAccessPolicy, AppointmentAccessPolicy
 from quotes.policies import QuoteAccessPolicy
 from quotes.models import Quote
+from vehicles.policies import VehicleAccessPolicy
+from vehicles.models import Vehicle
 
 
 class ServicePartSerializer(serializers.ModelSerializer):
@@ -141,6 +143,10 @@ class ShopOverviewSerializer(serializers.ModelSerializer):
 
 
 class InvitationSerializer(serializers.ModelSerializer):
+    shop = PermittedPkRelatedField(
+        access_policy=ShopAccessPolicy, queryset=Shop.objects.all()
+    )
+
     class Meta:
         model = Invitation
         fields = "__all__"
@@ -168,6 +174,13 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
 
 class AppointmentCreateSerializer(serializers.ModelSerializer):
+    shop = PermittedPkRelatedField(
+        access_policy=ShopAccessPolicy, queryset=Shop.objects.all()
+    )
+    vehicle = PermittedPkRelatedField(
+        access_policy=VehicleAccessPolicy, queryset=Vehicle.objects.all()
+    )
+
     class Meta:
         model = Appointment
         fields = "__all__"
@@ -175,6 +188,10 @@ class AppointmentCreateSerializer(serializers.ModelSerializer):
 
 
 class AppointmentUpdateSerializer(serializers.ModelSerializer):
+    vehicle = PermittedPkRelatedField(
+        access_policy=VehicleAccessPolicy, queryset=Vehicle.objects.all()
+    )
+
     class Meta:
         model = Appointment
         fields = "__all__"
@@ -182,6 +199,10 @@ class AppointmentUpdateSerializer(serializers.ModelSerializer):
 
 
 class AppointmentSlotSerializer(serializers.ModelSerializer):
+    shop = PermittedPkRelatedField(
+        access_policy=ShopAccessPolicy, queryset=Shop.objects.all()
+    )
+
     class Meta:
         model = AppointmentSlot
         fields = "__all__"
