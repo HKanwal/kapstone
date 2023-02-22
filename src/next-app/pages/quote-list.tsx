@@ -37,8 +37,6 @@ const QuoteListPage: NextPage = ({ quotes, quoteRequests }: any) => {
     router.push({ pathname: '/new-quote-requests' });
   };
 
-  //console.log(quotes.find((quote: any) => quote.id === 5));
-  console.log(quoteRequests.find((quoteRequest: any) => quoteRequest.id === 1));
   return (
     <div className={styles.container}>
       <Header
@@ -62,13 +60,10 @@ const QuoteListPage: NextPage = ({ quotes, quoteRequests }: any) => {
               <Card
                 key={quote.id}
                 id={quote.id}
-                name={
-                  quoteRequests.find((quoteRequest: any) => quoteRequest.id === quote.quote_request)
-                    .description
-                }
+                name={quote.quote_request.description}
                 status={quote.status === 'new_quote' ? 'Pending' : quote.status}
                 price={quote.price}
-                date={quote.expiry_date}
+                date={quote.created_at}
               />
             );
           })}

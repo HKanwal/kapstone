@@ -25,7 +25,7 @@ type QuoteProps = {
   dueDate: string;
 };
 
-const Quote: NextPage = ({ quote, quoteRequest, shop }: any) => {
+const Quote: NextPage = ({ quote }: any) => {
   const [authData, setAuthData] = useState(useContext(AuthContext));
 
   const router = useRouter();
@@ -40,22 +40,39 @@ const Quote: NextPage = ({ quote, quoteRequest, shop }: any) => {
     });
   }
 
-  const handleCallClick = () => {
-    window.open(`tel: ${shop.shop_owner.phone_number}`);
+  const handleCallClick = (callType: string) => {
+    let phoneNumber = '';
+    if (callType === 'shop') {
+      phoneNumber = quote.shop.shop_phone_number;
+    } else if (callType === 'customer') {
+      phoneNumber = quote.quote_request.customer.phone_number;
+    }
+    window.open(`tel: ${phoneNumber}`);
   };
+
+  console.log(quote);
 
   if (id) {
     return (
       <div className={styles.container}>
         <Header
-          title={`Quote - ${quoteRequest.description}`}
+          title={`Quote - ${quote.quote_request.description}`}
           burgerMenu={
             authData.user_type === 'customer'
               ? [
                   {
                     option: 'Call Shop',
                     onClick() {
-                      handleCallClick();
+                      handleCallClick('shop');
+                    },
+                  },
+                ]
+              : authData.user_type === 'shop_owner'
+              ? [
+                  {
+                    option: 'Call Customer',
+                    onClick() {
+                      handleCallClick('customer');
                     },
                   },
                 ]
@@ -70,10 +87,47 @@ const Quote: NextPage = ({ quote, quoteRequest, shop }: any) => {
             <label>{`Cost: $${quote.price}`}</label>
           </div>
           <div className={styles['date-container']}>
-            <label>{`Date: ${new Date().toISOString().split('T')[0]}`}</label>
+            <label>{`Date: ${new Date(quote.created_at).toISOString().split('T')[0]}`}</label>
           </div>
-          <div className={styles['field-container']}>
-            <TextField name="Accepted By" placeholder={shop.name} disabled={true} />
+          {authData.user_type === 'customer' ? (
+            <div className={styles['field-container']}>
+              <TextField name="Sent By" placeholder={quote.shop.name} disabled={true} />
+            </div>
+          ) : authData.user_type === 'shop_owner' || authData.user_type === 'employee' ? (
+            <div className={styles['customer-container']}>
+              <span className={styles['section-header']}>Customer Contact Information</span>
+              <div className={styles['field-container']}>
+                <TextField
+                  name="First Name"
+                  placeholder={quote.quote_request.customer.first_name}
+                  disabled={true}
+                />
+              </div>
+              <div className={styles['field-container']}>
+                <TextField
+                  name="Last Name"
+                  placeholder={quote.quote_request.customer.last_name}
+                  disabled={true}
+                />
+              </div>
+              <div className={styles['field-container']}>
+                <TextField
+                  name="Phone Number"
+                  placeholder={quote.quote_request.customer.phone_number}
+                  disabled={true}
+                />
+              </div>
+              <div className={styles['field-container']}>
+                <TextField
+                  name="Email"
+                  placeholder={quote.quote_request.customer.email}
+                  disabled={true}
+                />
+              </div>
+            </div>
+          ) : null}
+          <div className={styles['section-header']}>
+            <label>Quote Information</label>
           </div>
           {quote.partCost || quote.labourCost ? (
             <div className={styles.section}>
@@ -163,20 +217,20 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     const quote = await axios.get(`${apiUrl}/quotes/quotes/${id}`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
-    const quoteRequest = await axios.get(
-      `${apiUrl}/quotes/quote-requests/${quote.data.quote_request}`,
-      {
-        headers: { Authorization: `JWT ${access_token}` },
-      }
-    );
-    const shop = await axios.get(`${apiUrl}/shops/shops/${quote.data.shop}`, {
-      headers: { Authorization: `JWT ${access_token}` },
-    });
+    // const quoteRequest = await axios.get(
+    //   `${apiUrl}/quotes/quote-requests/${quote.data.quote_request}`,
+    //   {
+    //     headers: { Authorization: `JWT ${access_token}` },
+    //   }
+    // );
+    // const shop = await axios.get(`${apiUrl}/shops/shops/${quote.data.shop}`, {
+    //   headers: { Authorization: `JWT ${access_token}` },
+    // });
     return {
       props: {
         quote: quote.data,
-        quoteRequest: quoteRequest.data,
-        shop: shop.data,
+        // quoteRequest: quoteRequest.data,
+        // shop: shop.data,
       },
     };
   } catch (error) {

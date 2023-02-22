@@ -23,6 +23,12 @@ const Card = (props: CardProps) => {
     }
   };
 
+  let dateString = '';
+  if (props.date) {
+    const date = new Date(props.date);
+    dateString = date.toDateString();
+  }
+
   return (
     <div className={styles.card} onClick={handleClick}>
       <div className={styles['card-title']}>{props.name}</div>
@@ -32,7 +38,7 @@ const Card = (props: CardProps) => {
         ) : (
           <></>
         )}
-        {props.date ? <div className={styles['card-content']}>Date: {props.date}</div> : <></>}
+        {props.date ? <div className={styles['card-content']}>Date: {dateString}</div> : <></>}
       </div>
       <div className={styles['left-content']}>
         {props.price ? (
