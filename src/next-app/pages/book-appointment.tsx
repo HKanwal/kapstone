@@ -10,6 +10,7 @@ import DatePicker from '../components/DatePicker';
 import { useState, MouseEvent, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { AppointmentSlotsResponse, getAppointmentSlots } from '../utils/api';
+import { Loader } from '@mantine/core';
 
 function createEmptyArray(n: number): undefined[] {
   let a = [];
@@ -132,7 +133,8 @@ const BookAppointmentPage: NextPage = () => {
 
   // all times are represented as a number between 0 and 24
   // start time can only be x.00 (xx:00), x.25 (xx:15), x.50 (xx:30), or x.75 (xx:45)
-  const [startTime, setStartTime] = useState(7); //useState(availability[0].startTime);
+  // TODO: these times should not be hardcoded; change once endpoint is created
+  const [startTime, setStartTime] = useState(3); //useState(availability[0].startTime);
   const [endTime, setEndTime] = useState(18); //useState(availability[availability.length - 1].endTime);
 
   // # of sub-slots before first xx:00 mark
@@ -231,63 +233,69 @@ const BookAppointmentPage: NextPage = () => {
           <DatePicker value={[date]} onChange={handleDateChange} single />
           <IconButton icon={BsChevronRight} onClick={incrementDate} />
         </div>
-        <div className={styles.calendar}>
-          <div className={styles['time-row']}>
-            <div className={styles['time-container']}>
-              <div className={styles['time-inner-container']}>
-                <span className={styles.time}>{Math.ceil(startTime)}:00</span>
-              </div>
-            </div>
-            <div className={styles.slot}>
-              {createEmptyArray(preSlots).map((u, i) => (
-                <div className={styles['sub-slot']} key={i}></div>
-              ))}
-            </div>
+        {query.isLoading || query.isFetching ? (
+          <div className={styles['loader-container']}>
+            <Loader />
           </div>
-          {createEmptyArray(Math.ceil(endTime) - Math.ceil(startTime)).map((u, i) => (
-            <div className={styles['time-row']} key={i}>
+        ) : (
+          <div className={styles.calendar}>
+            <div className={styles['time-row']}>
               <div className={styles['time-container']}>
                 <div className={styles['time-inner-container']}>
-                  <span className={styles.time}>{Math.ceil(startTime) + i + 1}:00</span>
+                  <span className={styles.time}>{Math.ceil(startTime)}:00</span>
                 </div>
               </div>
               <div className={styles.slot}>
-                <SubSlot
-                  startTime={Math.ceil(startTime) + i}
-                  onBookableClick={handleBookableClick}
-                  booking={booking}
-                  onBookingClose={clearBooking}
-                  appointmentLength={appointmentLengthNum}
-                  isBookable={isBookable}
-                />
-                <SubSlot
-                  startTime={Math.ceil(startTime) + i + 0.25}
-                  onBookableClick={handleBookableClick}
-                  booking={booking}
-                  onBookingClose={clearBooking}
-                  appointmentLength={appointmentLengthNum}
-                  isBookable={isBookable}
-                />
-                <SubSlot
-                  startTime={Math.ceil(startTime) + i + 0.5}
-                  onBookableClick={handleBookableClick}
-                  booking={booking}
-                  onBookingClose={clearBooking}
-                  appointmentLength={appointmentLengthNum}
-                  isBookable={isBookable}
-                />
-                <SubSlot
-                  startTime={Math.ceil(startTime) + i + 0.75}
-                  onBookableClick={handleBookableClick}
-                  booking={booking}
-                  onBookingClose={clearBooking}
-                  appointmentLength={appointmentLengthNum}
-                  isBookable={isBookable}
-                />
+                {createEmptyArray(preSlots).map((u, i) => (
+                  <div className={styles['sub-slot']} key={i}></div>
+                ))}
               </div>
             </div>
-          ))}
-        </div>
+            {createEmptyArray(Math.ceil(endTime) - Math.ceil(startTime)).map((u, i) => (
+              <div className={styles['time-row']} key={i}>
+                <div className={styles['time-container']}>
+                  <div className={styles['time-inner-container']}>
+                    <span className={styles.time}>{Math.ceil(startTime) + i + 1}:00</span>
+                  </div>
+                </div>
+                <div className={styles.slot}>
+                  <SubSlot
+                    startTime={Math.ceil(startTime) + i}
+                    onBookableClick={handleBookableClick}
+                    booking={booking}
+                    onBookingClose={clearBooking}
+                    appointmentLength={appointmentLengthNum}
+                    isBookable={isBookable}
+                  />
+                  <SubSlot
+                    startTime={Math.ceil(startTime) + i + 0.25}
+                    onBookableClick={handleBookableClick}
+                    booking={booking}
+                    onBookingClose={clearBooking}
+                    appointmentLength={appointmentLengthNum}
+                    isBookable={isBookable}
+                  />
+                  <SubSlot
+                    startTime={Math.ceil(startTime) + i + 0.5}
+                    onBookableClick={handleBookableClick}
+                    booking={booking}
+                    onBookingClose={clearBooking}
+                    appointmentLength={appointmentLengthNum}
+                    isBookable={isBookable}
+                  />
+                  <SubSlot
+                    startTime={Math.ceil(startTime) + i + 0.75}
+                    onBookableClick={handleBookableClick}
+                    booking={booking}
+                    onBookingClose={clearBooking}
+                    appointmentLength={appointmentLengthNum}
+                    isBookable={isBookable}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
