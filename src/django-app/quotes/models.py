@@ -31,7 +31,10 @@ class Quote(models.Model):
         verbose_name_plural = "Quotes"
 
     def __str__(self):
-        return f'Shop "{self.shop.name}" to User "{self.quote_request.user.username}": ${self.price}'
+        user_name = (
+            self.quote_request.user.username if self.quote_request.user else "Null User"
+        )
+        return f'Shop "{self.shop.name}" to User "{user_name}": ${self.price}'
 
 
 class QuoteRequest(models.Model):
