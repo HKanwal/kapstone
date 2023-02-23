@@ -312,7 +312,6 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
             raise err
 
 
-
 class ServicePartViewSet(viewsets.ModelViewSet):
     queryset = ServicePart.objects.all()
     serializer_class = ServicePartSerializer
@@ -355,7 +354,9 @@ class AppointmentViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
             with transaction.atomic():
                 data = request.data
                 appointment_slots = data.pop("appointment_slots")
-                appointment_serializer = self.get_serializer_class()(data=data)
+                appointment_serializer = self.get_serializer_class()(
+                    data=data, context={"request": request}
+                )
                 if appointment_serializer.is_valid(raise_exception=True):
                     appointment = appointment_serializer.save()
                     slots = AppointmentSlot.objects.filter(
