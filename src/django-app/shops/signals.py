@@ -9,6 +9,7 @@ from .models import (
     WorkOrder,
 )
 from datetime import timedelta, datetime
+from .models import appointment_creation_signal
 
 
 @receiver(post_save, sender=Invitation)
@@ -69,9 +70,13 @@ def create_availability_slots(sender, instance, created, *args, **kwargs):
         )
 
 
-@receiver(post_save, sender=Appointment)
-def create_workorder(sender, instance, created, *args, **kwargs):
-    if created:
-        WorkOrder.objects.create(
-            appointment=instance, quote=instance.quote, shop=instance.shop
-        )
+@receiver(appointment_creation_signal)
+def create_workorder(sender, instance, **kwargs):
+    start_time = instance.start_time
+    end_time = instance.end_time
+    WorkOrder.objects.create(
+        appointment=instance,
+        quote=instance.quote,
+        shop=instance.shop,
+        employee=instance.shop.get_next_available_employee(start_time, end_time),
+    )
