@@ -6,6 +6,7 @@ from .models import (
     ShopAvailability,
     AppointmentSlot,
     Appointment,
+    WorkOrder,
 )
 from datetime import timedelta, datetime
 
@@ -65,4 +66,12 @@ def create_availability_slots(sender, instance, created, *args, **kwargs):
             shop=instance.shop_availability.shop,
             start_time=slot_start_date_time,
             end_time=slot_end_date_time,
+        )
+
+
+@receiver(post_save, sender=Appointment)
+def create_workorder(sender, instance, created, *args, **kwargs):
+    if created:
+        WorkOrder.objects.create(
+            appointment=instance, quote=instance.quote, shop=instance.shop
         )
