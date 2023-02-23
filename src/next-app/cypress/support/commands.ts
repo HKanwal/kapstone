@@ -28,10 +28,33 @@
 // declare global {
 //   namespace Cypress {
 //     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
+//       login(email: string, password: string): Chainable<void>;
+//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>;
+//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>;
+//       visit(
+//         originalFn: CommandOriginalFn,
+//         url: string,
+//         options: Partial<VisitOptions>
+//       ): Chainable<Element>;
 //     }
 //   }
 // }
+
+export {};
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      login(username: string, password: string): Chainable<void>;
+    }
+  }
+}
+
+Cypress.Commands.add('login', (username, password) => {
+  cy.session([username, password], () => {
+    cy.visit('/login');
+    cy.get('input[type=text]').type(username);
+    cy.get('input[type=password]').type(password);
+    cy.get('button[type=submit]').click();
+    cy.url().should('contain', '/dashboard');
+  });
+});
