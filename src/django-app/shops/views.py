@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.db import transaction
 from django.core.exceptions import ValidationError
 from django.apps import apps
+from django.utils.timezone import make_aware
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
@@ -452,18 +453,22 @@ class AppointmentSlotViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
     def _filter_by_start_date(self, queryset):
         try:
             start_date = datetime.combine(
-                self.request.GET.get("start_date"), datetime.min.time()
+                datetime.strptime(
+                    self.request.GET.get("start_date"), "%Y-%m-%d"
+                ).date(),
+                datetime.min.time(),
             )
-            return queryset.filter(start_time__gte=start_date)
+            return queryset.filter(start_time__gte=make_aware(start_date))
         except:
             return queryset
 
     def _filter_by_end_date(self, queryset):
         try:
             end_date = datetime.combine(
-                self.request.GET.get("end_date"), datetime.max.time()
+                datetime.strptime(self.request.GET.get("end_date"), "%Y-%m-%d").date(),
+                datetime.max.time(),
             )
-            return queryset.filter(end_time__lte=end_date)
+            return queryset.filter(end_time__lte=make_aware(end_date))
         except:
             return queryset
 
