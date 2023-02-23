@@ -68,6 +68,35 @@ class Shop(models.Model):
         except ShopHours.DoesNotExist:
             return None
 
+    def get_available_employee_ids(self, from_time, to_time):
+        workorders = WorkOrder.objects.filter(shop=self).exclude(employee__isnull=True)
+
+        appointment_ids = workorders.values_list("appointment", flat=True)
+        appointments = self.appointment_set.filter(id__in=appointment_ids)
+
+        employee_ids = set(self.employees)
+        for appointment in appointments:
+            if appointment.start_time is None or appointment.end_time is None:
+                continue
+            elif (
+                appointment.start_time <= to_time and from_time <= appointment.end_time
+            ):  # overlap
+                employee_ids.remove(workorders.get(appointment=appointment).employee.id)
+
+        return employee_ids
+
+    def get_number_of_available_employees(self, from_time, to_time):
+        return len(self.get_available_employee_ids(from_time, to_time))
+
+    def get_next_available_employee(self, from_time, to_time):
+        employee_ids = self.get_available_employee_ids(from_time, to_time)
+        if len(employee_ids) == 0:
+            return None
+
+        Employee = apps.get_model("accounts", "Employee")
+        employee = Employee.objects.filter(id=employee_ids.pop())
+        return employee
+
     class Meta:
         verbose_name = "Shop"
         verbose_name_plural = "Shops"
@@ -145,6 +174,9 @@ class Appointment(models.Model):
 
     status = models.CharField(
         _("status"), max_length=12, choices=Status.choices, default=Status.PENDING
+    )
+    quote = models.ForeignKey(
+        "quotes.Quote", on_delete=models.SET_NULL, null=True, default=None
     )
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     customer = models.ForeignKey(
@@ -386,7 +418,9 @@ class WorkOrder(models.Model):
     appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE)
     quote = models.ForeignKey("quotes.Quote", on_delete=models.CASCADE, null=False)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
-    employee = models.ForeignKey("accounts.Employee", on_delete=models.CASCADE)
+    employee = models.ForeignKey(
+        "accounts.Employee", on_delete=models.CASCADE, null=True
+    )
     odometer_reading_before = models.PositiveIntegerField(
         _("odometer reading before"), null=True
     )
@@ -398,7 +432,7 @@ class WorkOrder(models.Model):
     )
     notes = models.TextField(_("notes"), blank=True)
     grand_total = models.DecimalField(
-        _("grand total amount"), max_digits=10, decimal_places=2
+        _("grand total amount"), max_digits=10, decimal_places=2, null=True
     )
 
     class Meta:
