@@ -1,4 +1,5 @@
 import uuid
+from django import dispatch
 from django.db import models, transaction
 from datetime import datetime
 import pytz
@@ -20,6 +21,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from vehicles.models import Vehicle, Part
 from .validators import validate_nonzero
 
+appointment_creation_signal = dispatch.Signal("instance")
 
 class Shop(models.Model):
     shop_owner = models.ForeignKey("accounts.ShopOwner", on_delete=models.CASCADE)
@@ -76,7 +78,15 @@ class Shop(models.Model):
 
         employee_ids = set(self.employees)
         for appointment in appointments:
-            if appointment.start_time is None or appointment.end_time is None:
+            if any(
+                i == None
+                for i in [
+                    appointment.start_time,
+                    appointment.end_time,
+                    from_time,
+                    to_time,
+                ]
+            ):
                 continue
             elif (
                 appointment.start_time <= to_time and from_time <= appointment.end_time
@@ -94,7 +104,7 @@ class Shop(models.Model):
             return None
 
         Employee = apps.get_model("accounts", "Employee")
-        employee = Employee.objects.filter(id=employee_ids.pop())
+        employee = Employee.objects.get(id=employee_ids.pop())
         return employee
 
     class Meta:
