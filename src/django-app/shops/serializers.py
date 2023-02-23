@@ -153,11 +153,14 @@ class InvitationSerializer(serializers.ModelSerializer):
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
+    from quotes.serializers import QuoteSerializer
+
     customer = UserViewSerializer()
     shop = ShopOverviewSerializer()
     start_time = serializers.SerializerMethodField()
     end_time = serializers.SerializerMethodField()
     status_display = serializers.SerializerMethodField()
+    quote = QuoteSerializer()
 
     class Meta:
         model = Appointment
@@ -180,6 +183,9 @@ class AppointmentCreateSerializer(serializers.ModelSerializer):
     vehicle = PermittedPkRelatedField(
         access_policy=VehicleAccessPolicy, queryset=Vehicle.objects.all()
     )
+    quote = PermittedPkRelatedField(
+        access_policy=QuoteAccessPolicy, queryset=Quote.objects.all()
+    )
 
     class Meta:
         model = Appointment
@@ -195,7 +201,7 @@ class AppointmentUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = "__all__"
-        read_only_fields = ("id", "shop", "customer")
+        read_only_fields = ("id", "shop", "customer", "quote")
 
 
 class AppointmentSlotSerializer(serializers.ModelSerializer):
