@@ -49,6 +49,7 @@ from .models import (
     AppointmentSlot,
     Appointment,
     WorkOrder,
+    appointment_creation_signal,
 )
 from .policies import (
     ShopAccessPolicy,
@@ -404,6 +405,9 @@ class AppointmentViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                     AppointmentSlot.appointments.through.objects.bulk_create(
                         through_appointments
                     )
+                appointment_creation_signal.send(
+                    sender=self.__class__, instance=appointment
+                )
                 return Response(
                     {
                         "status": True,
