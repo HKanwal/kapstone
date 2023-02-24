@@ -19,6 +19,7 @@ import { Router, useRouter } from 'next/router';
 // @ts-ignore
 import * as cookie from 'cookie';
 import TextInput from '../components/TextInput';
+import { CardMultiSelect } from '../components/CardComponents';
 
 const QuoteResponsePage: NextPage = ({ quoteRequest, shop }: any) => {
   const router = useRouter();
@@ -30,16 +31,35 @@ const QuoteResponsePage: NextPage = ({ quoteRequest, shop }: any) => {
   const [estimatedTime, setEstimatedTime] = useState('');
   const [expiraryDate, setExpiraryDate] = useState('2025-01-01');
   const [partsList, setPartsList] = useState([]);
+  const [selectedParts, setSelectedParts] = useState<string[]>([]);
   const [partsCost, setPartsCost] = useState('');
 
   useEffect(() => {
-    if (!['Other', ''].includes(service)) {
-      setLabourCost(shop.shop_services.find((s: any) => s.name === service).price);
-    } else {
-      setLabourCost('');
-    }
+    setSelectedParts;
+    setPartsCost(
+      String(
+        selectedParts
+          .map((part) => {
+            return part.split('$')[1];
+          })
+          .reduce((partialSum, a) => partialSum + Number(a), 0)
+      )
+    );
     setPrice(String(Number(labourCost) + Number(partsCost)));
   });
+
+  const handleServiceSelect = (item: any) => {
+    setService(item);
+    if (!['Other', ''].includes(item)) {
+      setLabourCost(shop.shop_services.find((s: any) => s.name === item).price);
+      setPartsList(shop.shop_services.find((s: any) => s.name === item).parts);
+      console.log();
+    } else {
+      setLabourCost('');
+      setPartsList([]);
+      setSelectedParts([]);
+    }
+  };
 
   const handleSubmit = () => {
     const access_token = Cookies.get('access');
@@ -82,7 +102,7 @@ const QuoteResponsePage: NextPage = ({ quoteRequest, shop }: any) => {
                   return service.name;
                 })
                 .concat('Other')}
-              onSelect={setService}
+              onSelect={(item) => handleServiceSelect(item)}
               required
             />
           </div>
@@ -121,11 +141,26 @@ const QuoteResponsePage: NextPage = ({ quoteRequest, shop }: any) => {
           <div className={styles.section}>
             <span className={styles['section-header']}>Part Information</span>
             <div className={styles['field-container']}>
-              <TextField name="Parts Needed" placeholder="Add Required Part" />
+              <CardMultiSelect
+                fieldLabel={'Parts Needed'}
+                fieldData={partsList.map((part: any) => {
+                  return `${part.name} | $${part.price}`;
+                })}
+                fieldValues={selectedParts}
+                onChange={setSelectedParts}
+                fieldPlaceholder="Add Required Parts"
+                fieldSearchable
+              />
+              {selectedParts.length > 0 ? (
+                <span className={styles['price-text']}>Total Parts Cost: ${partsCost}</span>
+              ) : (
+                <></>
+              )}
             </div>
-            <div className={styles['field-container']}>
+            {/* <div className={styles['field-container']}>
+            <TextField name="Parts Needed" placeholder="Add Required Part" />
               <TextField name="Part Price" placeholder="Add Required Part Price" />
-            </div>
+            </div> */}
           </div>
           <div className={styles.section}>
             <span className={styles['section-header']}>Additional Information</span>
@@ -136,15 +171,6 @@ const QuoteResponsePage: NextPage = ({ quoteRequest, shop }: any) => {
         </div>
         <span className={styles['section-header']}>Total Cost: ${price}</span>
         {/* 
-        
-        <div className={styles.section}>
-          <div className={styles['field-container']}>
-            <TextField name="Labour Cost" placeholder="Add Required Labour Cost" />
-          </div>
-          <div className={styles['field-container']}>
-            <TextField name="Estimated Time" placeholder="Enter Estimated Time" />
-          </div>
-        </div>
         <div className={styles.section}>
           <div className={styles['field-container']}>
             <DropdownField
