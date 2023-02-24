@@ -37,6 +37,8 @@ const LoginPage: NextPage<LoginPageProps, {}> = (props) => {
           onSuccess(data, variables, context) {
             if (data.ok) {
               data.json().then((response: Jwt) => {
+                localStorage.setItem('access_token', response.access);
+                localStorage.setItem('refresh_token', response.refresh);
                 props.onLogin(response);
               });
               router.push('/dashboard');
