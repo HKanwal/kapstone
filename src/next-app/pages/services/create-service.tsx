@@ -42,6 +42,7 @@ const ServicesDetail: NextPage = ({ parts, shop }: any) => {
       active: 'Active',
     },
     validationSchema: schema,
+    validateOnChange: false,
     onSubmit: async (values) => {
       const valuesToSend = {
         shop: shop.id,
@@ -73,6 +74,7 @@ const ServicesDetail: NextPage = ({ parts, shop }: any) => {
       price: '',
     },
     validationSchema: partSchema,
+    validateOnChange: false,
     onSubmit: async (values) => {
       const valuesToSend = {
         name: values.name,
