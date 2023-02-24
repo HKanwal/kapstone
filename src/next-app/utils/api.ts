@@ -87,6 +87,28 @@ const refreshToken = (props: refreshTokenProps) => {
   );
 };
 
+type AppointmentBody = {
+  status: 'completed' | 'no show' | 'in_progress' | 'done' | 'rework' | 'pending';
+  /** In the format hh:mm:ss */
+  duration: string;
+  shop: number;
+  customer: number;
+  vehicle: number;
+  appointment_slots: number[];
+  jwtToken: string;
+};
+
+function bookAppointment(body: AppointmentBody) {
+  return fetch(`${apiUrl}/shops/appointments/`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+      Authorization: `JWT ${body.jwtToken}`,
+    },
+  });
+}
+
 /** Queries */
 
 type AppointmentSlotsParams = {
@@ -141,6 +163,27 @@ function getAppointmentSlots({
   };
 }
 
+type UserDetails = {
+  email: string;
+  type: accountTypes;
+  id: number;
+  username: string;
+};
+
+function getUserDetails(jwtToken: string) {
+  return () => {
+    return fetch(`${apiUrl}/auth/users/me`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        Authorization: `JWT ${jwtToken}`,
+      },
+    }).then((res) => {
+      return res.json() as Promise<UserDetails>;
+    });
+  };
+}
+
 export type {
   RegistrationBody,
   RegistrationErrResponse,
@@ -148,5 +191,16 @@ export type {
   Jwt,
   AppointmentSlotsParams,
   AppointmentSlotsResponse,
+  AppointmentBody,
+  AppointmentSlot,
+  UserDetails,
 };
-export { registrationFn, loginFn, AuthContext, refreshToken, getAppointmentSlots };
+export {
+  registrationFn,
+  loginFn,
+  AuthContext,
+  refreshToken,
+  getAppointmentSlots,
+  bookAppointment,
+  getUserDetails,
+};

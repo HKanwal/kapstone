@@ -8,9 +8,16 @@ import { AiOutlineCheck } from 'react-icons/ai';
 import IconButton from '../components/IconButton';
 import DatePicker from '../components/DatePicker';
 import { useState, MouseEvent, useEffect } from 'react';
-import { useQuery } from 'react-query';
-import { AppointmentSlotsResponse, getAppointmentSlots } from '../utils/api';
+import { useMutation, useQuery } from 'react-query';
+import {
+  AppointmentSlot,
+  AppointmentSlotsResponse,
+  bookAppointment,
+  getAppointmentSlots,
+  getUserDetails,
+} from '../utils/api';
 import { Loader } from '@mantine/core';
+import Modal from '../components/Modal';
 
 function createEmptyArray(n: number): undefined[] {
   let a = [];
@@ -100,6 +107,17 @@ function timeToNumber(time: string): number {
   return hour + minutes / 60;
 }
 
+/**
+ * Compares start time of slot (as returned by API) to given time as number
+ * for equality.
+ */
+function startTimeEquals(slot: AppointmentSlot, startTime: number): boolean {
+  const startTimeAsDate = new Date(slot.start_time);
+  const startHour = startTimeAsDate.getHours();
+  const startMinutes = startTimeAsDate.getMinutes();
+  return startTime === startHour + startMinutes / 60;
+}
+
 const BookAppointmentPage: NextPage = () => {
   const router = useRouter();
   const { appointmentLength, shopId, quoteId } = router.query;
@@ -111,6 +129,14 @@ const BookAppointmentPage: NextPage = () => {
       : (parseInt(appointmentLength[0]) as number);
   const [date, setDate] = useState(new Date());
   const strDate = date.toISOString().split('T')[0];
+  const [accessToken, setAccessToken] = useState<undefined | string>(undefined);
+  useEffect(() => {
+    setAccessToken(localStorage.getItem('access_token') || '');
+  }, []);
+  const userQuery = useQuery('getUserDetails', getUserDetails(accessToken || ''), {
+    refetchOnWindowFocus: false,
+    enabled: !!accessToken,
+  });
   const query = useQuery(
     'getAppointmentSlots',
     getAppointmentSlots({
@@ -128,8 +154,12 @@ const BookAppointmentPage: NextPage = () => {
     {
       refetchOnWindowFocus: false,
       refetchOnMount: true,
+      enabled: !!userQuery.data?.id,
     }
   );
+  const mutation = useMutation({
+    mutationFn: bookAppointment,
+  });
 
   // all times are represented as a number between 0 and 24
   // start time can only be x.00 (xx:00), x.25 (xx:15), x.50 (xx:30), or x.75 (xx:45)
@@ -199,8 +229,27 @@ const BookAppointmentPage: NextPage = () => {
   };
 
   const handleConfirmClick = () => {
-    // TODO: determine whether user has quote or not and redirect to appropriate screen accordingly
-    // what uniquely identifies a quote? is there a quote id?
+    if (quoteId !== undefined) {
+      const duration: number = appointmentLengthNum * 0.25;
+      mutation.mutate({
+        status: 'pending',
+        duration: `${Math.floor(duration)}:${(duration % 1) * 60 || '00'}:00`,
+        appointment_slots:
+          query.data?.slots
+            .find((slots) => {
+              return startTimeEquals(slots[0], booking || -1);
+            })
+            ?.map((slots) => {
+              return slots.id;
+            }) || [],
+        customer: userQuery.data?.id || -1,
+        shop: (typeof shopId === 'string' ? parseInt(shopId) : -1) || -1,
+        vehicle: 5, // TODO: should be removed and should have an association with quote in its place
+        jwtToken: localStorage.getItem('access_token') || '',
+      });
+    } else {
+      router.push('/appointment-form');
+    }
   };
 
   const isBookable = (startTime: number) => {
