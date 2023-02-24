@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_access_policy import PermittedPkRelatedField
 
 from .models import (
     Shop,
@@ -14,6 +15,11 @@ from .models import (
 )
 from accounts.serializers import UserViewSerializer
 from vehicles.serializers import PartSerializer
+from .policies import ShopAccessPolicy, AppointmentAccessPolicy
+from quotes.policies import QuoteAccessPolicy
+from quotes.models import Quote
+from vehicles.policies import VehicleAccessPolicy
+from vehicles.models import Vehicle
 
 
 class ServicePartSerializer(serializers.ModelSerializer):
@@ -42,23 +48,28 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ("id",)
 
+
 class ServiceWriteSerializer(serializers.ModelSerializer):
     price = serializers.DecimalField(default=0, max_digits=10, decimal_places=2)
+    shop = PermittedPkRelatedField(
+        access_policy=ShopAccessPolicy, queryset=Shop.objects.all()
+    )
 
     def create(self, validated_data):
-        service = Service.objects.create(
-            **validated_data
-        )
+        service = Service.objects.create(**validated_data)
         return service
 
     class Meta:
         model = Service
-        fields ="__all__"
-        read_only_fields=("id",)
+        fields = "__all__"
+        read_only_fields = ("id",)
 
 
 class ServiceUpdateSerializer(serializers.ModelSerializer):
     price = serializers.DecimalField(default=0, max_digits=10, decimal_places=2)
+    shop = PermittedPkRelatedField(
+        access_policy=ShopAccessPolicy, queryset=Shop.objects.all()
+    )
 
     class Meta:
         model = Service
@@ -132,17 +143,24 @@ class ShopOverviewSerializer(serializers.ModelSerializer):
 
 
 class InvitationSerializer(serializers.ModelSerializer):
+    shop = PermittedPkRelatedField(
+        access_policy=ShopAccessPolicy, queryset=Shop.objects.all()
+    )
+
     class Meta:
         model = Invitation
         fields = "__all__"
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
+    from quotes.serializers import QuoteSerializer
+
     customer = UserViewSerializer()
     shop = ShopOverviewSerializer()
     start_time = serializers.SerializerMethodField()
     end_time = serializers.SerializerMethodField()
     status_display = serializers.SerializerMethodField()
+    quote = QuoteSerializer()
 
     class Meta:
         model = Appointment
@@ -159,6 +177,16 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
 
 class AppointmentCreateSerializer(serializers.ModelSerializer):
+    shop = PermittedPkRelatedField(
+        access_policy=ShopAccessPolicy, queryset=Shop.objects.all()
+    )
+    vehicle = PermittedPkRelatedField(
+        access_policy=VehicleAccessPolicy, queryset=Vehicle.objects.all()
+    )
+    quote = PermittedPkRelatedField(
+        access_policy=QuoteAccessPolicy, queryset=Quote.objects.all()
+    )
+
     class Meta:
         model = Appointment
         fields = "__all__"
@@ -166,13 +194,21 @@ class AppointmentCreateSerializer(serializers.ModelSerializer):
 
 
 class AppointmentUpdateSerializer(serializers.ModelSerializer):
+    vehicle = PermittedPkRelatedField(
+        access_policy=VehicleAccessPolicy, queryset=Vehicle.objects.all()
+    )
+
     class Meta:
         model = Appointment
         fields = "__all__"
-        read_only_fields = ("id", "shop", "customer")
+        read_only_fields = ("id", "shop", "customer", "quote")
 
 
 class AppointmentSlotSerializer(serializers.ModelSerializer):
+    shop = PermittedPkRelatedField(
+        access_policy=ShopAccessPolicy, queryset=Shop.objects.all()
+    )
+
     class Meta:
         model = AppointmentSlot
         fields = "__all__"
@@ -219,6 +255,12 @@ class WorkOrderUpdateSerializer(serializers.ModelSerializer):
     odometer_reading_after = serializers.IntegerField(default=0)
     discount = serializers.DecimalField(max_digits=5, decimal_places=2, default=0)
     grand_total = serializers.DecimalField(max_digits=10, decimal_places=2, default=0)
+    quote = PermittedPkRelatedField(
+        access_policy=QuoteAccessPolicy, queryset=Quote.objects.all()
+    )
+    appointment = PermittedPkRelatedField(
+        access_policy=AppointmentAccessPolicy, queryset=Appointment.objects.all()
+    )
 
     class Meta:
         model = WorkOrder
@@ -231,6 +273,15 @@ class WorkOrderCreateSerializer(serializers.ModelSerializer):
     odometer_reading_after = serializers.IntegerField(default=0)
     discount = serializers.DecimalField(max_digits=5, decimal_places=2, default=0)
     grand_total = serializers.DecimalField(max_digits=10, decimal_places=2, default=0)
+    shop = PermittedPkRelatedField(
+        access_policy=ShopAccessPolicy, queryset=Shop.objects.all()
+    )
+    quote = PermittedPkRelatedField(
+        access_policy=QuoteAccessPolicy, queryset=Quote.objects.all()
+    )
+    appointment = PermittedPkRelatedField(
+        access_policy=AppointmentAccessPolicy, queryset=Appointment.objects.all()
+    )
 
     class Meta:
         model = WorkOrder
