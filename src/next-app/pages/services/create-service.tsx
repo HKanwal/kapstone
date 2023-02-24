@@ -87,7 +87,7 @@ const ServicesDetail: NextPage = ({ parts, shop }: any) => {
         });
         if (res.status === 201) {
           handlePartClose();
-          router.reload();
+          router.replace(router.asPath);
         }
       } catch (error: any) {
         setErrors(error.response.data.errors);
