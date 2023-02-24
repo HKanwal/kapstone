@@ -25,6 +25,7 @@ class Quote(models.Model):
     estimated_time = models.CharField(_("estimated time"), max_length=255)
     expiry_date = models.DateField(_("expiry date"))
     created_at = models.DateTimeField(_("created at"), auto_now_add=True)
+    notes = models.CharField(_("notes"), max_length=2000, blank=True)
 
     class Meta:
         verbose_name = "Quote"
