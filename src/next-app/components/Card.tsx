@@ -42,7 +42,7 @@ const Card = (props: CardProps) => {
       </div>
       <div className={styles['left-content']}>
         {props.price ? (
-          <div className={styles['card-content']}>Price: {props.price}</div>
+          <div className={styles['card-content']}>Price: ${props.price}</div>
         ) : (
           <div className={styles['blank-space']}> </div>
         )}

@@ -8,6 +8,7 @@ import apiUrl from '../constants/api-url';
 import { IoIosAdd } from 'react-icons/io';
 import { AuthContext, accountTypes } from '../utils/api';
 import Cookies from 'js-cookie';
+import { GrAddCircle } from 'react-icons/gr';
 
 const QuoteRequestListPage: NextPage = () => {
   const router = useRouter();
@@ -16,13 +17,11 @@ const QuoteRequestListPage: NextPage = () => {
 
   if (authData.access !== '') {
   } else if (Cookies.get('access') && Cookies.get('access') !== '') {
-    setAuthData(
-      {
-        'access': Cookies.get('access') as string,
-        'refresh': Cookies.get('refresh') as string,
-        'user_type': Cookies.get('user_type') as accountTypes,
-      }
-    )
+    setAuthData({
+      access: Cookies.get('access') as string,
+      refresh: Cookies.get('refresh') as string,
+      user_type: Cookies.get('user_type') as accountTypes,
+    });
   }
 
   useEffect(() => {
@@ -30,7 +29,7 @@ const QuoteRequestListPage: NextPage = () => {
     fetch(`${apiUrl}/quotes/quote-requests/`, {
       method: 'GET',
       headers: {
-        'Authorization': `JWT ${authData.access}`,
+        Authorization: `JWT ${authData.access}`,
         'Content-Type': 'application/json; charset=UTF-8',
       },
     }).then((data) => {
@@ -40,10 +39,12 @@ const QuoteRequestListPage: NextPage = () => {
         data.forEach((quoteRequest: any) => {
           console.log(quoteRequest);
           // cards.push(<QuoteRequestCard id={quoteRequest.id} description={quoteRequest.description} dateCreated={quoteRequest.dateCreated} />)
-          cards.push(<QuoteRequestCard id={quoteRequest.id} description={quoteRequest.description} />)
-        })
+          cards.push(
+            <QuoteRequestCard id={quoteRequest.id} description={quoteRequest.description} />
+          );
+        });
         setQuoteRequestCards(cards);
-      })
+      });
     });
 
     // TODO: Replace sample data with API data and place in above .then handler
@@ -61,16 +62,14 @@ const QuoteRequestListPage: NextPage = () => {
 
   const handleAddClick = () => {
     router.push('/quote-request');
-  }
+  };
 
   return (
     <div className={styles.container}>
-      <Header title="Quote Requests" rightIcon={IoIosAdd} onRightIconClick={handleAddClick} />
-      < div className={styles["card-container"]} >
-        {quoteRequestCards}
-      </div>
-    </div >
-  )
+      <Header title="Quote Requests" rightIcon={GrAddCircle} onRightIconClick={handleAddClick} />
+      <div className={styles['card-container']}>{quoteRequestCards}</div>
+    </div>
+  );
 };
 
 export default QuoteRequestListPage;
