@@ -28,6 +28,7 @@ class QuoteRequestSerializer(serializers.ModelSerializer):
             "images",
             "vehicle",
             "status",
+            "created_at",
         )
         read_only_fields = ("id", "customer", "shop")
 
