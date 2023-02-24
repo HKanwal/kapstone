@@ -11,6 +11,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 // @ts-ignore
 import * as cookie from 'cookie';
+import TextArea from '../components/TextArea';
 
 type QuoteProps = {
   id: number;
@@ -87,7 +88,7 @@ const Quote: NextPage = ({ quote }: any) => {
             <label>{`Cost: $${quote.price}`}</label>
           </div>
           <div className={styles['date-container']}>
-            <label>{`Date: ${new Date(quote.created_at).toISOString().split('T')[0]}`}</label>
+            <label>{`Date: ${new Date(quote.created_at).toDateString()}`}</label>
           </div>
           {authData.user_type === 'customer' ? (
             <div className={styles['field-container']}>
@@ -154,12 +155,18 @@ const Quote: NextPage = ({ quote }: any) => {
               ) : null}
             </div>
           ) : null}
-
           <div className={styles['field-container']}>
             <TextField name="Estimated Time:" placeholder={quote.estimated_time} disabled={true} />
           </div>
           <div className={styles['field-container']}>
-            <TextField name="Quote Expires On:" placeholder={quote.expiry_date} disabled={true} />
+            <TextField
+              name="Quote Expires On:"
+              placeholder={new Date(quote.expiry_date).toDateString()}
+              disabled={true}
+            />
+          </div>
+          <div className={styles['field-container']}>
+            <TextArea name="Notes" placeholder={`${quote.notes}`} disabled={true} />
           </div>
           {authData.user_type === 'customer' && quote.status === 'new_quote' ? (
             <div className={styles['buttons-container']}>
@@ -168,12 +175,27 @@ const Quote: NextPage = ({ quote }: any) => {
                   title="Reject Quote"
                   width="80%"
                   backgroundColor="red"
-                  onClick={() => {
-                    console.log('TODO: API call for rejecting quote');
-                    router.push({
-                      pathname: 'quote-request-details',
-                      query: { id: id },
-                    });
+                  onClick={async () => {
+                    const access_token = Cookies.get('access');
+                    const valuesToSend = { status: 'rejected' };
+                    try {
+                      const res = await axios.patch(
+                        `${apiUrl}/quotes/quotes/${id}/`,
+                        valuesToSend,
+                        {
+                          headers: { Authorization: `JWT ${access_token}` },
+                        }
+                      );
+                      if (res.status === 200) {
+                        router.push({
+                          pathname: 'quote-request-details',
+                          query: { id: quote.quote_request.id },
+                        });
+                      }
+                    } catch (error: any) {
+                      scrollTo(0, 0);
+                      console.log(error);
+                    }
                   }}
                 />
               </div>
@@ -182,12 +204,27 @@ const Quote: NextPage = ({ quote }: any) => {
                   title="Accept Quote"
                   margin="0 0 0 9vw"
                   width="80%"
-                  onClick={() => {
-                    console.log('TODO: API call for accepting quote');
-                    router.push({
-                      pathname: 'quote-request-details',
-                      query: { id: quote.quote_request },
-                    });
+                  onClick={async () => {
+                    const access_token = Cookies.get('access');
+                    const valuesToSend = { status: 'accepted' };
+                    try {
+                      const res = await axios.patch(
+                        `${apiUrl}/quotes/quotes/${id}/`,
+                        valuesToSend,
+                        {
+                          headers: { Authorization: `JWT ${access_token}` },
+                        }
+                      );
+                      if (res.status === 200) {
+                        router.push({
+                          pathname: 'quote-request-details',
+                          query: { id: quote.quote_request.id },
+                        });
+                      }
+                    } catch (error: any) {
+                      scrollTo(0, 0);
+                      console.log(error);
+                    }
                   }}
                 />
               </div>

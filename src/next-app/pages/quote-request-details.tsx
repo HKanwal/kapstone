@@ -125,17 +125,24 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
     }
   });
 
+  const date = new Date(quoteRequest.created_at);
+  const dateString = date.toDateString();
+  console.log(quotesList);
   return (
     <div className={styles.container}>
       <Header
-        title={`Quote Request - ${quoteRequest.description}`}
+        title={`Quote Request - ${
+          quoteRequest.description.length > 10
+            ? quoteRequest.description.slice(0, 10) + '...'
+            : quoteRequest.description
+        }`}
         rightIcon={inEdit ? GrFormClose : GrFormEdit}
         onRightIconClick={() => setInEdit(!inEdit)}
       />
       <div className={styles.content}>
         <div className={styles['field-container']}>
           <div className={styles['date-container']}>
-            <span className={styles['date-text']}>Date: {quoteRequest.preferred_date}</span>
+            <span className={styles['date-text']}>Date: {dateString}</span>
           </div>
         </div>
 

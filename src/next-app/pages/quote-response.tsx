@@ -20,46 +20,17 @@ import { Router, useRouter } from 'next/router';
 import * as cookie from 'cookie';
 import TextInput from '../components/TextInput';
 import { CardMultiSelect } from '../components/CardComponents';
+import { DatePicker } from '@mantine/dates';
 
 const QuoteResponsePage: NextPage = ({ quoteRequest, shop }: any) => {
   const router = useRouter();
   const { id } = router.query;
-  const [service, setService] = useState('');
-  const [customService, setCustomService] = useState('');
+  const aYearFromNow = new Date();
+  aYearFromNow.setFullYear(aYearFromNow.getFullYear() + 1);
   const [price, setPrice] = useState('');
-  const [labourCost, setLabourCost] = useState('');
   const [estimatedTime, setEstimatedTime] = useState('');
-  const [expiraryDate, setExpiraryDate] = useState('2025-01-01');
-  const [partsList, setPartsList] = useState([]);
-  const [selectedParts, setSelectedParts] = useState<string[]>([]);
-  const [partsCost, setPartsCost] = useState('');
-
-  useEffect(() => {
-    setSelectedParts;
-    setPartsCost(
-      String(
-        selectedParts
-          .map((part) => {
-            return part.split('$')[1];
-          })
-          .reduce((partialSum, a) => partialSum + Number(a), 0)
-      )
-    );
-    setPrice(String(Number(labourCost) + Number(partsCost)));
-  });
-
-  const handleServiceSelect = (item: any) => {
-    setService(item);
-    if (!['Other', ''].includes(item)) {
-      setLabourCost(shop.shop_services.find((s: any) => s.name === item).price);
-      setPartsList(shop.shop_services.find((s: any) => s.name === item).parts);
-      console.log();
-    } else {
-      setLabourCost('');
-      setPartsList([]);
-      setSelectedParts([]);
-    }
-  };
+  const [expiraryDate, setExpiraryDate] = useState(aYearFromNow.toISOString().split('T')[0]);
+  const [notes, setNotes] = useState('');
 
   const handleSubmit = () => {
     const access_token = Cookies.get('access');
@@ -70,6 +41,7 @@ const QuoteResponsePage: NextPage = ({ quoteRequest, shop }: any) => {
         price: price,
         estimated_time: estimatedTime,
         expiry_date: expiraryDate,
+        notes: notes,
         quote_request: id,
       }),
       headers: {
@@ -94,78 +66,35 @@ const QuoteResponsePage: NextPage = ({ quoteRequest, shop }: any) => {
       <div className={styles.content}>
         <div className={styles.section}>
           <div className={styles['field-container']}>
-            <DropdownField
-              name="Service"
-              placeholder="Add Required Service"
-              items={shop.shop_services
-                .map((service: any) => {
-                  return service.name;
-                })
-                .concat('Other')}
-              onSelect={(item) => handleServiceSelect(item)}
+            <TextField
+              name="Price ($)"
+              placeholder="Enter Price Quote"
+              onChange={setPrice}
               required
             />
           </div>
-          {service === 'Other' ? (
-            <div className={styles['field-container']}>
-              <TextField
-                name="Custom Service"
-                placeholder="Enter Custom Service"
-                onChange={setCustomService}
-                required
-              />
-            </div>
-          ) : (
-            <></>
-          )}
-        </div>
-        <div className={styles.section}>
           <div className={styles['field-container']}>
-            <FieldLabel label="Labour Cost ($)" required />
-            <TextInput
-              placeholder="Enter Labour Cost"
-              onChange={setLabourCost}
-              value={labourCost}
+            <TextField
+              name="Estimated Time"
+              placeholder="Enter Estimated Time"
+              onChange={setEstimatedTime}
+              required
             />
           </div>
-          <div className={styles.section}>
-            <div className={styles['field-container']}>
-              <TextField
-                name="Estimated Time"
-                placeholder="Enter Estimated Time"
-                onChange={setEstimatedTime}
-                required
-              />
-            </div>
-          </div>
-          <div className={styles.section}>
-            <span className={styles['section-header']}>Part Information</span>
-            <div className={styles['field-container']}>
-              <CardMultiSelect
-                fieldLabel={'Parts Needed'}
-                fieldData={partsList.map((part: any) => {
-                  return `${part.name} | $${part.price}`;
-                })}
-                fieldValues={selectedParts}
-                onChange={setSelectedParts}
-                fieldPlaceholder="Add Required Parts"
-                fieldSearchable
-              />
-              {selectedParts.length > 0 ? (
-                <span className={styles['price-text']}>Total Parts Cost: ${partsCost}</span>
-              ) : (
-                <></>
-              )}
-            </div>
-            {/* <div className={styles['field-container']}>
-            <TextField name="Parts Needed" placeholder="Add Required Part" />
-              <TextField name="Part Price" placeholder="Add Required Part Price" />
-            </div> */}
+          <div className={styles['field-container']}>
+            <FieldLabel label="Expirary Date" />
+            <DatePicker
+              placeholder="Enter Expirary Date"
+              onChange={(date) => {
+                date != null ? setExpiraryDate(date.toISOString().split('T')[0]) : null;
+              }}
+              dropdownType="modal"
+            />
           </div>
           <div className={styles.section}>
             <span className={styles['section-header']}>Additional Information</span>
             <div className={styles['field-container']}>
-              <TextArea name="Notes" placeholder="Enter Notes" />
+              <TextArea name="Notes" placeholder="Enter Notes" onChange={setNotes} />
             </div>
           </div>
         </div>

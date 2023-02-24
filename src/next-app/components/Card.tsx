@@ -26,7 +26,7 @@ const Card = (props: CardProps) => {
   let dateString = '';
   if (props.date) {
     const date = new Date(props.date);
-    dateString = date.toDateString();
+    dateString = date.toDateString().split(' ').slice(1).join(' ');
   }
 
   return (

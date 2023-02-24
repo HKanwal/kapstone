@@ -37,10 +37,15 @@ const QuoteRequestListPage: NextPage = () => {
       data.json().then((data) => {
         console.log(data);
         data.forEach((quoteRequest: any) => {
-          console.log(quoteRequest);
+          //console.log(quoteRequest);
           // cards.push(<QuoteRequestCard id={quoteRequest.id} description={quoteRequest.description} dateCreated={quoteRequest.dateCreated} />)
           cards.push(
-            <QuoteRequestCard id={quoteRequest.id} description={quoteRequest.description} />
+            <QuoteRequestCard
+              key={quoteRequest.id}
+              id={quoteRequest.id}
+              description={quoteRequest.description}
+              dateCreated={quoteRequest.created_at}
+            />
           );
         });
         setQuoteRequestCards(cards);

@@ -16,6 +16,8 @@ const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
   const router = useRouter();
   const { id } = router.query;
 
+  const date = new Date(quoteRequest.created_at);
+  const dateString = date.toDateString();
   return (
     <div className={styles.container}>
       <Header
@@ -33,7 +35,7 @@ const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
         <div className={styles['field-container']}>
           <div className={styles['date-container']}>
             <span className={styles['date-text']}>ID: {quoteRequest.id}</span>
-            <span className={styles['date-text']}>Date: </span>
+            <span className={styles['date-text']}>Date: {dateString}</span>
           </div>
         </div>
         <div className={styles.section}>
