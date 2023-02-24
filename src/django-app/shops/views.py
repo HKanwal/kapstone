@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.db import transaction
 from django.core.exceptions import ValidationError
 from django.apps import apps
+from django.utils.timezone import make_aware
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
@@ -223,7 +224,7 @@ class InvitationViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                 # send invitation emails
                 for invitation in invitations:
                     invitation.send_invitation()
-                    
+
                 return Response(
                     {"message": f"{len(invitations)} invitations have been sent."},
                     status=status.HTTP_201_CREATED,
@@ -251,25 +252,25 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         if self.action in ["create"]:
             return ServiceWriteSerializer
         return ServiceSerializer
-    
+
     @transaction.atomic
     def create(self, request, *args, **kwargs):
-            with transaction.atomic():
-                data = request.data
-                parts = data.pop("parts", None)
-                service_serializer = ServiceWriteSerializer(data=data)
-                service_serializer.is_valid(raise_exception=False)
-                print(service_serializer.errors)
-                if service_serializer.is_valid(raise_exception=True):
-                    service = service_serializer.save()
-                    if parts is not None:
-                        service_parts_to_create = Part.objects.filter(
-                            id__in=parts
+        with transaction.atomic():
+            data = request.data
+            parts = data.pop("parts", None)
+            service_serializer = ServiceWriteSerializer(data=data)
+            service_serializer.is_valid(raise_exception=False)
+            print(service_serializer.errors)
+            if service_serializer.is_valid(raise_exception=True):
+                service = service_serializer.save()
+                if parts is not None:
+                    service_parts_to_create = Part.objects.filter(id__in=parts)
+                    for part in service_parts_to_create:
+                        ServicePart.objects.create(
+                            service=service, part=part, quantity=1
                         )
-                        for part in service_parts_to_create:
-                            ServicePart.objects.create(service=service, part=part, quantity=1)
-                return Response(service_serializer.data)
-    
+            return Response(service_serializer.data)
+
     @transaction.atomic
     def partial_update(self, request, *args, **kwargs):
         try:
@@ -277,14 +278,14 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                 updated_service = self.get_object()
                 data = request.data
                 parts = data.pop("parts", None)
-                service_serializer = ServiceWriteSerializer(updated_service, data=data, partial=True)
+                service_serializer = ServiceWriteSerializer(
+                    updated_service, data=data, partial=True
+                )
                 if service_serializer.is_valid(raise_exception=True):
                     service_serializer.save()
                     if parts is not None:
-                        service_parts_fetched = Part.objects.filter(
-                            id__in=parts
-                        )
-                        
+                        service_parts_fetched = Part.objects.filter(id__in=parts)
+
                         ServicePart.objects.filter(
                             service__id=updated_service.pk
                         ).exclude(
@@ -296,16 +297,14 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                                 obj, created = ServicePart.objects.update_or_create(
                                     service=updated_service,
                                     part=part,
-                                    defaults={
-                                        "quantity": 1
-                                    },
+                                    defaults={"quantity": 1},
                                 )
                             except Exception as err:
                                 logging.error(traceback.format_exc())
                 return Response(service_serializer.data)
         except Exception as err:
             return Response(
-                {"status": False, "error_description": 'Failed to update service.'},
+                {"status": False, "error_description": "Failed to update service."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -444,18 +443,22 @@ class AppointmentSlotViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
     def _filter_by_start_date(self, queryset):
         try:
             start_date = datetime.combine(
-                self.request.GET.get("start_date"), datetime.min.time()
+                datetime.strptime(
+                    self.request.GET.get("start_date"), "%Y-%m-%d"
+                ).date(),
+                datetime.min.time(),
             )
-            return queryset.filter(start_time__gte=start_date)
+            return queryset.filter(start_time__gte=make_aware(start_date))
         except:
             return queryset
 
     def _filter_by_end_date(self, queryset):
         try:
             end_date = datetime.combine(
-                self.request.GET.get("end_date"), datetime.max.time()
+                datetime.strptime(self.request.GET.get("end_date"), "%Y-%m-%d").date(),
+                datetime.max.time(),
             )
-            return queryset.filter(end_time__lte=end_date)
+            return queryset.filter(end_time__lte=make_aware(end_date))
         except:
             return queryset
 
