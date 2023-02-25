@@ -23,6 +23,7 @@ from .validators import validate_nonzero
 
 appointment_creation_signal = dispatch.Signal("instance")
 
+
 class Shop(models.Model):
     shop_owner = models.ForeignKey("accounts.ShopOwner", on_delete=models.CASCADE)
     shop_email = models.EmailField(
@@ -192,7 +193,9 @@ class Appointment(models.Model):
     customer = models.ForeignKey(
         "accounts.Customer", on_delete=models.CASCADE, null=True
     )
-    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
+    vehicle = models.ForeignKey(
+        Vehicle, on_delete=models.CASCADE, null=True, default=None
+    )
     duration = models.DurationField(_("Duration"), default=timedelta(minutes=30))
     created_at = models.DateTimeField(auto_now_add=True)
 

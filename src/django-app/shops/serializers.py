@@ -181,7 +181,9 @@ class AppointmentCreateSerializer(serializers.ModelSerializer):
         access_policy=ShopAccessPolicy, queryset=Shop.objects.all()
     )
     vehicle = PermittedPkRelatedField(
-        access_policy=VehicleAccessPolicy, queryset=Vehicle.objects.all()
+        access_policy=VehicleAccessPolicy,
+        queryset=Vehicle.objects.all(),
+        required=False,
     )
     quote = PermittedPkRelatedField(
         access_policy=QuoteAccessPolicy, queryset=Quote.objects.all()
@@ -192,10 +194,24 @@ class AppointmentCreateSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ("id",)
 
+    def create(self, validated_data):
+        if validated_data.get("vehicle", None) is None:
+            quote = validated_data.get("quote", None)
+            if quote is not None:
+                vehicle = quote.quote_request.vehicle
+                if vehicle is not None:
+                    appointment = Appointment.objects.create(
+                        **validated_data, vehicle=vehicle
+                    )
+                    return appointment
+        return super().create(validated_data)
+
 
 class AppointmentUpdateSerializer(serializers.ModelSerializer):
     vehicle = PermittedPkRelatedField(
-        access_policy=VehicleAccessPolicy, queryset=Vehicle.objects.all()
+        access_policy=VehicleAccessPolicy,
+        queryset=Vehicle.objects.all(),
+        required=False,
     )
 
     class Meta:
