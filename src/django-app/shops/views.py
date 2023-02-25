@@ -196,8 +196,8 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         limit = request.GET.get("limit", None)
         if limit is not None:
             limit = int(limit)
-        if limit < 1:
-            raise APIException("Limit must be greater than 0.")
+            if limit < 1:
+                raise APIException("Limit must be greater than 0.")
 
         # initialize google maps client
         gmaps = googlemaps.Client(key=settings.GOOGLE_MAPS_API_KEY)
