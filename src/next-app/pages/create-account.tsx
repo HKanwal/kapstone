@@ -37,7 +37,7 @@ const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
       email: ['required', 'email'],
       username: ['required'],
       password: ['required'],
-      type: employeeCreation ? undefined : undefined,
+      type: employeeCreation ? undefined : ['required'],
     },
     onSubmit: (values, setErrors) => {
       let accountType = 'customer' as accountTypes;
