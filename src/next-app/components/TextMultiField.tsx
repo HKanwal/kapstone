@@ -62,6 +62,7 @@ const TextMultiField = (props: TextMultiFieldProps) => {
           return (
             <div className={styles['text-input-container']} key={i}>
               <TextInput
+                id={props.name}
                 placeholder={props.placeholder}
                 width={props.width}
                 value={val}
