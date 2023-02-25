@@ -89,8 +89,8 @@ const ServicesDetail: NextPage = ({ service, parts, shop }: any) => {
     onSubmit: async (values) => {
       const valuesToSend = {
         name: values.name,
-        condition: values.condition === 'New' ? 'new' : 'used',
-        type: values.type === 'OEM' ? 'oem' : 'aftermarket',
+        condition: values.condition.toLowerCase(),
+        type: values.type.toLowerCase(),
         price: values.price,
       };
       const access_token = Cookies.get('access');
