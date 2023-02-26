@@ -55,18 +55,20 @@ const QuoteListPage: NextPage = ({ quotes, quoteRequests }: any) => {
           <Button title="New Quote Requests" onClick={handleClick} width="100%" />
         </div>
         <div className={styles['card-container']}>
-          {quoteList.map((quote: any) => {
-            return (
-              <Card
-                key={quote.id}
-                id={quote.id}
-                name={quote.quote_request.description}
-                status={quote.status === 'new_quote' ? 'Pending' : quote.status}
-                price={quote.price}
-                date={quote.created_at}
-              />
-            );
-          })}
+          {quoteList
+            .sort((a: any, b: any) => (a.status < b.status ? -1 : 1))
+            .map((quote: any) => {
+              return (
+                <Card
+                  key={quote.id}
+                  id={quote.id}
+                  name={quote.quote_request.description}
+                  status={quote.status === 'new_quote' ? 'Pending' : quote.status_display}
+                  price={quote.price}
+                  date={quote.created_at}
+                />
+              );
+            })}
         </div>
       </div>
     </div>

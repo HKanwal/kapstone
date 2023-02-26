@@ -169,7 +169,7 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
                 .filter((quote: any) =>
                   quote.status == 'new_quote'
                     ? status == 'Pending' && quote.status == 'new_quote'
-                    : quote.status == status
+                    : quote.status_display == status
                 )
                 .sort((a: any, b: any) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
                 .map((quote: any) => {
@@ -178,7 +178,7 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
                       key={quote.id}
                       id={quote.id}
                       name={quote.shop.name}
-                      status={quote.status === 'new_quote' ? 'Pending' : quote.status}
+                      status={quote.status === 'new_quote' ? 'Pending' : quote.status_display}
                       date={quote.created_at}
                       price={quote.price}
                     />
@@ -186,7 +186,7 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
                 })
             ) : status == 'Accepted' && sortItem == 'Date' ? (
               quotesList
-                .filter((quote: any) => quote.status == status)
+                .filter((quote: any) => quote.status_display == status)
                 .sort((a: any, b: any) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
                 .map((quote: any) => {
                   return (
@@ -194,7 +194,7 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
                       key={quote.id}
                       id={quote.id}
                       name={quote.shop.name}
-                      status={quote.status === 'new_quote' ? 'Pending' : quote.status}
+                      status={quote.status === 'new_quote' ? 'Pending' : quote.status_display}
                       date={quote.created_at}
                       price={quote.price}
                     />
@@ -202,7 +202,7 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
                 })
             ) : status == 'Accepted' && sortItem == 'Price' ? (
               quotesList
-                .filter((quote: any) => quote.status == status)
+                .filter((quote: any) => quote.status_display == status)
                 .sort((a: any, b: any) => (a.price && b.price && a.price > b.price ? 1 : -1))
                 .map((quote: any) => {
                   return (
@@ -210,7 +210,7 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
                       key={quote.id}
                       id={quote.id}
                       name={quote.shop.name}
-                      status={quote.status === 'new_quote' ? 'Pending' : quote.status}
+                      status={quote.status === 'new_quote' ? 'Pending' : quote.status_display}
                       date={quote.created_at}
                       price={quote.price}
                     />
@@ -225,7 +225,7 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
                       key={quote.id}
                       id={quote.id}
                       name={quote.shop.name}
-                      status={quote.status === 'new_quote' ? 'Pending' : quote.status}
+                      status={quote.status === 'new_quote' ? 'Pending' : quote.status_display}
                       date={quote.created_at}
                       price={quote.price}
                     />
