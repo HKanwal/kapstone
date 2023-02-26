@@ -100,6 +100,14 @@
   width: 50%;
 }
 
+.respond-button {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+
 .no-quotes-text {
   color: var(--text-grey-color);
   font-weight: 400;

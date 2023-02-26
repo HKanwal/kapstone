@@ -98,7 +98,7 @@ const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
           </div>
         </div>
       </div>
-      <div className={styles['buttons-container']}>
+      {/* <div className={styles['buttons-container']}>
         <div className={styles['reject-button']}>
           <Button
             title="Reject"
@@ -112,18 +112,18 @@ const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
               });
             }}
           />
-        </div>
-        <div className={styles['accept-button']}>
-          <Button
-            title="Respond"
-            margin="0 6vw 0 0"
-            width="80%"
-            onClick={() => {
-              router.push({ pathname: '/quote-response', query: { id } });
-            }}
-          />
-        </div>
+        </div> */}
+      <div className={styles['respond-button']}>
+        <Button
+          title="Respond"
+          //margin="0 6vw 0 0"
+          width="80%"
+          onClick={() => {
+            router.push({ pathname: '/quote-response', query: { id } });
+          }}
+        />
       </div>
+      {/* </div> */}
     </div>
   );
 };
