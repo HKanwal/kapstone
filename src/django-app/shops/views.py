@@ -50,6 +50,7 @@ from .models import (
     AppointmentSlot,
     Appointment,
     WorkOrder,
+    appointment_creation_signal,
 )
 from .policies import (
     ShopAccessPolicy,
@@ -258,7 +259,10 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         with transaction.atomic():
             data = request.data
             parts = data.pop("parts", None)
-            service_serializer = ServiceWriteSerializer(data=data)
+            service_serializer = ServiceWriteSerializer(
+                data=data,
+                context={"request": request},
+            )
             service_serializer.is_valid(raise_exception=False)
             print(service_serializer.errors)
             if service_serializer.is_valid(raise_exception=True):
@@ -279,7 +283,10 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                 data = request.data
                 parts = data.pop("parts", None)
                 service_serializer = ServiceWriteSerializer(
-                    updated_service, data=data, partial=True
+                    updated_service,
+                    data=data,
+                    partial=True,
+                    context={"request": request},
                 )
                 if service_serializer.is_valid(raise_exception=True):
                     service_serializer.save()
@@ -303,10 +310,8 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                                 logging.error(traceback.format_exc())
                 return Response(service_serializer.data)
         except Exception as err:
-            return Response(
-                {"status": False, "error_description": "Failed to update service."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            logging.error(traceback.format_exc())
+            raise err
 
 
 class ServicePartViewSet(viewsets.ModelViewSet):
@@ -351,7 +356,9 @@ class AppointmentViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
             with transaction.atomic():
                 data = request.data
                 appointment_slots = data.pop("appointment_slots")
-                appointment_serializer = self.get_serializer_class()(data=data)
+                appointment_serializer = self.get_serializer_class()(
+                    data=data, context={"request": request}
+                )
                 if appointment_serializer.is_valid(raise_exception=True):
                     appointment = appointment_serializer.save()
                     slots = AppointmentSlot.objects.filter(
@@ -399,6 +406,9 @@ class AppointmentViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                     AppointmentSlot.appointments.through.objects.bulk_create(
                         through_appointments
                     )
+                appointment_creation_signal.send(
+                    sender=self.__class__, instance=appointment
+                )
                 return Response(
                     {
                         "status": True,

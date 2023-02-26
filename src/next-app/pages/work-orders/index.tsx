@@ -84,6 +84,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   } catch (error) {
     console.log(error);
     return {
+      notFound: true,
       props: {
         workOrders: [],
       },

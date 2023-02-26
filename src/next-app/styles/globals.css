@@ -226,3 +226,11 @@ a {
 .padding-bottom-zero {
   padding-bottom: 0 !important;
 }
+
+.modal-wrapper {
+  border: 2px dashed var(--ifm-link-color);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  white-space: pre-line;
+}
