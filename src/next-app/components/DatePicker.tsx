@@ -19,6 +19,7 @@ const DatePicker = (props: DatePickerProps) => {
   return (
     <div className={styles.container} ref={containerRef}>
       <TextInput
+        id='DatePicker'
         onClick={handleClick}
         placeholder="Pick dates..."
         value={props.value
@@ -45,7 +46,7 @@ const DatePicker = (props: DatePickerProps) => {
             );
           })
           .join('; ')}
-        onChange={() => {}}
+        onChange={() => { }}
         disabled
       />
       {opened ? (
