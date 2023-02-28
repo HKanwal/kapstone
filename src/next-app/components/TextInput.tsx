@@ -11,11 +11,10 @@ import {
 } from 'react';
 import styles from '../styles/components/TextInput.module.css';
 import { ImCancelCircle } from 'react-icons/im';
-import { BsChevronDown } from 'react-icons/bs';
 import DropdownField from './DropdownField';
 
 type TextInputProps = {
-  id: string;
+  id?: string;
   placeholder?: string;
   width?: string | number;
   value?: string;
