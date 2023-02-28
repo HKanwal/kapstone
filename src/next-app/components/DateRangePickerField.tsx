@@ -17,7 +17,7 @@ const DateRangePickerField = (props: DateRangePickerFieldProps) => {
     <div className={styles.container}>
       {props.name.length > 0 ? <FieldLabel label={props.name} required={props.required} /> : <></>}
       <div className={styles['date-picker-container']}>
-        <DateRangePicker value={props.value} onChange={props.onChange} />
+        <DateRangePicker name={props.name} value={props.value} onChange={props.onChange} />
       </div>
     </div>
   );

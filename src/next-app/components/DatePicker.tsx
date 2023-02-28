@@ -4,6 +4,7 @@ import TextInput from './TextInput';
 import styles from '../styles/components/DatePicker.module.css';
 
 type DatePickerProps = {
+  name: string;
   value: Date[];
   onChange: (newDates: Date[]) => void;
 };
@@ -19,7 +20,7 @@ const DatePicker = (props: DatePickerProps) => {
   return (
     <div className={styles.container} ref={containerRef}>
       <TextInput
-        id='DatePicker'
+        id={props.name}
         onClick={handleClick}
         placeholder="Pick dates..."
         value={props.value
