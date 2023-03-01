@@ -11,10 +11,10 @@ import {
 } from 'react';
 import styles from '../styles/components/TextInput.module.css';
 import { ImCancelCircle } from 'react-icons/im';
-import { BsChevronDown } from 'react-icons/bs';
 import DropdownField from './DropdownField';
 
 type TextInputProps = {
+  id?: string;
   placeholder?: string;
   width?: string | number;
   value?: string;
@@ -65,8 +65,8 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
       paddingRight: props.rightItems
         ? 'calc(1em + 35%)'
         : props.onRemove
-        ? '3em'
-        : props.style?.paddingRight ?? '1em',
+          ? '3em'
+          : props.style?.paddingRight ?? '1em',
     };
   }, [props.width, props.style, props.onRemove]);
 
@@ -109,6 +109,7 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
     <div className={styles.container} onClick={props.onClick}>
       <input
         className={`${styles.input} ${props.error ? styles.error : ''}`}
+        id={props.id}
         type={props.type ?? 'text'}
         placeholder={props.placeholder ?? ''}
         value={value}

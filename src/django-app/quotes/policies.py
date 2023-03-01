@@ -84,6 +84,7 @@ class QuoteAccessPolicy(AccessPolicy):
     def is_editing_status(self, request, view, action):
         status = request.data.pop("status", None)
         if status is not None and not request.data:
+            request.data["status"] = status
             return True
         return False
 
