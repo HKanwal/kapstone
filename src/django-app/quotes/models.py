@@ -1,8 +1,9 @@
+import uuid
 from django.db import models
 from django.utils.translation import gettext as _
 from shops.models import Shop
 from accounts.models import Customer
-from vehicles.models import Vehicle
+from vehicles.models import Vehicle, Part
 
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -42,11 +43,22 @@ class QuoteRequest(models.Model):
     # These are allowed to be null, as right now there are no shops or users in the system to assign them to.
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)
+    batch_id = models.UUIDField(default=uuid.uuid4)
     preferred_date = models.DateField(_("preferred date"), blank=True, null=True)
     preferred_time = models.TimeField(_("preferred time"), blank=True, null=True)
     preferred_phone_number = PhoneNumberField(blank=True, null=True)
     preferred_email = models.EmailField(
         _("email address"), max_length=255, blank=True, null=True
+    )
+    preferred_part_condition = models.CharField(
+        _("Condition"),
+        max_length=4,
+        choices=Part.Condition.choices,
+        null=True,
+        blank=True,
+    )
+    preferred_part_type = models.CharField(
+        _("Type"), max_length=11, choices=Part.Type.choices, null=True, blank=True
     )
     description = models.CharField(_("description"), max_length=1000)
     vehicle = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True)
