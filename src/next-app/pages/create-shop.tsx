@@ -230,6 +230,7 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
 };
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
+  //  TODO: Need API to get shop details of current shop_owner account to allow edit functionality of page
   const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const user_type = parsedCookies.user_type;
   if (user_type === 'shop_owner') {
