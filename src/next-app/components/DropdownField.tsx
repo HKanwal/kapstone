@@ -147,6 +147,7 @@ const DropdownField = (props: DropdownFieldProps) => {
       )}
       <div className={styles['input-container']} ref={inputContainerRef}>
         <TextInput
+          id={props.name}
           placeholder={props.placeholder ?? ''}
           width={props.width}
           style={{ paddingRight: '14%' }}
@@ -175,6 +176,7 @@ const DropdownField = (props: DropdownFieldProps) => {
               })
               .map((item) => (
                 <button
+                  id={item}
                   className={styles.item}
                   key={item}
                   onFocus={handleBtnFocus}

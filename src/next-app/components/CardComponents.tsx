@@ -55,6 +55,7 @@ export const CardTextField = (props: CardTextFieldProps) => {
     <div className={`card-field flex flex-col row-gap-small`}>
       <FieldLabel label={props.fieldLabel} required={props.fieldRequired} />
       <input
+        id={props.fieldName}
         className="input"
         name={props.fieldName}
         value={props.fieldValue}

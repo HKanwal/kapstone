@@ -41,7 +41,6 @@ const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
     },
     onSubmit: (values, setErrors) => {
       let accountType = 'customer' as accountTypes;
-      
       if (employeeCreation) {
         accountType = 'employee';
       } else if (values.type === 'Shop Owner') {
@@ -98,6 +97,7 @@ const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
       );
     },
   });
+  console.log(form.values.type);
   return (
     <div className={styles.container}>
       <Header title="Create New Account" />
