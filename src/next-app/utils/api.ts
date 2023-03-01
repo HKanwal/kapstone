@@ -7,6 +7,7 @@ export type accountTypes = 'shop_owner' | 'employee' | 'customer';
 
 type RegistrationBody = {
   email: string;
+  phoneNumber: string;
   username: string;
   password: string;
   re_password: string;
