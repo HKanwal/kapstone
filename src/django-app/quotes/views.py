@@ -34,6 +34,20 @@ class QuoteViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
             return QuoteWriteSerializer
         return QuoteSerializer
 
+    def partial_update(self, request, *args, **kwargs):
+        with transaction.atomic():
+            if "status" in request.data and request.data["status"] == "accepted":
+                quote = self.get_object()
+                if quote.status != "accepted":  # current status
+                    batch_quotes = Quote.objects.filter(
+                        quote_request__batch_id=quote.quote_request.batch_id
+                    ).exclude(pk=quote.pk)
+                    for batch_quote in batch_quotes:
+                        batch_quote.status = "rejected"  # reject other quotes in the batch
+                    Quote.objects.bulk_update(batch_quotes, ["status"])
+            response = super().partial_update(request, *args, **kwargs)
+        return response
+
 
 class QuoteRequestViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
     access_policy = QuoteRequestAccessPolicy
