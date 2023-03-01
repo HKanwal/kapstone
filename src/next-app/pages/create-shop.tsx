@@ -16,7 +16,7 @@ import Cookies from 'js-cookie';
 const CreateShopPage: NextPage = ({ shop }: any) => {
   const router = useRouter();
   const [errors, setErrors] = useState([]);
-  const [services, setServices] = useState(shop?.shop_services ?? []);
+  // const [services, setServices] = useState(shop?.shop_services ?? []);
   const [shopHours, setShopHours] = useState(shop?.shophours_set ?? []);
   const schema = yup.object().shape({
     name: yup.string().required(),
