@@ -131,11 +131,10 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
   return (
     <div className={styles.container}>
       <Header
-        title={`Quote Request - ${
-          quoteRequest.description.length > 10
-            ? quoteRequest.description.slice(0, 10) + '...'
-            : quoteRequest.description
-        }`}
+        title={`Quote Request - ${quoteRequest.description.length > 10
+          ? quoteRequest.description.slice(0, 10) + '...'
+          : quoteRequest.description
+          }`}
         rightIcon={inEdit ? GrFormClose : GrFormEdit}
         onRightIconClick={() => setInEdit(!inEdit)}
       />
@@ -298,7 +297,7 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
                         );
                       }
                     )}
-                    fieldDisabled={true}
+                    fieldDisabled={!inEdit}
                   />
                   <CardSelect
                     fieldName="part_type"
@@ -312,7 +311,7 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
                         );
                       }
                     )}
-                    fieldDisabled={true}
+                    fieldDisabled={!inEdit}
                   />
                   <CardTextArea
                     fieldValue={form.values.description}

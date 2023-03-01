@@ -49,7 +49,7 @@ const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
       mutation.mutate(
         {
           email: values.email,
-          phoneNumber: values.phoneNumber,
+          phone_number: values.phoneNumber,
           username: values.username,
           password: values.password,
           re_password: values.password,

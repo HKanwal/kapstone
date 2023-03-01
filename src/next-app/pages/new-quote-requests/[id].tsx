@@ -21,7 +21,10 @@ const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
   return (
     <div className={styles.container}>
       <Header
-        title={'Quote Request - ' + quoteRequest.description + ''}
+        title={`Quote Request - ${quoteRequest.description.length > 10
+          ? quoteRequest.description.slice(0, 10) + '...'
+          : quoteRequest.description
+          }`}
         burgerMenu={[
           {
             option: 'Call Customer',
