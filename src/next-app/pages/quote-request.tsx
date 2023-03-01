@@ -68,13 +68,13 @@ const QuoteRequestPage: NextPage = (props: any) => {
     (make === 'Other' ? customMake.length > 0 : make.length > 0) &&
     (make === 'Other' ? customModel.length > 0 : make.length > 0) &&
     modelYear.length > 0 &&
-    firstName.length > 0 &&
-    lastName.length > 0 &&
-    phoneNumber.length > 0 &&
+    // firstName.length > 0 &&
+    // lastName.length > 0 &&
+    // phoneNumber.length > 0 &&
     notes.length > 0 &&
-    VIN.length > 0 &&
-    email.length > 0 &&
-    emailErrors === undefined
+    VIN.length > 0
+    // email.length > 0 &&
+    // emailErrors === undefined
   ) {
     valid = true;
   }
@@ -84,13 +84,13 @@ const QuoteRequestPage: NextPage = (props: any) => {
       (make === 'Other' ? customMake.length > 0 : make.length > 0) &&
       (make === 'Other' ? customModel.length > 0 : make.length > 0) &&
       modelYear.length > 0 &&
-      firstName.length > 0 &&
-      lastName.length > 0 &&
-      phoneNumber.length > 0 &&
+      // firstName.length > 0 &&
+      // lastName.length > 0 &&
+      // phoneNumber.length > 0 &&
       notes.length > 0 &&
-      VIN.length > 0 &&
-      email.length > 0 &&
-      emailErrors === undefined
+      VIN.length > 0
+      // email.length > 0 &&
+      // emailErrors === undefined
     ) {
       valid = true;
     }
@@ -236,7 +236,7 @@ const QuoteRequestPage: NextPage = (props: any) => {
             />
           </div>
         </div>
-        <div className={styles.section}>
+        {/* <div className={styles.section}>
           <span className={styles['section-header']}>Contact Information</span>
           <div className={styles['field-container']}>
             <TextField
@@ -280,7 +280,7 @@ const QuoteRequestPage: NextPage = (props: any) => {
               onSelect={setPreferredContact}
             />
           </div>
-        </div>
+        </div> */}
         <div className={styles.section}>
           <span className={styles['section-header']}>Additional Information</span>
           <div className={styles['field-container']}>
@@ -367,9 +367,6 @@ const QuoteRequestPage: NextPage = (props: any) => {
               setErrors(error.response.data?.errors);
               scrollTo(0, 0);
             }
-            console.log(
-              'TODO: handle submit by verifying form, sending API request, and redirecting to find-shop'
-            );
           }}
         />
       </div>
