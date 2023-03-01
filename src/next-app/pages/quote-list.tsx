@@ -37,8 +37,6 @@ const QuoteListPage: NextPage = ({ quotes, quoteRequests }: any) => {
     router.push({ pathname: '/new-quote-requests' });
   };
 
-  //console.log(quotes.find((quote: any) => quote.id === 5));
-  console.log(quoteRequests.find((quoteRequest: any) => quoteRequest.id === 1));
   return (
     <div className={styles.container}>
       <Header
@@ -57,21 +55,20 @@ const QuoteListPage: NextPage = ({ quotes, quoteRequests }: any) => {
           <Button title="New Quote Requests" onClick={handleClick} width="100%" />
         </div>
         <div className={styles['card-container']}>
-          {quoteList.map((quote: any) => {
-            return (
-              <Card
-                key={quote.id}
-                id={quote.id}
-                name={
-                  quoteRequests.find((quoteRequest: any) => quoteRequest.id === quote.quote_request)
-                    .description
-                }
-                status={quote.status === 'new_quote' ? 'Pending' : quote.status}
-                price={quote.price}
-                date={quote.expiry_date}
-              />
-            );
-          })}
+          {quoteList
+            .sort((a: any, b: any) => (a.status < b.status ? -1 : 1))
+            .map((quote: any) => {
+              return (
+                <Card
+                  key={quote.id}
+                  id={quote.id}
+                  name={quote.quote_request.description}
+                  status={quote.status === 'new_quote' ? 'Pending' : quote.status_display}
+                  price={quote.price}
+                  date={quote.created_at}
+                />
+              );
+            })}
         </div>
       </div>
     </div>

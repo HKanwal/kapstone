@@ -25,13 +25,17 @@ class Quote(models.Model):
     estimated_time = models.CharField(_("estimated time"), max_length=255)
     expiry_date = models.DateField(_("expiry date"))
     created_at = models.DateTimeField(_("created at"), auto_now_add=True)
+    notes = models.CharField(_("notes"), max_length=2000, blank=True)
 
     class Meta:
         verbose_name = "Quote"
         verbose_name_plural = "Quotes"
 
     def __str__(self):
-        return f'Shop "{self.shop.name}" to User "{self.quote_request.user.username}": ${self.price}'
+        user_name = (
+            self.quote_request.user.username if self.quote_request.user else "Null User"
+        )
+        return f'Shop "{self.shop.name}" to User "{user_name}": ${self.price}'
 
 
 class QuoteRequest(models.Model):

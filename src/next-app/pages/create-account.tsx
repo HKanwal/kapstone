@@ -33,7 +33,7 @@ const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
     validationSchema: {
       firstName: ['required'],
       lastName: ['required'],
-      phoneNumber: ['required'],
+      phoneNumber: ['required', 'phoneNumber'],
       email: ['required', 'email'],
       username: ['required'],
       password: ['required'],
@@ -41,7 +41,6 @@ const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
     },
     onSubmit: (values, setErrors) => {
       let accountType = 'customer' as accountTypes;
-      
       if (employeeCreation) {
         accountType = 'employee';
       } else if (values.type === 'Shop Owner') {
@@ -50,6 +49,7 @@ const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
       mutation.mutate(
         {
           email: values.email,
+          phone_number: values.phoneNumber,
           username: values.username,
           password: values.password,
           re_password: values.password,
@@ -98,6 +98,7 @@ const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
       );
     },
   });
+  console.log(form.values.type);
   return (
     <div className={styles.container}>
       <Header title="Create New Account" />
