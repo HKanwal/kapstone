@@ -1,3 +1,4 @@
+import uuid
 from django.shortcuts import render
 from django.db import transaction
 from django.core.exceptions import ValidationError
@@ -58,18 +59,22 @@ class QuoteRequestViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                 vehicle_year = quote_request.pop("vehicle_year", None)
                 vehicle, created = Vehicle.objects.get_or_create(
                     vin=vehicle_vin,
-                    manufacturer=vehicle_make,
-                    model=vehicle_model,
-                    year=vehicle_year,
-                    customer=request.user,
+                    defaults={
+                        "manufacturer": vehicle_make,
+                        "model": vehicle_model,
+                        "year": vehicle_year,
+                        "customer": request.user,
+                    },
                 )
                 quote_request["vehicle"] = vehicle.pk
 
                 shop_ids = quote_request.pop("shops", [])
+                batch_id = uuid.uuid4()
                 quote_requests = []
                 for shop_id in shop_ids:
                     qr = deepcopy(quote_request)
                     qr["shop"] = shop_id
+                    qr["batch_id"] = batch_id
                     quote_requests.append(qr)
 
                 serializer = QuoteRequestWriteSerializer(
@@ -84,9 +89,16 @@ class QuoteRequestViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                     QuoteRequest(**data, user=request.user) for data in validated_data
                 ]
 
-                QuoteRequest.objects.bulk_create(quote_requests)
+                created_quote_requests = QuoteRequest.objects.bulk_create(
+                    quote_requests
+                )
                 return Response(
-                    {"message": f"{len(quote_requests)} quote requests created."},
+                    {
+                        "message": f"{len(quote_requests)} quote requests created.",
+                        "data": QuoteRequestSerializer(
+                            created_quote_requests, many=True
+                        ).data,
+                    },
                     status=status.HTTP_201_CREATED,
                 )
         except Exception as err:
