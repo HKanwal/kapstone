@@ -115,4 +115,4 @@ describe('quote request creation', () => {
   });
 });
 
-export {};
+export {}; // Needed to fix linting errors
