@@ -61,7 +61,13 @@ const QuoteResponsePage: NextPage = ({ quoteRequest, shop }: any) => {
 
   return (
     <div className={styles.container}>
-      <Header title={`Quote Response - ${quoteRequest.description}`} />
+      <Header
+        title={`Quote Response - ${
+          quoteRequest.description.length > 10
+            ? quoteRequest.description.slice(0, 10) + '...'
+            : quoteRequest.description
+        }`}
+      />
 
       <div className={styles.content}>
         <div className={styles.section}>
@@ -112,7 +118,12 @@ const QuoteResponsePage: NextPage = ({ quoteRequest, shop }: any) => {
             <TextField name="Discount Amount" placeholder="Enter Discount Amount" />
           </div>
         </div>*/}
-        <Button title="Submit Quote" width="80%" onClick={handleSubmit} />
+        <Button
+          title="Submit Quote"
+          width="80%"
+          onClick={handleSubmit}
+          disabled={price === '' || estimatedTime === ''}
+        />
       </div>
     </div>
   );

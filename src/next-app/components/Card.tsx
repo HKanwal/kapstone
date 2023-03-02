@@ -30,7 +30,7 @@ const Card = (props: CardProps) => {
   }
 
   return (
-    <div className={styles.card} onClick={handleClick}>
+    <div className={styles.card} id={`quote-${props.id}`} onClick={handleClick}>
       <div className={styles['card-title']}>{props.name}</div>
       <div className={styles['right-content']}>
         {props.status ? (

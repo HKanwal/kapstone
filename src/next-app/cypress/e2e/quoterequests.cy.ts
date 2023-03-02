@@ -51,7 +51,7 @@ describe('quote request creation', () => {
     // Login as Customer
     cy.login('chris', 'pass101word');
 
-    // Go to quote request create page
+    // Go to quote request list page
     cy.visit('/quote-request-list');
 
     cy.get('span').contains('Quote Requests').should('be.visible');
