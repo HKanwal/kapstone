@@ -58,3 +58,17 @@ Cypress.Commands.add('login', (username, password) => {
     cy.url().should('contain', '/dashboard');
   });
 });
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      logout(): Chainable<void>;
+    }
+  }
+}
+
+Cypress.Commands.add('logout', () => {
+  cy.visit('/dashboard');
+  cy.get('button').contains('Logout').click({ force: true });
+  cy.get('button').contains('Login').should('be.visible');
+});
