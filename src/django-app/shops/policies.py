@@ -6,7 +6,7 @@ from .models import Shop, Invitation
 class ShopAccessPolicy(AccessPolicy):
     statements = [
         {
-            "action": ["list", "retrieve"],
+            "action": ["list", "retrieve", "distance"],
             "principal": "*",
             "effect": "allow",
         },
