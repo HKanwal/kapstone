@@ -27,6 +27,8 @@
   font-weight: 400;
   width: 100%;
   text-align: left;
+  padding-top: 1vh;
+  padding-bottom: 4vh;
 }
 
 .image {
@@ -57,7 +59,6 @@
   width: 100%;
   height: 100%;
   padding-top: 4vh;
-  padding-bottom: 4vh;
 }
 
 .section {
@@ -83,4 +84,34 @@
   display: inline-block;
   padding-right: 1%;
   padding-bottom: 1vh;
+}
+
+.buttons-container {
+  margin-bottom: 2vh;
+}
+
+.reject-button {
+  display: inline-flex;
+  width: 50%;
+}
+
+.accept-button {
+  display: inline-flex;
+  width: 50%;
+}
+
+.respond-button {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+
+.no-quotes-text {
+  color: var(--text-grey-color);
+  font-weight: 400;
+  width: 100%;
+  text-align: center;
+  padding-top: 2vh;
 }

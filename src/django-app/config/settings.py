@@ -27,6 +27,9 @@ SECRET_KEY = os.environ.get(
     "django-insecure-)pzy(*e-*mo=9f39qw+s+65w9nz5k@tu_eu4bq*y4hei9o9t8@",
 )
 
+# GOOGLE MAPS API KEY
+GOOGLE_MAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY", None)
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = str(os.environ.get("DEBUG", 1)) == "1"
 
@@ -191,7 +194,7 @@ APP_REGISTRATION_ROUTE = "create-account"
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/New_York"
 
 USE_I18N = True
 

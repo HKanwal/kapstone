@@ -10,30 +10,26 @@ import apiUrl from '../../constants/api-url';
 import Cookies from 'js-cookie';
 // @ts-ignore
 import * as cookie from 'cookie';
+import Button from '../../components/Button';
 
 const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
   const router = useRouter();
   const { id } = router.query;
 
-  function noChange(): void {
-    throw new Error('Function not implemented.');
-  }
-
+  const date = new Date(quoteRequest.created_at);
+  const dateString = date.toDateString();
   return (
     <div className={styles.container}>
       <Header
-        title={'Quote Request - ' + quoteRequest.description + ''}
+        title={`Quote Request - ${quoteRequest.description.length > 10
+          ? quoteRequest.description.slice(0, 10) + '...'
+          : quoteRequest.description
+          }`}
         burgerMenu={[
           {
-            option: 'Respond',
+            option: 'Call Customer',
             onClick() {
-              router.push({ pathname: '/quote-response', query: { id } });
-            },
-          },
-          {
-            option: 'Reject',
-            onClick() {
-              alert('Quote Request ' + String(quoteRequest.id) + ' Rejected.');
+              window.open(`tel: ${quoteRequest.customer.phone_number}`);
             },
           },
         ]}
@@ -42,58 +38,58 @@ const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
         <div className={styles['field-container']}>
           <div className={styles['date-container']}>
             <span className={styles['date-text']}>ID: {quoteRequest.id}</span>
-            <span className={styles['date-text']}>Date: </span>
+            <span className={styles['date-text']}>Date: {dateString}</span>
           </div>
         </div>
         <div className={styles.section}>
           <span className={styles['section-header']}>Vehicle Information</span>
           <div className={styles['field-container']}>
             <FieldLabel label="Manufacturer" />
-            <TextInput value={vehicle.manufacturer} disabled onChange={noChange} />
+            <TextInput value={vehicle.manufacturer} disabled />
           </div>
 
           <div className={styles['field-container']}>
             <FieldLabel label="Model" />
-            <TextInput value={vehicle.model} disabled onChange={noChange} />
+            <TextInput value={vehicle.model} disabled />
           </div>
 
           <div className={styles['field-container']}>
             <FieldLabel label="Model Year" />
-            <TextInput value={vehicle.year} disabled onChange={noChange} />
+            <TextInput value={vehicle.year} disabled />
           </div>
         </div>
         <div className={styles.section}>
           <span className={styles['section-header']}>Customer Information</span>
           <div className={styles['field-container']}>
             <FieldLabel label="Customer First Name" />
-            <TextInput value={quoteRequest.customer.first_name} disabled onChange={noChange} />
+            <TextInput value={quoteRequest.customer.first_name} disabled />
           </div>
           <div className={styles['field-container']}>
             <FieldLabel label="Customer Last Name" />
-            <TextInput value={quoteRequest.customer.last_name} disabled onChange={noChange} />
+            <TextInput value={quoteRequest.customer.last_name} disabled />
           </div>
           <div className={styles['field-container']}>
             <FieldLabel label="Customer Email" />
-            <TextInput value={quoteRequest.customer.email} disabled onChange={noChange} />
+            <TextInput value={quoteRequest.customer.email} disabled />
           </div>
           <div className={styles['field-container']}>
             <FieldLabel label="Customer Phone Number" />
-            <TextInput value={quoteRequest.customer.phone_number} disabled onChange={noChange} />
+            <TextInput value={quoteRequest.customer.phone_number} disabled />
           </div>
         </div>
         <div className={styles.section}>
           <span className={styles['section-header']}>Additional Information</span>
           <div className={styles['field-container']}>
             <FieldLabel label="Part Condition" />
-            <TextInput value="" disabled onChange={noChange} />
+            <TextInput value="" disabled />
           </div>
           <div className={styles['field-container']}>
             <FieldLabel label="Part Type" />
-            <TextInput value="" disabled onChange={noChange} />
+            <TextInput value="" disabled />
           </div>
           <div className={styles['field-container']}>
             <FieldLabel label="Notes" />
-            <TextInput value="" disabled onChange={noChange} />
+            <TextInput value={quoteRequest.description} disabled />
           </div>
           <div className={styles['field-container']}>
             <div className={styles['images-field-container']}>
@@ -105,6 +101,32 @@ const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
           </div>
         </div>
       </div>
+      {/* <div className={styles['buttons-container']}>
+        <div className={styles['reject-button']}>
+          <Button
+            title="Reject"
+            margin="0 0 0 6vw"
+            width="80%"
+            backgroundColor="red"
+            onClick={() => {
+              console.log('TODO: API call for rejecting quote');
+              router.push({
+                pathname: '/new-quote-requests',
+              });
+            }}
+          />
+        </div> */}
+      <div className={styles['respond-button']}>
+        <Button
+          title="Respond"
+          //margin="0 6vw 0 0"
+          width="80%"
+          onClick={() => {
+            router.push({ pathname: '/quote-response', query: { id } });
+          }}
+        />
+      </div>
+      {/* </div> */}
     </div>
   );
 };
