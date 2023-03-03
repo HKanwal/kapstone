@@ -30,7 +30,12 @@ const IconButton = (props: IconButtonProps) => {
   }, []);
 
   return (
-    <button className={styles.container} disabled={!props.onClick} style={props.style}>
+    <button
+      className={styles.container}
+      id="icon-button"
+      disabled={!props.onClick}
+      style={props.style}
+    >
       <props.icon className={styles.icon} size={size} onClick={props.onClick} />
     </button>
   );
