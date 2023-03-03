@@ -42,7 +42,7 @@ export const ShopOwnerNavbarData = [
   },
   {
     title: 'Employees',
-    path: '#',
+    path: '/employees',
     icon: <IoIcons.IoMdPeople />,
   },
   {
