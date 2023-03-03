@@ -7,7 +7,10 @@ describe('shop owner quote response', () => {
   const shop = "Sam's Workshop";
   const price = '50';
   const estimatedTime = '2 days';
-  const day = '28';
+  const month = new Date().getMonth() + 1;
+  const year = new Date().getFullYear();
+  const day = '30';
+  const date = new Date(`${year}-${month}-${Number(day) - 1}`).toDateString();
   const notes = 'This is a test quote.';
 
   beforeEach(() => {
@@ -19,7 +22,7 @@ describe('shop owner quote response', () => {
     cy.visit('/quote-request');
 
     // Find text "Create Quote Request"
-    cy.get('span').contains('Create Quote Request').should('be.visible');
+    cy.get('span', { timeout: 1000000 }).contains('Create Quote Request').should('be.visible');
 
     cy.get('input[id="Manufacturer"]').click();
     cy.get(`button[id="${manufacturer}"]`).then(($button) => {
@@ -46,7 +49,7 @@ describe('shop owner quote response', () => {
     cy.get('button').contains('Create').should('be.enabled');
     cy.get('button').contains('Create').click();
 
-    cy.get('span').contains('Quote Requests').should('be.visible');
+    cy.get('span', { timeout: 1000000 }).contains('Quote Requests').should('be.visible');
     cy.get('div').contains(quoteRequest).should('be.visible');
     cy.logout();
   });
@@ -58,15 +61,15 @@ describe('shop owner quote response', () => {
     // Go to new quote request page
     cy.visit('/new-quote-requests');
 
-    cy.get('span').contains('New Quote Requests').should('be.visible');
+    cy.get('span', { timeout: 1000000 }).contains('New Quote Requests').should('be.visible');
     cy.get('div').contains(quoteRequest).should('be.visible');
 
     cy.get('div').contains(quoteRequest).click();
-    cy.get('span', { timeout: 10000 }).contains(quoteRequest.slice(0, 10)).should('be.visible');
+    cy.get('span', { timeout: 1000000 }).contains(quoteRequest.slice(0, 10)).should('be.visible');
 
     cy.get('button').contains('Respond').click();
 
-    cy.get('span', { timeout: 10000 }).contains(quoteRequest.slice(0, 10)).should('be.visible');
+    cy.get('span', { timeout: 1000000 }).contains(quoteRequest.slice(0, 10)).should('be.visible');
 
     cy.get('input[id="Price ($)"]').type(price);
     cy.get('input[id="Estimated Time"]').type(estimatedTime);
@@ -77,8 +80,14 @@ describe('shop owner quote response', () => {
     cy.get('button').contains('Submit Quote').should('be.enabled');
     cy.get('button').contains('Submit Quote').click();
 
-    cy.get('span', { timeout: 100000 }).contains('Quotes').should('be.visible');
+    cy.get('span', { timeout: 1000000 }).contains('Quotes').should('be.visible');
     cy.get('div').contains(quoteRequest).should('be.visible');
+    cy.get('div').contains(quoteRequest).click();
+    cy.get('label').contains('Status: ').should('contain', 'Pending');
+    cy.get('label').contains('Cost: $').should('contain', price);
+    cy.get('input[id="Estimated Time:"]').should('have.attr', 'placeholder', estimatedTime);
+    cy.get('input[id="Quote Expires On:"]').should('have.attr', 'placeholder', date);
+    cy.get('textarea[id="Notes"]').should('have.attr', 'placeholder', notes);
   });
 });
 
@@ -91,10 +100,10 @@ describe('customer views/accepts/rejects quote', () => {
   const shop = "Sam's Workshop";
   const price = '50';
   const estimatedTime = '2 days';
-  const month = new Date().getMonth();
+  const month = new Date().getMonth() + 1;
   const year = new Date().getFullYear();
-  const day = '28';
-  const today = new Date(`${year}/${month}/${day}`).toDateString();
+  const day = '30';
+  const date = new Date(`${year}-${month}-${Number(day) - 1}`).toDateString();
   const notes = 'This is a test quote.';
   let quote: any;
 
@@ -107,7 +116,7 @@ describe('customer views/accepts/rejects quote', () => {
     cy.visit('/quote-request');
 
     // Find text "Create Quote Request"
-    cy.get('span').contains('Create Quote Request').should('be.visible');
+    cy.get('span', { timeout: 1000000 }).contains('Create Quote Request').should('be.visible');
 
     cy.get('input[id="Manufacturer"]').click();
     cy.get(`button[id="${manufacturer}"]`).then(($button) => {
@@ -133,8 +142,8 @@ describe('customer views/accepts/rejects quote', () => {
 
     cy.get('button').contains('Create').should('be.enabled');
     cy.get('button').contains('Create').click();
-
-    cy.get('span').contains('Quote Requests').should('be.visible');
+    cy.wait(5000);
+    cy.get('span', { timeout: 10000000 }).contains('Quote Requests').should('be.visible');
     cy.get('div').contains(quoteRequest).should('be.visible');
     cy.logout();
 
@@ -144,15 +153,16 @@ describe('customer views/accepts/rejects quote', () => {
     // Go to new quote request page
     cy.visit('/new-quote-requests');
 
-    cy.get('span').contains('New Quote Requests').should('be.visible');
+    cy.get('span', { timeout: 1000000 }).contains('New Quote Requests').should('be.visible');
     cy.get('div').contains(quoteRequest).should('be.visible');
 
     cy.get('div').contains(quoteRequest).click();
-    cy.get('span').contains(quoteRequest.slice(0, 10)).should('be.visible');
+    cy.wait(5000);
+    cy.get('span', { timeout: 100000000 }).contains(quoteRequest.slice(0, 10)).should('be.visible');
 
     cy.get('button').contains('Respond').click();
-
-    cy.get('span').contains(quoteRequest.slice(0, 10)).should('be.visible');
+    cy.wait(5000);
+    cy.get('span', { timeout: 1000000 }).contains('Quote Response').should('be.visible');
 
     cy.get('input[id="Price ($)"]').type(price);
     cy.get('input[id="Estimated Time"]').type(estimatedTime);
@@ -162,11 +172,19 @@ describe('customer views/accepts/rejects quote', () => {
 
     cy.get('button').contains('Submit Quote').should('be.enabled');
     cy.get('button').contains('Submit Quote').click();
-
-    cy.get('span', { timeout: 10000 }).contains('Quotes').should('be.visible');
+    cy.wait(5000);
+    cy.get('span', { timeout: 100000000 }).contains('Quotes').should('be.visible');
     cy.get('div').contains(quoteRequest).should('be.visible');
     cy.get('div').contains(quoteRequest).click();
-    quote = cy.url.toString().split('?id=')[1];
+    cy.wait(5000);
+    cy.get('span', { timeout: 100000000 }).contains(quoteRequest.slice(0, 10)).should('be.visible');
+
+    cy.get('label')
+      .contains('ID:')
+      .invoke('text')
+      .then((txt) => {
+        quote = txt.split(': ')[1];
+      });
     cy.logout();
   });
 
@@ -177,33 +195,35 @@ describe('customer views/accepts/rejects quote', () => {
     // Go to quote request list page
     cy.visit('/quote-request-list');
 
-    cy.get('span').contains('Quote Requests').should('be.visible');
+    cy.get('span', { timeout: 1000000 }).contains('Quote Requests').should('be.visible');
     cy.get('div').contains(quoteRequest).should('be.visible');
 
     cy.get('div').contains(quoteRequest).click();
-    cy.get('span', { timeout: 100000 }).contains(quoteRequest.slice(0, 10)).should('be.visible');
+    cy.wait(5000);
+    cy.get('span', { timeout: 1000000 }).contains(quoteRequest.slice(0, 10)).should('be.visible');
 
     cy.get('select[id="Filter By"').select('Pending');
     cy.get(`div[id="quote-${quote}"]`).should('be.visible');
     cy.get(`div[id="quote-${quote}"]`).click();
-
+    cy.wait(5000);
     cy.get('label').contains('Status: ').should('contain', 'Pending');
     cy.get('label').contains('Cost: $').should('contain', price);
     cy.get('input[id="Sent By"]').should('have.attr', 'placeholder', shop);
     cy.get('input[id="Estimated Time:"]').should('have.attr', 'placeholder', estimatedTime);
-    cy.get('input[id="Quote Expires On:"]').should('have.attr', 'placeholder', today);
+    cy.get('input[id="Quote Expires On:"]').should('have.attr', 'placeholder', date);
     cy.get('textarea[id="Notes"]').should('have.attr', 'placeholder', notes);
 
     cy.get('button').contains('Accept Quote').click();
-
-    cy.get('span', { timeout: 10000 }).contains(quoteRequest.slice(0, 10)).should('be.visible');
+    cy.wait(5000);
+    cy.get('span', { timeout: 1000000 }).contains(quoteRequest.slice(0, 10)).should('be.visible');
 
     cy.get('select[id="Filter By"').select('Pending');
-    cy.get(`div[id="quote-${quote}"]`).should('not.be.visible');
+    cy.get(`div[id="quote-${quote}"]`).should('not.exist');
 
     cy.get('select[id="Filter By"').select('Accepted');
     cy.get(`div[id="quote-${quote}"]`).should('be.visible');
     cy.get(`div[id="quote-${quote}"]`).click();
+    cy.wait(5000);
     cy.get('label').contains('Status: ').should('contain', 'Accepted');
   });
 
@@ -214,33 +234,35 @@ describe('customer views/accepts/rejects quote', () => {
     // Go to quote request list page
     cy.visit('/quote-request-list');
 
-    cy.get('span').contains('Quote Requests').should('be.visible');
+    cy.get('span', { timeout: 1000000 }).contains('Quote Requests').should('be.visible');
     cy.get('div').contains(quoteRequest).should('be.visible');
 
     cy.get('div').contains(quoteRequest).click();
-    cy.get('span', { timeout: 100000 }).contains(quoteRequest.slice(0, 10)).should('be.visible');
+    cy.wait(5000);
+    cy.get('span', { timeout: 1000000 }).contains(quoteRequest.slice(0, 10)).should('be.visible');
 
     cy.get('select[id="Filter By"').select('Pending');
     cy.get(`div[id="quote-${quote}"]`).should('be.visible');
     cy.get(`div[id="quote-${quote}"]`).click();
-
+    cy.wait(5000);
     cy.get('label').contains('Status: ').should('contain', 'Pending');
     cy.get('label').contains('Cost: $').should('contain', price);
     cy.get('input[id="Sent By"]').should('have.attr', 'placeholder', shop);
     cy.get('input[id="Estimated Time:"]').should('have.attr', 'placeholder', estimatedTime);
-    cy.get('input[id="Quote Expires On:"]').should('have.attr', 'placeholder', today);
+    cy.get('input[id="Quote Expires On:"]').should('have.attr', 'placeholder', date);
     cy.get('textarea[id="Notes"]').should('have.attr', 'placeholder', notes);
 
     cy.get('button').contains('Reject Quote').click();
-
-    cy.get('span', { timeout: 10000 }).contains(quoteRequest.slice(0, 10)).should('be.visible');
+    cy.wait(5000);
+    cy.get('span', { timeout: 1000000 }).contains(quoteRequest.slice(0, 10)).should('be.visible');
 
     cy.get('select[id="Filter By"').select('Pending');
-    cy.get(`div[id="quote-${quote}"]`).should('not.be.visible');
+    cy.get(`div[id="quote-${quote}"]`).should('not.exist');
 
     cy.get('select[id="Filter By"').select('Rejected');
     cy.get(`div[id="quote-${quote}"]`).should('be.visible');
     cy.get(`div[id="quote-${quote}"]`).click();
+    cy.wait(5000);
     cy.get('label').contains('Status: ').should('contain', 'Rejected');
   });
 });

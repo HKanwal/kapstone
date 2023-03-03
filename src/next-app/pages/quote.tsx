@@ -85,10 +85,15 @@ const Quote: NextPage = ({ quote }: any) => {
           }
         />
         <div className={styles['quote-container']}>
-          <div className={styles['status-container']}>
-            <label>{`Status: ${
-              quote.status === 'new_quote' ? 'Pending' : quote.status_display
-            }`}</label>
+          <div className={styles['container']}>
+            <div className={styles['status-container']}>
+              <label>{`Status: ${
+                quote.status === 'new_quote' ? 'Pending' : quote.status_display
+              }`}</label>
+            </div>
+            <div className={styles['id-container']}>
+              <label>{`ID: ${quote.id}`}</label>
+            </div>
           </div>
           <div className={styles['cost-container']}>
             <label>{`Cost: $${quote.price}`}</label>
