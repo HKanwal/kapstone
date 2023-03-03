@@ -18,44 +18,19 @@ import apiUrl from '../constants/api-url';
 import { Router, useRouter } from 'next/router';
 // @ts-ignore
 import * as cookie from 'cookie';
+import TextInput from '../components/TextInput';
+import { CardMultiSelect } from '../components/CardComponents';
+import { DatePicker } from '@mantine/dates';
 
-const sampleQuoteRequest = {
-  id: 0,
-  shop: {
-    id: 1,
-    name: 'string',
-  },
-  customer: {
-    id: 0,
-    username: 'string',
-    first_name: 'string',
-    last_name: 'string',
-    email: 'user@example.com',
-    phone_number: 'string',
-  },
-  preferred_date: '2023-02-12',
-  preferred_time: 'string',
-  preferred_phone_number: 'string',
-  preferred_email: 'user@example.com',
-  description: 'string',
-  images: [
-    {
-      id: 0,
-      photo: 'string',
-      quote_request: 0,
-    },
-  ],
-  vehicle: 'string',
-  status: 'string',
-};
-
-const QuoteResponsePage: NextPage = ({ quoteRequest }: any) => {
+const QuoteResponsePage: NextPage = ({ quoteRequest, shop }: any) => {
   const router = useRouter();
   const { id } = router.query;
-  const shopID: number = quoteRequest.shop.id;
+  const aYearFromNow = new Date();
+  aYearFromNow.setFullYear(aYearFromNow.getFullYear() + 1);
   const [price, setPrice] = useState('');
   const [estimatedTime, setEstimatedTime] = useState('');
-  const expiraryDate = '2025-01-01';
+  const [expiraryDate, setExpiraryDate] = useState(aYearFromNow.toISOString().split('T')[0]);
+  const [notes, setNotes] = useState('');
 
   const handleSubmit = () => {
     const access_token = Cookies.get('access');
@@ -66,6 +41,7 @@ const QuoteResponsePage: NextPage = ({ quoteRequest }: any) => {
         price: price,
         estimated_time: estimatedTime,
         expiry_date: expiraryDate,
+        notes: notes,
         quote_request: id,
       }),
       headers: {
@@ -90,7 +66,12 @@ const QuoteResponsePage: NextPage = ({ quoteRequest }: any) => {
       <div className={styles.content}>
         <div className={styles.section}>
           <div className={styles['field-container']}>
-            <TextField name="Price ($)" placeholder="Enter Price" onChange={setPrice} required />
+            <TextField
+              name="Price ($)"
+              placeholder="Enter Price Quote"
+              onChange={setPrice}
+              required
+            />
           </div>
           <div className={styles['field-container']}>
             <TextField
@@ -100,34 +81,25 @@ const QuoteResponsePage: NextPage = ({ quoteRequest }: any) => {
               required
             />
           </div>
-        </div>
-        {/* <div className={styles.section}>
           <div className={styles['field-container']}>
-            <DropdownField
-              name="Services"
-              placeholder="Add Required Services"
-              items={serviceList}
-              type="multi-select"
+            <FieldLabel label="Expirary Date" />
+            <DatePicker
+              placeholder="Enter Expirary Date"
+              onChange={(date) => {
+                date != null ? setExpiraryDate(date.toISOString().split('T')[0]) : null;
+              }}
+              dropdownType="modal"
             />
           </div>
-        </div>
-        <div className={styles.section}>
-          <span className={styles['section-header']}>Part Information</span>
-          <div className={styles['field-container']}>
-            <TextField name="Part Type" placeholder="Add Required Part Type" />
-          </div>
-          <div className={styles['field-container']}>
-            <TextField name="Part Price" placeholder="Add Required Part Price" />
+          <div className={styles.section}>
+            <span className={styles['section-header']}>Additional Information</span>
+            <div className={styles['field-container']}>
+              <TextArea name="Notes" placeholder="Enter Notes" onChange={setNotes} />
+            </div>
           </div>
         </div>
-        <div className={styles.section}>
-          <div className={styles['field-container']}>
-            <TextField name="Labour Cost" placeholder="Add Required Labour Cost" />
-          </div>
-          <div className={styles['field-container']}>
-            <TextField name="Estimated Time" placeholder="Enter Estimated Time" />
-          </div>
-        </div>
+        <span className={styles['section-header']}>Total Cost: ${price}</span>
+        {/* 
         <div className={styles.section}>
           <div className={styles['field-container']}>
             <DropdownField
@@ -152,20 +124,22 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const access_token = parsedCookies.access;
   try {
+    const shop = await axios.get(`${apiUrl}/shops/shops/me`, {
+      headers: { Authorization: `JWT ${access_token}` },
+    });
     const quoteRequest = await axios.get(`${apiUrl}/quotes/quote-requests/${id}`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
     return {
       props: {
+        shop: shop.data,
         quoteRequest: quoteRequest.data,
       },
     };
   } catch (error) {
     console.log(error);
     return {
-      props: {
-        quoteRequest: {},
-      },
+      notFound: true,
     };
   }
 };

@@ -26,6 +26,7 @@ class UserCreateSerializer(BaseUserCreateSerializer):
             "last_name",
             "type",
             "invite_key",
+            "phone_number",
             "tokens",
         )
 

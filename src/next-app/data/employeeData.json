@@ -1,0 +1,69 @@
+{
+  "employeeData": [
+    {
+      "id": 0,
+      "user": {
+        "id": 0,
+        "username": "bob123",
+        "first_name": "Bob",
+        "last_name": "Apple",
+        "email": "bob@example.com",
+        "phone_number": "1234567890"
+      },
+      "salary": "100",
+      "shop": 0
+    },
+    {
+      "id": 1,
+      "user": {
+        "id": 1,
+        "username": "janesmith",
+        "first_name": "Jane",
+        "last_name": "Smith",
+        "email": "jane@example.com",
+        "phone_number": "4161234567"
+      },
+      "salary": "100",
+      "shop": 0
+    },
+    {
+      "id": 2,
+      "user": {
+        "id": 2,
+        "username": "jimc",
+        "first_name": "Jim",
+        "last_name": "Carry",
+        "email": "jim@example.com",
+        "phone_number": "9056789898"
+      },
+      "salary": "100",
+      "shop": 0
+    },
+    {
+      "id": 3,
+      "user": {
+        "id": 3,
+        "username": "mary3",
+        "first_name": "Mary",
+        "last_name": "Joseph",
+        "email": "mary@example.com",
+        "phone_number": "1112345678"
+      },
+      "salary": "100",
+      "shop": 0
+    },
+    {
+      "id": 4,
+      "user": {
+        "id": 4,
+        "username": "bluejay",
+        "first_name": "Jay",
+        "last_name": "Blues",
+        "email": "jay@example.com",
+        "phone_number": "4355677788"
+      },
+      "salary": "100",
+      "shop": 0
+    }
+  ]
+}
