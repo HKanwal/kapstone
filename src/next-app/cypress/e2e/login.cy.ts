@@ -34,4 +34,30 @@ describe('login page shows login option', () => {
   });
 });
 
+describe('test login to different account types', () => {
+  it('should navigate to the login page', () => {
+    cy.visit('/login');
+    cy.get('input[type=text]').type('sam');
+    cy.get('input[type=password]').type('pass101word');
+    cy.get('button[type=submit]').click();
+    cy.url().should('contain', '/dashboard');
+  });
+
+  it('Login page should show login and register options', () => {
+    cy.visit('/login');
+    cy.get('input[type=text]').type('ethan');
+    cy.get('input[type=password]').type('pass101word');
+    cy.get('button[type=submit]').click();
+    cy.url().should('contain', '/dashboard');
+  });
+
+  it('should navigate to the login page', () => {
+    cy.visit('/login');
+    cy.get('input[type=text]').type('chris');
+    cy.get('input[type=password]').type('pass101word');
+    cy.get('button[type=submit]').click();
+    cy.url().should('contain', '/dashboard');
+  });
+});
+
 export {}; // Needed to fix linting errors
