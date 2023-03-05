@@ -447,7 +447,35 @@ class WorkOrder(models.Model):
     grand_total = models.DecimalField(
         _("grand total amount"), max_digits=10, decimal_places=2, null=True
     )
+    is_visible_to_customer = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Work Order"
         verbose_name_plural = "Work Orders"
+
+    def get_workorder_url(self):
+        return f"{settings.APP_URL}/work-orders/{self.pk}"
+
+    def send_to_customer(self):
+        self.is_visible_to_customer = True
+        self.save()
+        customer = self.appointment.customer
+
+        subject = f"WorkOrder Information from {self.shop.name}"
+        context = {
+            "shop_name": self.shop.name,
+            "workorder_url": self.get_workorder_url(),
+        }
+        text_invitation_email_template = "workorders/email/workorder_email.txt"
+        html_invitation_email_template = "workorders/email/workorder_email.html"
+        text_body = render_to_string(text_invitation_email_template, context)
+        html_body = render_to_string(html_invitation_email_template, context)
+
+        message = EmailMultiAlternatives(
+            subject=subject,
+            body=text_body,
+            from_email=settings.EMAIL_HOST_USER,
+            to=[customer.email],
+        )
+        message.attach_alternative(html_body, "text/html")
+        message.send(fail_silently=False)

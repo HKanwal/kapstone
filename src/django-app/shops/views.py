@@ -586,6 +586,12 @@ class WorkOrderViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
             return WorkOrderCreateSerializer
         return WorkOrderSerializer
 
+    @action(detail=True, methods=["post"])
+    def send_to_customer(self, request, *args, **kwargs):
+        work_order = self.get_object()
+        work_order.send_to_customer()
+        return Response({"status": "OK", "message": "Work order sent to customer."})
+
 
 class ShopAvailabilityViewSet(viewsets.ModelViewSet):
     # access_policy = ShopAvailabilityAccessPolicy
