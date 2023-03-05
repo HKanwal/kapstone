@@ -36,17 +36,17 @@ describe('shop owners inviting employees', () => {
           }
         );
       });
-      it('Should work', () => {
+      it('email should be present in inbox', () => {
         expect(inbox.result).to.equal('success');
       });
-      it('There should be one email in the inbox', () => {
+      it('there should only be one email in the inbox', () => {
         expect(inbox.count).to.equal(1);
       });
-      it('Get the email verification link', () => {
+      it('get the email verification link', () => {
         const registeration_link = inbox.emails[0].text.match(/\bhttps?:\/\/\S+/gi);
         expect(registeration_link.length).to.equal(1);
       });
-      it('Be able to register using the verification link', () => {
+      it('be able to register using the verification link', () => {
         const registeration_link = inbox.emails[0].text.match(/\bhttps?:\/\/\S+/gi);
         expect(registeration_link.length).to.equal(1);
         cy.visit(registeration_link[0].replace('&amp;', '&'));
