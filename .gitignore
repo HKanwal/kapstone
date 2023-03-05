@@ -290,6 +290,4 @@ TSWLatexianTemp*
 .vscode/*
 
 # Yarn
-yarn.lock
 .yarn-integrity
-yarn.lock
