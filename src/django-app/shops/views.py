@@ -15,6 +15,7 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import APIException
 
 from accounts.serializers import EmployeeDataSerializer
+from accounts.models import EmployeeData
 
 from datetime import datetime, timedelta
 import json
@@ -160,6 +161,12 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
     @action(detail=True, methods=["get"])
     def employees(self, request, *args, **kwargs):
         shop = self.get_object()
+        serializer = EmployeeDataSerializer(shop.get_employees(), many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["get"])
+    def all_employees(self, request, *args, **kwargs):
+        shop = Shop.objects.get(shop_owner=request.user)
         serializer = EmployeeDataSerializer(shop.get_employees(), many=True)
         return Response(serializer.data)
 

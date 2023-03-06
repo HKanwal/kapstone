@@ -33,9 +33,10 @@ class ShopAccessPolicy(AccessPolicy):
             "effect": "allow",
         },
         {
-            "action": ["employees"],
+            "action": ["employees", "all_employees"],
             "principal": "authenticated",
             "effect": "allow",
+            "condition": ["user_type_is_shop_owner"],
         },
     ]
 
