@@ -1,0 +1,32 @@
+.container {
+  display: inline;
+  margin-right: 0.5vh;
+  margin-bottom: 2vh;
+  width: fit-content;
+}
+.label-container {
+  display: inline;
+  margin-right: 0.5vh;
+}
+
+.dropdown-container {
+  display: inline;
+  padding-top: 1vh;
+  padding-bottom: 1vh;
+  background-color: #f1f5ff;
+  border-radius: 10px;
+}
+
+.custom-select {
+  background-color: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: inherit;
+  line-height: inherit;
+  padding: 1vh;
+}
+
+.custom-select:hover {
+  cursor: pointer;
+}

@@ -1,16 +1,18 @@
-import styles from '../styles/components/BackButton.module.css';
-import { IoMdArrowBack } from 'react-icons/io';
-import { useEffect, useState } from 'react';
+import styles from '../styles/components/IconButton.module.css';
+import { CSSProperties, useEffect, useState } from 'react';
+import { IconType } from 'react-icons';
 
-type BackButtonProps = {
+type IconButtonProps = {
+  icon: IconType;
   onClick?: () => void;
+  style?: CSSProperties;
 };
 
 const calcSize = (winHeight: number, winWidth: number) => {
   return Math.floor(Math.min(winHeight, winWidth) / 12);
 };
 
-const BackButton = (props: BackButtonProps) => {
+const IconButton = (props: IconButtonProps) => {
   const [size, setSize] = useState<number>(0);
 
   // Responsive size based on screen size
@@ -28,10 +30,10 @@ const BackButton = (props: BackButtonProps) => {
   }, []);
 
   return (
-    <button className={styles.container} disabled={!props.onClick}>
-      <IoMdArrowBack className={styles.back} size={size} onClick={props.onClick} />
+    <button className={styles.container} disabled={!props.onClick} style={props.style}>
+      <props.icon className={styles.icon} size={size} onClick={props.onClick} />
     </button>
   );
 };
 
-export default BackButton;
+export default IconButton;

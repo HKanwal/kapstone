@@ -1,18 +1,25 @@
 import type { NextPage } from 'next';
 import Button from '../components/Button';
+import DropdownField from '../components/DropdownField';
 import TextField from '../components/TextField';
 import Header from '../components/Header';
 import styles from '../styles/pages/CreateAccount.module.css';
 import { useMutation } from 'react-query';
-import { RegistrationErrResponse, registrationFn } from '../utils/api';
+import { RegistrationErrResponse, registrationFn, Jwt, accountTypes } from '../utils/api';
 import { useRouter } from 'next/router';
 import { useForm } from '../hooks/useForm';
 
-const CreateAccountPage: NextPage = () => {
+type CreateAccountPageProps = {
+  onLogin: (jwt: Jwt) => void;
+};
+
+const CreateAccountPage: NextPage<CreateAccountPageProps, {}> = (props) => {
   const router = useRouter();
   const mutation = useMutation({
     mutationFn: registrationFn,
   });
+  const { type, invitation_key } = router.query;
+  const employeeCreation = type === 'employee' && invitation_key !== undefined;
   const form = useForm({
     initialValues: {
       firstName: '',
@@ -21,30 +28,52 @@ const CreateAccountPage: NextPage = () => {
       email: '',
       username: '',
       password: '',
+      type: employeeCreation ? 'Employee' : '',
     },
     validationSchema: {
       firstName: ['required'],
       lastName: ['required'],
-      phoneNumber: ['required'],
+      phoneNumber: ['required', 'phoneNumber'],
       email: ['required', 'email'],
       username: ['required'],
       password: ['required'],
+      type: employeeCreation ? undefined : ['required'],
     },
     onSubmit: (values, setErrors) => {
+      let accountType = 'customer' as accountTypes;
+      if (employeeCreation) {
+        accountType = 'employee';
+      } else if (values.type === 'Shop Owner') {
+        accountType = 'shop_owner';
+      }
       mutation.mutate(
         {
           email: values.email,
+          phone_number: values.phoneNumber,
           username: values.username,
           password: values.password,
           re_password: values.password,
-          type: 'shop_owner',
+          type: accountType,
           first_name: values.firstName || undefined,
           last_name: values.lastName || undefined,
+          invite_key: invitation_key || undefined,
         },
         {
           onSuccess(data, variables, context) {
             if (data.ok) {
-              router.push('/create-shop');
+              data.json().then((response) => {
+                console.log(response);
+                props.onLogin({
+                  access: response.tokens.access,
+                  refresh: response.tokens.refresh,
+                  user_type: response.type,
+                });
+              });
+              if (accountType === 'shop_owner') {
+                router.push('/create-shop');
+              } else {
+                router.push('dashboard');
+              }
             } else {
               data.json().then((response: RegistrationErrResponse) => {
                 let errors: { email: string[]; username: string[]; password: string[] } = {
@@ -69,7 +98,7 @@ const CreateAccountPage: NextPage = () => {
       );
     },
   });
-
+  console.log(form.values.type);
   return (
     <div className={styles.container}>
       <Header title="Create New Account" />
@@ -138,6 +167,17 @@ const CreateAccountPage: NextPage = () => {
             required
           />
         </div>
+        {!employeeCreation && (
+          <div className={styles['field-container']}>
+            <DropdownField
+              name="Type"
+              placeholder="Select Account Type"
+              items={['Customer', 'Shop Owner']}
+              onSelect={form.handleChange('type')}
+              required
+            />
+          </div>
+        )}
         <div className={styles['submit-container']}>
           <Button type="submit" title="Create" disabled={!form.isValid} width="80%" />
         </div>

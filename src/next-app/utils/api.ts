@@ -1,16 +1,20 @@
-import { createContext } from 'react';
+import { createContext, useState } from 'react';
 import apiUrl from '../constants/api-url';
+
+export type accountTypes = 'shop_owner' | 'employee' | 'customer';
 
 /** Mutations */
 
 type RegistrationBody = {
   email: string;
+  phone_number: string;
   username: string;
   password: string;
   re_password: string;
   first_name?: string;
   last_name?: string;
-  type: 'shop_owner' | 'employee' | 'customer';
+  type: accountTypes;
+  invite_key?: any;
 };
 
 type RegistrationErrResponse = {
@@ -40,9 +44,10 @@ type LoginBody = {
 type Jwt = {
   refresh: string;
   access: string;
+  user_type: accountTypes;
 };
 
-const AuthContext = createContext({ refresh: '', access: '' });
+const AuthContext = createContext<Jwt>({ refresh: '', access: '', user_type: 'customer' });
 
 function loginFn(loginBody: LoginBody) {
   return fetch(`${apiUrl}/auth/jwt/create/`, {
@@ -54,5 +59,34 @@ function loginFn(loginBody: LoginBody) {
   });
 }
 
+type refreshTokenProps = {
+  authData: Jwt;
+  setAuthData: (jwt: Jwt) => void;
+  onLogin: (jwt: Jwt) => void;
+};
+
+const refreshToken = (props: refreshTokenProps) => {
+  fetch(`${apiUrl}/auth/jwt/refresh`, {
+    method: 'POST',
+    body: JSON.stringify({ refresh: props.authData.refresh }),
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  }).then((response) =>
+    response.json().then((response) => {
+      props.setAuthData({
+        access: response.access,
+        refresh: props.authData.refresh,
+        user_type: props.authData.user_type,
+      });
+      props.onLogin({
+        access: response.access,
+        refresh: props.authData.refresh,
+        user_type: props.authData.user_type,
+      });
+    })
+  );
+};
+
 export type { RegistrationBody, RegistrationErrResponse, LoginBody, Jwt };
-export { registrationFn, loginFn, AuthContext };
+export { registrationFn, loginFn, AuthContext, refreshToken };

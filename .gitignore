@@ -285,3 +285,9 @@ TSWLatexianTemp*
 
 # DS_Store file from Mac computers
 .DS_Store
+
+# VS code
+.vscode/*
+
+# Yarn
+.yarn-integrity

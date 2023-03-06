@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
+
 html,
 body {
   padding: 0;
@@ -35,3 +37,200 @@ a {
     background: black;
   }
 } */
+
+.flex {
+  display: flex;
+}
+
+.flex-row {
+  flex-direction: column;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.row-gap-large {
+  row-gap: 8px;
+}
+
+.row-gap-small {
+  row-gap: 4px;
+}
+
+.gap {
+  gap: 10px;
+}
+
+.wrapper {
+  padding: 0 20px 0 20px;
+}
+
+.card {
+  margin: 2px;
+  padding: 16px;
+  background-color: #f3f6fe;
+  border-radius: 12px;
+}
+
+.card.edit {
+  background-color: #fff;
+}
+
+.card-field {
+  width: 100%;
+  padding-bottom: 3vh;
+}
+
+.input {
+  background-color: var(--text-input-color);
+  border: 0;
+  padding-left: 1em;
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+  border-radius: 0.8em;
+  font-size: var(--font-size);
+}
+
+.mantine-MultiSelect-input {
+  border: 0;
+  padding-left: 1em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  border-radius: 0.8em;
+  font-size: var(--font-size);
+}
+
+.mantine-MultiSelect-value {
+  height: 32px;
+  font-size: var(--font-size);
+  background-color: #fff;
+}
+
+.input.select {
+  width: 100%;
+  padding-right: 1em;
+}
+
+.input.select:disabled {
+  color: #222;
+}
+
+.input:focus {
+  outline: 1px solid var(--primary-color);
+}
+
+.input.error {
+  outline: 1px solid var(--red-color);
+}
+
+.input.textarea {
+  resize: vertical;
+}
+
+.form-header {
+  font-weight: bold;
+  font-size: var(--section-header-font-size);
+  width: 80%;
+  margin-bottom: 16px;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.hover-scale-up:hover {
+  scale: 102%;
+  transition: all 0.2s ease-in-out;
+}
+
+.active-scale-down:active {
+  scale: 98%;
+  transition: all 0.2s ease-in-out;
+}
+
+.error {
+  color: var(--red-color);
+  margin-top: 2%;
+}
+
+.hours-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.hour-field {
+  padding: 0.3rem 0.5rem 0.5rem 0.5rem;
+  margin: 12px;
+  background-color: white;
+  border: 1.5px solid black;
+  border-radius: 12px;
+  text-align: center;
+  min-height: 100px;
+}
+
+.hour-header {
+  color: #3fdeae;
+  font-weight: bold;
+}
+
+.mantine-NativeSelect-input {
+  color: #3fdeae;
+  font-weight: bold;
+  font-size: var(--font-size);
+  padding-left: 12px;
+  padding-right: 12px;
+  text-align: center;
+  background-color: white !important;
+}
+
+.mantine-NativeSelect-input:disabled {
+  color: #3fdeae;
+  font-weight: bold;
+  font-size: var(--font-size);
+  padding-left: 12px;
+  padding-right: 12px;
+  text-align: center;
+  opacity: 1;
+  background-color: transparent;
+}
+
+.mantine-NativeSelect-input:disabled + .mantine-NativeSelect-rightSection {
+  display: none;
+}
+
+.mantine-TimeInput-controls {
+  justify-content: center;
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.delete-button {
+  background-color: #eee;
+  border: none;
+  padding: 5px;
+  border-radius: 16px;
+  margin-top: 10px;
+}
+
+.padding-bottom-zero {
+  padding-bottom: 0 !important;
+}
+
+.modal-wrapper {
+  border: 2px dashed var(--ifm-link-color);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  white-space: pre-line;
+}

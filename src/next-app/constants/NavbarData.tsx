@@ -1,7 +1,30 @@
 import React from 'react';
 import * as IoIcons from 'react-icons/io';
 
-export const NavbarData = [
+export const CustomerNavbarData = [
+  {
+    title: 'Home',
+    path: '/dashboard',
+    icon: <IoIcons.IoMdHome />,
+  },
+  {
+    title: 'Shop Search',
+    path: '/shop-results',
+    icon: <IoIcons.IoMdMap />,
+  },
+  {
+    title: 'Appointments',
+    path: '#',
+    icon: <IoIcons.IoMdCalendar />,
+  },
+  {
+    title: 'Quote Requests',
+    path: '/quote-request-list',
+    icon: <IoIcons.IoMdFiling />,
+  },
+];
+
+export const ShopOwnerNavbarData = [
   {
     title: 'Home',
     path: '/dashboard',
@@ -9,7 +32,7 @@ export const NavbarData = [
   },
   {
     title: 'Services',
-    path: '#',
+    path: '/services',
     icon: <IoIcons.IoMdConstruct />,
   },
   {
@@ -19,17 +42,26 @@ export const NavbarData = [
   },
   {
     title: 'Employees',
-    path: '/invite',
+    path: '/employees',
     icon: <IoIcons.IoMdPeople />,
   },
   {
+    title: 'Invitations',
+    path: '/invitations',
+    icon: <IoIcons.IoMdMan />,
+  },
+  {
     title: 'Work Orders',
-    path: '#',
+    path: '/work-orders',
     icon: <IoIcons.IoMdCalculator />,
   },
   {
     title: 'Quotes',
-    path: '/quote-request',
+    path: '/quote-list',
     icon: <IoIcons.IoMdFiling />,
   },
 ];
+
+export const EmployeeNavbarData = ShopOwnerNavbarData.filter(
+  (item) => !['Employees', 'Invitations'].includes(item.title)
+);

@@ -17,6 +17,7 @@ type DropdownFieldProps = {
   onSelect?: (item: string, selectedItems: string[]) => void;
   type?: Type;
   style?: CSSProperties;
+  textCentered?: boolean;
 
   /**
    * If disabled, the behaviour will be as follows:
@@ -146,6 +147,7 @@ const DropdownField = (props: DropdownFieldProps) => {
       )}
       <div className={styles['input-container']} ref={inputContainerRef}>
         <TextInput
+          id={props.name}
           placeholder={props.placeholder ?? ''}
           width={props.width}
           style={{ paddingRight: '14%' }}
@@ -174,10 +176,12 @@ const DropdownField = (props: DropdownFieldProps) => {
               })
               .map((item) => (
                 <button
+                  id={item}
                   className={styles.item}
                   key={item}
                   onFocus={handleBtnFocus}
                   onClick={() => handleItemClick(item)}
+                  style={props.textCentered ? { textAlign: 'center', paddingLeft: 0 } : {}}
                 >
                   {item}
                 </button>

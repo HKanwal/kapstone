@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+from datetime import timedelta
 import os
 from pathlib import Path
 
@@ -25,6 +26,9 @@ SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY",
     "django-insecure-)pzy(*e-*mo=9f39qw+s+65w9nz5k@tu_eu4bq*y4hei9o9t8@",
 )
+
+# GOOGLE MAPS API KEY
+GOOGLE_MAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY", None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = str(os.environ.get("DEBUG", 1)) == "1"
@@ -51,12 +55,16 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "drf_standardized_errors",
+    "drf_spectacular",
     "djoser",
     "phonenumber_field",
     "accounts.apps.AccountsConfig",
     "shops.apps.ShopsConfig",
     "quotes.apps.QuotesConfig",
+    "vehicles.apps.VehiclesConfig",
+    "misc.apps.MiscConfig",
     "corsheaders",
+    "nested_admin",
 ]
 
 MIDDLEWARE = [
@@ -149,13 +157,25 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+    ),
     "EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler",
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Sayyara Automotive Matcher API",
+    "DESCRIPTION": "An app to promote communcation between mechanics and customers.",
+    "VERSION": "0.0.1",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 DRF_STANDARDIZED_ERRORS = {"ENABLE_IN_DEBUG_FOR_UNHANDLED_EXCEPTIONS": True}
 
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("JWT",),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=10),  # temporary
 }
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -165,14 +185,16 @@ EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "NOT SET").strip()
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "NOT SET").strip()
 EMAIL_USE_TLS = True
 
-APP_URL = "http://127.0.0.1:8000"
-APP_REGISTRATION_ROUTE = "signup"
+APP_URL = "http://localhost:3000"
+if not DEBUG:
+    APP_URL = "https://kapstone-ten.vercel.app"
+APP_REGISTRATION_ROUTE = "create-account"
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/New_York"
 
 USE_I18N = True
 
@@ -186,6 +208,9 @@ STATIC_URL = "/static/"
 STATIC_ROOT = Path(BASE_DIR).joinpath("staticfiles")
 STATICFILES_DIRS = (Path(BASE_DIR).joinpath("static"),)
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

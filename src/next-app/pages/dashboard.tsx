@@ -1,10 +1,83 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Navbar from '../components/Navbar';
 import styles from '../styles/pages/Dashboard.module.css';
+import { AuthContext, Jwt, accountTypes, refreshToken } from '../utils/api';
+import apiUrl from '../constants/api-url';
+import Cookies from 'js-cookie';
+import axios from 'axios';
 
-const Dashboard: NextPage = () => {
+type DashboardPageProps = {
+  onLogin: (jwt: Jwt) => void;
+};
+const Dashboard: NextPage<DashboardPageProps, {}> = (props) => {
+  const [authData, setAuthData] = useState(useContext(AuthContext));
+  const [headerName, setHeaderName] = useState('');
+  const [modalBody, setModalBody] = useState([] as JSX.Element[]);
+  const [profileURL, setProfileURL] = useState<null | string>(null);
+
+  useEffect(() => {
+    if (authData.access !== '') {
+    } else if (Cookies.get('access') && Cookies.get('access') !== '') {
+      setAuthData({
+        access: Cookies.get('access') as string,
+        refresh: Cookies.get('refresh') as string,
+        user_type: Cookies.get('user_type') as accountTypes,
+      });
+    }
+
+    if (['shop_owner', 'employee'].includes(authData.user_type)) {
+      const access_token = Cookies.get('access');
+      axios
+        .get(`${apiUrl}/shops/shops/me/`, {
+          headers: { Authorization: `JWT ${access_token}` },
+        })
+        .then((response) => {
+          const shop = response.data;
+          setHeaderName(shop.name);
+          setModalBody([
+            <p key="1">{shop.address?.street}</p>,
+            <p key="2">
+              {shop.address?.city}, {shop.address?.province}
+            </p>,
+            <p key="3">
+              {shop.address?.country}, {shop.address?.postal_code}
+            </p>,
+          ]);
+          setProfileURL(`/shop/${shop.id}/profile`);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      if (authData.access !== '') {
+        fetch(`${apiUrl}/auth/users/me`, {
+          method: 'GET',
+          headers: {
+            Authorization: `JWT ${authData.access}`,
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+        }).then((response) =>
+          response.json().then((response) => {
+            if (response.type === 'client_error' && response.errors[0].code === 'token_not_valid') {
+              // Function to refresh token
+              refreshToken({
+                authData: authData,
+                setAuthData: setAuthData,
+                onLogin: props.onLogin,
+              });
+            } else {
+              setHeaderName(response.username);
+            }
+          })
+        );
+      } else {
+        setHeaderName('Not Logged In');
+      }
+    }
+  }, [authData]);
+
   return (
     <div id={styles.wrapper}>
       <Head>
@@ -12,7 +85,14 @@ const Dashboard: NextPage = () => {
         <meta name="description" content="Sayyara automotive matcher (working title)" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Navbar />
+      <Navbar
+        authData={authData}
+        onLogin={props.onLogin}
+        headerName={headerName}
+        modalBody={modalBody}
+        profileURL={profileURL ?? ''}
+        showProfileButton={profileURL !== null}
+      />
       <div className={styles.container}>
         <h2>Today&apos;s Appointments</h2>
       </div>

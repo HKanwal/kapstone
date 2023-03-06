@@ -1,21 +1,24 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, ChangeEvent } from 'react';
 import styles from '../styles/components/TextArea.module.css';
 import { TextInputRef } from './TextInput';
 
-type DropdownFieldProps = {
+type TextAreaProps = {
   name: string;
   placeholder?: string;
   required?: boolean;
   onChange?: (newVal: string) => void;
+  disabled?: boolean;
 };
 
-const TextArea = (props: DropdownFieldProps) => {
+const TextArea = (props: TextAreaProps) => {
   const [expanded, setExpanded] = useState(false);
   const [value, setValue] = useState('');
   const inputRef = useRef<TextInputRef>(null);
 
-  const handleChange = (newVals: string) => {
-    props.onChange && props.onChange(newVals);
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const newVal = e.target.value;
+    props.onChange && props.onChange(newVal);
+    setValue(newVal);
   };
 
   return (
@@ -25,10 +28,15 @@ const TextArea = (props: DropdownFieldProps) => {
         {props.required ? <span className={styles.asterisk}>*</span> : <></>}
       </span>
       <div className={styles['input-container']}>
-        <textarea className={styles['input']} placeholder={props.placeholder}>
-        </textarea>
+        <textarea
+          className={styles['input']}
+          placeholder={props.placeholder}
+          value={value}
+          onChange={handleChange}
+          disabled={props.disabled}
+        ></textarea>
       </div>
-    </div >
+    </div>
   );
 };
 

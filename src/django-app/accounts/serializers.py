@@ -1,6 +1,7 @@
 from djoser.serializers import (
     UserCreatePasswordRetypeSerializer as BaseUserCreateSerializer,
 )
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from django.db import transaction
@@ -9,11 +10,11 @@ User = get_user_model()
 
 from .models import ShopOwnerData, EmployeeData, CustomerData
 from shops.models import Invitation, Shop
-from shops.serializers import ShopSerializer
 
 
 class UserCreateSerializer(BaseUserCreateSerializer):
     invite_key = serializers.UUIDField(write_only=True, required=False)
+    tokens = serializers.SerializerMethodField(method_name="get_tokens")
 
     class Meta(BaseUserCreateSerializer.Meta):
         model = User
@@ -25,7 +26,17 @@ class UserCreateSerializer(BaseUserCreateSerializer):
             "last_name",
             "type",
             "invite_key",
+            "phone_number",
+            "tokens",
         )
+
+    def get_tokens(self, obj):
+        refresh = TokenObtainPairSerializer.get_token(obj)
+        tokens = {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }
+        return tokens
 
     def validate(self, attrs):
         """
@@ -71,19 +82,46 @@ class UserCreateSerializer(BaseUserCreateSerializer):
             return user
 
 
+class UserViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "username", "first_name", "last_name", "email", "phone_number")
+        read_only_fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "phone_number",
+        )
+
+
 class ShopOwnerDataSerializer(serializers.ModelSerializer):
+    user = UserViewSerializer()
+
     class Meta:
         model = ShopOwnerData
         fields = "__all__"
 
 
 class EmployeeDataSerializer(serializers.ModelSerializer):
+    user = UserViewSerializer()
+
     class Meta:
         model = EmployeeData
         fields = "__all__"
 
 
 class CustomerDataSerializer(serializers.ModelSerializer):
+    user = UserViewSerializer()
+
     class Meta:
         model = CustomerData
         fields = "__all__"
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        data["user_type"] = self.user.type
+        return data
