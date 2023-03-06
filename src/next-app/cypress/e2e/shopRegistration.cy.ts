@@ -8,7 +8,7 @@ describe('create shop owner account and shop', () => {
     
     cy.get('input[id="First Name"]').type('John');
     cy.get('input[id="Last Name"]').type('Smith');
-    cy.get('input[id="Phone Number"]').type('1123456789');
+    cy.get('input[id="Phone Number"]').type('+16472224448');
     cy.get('input[id="Email"]').type('test@email.com');
     cy.get('input[id="Username"]').type(username);
     cy.get('input[id="Password"]').type(password);
