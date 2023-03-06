@@ -1,3 +1,4 @@
+import { sleep } from "react-query/types/core/utils";
 import apiUrl from "../../constants/api-url";
 import Cookies from "js-cookie";
 
@@ -43,25 +44,7 @@ describe('create shop owner account and shop', () => {
   });
 
   after(() => {
-    const access_token = Cookies.get('access');
-      fetch(`${apiUrl}/shops/shops/me/`, {
-      method: 'GET',
-      headers: {
-        Authorization: `JWT ${access_token}`,
-        'Content-Type': 'application/json; charset=UTF-8',
-      }
-    }).then((response) => {
-      response.json().then((data) => {
-        console.log(data);
-        fetch(`${apiUrl}/shops/shops/${data.id}`, {
-          method: 'DELETE',
-          headers: {
-            Authorization: `JWT ${access_token}`,
-            'Content-Type': 'application/json; charset=UTF-8',
-          }
-        })
-      })
-    })
+    cy.deleteShop();
   });
 
 });
