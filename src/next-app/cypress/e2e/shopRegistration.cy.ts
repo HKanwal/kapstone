@@ -1,3 +1,6 @@
+import apiUrl from "../../constants/api-url";
+import Cookies from "js-cookie";
+
 describe('create shop owner account and shop', () => {
 
   const username = `SHOPOWNER-${Math.round(Math.random()*1000000)}`;
@@ -20,7 +23,7 @@ describe('create shop owner account and shop', () => {
     cy.get('button').contains('Create').click().then(() => {
       cy.url().should('include', '/create-shop');
     })
-});
+  });
   
   it('should create shop', () => {
     cy.login(username, password);
@@ -36,8 +39,31 @@ describe('create shop owner account and shop', () => {
     cy.get('input[id="address.postal_code"]').type('A1B2C3');
     cy.get('button').contains('Save').click().then(() => {
       cy.url().should('include', '/dashboard');
+    });
+  });
+
+  after(() => {
+    const access_token = Cookies.get('access');
+      fetch(`${apiUrl}/shops/shops/me/`, {
+      method: 'GET',
+      headers: {
+        Authorization: `JWT ${access_token}`,
+        'Content-Type': 'application/json; charset=UTF-8',
+      }
+    }).then((response) => {
+      response.json().then((data) => {
+        console.log(data);
+        fetch(`${apiUrl}/shops/shops/${data.id}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `JWT ${access_token}`,
+            'Content-Type': 'application/json; charset=UTF-8',
+          }
+        })
+      })
     })
-  })
+  });
+
 });
 
 export {}; // Needed to fix linting errors
