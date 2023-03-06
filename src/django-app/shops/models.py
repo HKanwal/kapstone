@@ -25,7 +25,7 @@ appointment_creation_signal = dispatch.Signal("instance")
 
 
 class Shop(models.Model):
-    shop_owner = models.ForeignKey("accounts.ShopOwner", on_delete=models.CASCADE)
+    shop_owner = models.OneToOneField("accounts.ShopOwner", on_delete=models.CASCADE)
     shop_email = models.EmailField(
         _("shop's email address"), max_length=255, blank=True, null=True
     )
