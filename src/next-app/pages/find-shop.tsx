@@ -26,7 +26,7 @@ const FindShopPage: NextPage = () => {
 
   return (
     <div className={formStyles['page-container']}>
-      <Header title="Find Shop" withoutBackBtn />
+      <Header title="Find Shop" />
 
       <div className={formStyles.content}>
         <div className={formStyles['field-container']}>
