@@ -161,3 +161,5 @@ describe('shop owners inviting employees', () => {
     });
   });
 });
+
+export {}; // Needed to fix linting errors
