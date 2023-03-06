@@ -17,10 +17,10 @@ describe('create shop owner account and shop', () => {
       const button = $button[0]; // get the DOM node
       button.dispatchEvent(new Event('click', { bubbles: true, cancelable: true }));
     });
-    cy.get('button').contains('Create').click();
-  
-    cy.url().should('include', '/create-shop');
-  });
+    cy.get('button').contains('Create').click().then(() => {
+      cy.url().should('include', '/create-shop');
+    })
+});
   
   it('should create shop', () => {
     cy.login(username, password);
@@ -34,9 +34,9 @@ describe('create shop owner account and shop', () => {
     cy.get('input[id="address.province"]').type('Ontario');
     cy.get('input[id="address.country"]').type('Canada');
     cy.get('input[id="address.postal_code"]').type('A1B2C3');
-    cy.get('button').contains('Save').click();
-
-    cy.url().should('include', '/dashboard');
+    cy.get('button').contains('Save').click().then(() => {
+      cy.url().should('include', '/dashboard');
+    })
   })
 });
 
