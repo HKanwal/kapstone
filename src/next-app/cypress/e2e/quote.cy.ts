@@ -143,7 +143,7 @@ describe('customer views/accepts/rejects quote', () => {
     cy.get('button').contains('Create').should('be.enabled');
     cy.get('button').contains('Create').click();
     cy.wait(5000);
-    cy.get('span', { timeout: 10000000 }).contains('Quote Requests').should('be.visible');
+    cy.get('span', { timeout: 1000000 }).contains('Quote Requests').should('be.visible');
     cy.get('div').contains(quoteRequest).should('be.visible');
     cy.logout();
 
@@ -158,7 +158,7 @@ describe('customer views/accepts/rejects quote', () => {
 
     cy.get('div').contains(quoteRequest).click();
     cy.wait(5000);
-    cy.get('span', { timeout: 100000000 }).contains(quoteRequest.slice(0, 10)).should('be.visible');
+    cy.get('span', { timeout: 1000000 }).contains(quoteRequest.slice(0, 10)).should('be.visible');
 
     cy.get('button').contains('Respond').click();
     cy.wait(5000);
@@ -173,11 +173,11 @@ describe('customer views/accepts/rejects quote', () => {
     cy.get('button').contains('Submit Quote').should('be.enabled');
     cy.get('button').contains('Submit Quote').click();
     cy.wait(5000);
-    cy.get('span', { timeout: 100000000 }).contains('Quotes').should('be.visible');
+    cy.get('span', { timeout: 1000000 }).contains('Quotes').should('be.visible');
     cy.get('div').contains(quoteRequest).should('be.visible');
     cy.get('div').contains(quoteRequest).click();
     cy.wait(5000);
-    cy.get('span', { timeout: 100000000 }).contains(quoteRequest.slice(0, 10)).should('be.visible');
+    cy.get('span', { timeout: 1000000 }).contains(quoteRequest.slice(0, 10)).should('be.visible');
 
     cy.get('label')
       .contains('ID:')
