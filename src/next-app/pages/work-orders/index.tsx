@@ -61,7 +61,7 @@ const WorkOrdersList: NextPage = ({ workOrders }: any) => {
             <Radio value="in_progress" label="In Progress" />
           </Radio.Group>
         </div>
-        <div className="flex flex-row row-gap-large">
+        <div className="flex flex-row row-gap-large" id="work-orders-list">
           {workOrdersList.length > 0 ? workOrdersList : <p>No work orders found.</p>}
         </div>
       </div>

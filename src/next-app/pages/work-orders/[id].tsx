@@ -1,7 +1,7 @@
 import type { NextPage, GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import * as yup from 'yup';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useFormik, FormikProvider } from 'formik';
 import { useState } from 'react';
 import { GrFormEdit, GrFormClose } from 'react-icons/gr';
@@ -84,7 +84,7 @@ const WorkOrdersDetail: NextPage = ({ workOrder, employees }: any) => {
         onRightIconClick={() => setInEdit(!inEdit)}
       />
       <div className="wrapper">
-        <div className="flex flex-row row-gap-large">
+        <div className="flex flex-row row-gap-large padding-bottom-large">
           {errors.length > 0 && (
             <div className="flex flex-col row-gap-small">
               {errors.map((error: any, index) => {
@@ -173,6 +173,29 @@ const WorkOrdersDetail: NextPage = ({ workOrder, employees }: any) => {
               </div>
             </form>
           </FormikProvider>
+          {!inEdit && workOrder.has_edit_permission && (
+            <Button
+              type="button"
+              title="Send to Customer"
+              width={'100%'}
+              onClick={() => {
+                const access_token = Cookies.get('access');
+                axios
+                  .post(
+                    `${apiUrl}/shops/work-orders/${workOrder.id}/send_to_customer/`,
+                    {},
+                    {
+                      headers: { Authorization: `JWT ${access_token}` },
+                    }
+                  )
+                  .then((res) => {
+                    if (res.status === 200) {
+                      router.reload();
+                    }
+                  });
+              }}
+            ></Button>
+          )}
         </div>
       </div>
     </div>
@@ -183,6 +206,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   const { id } = context.query;
   const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const access_token = parsedCookies.access;
+  let auth_error: Error | AxiosError | null = null;
   try {
     const { workOrder, employees }: any = await axios
       .get(`${apiUrl}/shops/work-orders/${id}/`, {
@@ -191,22 +215,44 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
       .then((response: any) => {
         return {
           workOrder: response.data,
-          employees: axios.get(`${apiUrl}/shops/shops/${response.data.shop}/employees/`, {
-            headers: { Authorization: `JWT ${access_token}` },
-          }),
+          employees: response.data.has_edit_permission
+            ? axios.get(`${apiUrl}/shops/shops/${response.data.shop}/employees/`, {
+                headers: { Authorization: `JWT ${access_token}` },
+              })
+            : [],
         };
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
+        auth_error = error;
       });
     return {
       props: {
         workOrder: workOrder,
-        employees: await employees.then((res: any) => res.data),
+        employees: workOrder.has_edit_permission
+          ? await employees.then((res: any) => res.data)
+          : [],
       },
     };
   } catch (error) {
-    console.log(error);
+    if (auth_error !== null) {
+      if (
+        // @ts-ignore
+        auth_error.response.status === 401 &&
+        // @ts-ignore
+        (auth_error.response.data.errors[0].code === 'token_not_valid' ||
+          // @ts-ignore
+          auth_error.response.data.errors[0].code === 'not_authenticated')
+      ) {
+        const { resolvedUrl } = context;
+        return {
+          redirect: {
+            destination: `/login?from=${resolvedUrl}`,
+            permanent: false,
+          },
+        };
+      }
+    }
     return {
       notFound: true,
     };
