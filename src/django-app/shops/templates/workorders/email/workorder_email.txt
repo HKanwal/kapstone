@@ -1,0 +1,8 @@
+Hi,
+
+{{ shop_name }} has shared a WorkOrder with you.
+
+Please follow this link to view: {{ workorder_url }}
+
+Thank you,
+Sayyara

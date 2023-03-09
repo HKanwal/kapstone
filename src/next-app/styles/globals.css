@@ -227,6 +227,10 @@ a {
   padding-bottom: 0 !important;
 }
 
+.padding-bottom-large {
+  padding-bottom: 16px !important;
+}
+
 .modal-wrapper {
   border: 2px dashed var(--ifm-link-color);
   display: flex;

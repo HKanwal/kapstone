@@ -105,7 +105,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   try {
     const parsedCookies = cookie.parse(String(context.req.headers.cookie));
     const access_token = parsedCookies.access;
-    const employees = await axios.get(`${apiUrl}/accounts/employee/`, {
+    const employees = await axios.get(`${apiUrl}/shops/shops/all_employees/`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
     const shop = await axios.get(`${apiUrl}/shops/shops/me/`, {
@@ -120,9 +120,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   } catch (error) {
     console.log(error);
     return {
-      props: {
-        employees: [],
-      },
+      notFound: true,
     };
   }
 };

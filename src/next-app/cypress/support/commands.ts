@@ -45,6 +45,15 @@ declare global {
   namespace Cypress {
     interface Chainable {
       login(username: string, password: string): Chainable<void>;
+      register(
+        username: string,
+        password: string,
+        first_name: string,
+        last_name: string,
+        phone_number: string,
+        email: string,
+        type?: 'Shop Owner' | 'Customer'
+      ): Chainable<void>;
     }
   }
 }
@@ -58,6 +67,27 @@ Cypress.Commands.add('login', (username, password) => {
     cy.url().should('contain', '/dashboard');
   });
 });
+
+Cypress.Commands.add(
+  'register',
+  (username, password, first_name, last_name, phone_number, email, type) => {
+    cy.get('input[id="First Name"]').type(first_name);
+    cy.get('input[id="Last Name"]').type(last_name);
+    cy.get('input[id="Phone Number"]').type(phone_number);
+    cy.get('input[id="Email"]').type(email);
+    cy.get('input[id="Username"]').type(username);
+    cy.get('input[id="Password"]').type(password);
+    if (type != undefined) {
+      cy.get('input[id="Type"]').click(); // open the dropdown menu
+      cy.get(`button[id="${type}"]`).then(($button) => {
+        const button = $button[0]; // get the DOM node
+        button.dispatchEvent(new Event('click', { bubbles: true, cancelable: true }));
+      });
+    }
+
+    cy.get('button').contains('Create').click();
+  }
+);
 
 declare global {
   namespace Cypress {
