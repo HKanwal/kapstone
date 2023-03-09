@@ -162,7 +162,6 @@ describe('shop owners inviting employees', () => {
   });
 });
 
-export {}; // Needed to fix linting errors
 describe('employee information can be edited', () => {
   const newSalary = String(Math.floor(Math.random() * 90 + 10)) + '.00';
   it('shop owner can edit employee information', () => {
