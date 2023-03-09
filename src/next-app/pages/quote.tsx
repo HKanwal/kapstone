@@ -57,22 +57,23 @@ const Quote: NextPage = ({ quote }: any) => {
     return (
       <div className={styles.container}>
         <Header
-          title={`Quote - ${quote.quote_request.description.length > 20
-            ? quote.quote_request.description.slice(0, 20) + '...'
-            : quote.quote_request.description
-            }`}
+          title={`Quote - ${
+            quote.quote_request.description.length > 20
+              ? quote.quote_request.description.slice(0, 20) + '...'
+              : quote.quote_request.description
+          }`}
           burgerMenu={
             authData.user_type === 'customer'
               ? [
-                {
-                  option: 'Call Shop',
-                  onClick() {
-                    handleCallClick('shop');
+                  {
+                    option: 'Call Shop',
+                    onClick() {
+                      handleCallClick('shop');
+                    },
                   },
-                },
-              ]
+                ]
               : authData.user_type === 'shop_owner'
-                ? [
+              ? [
                   {
                     option: 'Call Customer',
                     onClick() {
@@ -80,13 +81,19 @@ const Quote: NextPage = ({ quote }: any) => {
                     },
                   },
                 ]
-                : undefined
+              : undefined
           }
         />
         <div className={styles['quote-container']}>
-          <div className={styles['status-container']}>
-            <label>{`Status: ${quote.status === 'new_quote' ? 'Pending' : quote.status_display
+          <div className={styles['container']}>
+            <div className={styles['status-container']}>
+              <label>{`Status: ${
+                quote.status === 'new_quote' ? 'Pending' : quote.status_display
               }`}</label>
+            </div>
+            <div className={styles['id-container']}>
+              <label>{`ID: ${quote.id}`}</label>
+            </div>
           </div>
           <div className={styles['cost-container']}>
             <label>{`Cost: $${quote.price}`}</label>

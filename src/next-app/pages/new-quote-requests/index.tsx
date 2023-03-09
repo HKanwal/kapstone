@@ -48,7 +48,7 @@ const NewQuoteRequestsPage: NextPage = ({ quoteRequests }: any) => {
               if (
                 QRFilter != '' &&
                 !(
-                  newQuoteRequest.description.toLowerCase().startsWith(QRFilter.toLowerCase()) ||
+                  newQuoteRequest.description.toLowerCase().includes(QRFilter.toLowerCase()) ||
                   String(newQuoteRequest.id).startsWith(QRFilter)
                 )
               )
@@ -61,7 +61,7 @@ const NewQuoteRequestsPage: NextPage = ({ quoteRequests }: any) => {
                   key={newQuoteRequest.id}
                   id={Number(newQuoteRequest.id)}
                   description={newQuoteRequest.description}
-                  dateCreated={String(new Date())}
+                  dateCreated={newQuoteRequest.created_at}
                   path={`new-quote-requests/${newQuoteRequest.id}`}
                 />
               );
