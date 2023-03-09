@@ -135,7 +135,7 @@ const EmployeeDetailsPage: NextPage = ({ employee }: any) => {
                 <CardTextField
                   fieldValue={form.values.salary ? form.values.salary : ''}
                   fieldName="salary"
-                  fieldLabel="Salary"
+                  fieldLabel="Salary ($)"
                   fieldType="string"
                   fieldDisabled={!inEdit}
                   onChange={form.handleChange}

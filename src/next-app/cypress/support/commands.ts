@@ -54,6 +54,7 @@ declare global {
         email: string,
         type?: 'Shop Owner' | 'Customer'
       ): Chainable<void>;
+      logout(): Chainable<void>;
     }
   }
 }
@@ -88,3 +89,9 @@ Cypress.Commands.add(
     cy.get('button').contains('Create').click();
   }
 );
+
+Cypress.Commands.add('logout', () => {
+  cy.visit('/dashboard');
+  cy.get('button').contains('Logout').click({ force: true });
+  cy.get('button').contains('Login').should('be.visible');
+});
