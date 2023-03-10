@@ -17,6 +17,7 @@ import * as cookie from 'cookie';
 import Button from '../../components/Button';
 import employees from '.';
 import { CardTextField, CardSelect, CardTextArea } from '../../components/CardComponents';
+import Modal from '../../components/Modal';
 
 type info = {
   [key: string]: any;
@@ -27,6 +28,15 @@ const EmployeeDetailsPage: NextPage = ({ employee }: any) => {
   const { id } = router.query;
   const [inEdit, setInEdit] = useState(false);
   const [errors, setErrors] = useState([]);
+  const [modalVisible, setModalVisisble] = useState<boolean>(false);
+
+  const showModal = () => {
+    setModalVisisble(true);
+  };
+
+  const hideModal = () => {
+    setModalVisisble(false);
+  };
 
   const schema = yup.object().shape({
     user: yup.object().shape({
@@ -142,9 +152,60 @@ const EmployeeDetailsPage: NextPage = ({ employee }: any) => {
                   error={form.errors.salary}
                 />
                 {inEdit && <Button type="submit" title="Save" width={'100%'}></Button>}
+                <div className={styles['field-container']}>
+                  {inEdit && (
+                    <Button
+                      backgroundColor="red"
+                      title="Delete"
+                      onClick={showModal}
+                      width={'100%'}
+                    ></Button>
+                  )}
+                </div>
               </div>
             </form>
           </FormikProvider>
+          <Modal visible={modalVisible} onClose={hideModal}>
+            <div className={styles['modal-content']}>
+              <div className={styles['modal-title-container']}>
+                <span className={styles['modal-title']}>
+                  {`Are you sure you wish to delete the following employee: ${form.values.user.first_name}
+                  ${form.values.user.last_name}`}
+                </span>
+              </div>
+              <div className={styles['modal-submit']}>
+                <Button
+                  title="Delete"
+                  backgroundColor="red"
+                  onClick={async () => {
+                    const access_token = Cookies.get('access');
+                    try {
+                      const res = await axios.delete(
+                        `${apiUrl}/accounts/employee/${employee.id}/`,
+                        {
+                          headers: { Authorization: `JWT ${access_token}` },
+                        }
+                      );
+                      if (res.status === 204) {
+                        hideModal();
+                        router.push({
+                          pathname: '/employees',
+                        });
+                      }
+                    } catch (error: any) {
+                      hideModal();
+                      scrollTo(0, 0);
+                      console.log(error);
+                    }
+                  }}
+                  width="100%"
+                />
+              </div>
+              <div className={styles['modal-submit']}>
+                <Button title="Cancel" onClick={hideModal} width="100%" />
+              </div>
+            </div>
+          </Modal>
         </div>
       </div>
     </div>
