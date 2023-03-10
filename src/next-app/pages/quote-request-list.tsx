@@ -26,9 +26,8 @@ const QuoteRequestListPage: NextPage = () => {
       user_type: Cookies.get('user_type') as accountTypes,
     });
   }
-  console.log(Cookies.get('access'));
   useEffect(() => {
-    if (Cookies.get('access') !== undefined) {
+    if (Cookies.get('access')) {
       const cards: JSX.Element[] = [];
       fetch(`${apiUrl}/quotes/quote-requests/`, {
         method: 'GET',
