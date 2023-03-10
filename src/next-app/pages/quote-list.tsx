@@ -16,10 +16,11 @@ import { useRouter } from 'next/router';
 import Button from '../components/Button';
 import Dropdown from '../components/Dropdown';
 
-const QuoteListPage: NextPage = ({ quotes, quoteRequests }: any) => {
+const QuoteListPage: NextPage = ({ quotes }: any) => {
   const router = useRouter();
   const [authData, setAuthData] = useState(useContext(AuthContext));
   const [status, setStatus] = useState('All');
+  const [quoteSearch, setQuoteSearch] = useState('');
 
   if (authData.access !== '') {
   } else if (Cookies.get('access') && Cookies.get('access') !== '') {
@@ -58,6 +59,13 @@ const QuoteListPage: NextPage = ({ quotes, quoteRequests }: any) => {
           <Button title="New Quote Requests" onClick={handleClick} width="100%" />
         </div>
         <div className={styles['filter-container']}>
+          <TextField
+            name="Search"
+            placeholder="Search by ID, description or customer name"
+            onChange={setQuoteSearch}
+          />
+        </div>
+        <div className={styles['filter-container']}>
           <Dropdown
             name="Filter By"
             items={['All', 'Accepted', 'Pending', 'Rejected']}
@@ -73,6 +81,25 @@ const QuoteListPage: NextPage = ({ quotes, quoteRequests }: any) => {
                 ? status == 'Pending' && quote.status == 'new_quote'
                 : quote.status_display == status
             )
+            .filter((quote: any) => {
+              if (
+                quoteSearch != '' &&
+                !(
+                  quote.quote_request.description
+                    .toLowerCase()
+                    .includes(quoteSearch.toLowerCase()) ||
+                  String(quote.id).startsWith(quoteSearch) ||
+                  quote.quote_request.customer.first_name
+                    .toLowerCase()
+                    .includes(quoteSearch.toLowerCase()) ||
+                  quote.quote_request.customer.last_name
+                    .toLowerCase()
+                    .includes(quoteSearch.toLowerCase())
+                )
+              )
+                return false;
+              else return true;
+            })
             .sort((a: any, b: any) =>
               Date.parse(a.created_at) < Date.parse(b.created_at) ? 1 : -1
             )
@@ -102,13 +129,9 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     const quotes = await axios.get(`${apiUrl}/quotes/quotes/`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
-    const quoteRequests = await axios.get(`${apiUrl}/quotes/quote-requests/`, {
-      headers: { Authorization: `JWT ${access_token}` },
-    });
     return {
       props: {
         quotes: quotes.data,
-        quoteRequests: quoteRequests.data,
       },
     };
   } catch (error) {
@@ -116,7 +139,6 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     return {
       props: {
         quotes: [],
-        quoteRequests: [],
       },
     };
   }

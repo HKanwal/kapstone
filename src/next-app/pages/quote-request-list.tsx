@@ -31,54 +31,6 @@ const QuoteRequestListPage: NextPage = ({ quoteRequests }: any) => {
       user_type: Cookies.get('user_type') as accountTypes,
     });
   }
-  useEffect(() => {
-    if (Cookies.get('access')) {
-      const cards: JSX.Element[] = [];
-      fetch(`${apiUrl}/quotes/quote-requests/`, {
-        method: 'GET',
-        headers: {
-          Authorization: `JWT ${authData.access}`,
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      }).then((data) => {
-        console.log(data);
-        data.json().then((data) => {
-          console.log(data);
-          data.forEach((quoteRequest: any) => {
-            //console.log(quoteRequest);
-            // cards.push(<QuoteRequestCard id={quoteRequest.id} description={quoteRequest.description} dateCreated={quoteRequest.dateCreated} />)
-            if (
-              (QRFilter !== '' &&
-                quoteRequest.description.toLowerCase().includes(QRFilter.toLowerCase())) ||
-              String(quoteRequest.id).startsWith(QRFilter)
-            ) {
-              cards.push(
-                <QuoteRequestCard
-                  key={quoteRequest.id}
-                  id={quoteRequest.id}
-                  description={quoteRequest.description}
-                  dateCreated={quoteRequest.created_at}
-                />
-              );
-            }
-          });
-          setQuoteRequestCards(cards);
-        });
-      });
-
-      // TODO: Replace sample data with API data and place in above .then handler
-      // sampleData.sort((a, b) => {
-      //   let keyA = new Date(a.dateCreated);
-      //   let keyB = new Date(b.dateCreated);
-      //   if (keyA < keyB) return 1;
-      //   if (keyA > keyB) return -1;
-      //   return 0;
-      // });
-      // sampleData.forEach((quoteRequest) => {
-      //   cards.push(<QuoteRequestCard id={quoteRequest.id} description={quoteRequest.description} dateCreated={quoteRequest.dateCreated} />)
-      // });
-    }
-  }, []);
 
   const handleAddClick = () => {
     router.push('/quote-request');
