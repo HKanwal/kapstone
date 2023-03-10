@@ -33,7 +33,7 @@ const NewQuoteRequestsPage: NextPage = ({ quoteRequests }: any) => {
 
   return (
     <div className={styles.container}>
-      <Header title="New Quote Requests" />
+      <Header title="New Quote Requests" backButtonPath="/quote-list" />
       <div className={styles['field-container']}>
         <div className={styles['filter-container']}>
           <TextField
@@ -55,6 +55,9 @@ const NewQuoteRequestsPage: NextPage = ({ quoteRequests }: any) => {
                 return false;
               else return true;
             })
+            .sort((a: any, b: any) =>
+              Date.parse(a.created_at) < Date.parse(b.created_at) ? 1 : -1
+            )
             .map((newQuoteRequest: any) => {
               return (
                 <QuoteRequestCard

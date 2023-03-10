@@ -85,6 +85,7 @@ const QuoteRequestListPage: NextPage = () => {
     <div className={styles.container}>
       <Header
         title="Quote Requests"
+        backButtonPath="/dashboard"
         rightIcon={GrAddCircle}
         onRightIconClick={Cookies.get('access') ? handleAddClick : showModal}
       />

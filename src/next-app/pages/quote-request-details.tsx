@@ -136,6 +136,7 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
             ? quoteRequest.description.slice(0, 10) + '...'
             : quoteRequest.description
         }`}
+        backButtonPath="/quote-request-list"
         rightIcon={inEdit ? GrFormClose : GrFormEdit}
         onRightIconClick={() => setInEdit(!inEdit)}
       />

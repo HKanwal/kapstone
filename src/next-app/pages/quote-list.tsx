@@ -41,6 +41,7 @@ const QuoteListPage: NextPage = ({ quotes, quoteRequests }: any) => {
     <div className={styles.container}>
       <Header
         title="Quotes"
+        backButtonPath="/dashboard"
         burgerMenu={[
           {
             option: 'Home',
