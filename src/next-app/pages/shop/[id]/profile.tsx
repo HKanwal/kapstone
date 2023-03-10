@@ -22,6 +22,8 @@ const ProfilePage: NextPage = ({ shop }: any) => {
   const [shopHours, setShopHours] = useState(shop?.shophours_set ?? []);
   const schema = yup.object().shape({
     name: yup.string().required(),
+    shop_email: yup.string().optional(),
+    shop_phone_number: yup.string().optional(),
     num_bays: yup.number().optional(),
     num_employees: yup.number().optional(),
     address: yup.object().shape({
@@ -36,6 +38,8 @@ const ProfilePage: NextPage = ({ shop }: any) => {
   const form = useFormik({
     initialValues: {
       name: shop.name,
+      shop_email: shop.shop_email,
+      shop_phone_number: shop.shop_phone_number,
       num_bays: shop.num_bays,
       num_employees: shop.num_employees,
       address: {
@@ -51,6 +55,8 @@ const ProfilePage: NextPage = ({ shop }: any) => {
     onSubmit: async (values) => {
       const valuesToSend = {
         name: values.name,
+        shop_email: values.shop_email,
+        shop_phone_number: values.shop_phone_number,
         shop_services: services
           .filter((service: any) => service.active)
           .map((service: any) => service.id),
@@ -111,6 +117,24 @@ const ProfilePage: NextPage = ({ shop }: any) => {
                   fieldDisabled={!inEdit}
                   onChange={form.handleChange}
                   error={form.errors.name}
+                />
+                <CardTextField
+                  fieldValue={form.values.shop_email}
+                  fieldName="shop_email"
+                  fieldLabel="Shop Email"
+                  fieldType="string"
+                  fieldDisabled={!inEdit}
+                  onChange={form.handleChange}
+                  error={form.errors.shop_email}
+                />
+                <CardTextField
+                  fieldValue={form.values.shop_phone_number}
+                  fieldName="shop_phone_number"
+                  fieldLabel="Shop Phone Number"
+                  fieldType="string"
+                  fieldDisabled={!inEdit}
+                  onChange={form.handleChange}
+                  error={form.errors.shop_phone_number}
                 />
                 <CardMultiSelect
                   fieldLabel="Shop Services"

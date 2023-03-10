@@ -20,6 +20,8 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
   const [shopHours, setShopHours] = useState(shop?.shophours_set ?? []);
   const schema = yup.object().shape({
     name: yup.string().required(),
+    shop_email: yup.string().required(),
+    shop_phone_number: yup.string().required(),
     num_bays: yup.number().optional(),
     address: yup.object().shape({
       street: yup.string().required(),
@@ -32,6 +34,8 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
   const form = useFormik({
     initialValues: {
       name: shop.name,
+      shop_email: shop.shop_email,
+      shop_phone_number: shop.shop_phone_number,
       num_bays: shop.num_bays,
       address: {
         street: shop.address.street,
@@ -49,6 +53,8 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
         // shop_services: services
         //   .filter((service: any) => service.active)
         //   .map((service: any) => service.id)
+        shop_email: values.shop_email,
+        shop_phone_number: values.shop_phone_number,
         num_bays: values.num_bays,
         address: {
           street: values.address.street,
@@ -108,6 +114,26 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
                   fieldDisabled={!inEdit}
                   onChange={form.handleChange}
                   error={form.errors.name}
+                />
+                <CardTextField
+                  fieldValue={form.values.shop_email}
+                  fieldName="shop_email"
+                  fieldLabel="Shop Email"
+                  fieldType="string"
+                  fieldRequired
+                  fieldDisabled={!inEdit}
+                  onChange={form.handleChange}
+                  error={form.errors.shop_email}
+                />
+                <CardTextField
+                  fieldValue={form.values.shop_phone_number}
+                  fieldName="shop_phone_number"
+                  fieldLabel="Shop Phone Number"
+                  fieldType="string"
+                  fieldRequired
+                  fieldDisabled={!inEdit}
+                  onChange={form.handleChange}
+                  error={form.errors.shop_phone_number}
                 />
                 {/* <CardMultiSelect
                   fieldLabel="Shop Services"
