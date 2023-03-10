@@ -14,10 +14,12 @@ import * as cookie from 'cookie';
 import Card from '../components/Card';
 import { useRouter } from 'next/router';
 import Button from '../components/Button';
+import Dropdown from '../components/Dropdown';
 
 const QuoteListPage: NextPage = ({ quotes, quoteRequests }: any) => {
   const router = useRouter();
   const [authData, setAuthData] = useState(useContext(AuthContext));
+  const [status, setStatus] = useState('All');
 
   if (authData.access !== '') {
   } else if (Cookies.get('access') && Cookies.get('access') !== '') {
@@ -55,8 +57,25 @@ const QuoteListPage: NextPage = ({ quotes, quoteRequests }: any) => {
         <div className={styles['btn-container']}>
           <Button title="New Quote Requests" onClick={handleClick} width="100%" />
         </div>
+        <div className={styles['filter-container']}>
+          <Dropdown
+            name="Filter By"
+            items={['All', 'Accepted', 'Pending', 'Rejected']}
+            onSelect={setStatus}
+          />
+        </div>
         <div className={styles['card-container']}>
           {quoteList
+            .filter((quote: any) =>
+              status === 'All'
+                ? true
+                : quote.status == 'new_quote'
+                ? status == 'Pending' && quote.status == 'new_quote'
+                : quote.status_display == status
+            )
+            .sort((a: any, b: any) =>
+              Date.parse(a.created_at) < Date.parse(b.created_at) ? 1 : -1
+            )
             .sort((a: any, b: any) => (a.status < b.status ? -1 : 1))
             .map((quote: any) => {
               return (

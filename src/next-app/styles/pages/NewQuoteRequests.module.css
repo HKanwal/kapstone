@@ -22,9 +22,9 @@
 
 .filter-container {
   display: inline-block;
+  padding-top: 5vh;
   padding-left: 4vw;
   padding-right: 4vw;
-  padding-bottom: 1vh;
 }
 
 .btn-container {
