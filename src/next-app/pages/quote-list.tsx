@@ -42,18 +42,7 @@ const QuoteListPage: NextPage = ({ quotes }: any) => {
 
   return (
     <div className={styles.container}>
-      <Header
-        title="Quotes"
-        backButtonPath="/dashboard"
-        burgerMenu={[
-          {
-            option: 'Home',
-            onClick() {
-              router.push('/dashboard');
-            },
-          },
-        ]}
-      />
+      <Header title="Quotes" backButtonPath="/dashboard" />
       <div className={styles['field-container']}>
         <div className={styles['btn-container']}>
           <Button title="New Quote Requests" onClick={handleClick} width="100%" />

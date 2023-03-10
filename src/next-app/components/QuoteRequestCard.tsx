@@ -20,8 +20,8 @@ const QuoteRequestCard = (props: QuoteRequestProps) => {
   const router = useRouter();
   const url = '/quote-request-details';
 
-  if (props.description.length > 45) {
-    descriptionLabel = `${props.description.slice(0, 45)}...`;
+  if (props.description.length > 16) {
+    descriptionLabel = `${props.description.slice(0, 16)}...`;
   }
   return (
     <div
