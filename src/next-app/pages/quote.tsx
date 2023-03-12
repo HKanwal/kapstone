@@ -44,14 +44,16 @@ const Quote: NextPage = ({ quote, comments }: any) => {
     }
   }, [addingComment]);
 
-  if (authData.access !== '') {
-  } else if (Cookies.get('access') && Cookies.get('access') !== '') {
-    setAuthData({
-      access: Cookies.get('access') as string,
-      refresh: Cookies.get('refresh') as string,
-      user_type: Cookies.get('user_type') as accountTypes,
-    });
-  }
+  useEffect(() => {
+    if (authData.access !== '') {
+    } else if (Cookies.get('access') && Cookies.get('access') !== '') {
+      setAuthData({
+        access: Cookies.get('access') as string,
+        refresh: Cookies.get('refresh') as string,
+        user_type: Cookies.get('user_type') as accountTypes,
+      });
+    }
+  }, [authData]);
 
   const handleCallClick = (callType: string) => {
     let phoneNumber = '';
@@ -239,9 +241,7 @@ const Quote: NextPage = ({ quote, comments }: any) => {
                           }
                         );
                         if (res.status === 204) {
-                          setQuoteComments(
-                            quoteComments.filter((c: any) => c.id !== comment.id)
-                          );
+                          setQuoteComments(quoteComments.filter((c: any) => c.id !== comment.id));
                           return true;
                         }
                       } catch (error: any) {

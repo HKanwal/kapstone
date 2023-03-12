@@ -96,7 +96,7 @@ const InvitationsList: NextPage = ({ invitations }: any) => {
             <Radio value="not_used" label="Not Used" />
           </Radio.Group>
         </div>
-        <div className="flex flex-row row-gap-large">
+        <div className="grid-list">
           {invitationList.length > 0 ? invitationList : <p>No invitations found.</p>}
         </div>
       </div>

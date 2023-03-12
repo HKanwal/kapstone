@@ -49,7 +49,7 @@ const ServicesList: NextPage = ({ services, shop }: any) => {
         </div>
       </div>
       <div className="wrapper">
-        <div className="flex flex-row row-gap-large">
+        <div className="grid-list">
           {servicesList.length > 0 ? servicesList : <p>No services found.</p>}
         </div>
       </div>
