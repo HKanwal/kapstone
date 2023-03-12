@@ -49,6 +49,7 @@
   transform: translate(-100%, 0);
   border-radius: 2vmin;
   box-shadow: 0 0 0.2em 0.01em #888888;
+  background-color: white;
 }
 
 .burger-item {
