@@ -1,5 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next';
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import Header from '../components/Header';
 import styles from '../styles/pages/Quote.module.css';
 import { useRouter } from 'next/router';
@@ -12,6 +12,9 @@ import axios from 'axios';
 // @ts-ignore
 import * as cookie from 'cookie';
 import TextArea from '../components/TextArea';
+import EditableTextArea from '../components/EditableTextArea';
+import * as yup from 'yup';
+import moment from 'moment-timezone';
 
 type QuoteProps = {
   id: number;
@@ -26,11 +29,20 @@ type QuoteProps = {
   dueDate: string;
 };
 
-const Quote: NextPage = ({ quote }: any) => {
+const Quote: NextPage = ({ quote, comments }: any) => {
   const [authData, setAuthData] = useState(useContext(AuthContext));
+  const [quoteComments, setQuoteComments] = useState(comments);
+  const [addingComment, setAddingComment] = useState(false);
+  const newCommentRef = useRef<null | HTMLDivElement>(null);
 
   const router = useRouter();
   const { id } = router.query;
+
+  useEffect(() => {
+    if (addingComment) {
+      newCommentRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [addingComment]);
 
   if (authData.access !== '') {
   } else if (Cookies.get('access') && Cookies.get('access') !== '') {
@@ -51,7 +63,9 @@ const Quote: NextPage = ({ quote }: any) => {
     window.open(`tel: ${phoneNumber}`);
   };
 
-  console.log(quote);
+  const quoteCommentSchema = yup.object().shape({
+    comment: yup.string().required(),
+  });
 
   if (id) {
     return (
@@ -179,6 +193,110 @@ const Quote: NextPage = ({ quote }: any) => {
           <div className={styles['field-container']}>
             <TextArea name="Notes" placeholder={`${quote.notes}`} disabled={true} />
           </div>
+          <div className={styles['section-header']}>
+            <label>Quote Comments</label>
+            <div className={styles['comments-container']}>
+              {quoteComments.map((comment: any, index: number) => {
+                return (
+                  <EditableTextArea
+                    key={comment.id}
+                    value={comment.comment}
+                    name="comment"
+                    schema={quoteCommentSchema}
+                    title={`@${comment.user.username}`}
+                    subtitle={moment
+                      .tz(comment.created_at, 'America/New_York')
+                      .format('MMM D, YYYY h:mm A z')}
+                    hasEditPermission={comment.has_edit_permission}
+                    onSubmit={async (values: any, id: number) => {
+                      const valuesToSend = {
+                        comment: values.comment,
+                      };
+                      const access_token = Cookies.get('access');
+                      try {
+                        const res = await axios.patch(
+                          `${apiUrl}/quotes/quote-comments/${id}/`,
+                          valuesToSend,
+                          {
+                            headers: { Authorization: `JWT ${access_token}` },
+                          }
+                        );
+                        if (res.status === 200) {
+                          return true;
+                        }
+                      } catch (error: any) {
+                        console.error(error);
+                        return false;
+                      }
+                    }}
+                    onDelete={async () => {
+                      const access_token = Cookies.get('access');
+                      try {
+                        const res = await axios.delete(
+                          `${apiUrl}/quotes/quote-comments/${comment.id}/`,
+                          {
+                            headers: { Authorization: `JWT ${access_token}` },
+                          }
+                        );
+                        if (res.status === 204) {
+                          setQuoteComments(
+                            quoteComments.filter((c: any) => c.id !== comment.id)
+                          );
+                          return true;
+                        }
+                      } catch (error: any) {
+                        console.error(error);
+                        return false;
+                      }
+                    }}
+                    id={comment.id}
+                  />
+                );
+              })}
+              {addingComment ? (
+                <EditableTextArea
+                  new
+                  value=""
+                  name="comment"
+                  schema={quoteCommentSchema}
+                  onCancel={() => setAddingComment(false)}
+                  onSubmit={async (values: any) => {
+                    const valuesToSend = {
+                      comment: values.comment,
+                      quote: id,
+                    };
+                    const access_token = Cookies.get('access');
+                    try {
+                      const res = await axios.post(
+                        `${apiUrl}/quotes/quote-comments/`,
+                        valuesToSend,
+                        {
+                          headers: { Authorization: `JWT ${access_token}` },
+                        }
+                      );
+                      if (res.status === 201) {
+                        const comment = await axios.get(
+                          `${apiUrl}/quotes/quote-comments/${res.data.id}`,
+                          {
+                            headers: { Authorization: `JWT ${access_token}` },
+                          }
+                        );
+                        setQuoteComments([...quoteComments, comment.data]);
+                        setAddingComment(false);
+                        return true;
+                      }
+                    } catch (error: any) {
+                      console.error(error);
+                      return false;
+                    }
+                  }}
+                />
+              ) : (
+                <Button title="Add comment" onClick={() => setAddingComment(true)} />
+              )}
+              <div ref={newCommentRef} />
+            </div>
+          </div>
           {authData.user_type === 'customer' && quote.status === 'new_quote' ? (
             <div className={styles['buttons-container']}>
               <div className={styles['reject-button']}>
@@ -265,6 +383,9 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     const quote = await axios.get(`${apiUrl}/quotes/quotes/${id}`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
+    const quoteComments = await axios.get(`${apiUrl}/quotes/quote-comments?quote=${id}`, {
+      headers: { Authorization: `JWT ${access_token}` },
+    });
     // const quoteRequest = await axios.get(
     //   `${apiUrl}/quotes/quote-requests/${quote.data.quote_request}`,
     //   {
@@ -277,6 +398,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     return {
       props: {
         quote: quote.data,
+        comments: quoteComments.data,
         // quoteRequest: quoteRequest.data,
         // shop: shop.data,
       },
