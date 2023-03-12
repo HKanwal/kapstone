@@ -243,7 +243,7 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
       </div>
       <div className="container">
         <div className="wrapper">
-          <div className="flex flex-row row-gap-large">
+          <div className="flex flex-col row-gap-large">
             {errors.length > 0 && (
               <div className="flex flex-col row-gap-small">
                 {errors.map((error: any, index) => {

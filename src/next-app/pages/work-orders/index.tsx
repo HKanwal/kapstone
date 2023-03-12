@@ -23,7 +23,7 @@ const WorkOrdersList: NextPage = ({ workOrders }: any) => {
       return (
         <Link href={`/work-orders/${workOrder.id}`} key={workOrder.id} legacyBehavior>
           <a className="card hover-scale-up active-scale-down">
-            <div className="flex flex-row row-gap-small">
+            <div className="flex flex-col row-gap-small">
               <span>
                 <b>Customer</b>: @{workOrder.appointment.customer?.username}
               </span>
@@ -49,7 +49,7 @@ const WorkOrdersList: NextPage = ({ workOrders }: any) => {
     <div className="container">
       <Header title="Work Orders" />
       <div className="wrapper">
-        <div className="flex flex-row">
+        <div className="flex flex-col">
           <Radio.Group
             label="Filter by Status"
             defaultValue={sortStatus}
