@@ -25,3 +25,4 @@ class QuoteCommentAdmin(admin.ModelAdmin):
 @admin.register(QuoteRequest)
 class QuoteRequestAdmin(admin.ModelAdmin):
     list_display = ("description", "user", "shop")
+    exclude = ("batch_id",)

@@ -68,6 +68,7 @@ class QuoteRequestWriteSerializer(serializers.ModelSerializer):
             "images",
             "uploaded_images",
             "vehicle",
+            "batch_id",
         )
         read_only_fields = ("id",)
         extra_kwargs = {
