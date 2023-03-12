@@ -1,3 +1,4 @@
+import uuid
 from django.shortcuts import render
 from django.db import transaction
 from django.core.exceptions import ValidationError
@@ -33,6 +34,20 @@ class QuoteViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
             return QuoteWriteSerializer
         return QuoteSerializer
 
+    def partial_update(self, request, *args, **kwargs):
+        with transaction.atomic():
+            if "status" in request.data and request.data["status"] == "accepted":
+                quote = self.get_object()
+                if quote.status != "accepted":  # current status
+                    batch_quotes = Quote.objects.filter(
+                        quote_request__batch_id=quote.quote_request.batch_id
+                    ).exclude(pk=quote.pk)
+                    for batch_quote in batch_quotes:
+                        batch_quote.status = "rejected"  # reject other quotes in the batch
+                    Quote.objects.bulk_update(batch_quotes, ["status"])
+            response = super().partial_update(request, *args, **kwargs)
+        return response
+
 
 class QuoteRequestViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
     access_policy = QuoteRequestAccessPolicy
@@ -58,18 +73,22 @@ class QuoteRequestViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                 vehicle_year = quote_request.pop("vehicle_year", None)
                 vehicle, created = Vehicle.objects.get_or_create(
                     vin=vehicle_vin,
-                    manufacturer=vehicle_make,
-                    model=vehicle_model,
-                    year=vehicle_year,
-                    customer=request.user,
+                    defaults={
+                        "manufacturer": vehicle_make,
+                        "model": vehicle_model,
+                        "year": vehicle_year,
+                        "customer": request.user,
+                    },
                 )
                 quote_request["vehicle"] = vehicle.pk
 
                 shop_ids = quote_request.pop("shops", [])
+                batch_id = uuid.uuid4()
                 quote_requests = []
                 for shop_id in shop_ids:
                     qr = deepcopy(quote_request)
                     qr["shop"] = shop_id
+                    qr["batch_id"] = batch_id
                     quote_requests.append(qr)
 
                 serializer = QuoteRequestWriteSerializer(
@@ -84,9 +103,16 @@ class QuoteRequestViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                     QuoteRequest(**data, user=request.user) for data in validated_data
                 ]
 
-                QuoteRequest.objects.bulk_create(quote_requests)
+                created_quote_requests = QuoteRequest.objects.bulk_create(
+                    quote_requests
+                )
                 return Response(
-                    {"message": f"{len(quote_requests)} quote requests created."},
+                    {
+                        "message": f"{len(quote_requests)} quote requests created.",
+                        "data": QuoteRequestSerializer(
+                            created_quote_requests, many=True
+                        ).data,
+                    },
                     status=status.HTTP_201_CREATED,
                 )
         except Exception as err:
