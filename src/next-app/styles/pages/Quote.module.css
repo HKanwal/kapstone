@@ -79,3 +79,10 @@
   padding-top: 2vh;
   padding-left: 35%;
 }
+
+.comments-container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+  gap: 16px;
+}

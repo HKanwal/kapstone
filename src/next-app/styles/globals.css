@@ -238,3 +238,135 @@ a {
   justify-content: space-around;
   white-space: pre-line;
 }
+
+.shadow-card {
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.02);
+  color: #4a4a4a;
+  max-width: 100%;
+  position: relative;
+}
+
+.shadow-card.active {
+  border: 1px solid rgb(45, 94, 255);
+}
+
+.shadow-card-header {
+  background-color: transparent;
+  align-items: stretch;
+  display: flex;
+  border-radius: 16px 16px 0 0;
+}
+
+.shadow-card-header-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.shadow-card-header-title {
+  align-items: center;
+  color: #363636;
+  font-weight: 500;
+  padding: 0.75rem 1rem 0.5rem 1rem;
+  /* margin: 0.5rem 0; */
+  font-size: 18px;
+}
+
+.shadow-card-header-subtitle {
+  align-items: center;
+  color: #363636;
+  font-weight: 200;
+  padding: 0rem 1rem;
+  margin: 0rem 0.1rem;
+  font-size: 16px;
+}
+
+.shadow-card-header-button {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: 0 0;
+  border: none;
+  color: currentColor;
+  font-family: inherit;
+  font-size: 1em;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+}
+.shadow-card-header-icon {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.shadow-card-body {
+  background-color: transparent;
+}
+
+.shadow-card-body > textarea {
+  width: 100%;
+  padding: 1.5rem;
+  resize: vertical;
+  background-color: white;
+  border: none;
+  font-size: 18px;
+  outline: none;
+  border-radius: 16px;
+}
+
+.shadow-card-body.disabled > textarea {
+  resize: none;
+}
+
+.shadow-card-footer {
+  background-color: transparent;
+  border-top: 1px solid #ededed;
+  align-items: stretch;
+  display: flex;
+}
+
+button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+.shadow-card-footer-item {
+  align-items: center;
+  display: flex;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 0;
+  justify-content: center;
+  padding: 0.75rem;
+  cursor: pointer;
+  color: rgb(45, 94, 255);
+  font-weight: 200;
+}
+
+button:disabled.shadow-card-footer-item {
+  cursor: not-allowed;
+  color: black;
+  font-weight: 200;
+}
+
+.shadow-card-footer-item:hover {
+  font-weight: 500;
+}
+
+.border-right {
+  border-right: 1px solid #ededed;
+}
