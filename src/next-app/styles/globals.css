@@ -7,10 +7,10 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
     Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 
-  --font-size: 4vmin;
+  --font-size: 18px;
   font-size: var(--font-size);
-  --title-font-size: 6vmin;
-  --section-header-font-size: 5vmin;
+  --title-font-size: 32px;
+  --section-header-font-size: 26px;
 
   /* Theme */
   --primary-color: #3fdeae;
@@ -38,12 +38,23 @@ a {
   }
 } */
 
+.app-container {
+  margin: 0 auto;
+  max-width: 1400px;
+}
+
+.grid-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 12px;
+}
+
 .flex {
   display: flex;
 }
 
 .flex-row {
-  flex-direction: column;
+  flex-direction: row;
 }
 
 .flex-col {
@@ -355,6 +366,7 @@ button {
   cursor: pointer;
   color: rgb(45, 94, 255);
   font-weight: 200;
+  font-size: 18px;
 }
 
 button:disabled.shadow-card-footer-item {
