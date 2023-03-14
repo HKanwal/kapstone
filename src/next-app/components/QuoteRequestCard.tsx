@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 
 type QuoteRequestProps = {
-  id: number;
+  batch_id: number;
   description: string;
   dateCreated?: string;
   path?: string;
@@ -25,12 +25,12 @@ const QuoteRequestCard = (props: QuoteRequestProps) => {
   }
   return (
     <div
-      key={props.id}
+      key={props.batch_id}
       className={styles.card}
       onClick={() => {
         router.push({
           pathname: props.path ? props.path : 'quote-request-details',
-          query: { id: props.id },
+          query: { batch_id: props.batch_id },
         });
       }}
     >
