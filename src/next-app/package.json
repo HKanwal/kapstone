@@ -9,7 +9,7 @@
     "cypress": "cypress open",
     "lint": "next lint",
     "storybook": "start-storybook -p 6006",
-    "test": "jest --watch",
+    "test": "jest",
     "build-storybook": "build-storybook"
   },
   "prettier": {
