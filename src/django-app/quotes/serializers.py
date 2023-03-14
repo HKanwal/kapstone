@@ -26,14 +26,58 @@ class QuoteRequestSerializer(serializers.ModelSerializer):
             "preferred_date",
             "preferred_time",
             "preferred_phone_number",
+            "preferred_part_condition",
+            "preferred_part_type",
             "preferred_email",
             "description",
             "images",
             "vehicle",
             "status",
+            "batch_id",
             "created_at",
         )
         read_only_fields = ("id", "customer", "shop")
+
+    def get_status(self, obj):
+        return obj.status
+
+
+class QuoteRequestBatchSerializer(serializers.ModelSerializer):
+    quote_requests = serializers.SerializerMethodField("get_quote_requests")
+
+    class Meta:
+        model = QuoteRequest
+        fields = ["batch_id", "quote_requests"]
+
+    def get_quote_requests(self, obj):
+        quote_requests = QuoteRequest.objects.filter(batch_id=obj.batch_id)
+        quote_request_serializer = QuoteRequestSerializer(quote_requests, many=True)
+        return quote_request_serializer.data
+
+
+class QuoteRequestBatchRetrieveSerializer(serializers.ModelSerializer):
+    customer = UserViewSerializer(source="user")
+    images = ImageQuoteSerializer(many=True, read_only=True)
+    status = serializers.SerializerMethodField()
+
+    class Meta:
+        model = QuoteRequest
+        fields = (
+            "customer",
+            "preferred_date",
+            "preferred_time",
+            "preferred_phone_number",
+            "preferred_part_condition",
+            "preferred_part_type",
+            "preferred_email",
+            "description",
+            "images",
+            "vehicle",
+            "status",
+            "batch_id",
+            "created_at",
+        )
+        read_only_fields = ("customer",)
 
     def get_status(self, obj):
         return obj.status
@@ -64,6 +108,8 @@ class QuoteRequestWriteSerializer(serializers.ModelSerializer):
             "customer",
             "preferred_date",
             "preferred_time",
+            "preferred_part_condition",
+            "preferred_part_type",
             "description",
             "images",
             "uploaded_images",
