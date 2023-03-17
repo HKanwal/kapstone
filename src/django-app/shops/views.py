@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.apps import apps
 from django.utils.timezone import make_aware
 from django.conf import settings
+from django.core import management
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
@@ -185,6 +186,22 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         shop = Shop.objects.get(shop_owner=request.user)
         serializer = EmployeeDataSerializer(shop.get_employees(), many=True)
         return Response(serializer.data)
+
+    @action(detail=False, methods=["post"])
+    def generate_appointment_slots(self, request, *args, **kwargs):
+        if request.user.type == "shop_owner":
+            shop = self.get_queryset().get(shop_owner=request.user)
+        else:
+            shop = request.user.data.shop
+        if not shop:
+            return Response(
+                status=status.HTTP_404_NOT_FOUND,
+                message="No shop found.",
+            )
+        response = management.call_command(
+            "generate_appointment_slots", "--shop", shop.id
+        )
+        return Response(response, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=["get"])
     def me(self, request, *args, **kwargs):
