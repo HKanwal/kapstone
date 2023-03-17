@@ -19,6 +19,7 @@ import { accountTypes } from '../utils/api';
 import * as cookie from 'cookie';
 import { CardTextField, CardTextArea, CardSelect } from '../components/CardComponents';
 import Button from '../components/Button';
+import Link from 'next/link';
 
 const QuoteRequestDetailsPage: NextPage = ({ quotes: quotesList, quoteRequest, vehicle }: any) => {
   const router = useRouter();
@@ -204,14 +205,15 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes: quotesList, quoteRequest, v
                 .sort((a: any, b: any) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
                 .map((quote: any) => {
                   return (
-                    <Card
-                      key={quote.id}
-                      id={quote.id}
-                      name={quote.shop.name}
-                      status={quote.status === 'new_quote' ? 'Pending' : quote.status_display}
-                      date={quote.created_at}
-                      price={quote.price}
-                    />
+                    <Link key={quote.id} href={`/quote?id=${quote.id}`}>
+                      <Card
+                        id={quote.id}
+                        name={quote.shop.name}
+                        status={quote.status === 'new_quote' ? 'Pending' : quote.status_display}
+                        date={quote.created_at}
+                        price={quote.price}
+                      />
+                    </Link>
                   );
                 })
             ) : (
@@ -224,7 +226,7 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes: quotesList, quoteRequest, v
       </div>
       <div className="container">
         <div className="wrapper">
-          <div className="flex flex-row row-gap-large">
+          <div className="flex flex-col row-gap-large">
             {errors.length > 0 && (
               <div className="flex flex-col row-gap-small">
                 {errors.map((error: any, index) => {
@@ -380,18 +382,17 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
         headers: { Authorization: `JWT ${access_token}` },
       }
     );
-    const vehicle = await axios.get(
-      `${apiUrl}/vehicles/vehicles/${quoteRequestBatch.data.vehicle}`,
-      {
-        headers: { Authorization: `JWT ${access_token}` },
-      }
-    );
+    const vehicle = quoteRequestBatch.data.vehicle
+      ? await axios.get(`${apiUrl}/vehicles/vehicles/${quoteRequestBatch.data.vehicle}`, {
+          headers: { Authorization: `JWT ${access_token}` },
+        })
+      : null;
     console.log(quoteRequestBatch.data);
     return {
       props: {
         quotes: quotes.data,
         quoteRequest: quoteRequestBatch.data,
-        vehicle: vehicle.data,
+        vehicle: vehicle ?? {},
       },
     };
   } catch (error) {

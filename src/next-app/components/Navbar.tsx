@@ -87,7 +87,7 @@ const Navbar = (props: NavbarProps) => {
               ) : null}
             </div>
             <div className={styles['logout-btn']}>
-              <Button title={buttonText} width="120%" onClick={logout} />
+              <Button title={buttonText} onClick={logout} />
             </div>
           </div>
         </div>

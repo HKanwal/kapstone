@@ -27,7 +27,7 @@ const InvitationsList: NextPage = ({ invitations }: any) => {
     .map((invitation: any) => {
       return (
         <div key={invitation.invitation_key} className="card">
-          <div className="flex flex-row row-gap-small">
+          <div className="flex flex-col row-gap-small">
             <span>
               <b>Email</b>: {invitation.email}
             </span>
@@ -84,7 +84,7 @@ const InvitationsList: NextPage = ({ invitations }: any) => {
             })}
           </div>
         )}
-        <div className="flex flex-row">
+        <div className="flex flex-col">
           <Radio.Group
             label="Filter by Status"
             defaultValue={sortStatus}
@@ -96,7 +96,7 @@ const InvitationsList: NextPage = ({ invitations }: any) => {
             <Radio value="not_used" label="Not Used" />
           </Radio.Group>
         </div>
-        <div className="flex flex-row row-gap-large">
+        <div className="grid-list">
           {invitationList.length > 0 ? invitationList : <p>No invitations found.</p>}
         </div>
       </div>

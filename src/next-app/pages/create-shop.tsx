@@ -83,7 +83,7 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
         onRightIconClick={() => router.push('/dashboard/')}
       />
       <div className="wrapper">
-        <div className="flex flex-row row-gap-large">
+        <div className="flex flex-col row-gap-large">
           {errors?.length > 0 && (
             <div className="flex flex-col row-gap-small">
               {errors.map((error: any, index) => {
@@ -230,30 +230,40 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
 };
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-  //  TODO: Need API to get shop details of current shop_owner account to allow edit functionality of page
   const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const user_type = parsedCookies.user_type;
-  if (user_type === 'shop_owner') {
-    return {
-      props: {
-        shop: {
-          name: '',
-          num_bays: '',
-          address: {
-            street: '',
-            city: '',
-            province: '',
-            country: '',
-            postal_code: '',
+  const access_token = parsedCookies.access;
+
+  try {
+    const shop = await axios.get(`${apiUrl}/shops/shops/me/`, {
+      headers: { Authorization: `JWT ${access_token}` },
+    });
+    //If a shop already exists on a shop owner account then block users from accessing this page
+    if (shop.data.id) {
+      return { notFound: true }
+    } else {
+      return {
+        props: {
+          shop: {
+            name: '',
+            num_bays: '',
+            address: {
+              street: '',
+              city: '',
+              province: '',
+              country: '',
+              postal_code: '',
+            },
           },
         },
-      },
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      notFound: true,
     };
   }
-
-  return {
-    notFound: true,
-  };
 };
 
 export default CreateShopPage;

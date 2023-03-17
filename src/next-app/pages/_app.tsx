@@ -20,9 +20,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const handleLogin = (jwt: Jwt) => {
     setJwt(jwt);
-    Cookies.set("access", jwt.access);
-    Cookies.set("refresh", jwt.refresh);
-    Cookies.set("user_type", jwt.user_type);
+    Cookies.set('access', jwt.access);
+    Cookies.set('refresh', jwt.refresh);
+    Cookies.set('user_type', jwt.user_type);
   };
 
   return (
@@ -83,7 +83,9 @@ function MyApp({ Component, pageProps }: AppProps) {
             />
           </Head>
           <NextNProgress color="#72DAB1" showOnShallow />
-          <Component {...pageProps} onLogin={handleLogin} />
+          <div className="app-container">
+            <Component {...pageProps} onLogin={handleLogin} />
+          </div>
         </AuthContext.Provider>
       </QueryClientProvider>
     </MantineProvider>
