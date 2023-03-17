@@ -3,6 +3,8 @@ from django.shortcuts import render
 from django.db import transaction
 from django.core.exceptions import ValidationError
 from django.apps import apps
+from django.utils.timezone import make_aware
+from django.conf import settings
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
@@ -10,13 +12,16 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_access_policy import AccessViewSetMixin
 from rest_framework.decorators import action
+from rest_framework.exceptions import APIException
 
 from accounts.serializers import EmployeeDataSerializer
+from accounts.models import EmployeeData
 
 from datetime import datetime, timedelta
 import json
 import traceback
 import logging
+import googlemaps
 
 from .serializers import (
     ShopSerializer,
@@ -49,6 +54,7 @@ from .models import (
     AppointmentSlot,
     Appointment,
     WorkOrder,
+    appointment_creation_signal,
 )
 from .policies import (
     ShopAccessPolicy,
@@ -130,7 +136,6 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         try:
             with transaction.atomic():
-                print(request.data)
                 address = request.data.pop("address", None)
                 if address is not None and type(address) is dict:
                     address_serializer = AddressSerializer(
@@ -144,7 +149,24 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                 else:
                     request.data["address"] = address
 
-                return super().create(request, *args, **kwargs)
+                shop_hours = request.data.pop("shophours_set", None)
+
+                response = super().create(request, *args, **kwargs)
+                shop = Shop.objects.get(id=response.data["id"])
+
+                if shop_hours is not None:
+                    for shop_hour in shop_hours:
+                        try:
+                            ShopHours.objects.create(
+                                shop=shop,
+                                day=shop_hour.get("day", None),
+                                from_time=shop_hour.get("from_time", None),
+                                to_time=shop_hour.get("to_time", None),
+                            )
+                        except Exception as e:
+                            logging.error(traceback.format_exc())
+
+                return response
         except ValidationError as err:
             logging.error(traceback.format_exc())
             return Response(
@@ -155,6 +177,12 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
     @action(detail=True, methods=["get"])
     def employees(self, request, *args, **kwargs):
         shop = self.get_object()
+        serializer = EmployeeDataSerializer(shop.get_employees(), many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["get"])
+    def all_employees(self, request, *args, **kwargs):
+        shop = Shop.objects.get(shop_owner=request.user)
         serializer = EmployeeDataSerializer(shop.get_employees(), many=True)
         return Response(serializer.data)
 
@@ -179,6 +207,75 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+    @action(detail=False, methods=["get"])
+    def distance(self, request, *args, **kwargs):
+        user_postal_code = request.GET.get("postal_code", None)
+        if user_postal_code is None:
+            raise APIException(
+                "Specify postal code in URL query parameters. Example: /distance/?postal_code=LXXXXX"
+            )
+
+        limit = request.GET.get("limit", None)
+        if limit is not None:
+            limit = int(limit)
+            if limit < 1:
+                raise APIException("Limit must be greater than 0.")
+
+        # initialize google maps client
+        gmaps = googlemaps.Client(key=settings.GOOGLE_MAPS_API_KEY)
+
+        # convert user postal code to latitude and longitude
+        user_geocode = gmaps.geocode(user_postal_code)
+        user_lat_lng = (
+            user_geocode[0]["geometry"]["location"]["lat"],
+            user_geocode[0]["geometry"]["location"]["lng"],
+        )
+
+        # get all shops with a valid address
+        shops = Shop.objects.all().exclude(address__isnull=True).order_by("name")
+
+        # set an array to store the distance between each shop and the user
+        shops_and_distance_matrices = []
+        for shop in shops:
+            # convert shop address to latitude and longitude
+            shop_geocode = gmaps.geocode(str(shop.address))
+            if not shop_geocode:
+                continue
+
+            shop_lat_lng = (
+                shop_geocode[0]["geometry"]["location"]["lat"],
+                shop_geocode[0]["geometry"]["location"]["lng"],
+            )
+            # get the distance between the user and the shop
+            distance_matrix = gmaps.distance_matrix(user_lat_lng, shop_lat_lng)
+
+            # add the distance matrix to the distances list
+            if distance_matrix["status"] == "OK":
+                shops_and_distance_matrices.append((shop, distance_matrix))
+
+        shops_and_distances = []
+        for (shop, distance_matrix) in shops_and_distance_matrices:
+            shop_serializer = ShopSerializer(shop, context={"request": request})
+            shop_data = shop_serializer.data
+            shop_data["distance_from_user"] = distance_matrix["rows"][0]["elements"][0][
+                "distance"
+            ]["text"]
+            shop_data["duration_from_user"] = distance_matrix["rows"][0]["elements"][0][
+                "duration"
+            ]["text"]
+            shop_data["distance_from_user_in_meters"] = distance_matrix["rows"][0][
+                "elements"
+            ][0]["distance"]["value"]
+            shop_data["duration_from_user_in_seconds"] = distance_matrix["rows"][0][
+                "elements"
+            ][0]["duration"]["value"]
+            shops_and_distances.append(shop_data)
+
+        shops_and_distances.sort(key=lambda x: x["distance_from_user_in_meters"])
+        if limit is not None:
+            shops_and_distances = shops_and_distances[:limit]
+        return Response(shops_and_distances)
 
 
 class AddressViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
@@ -223,7 +320,7 @@ class InvitationViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                 # send invitation emails
                 for invitation in invitations:
                     invitation.send_invitation()
-                    
+
                 return Response(
                     {"message": f"{len(invitations)} invitations have been sent."},
                     status=status.HTTP_201_CREATED,
@@ -251,40 +348,48 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         if self.action in ["create"]:
             return ServiceWriteSerializer
         return ServiceSerializer
-    
+
     @transaction.atomic
     def create(self, request, *args, **kwargs):
-            with transaction.atomic():
-                data = request.data
-                parts = data.pop("parts", None)
-                service_serializer = ServiceWriteSerializer(data=data)
-                service_serializer.is_valid(raise_exception=False)
-                print(service_serializer.errors)
-                if service_serializer.is_valid(raise_exception=True):
-                    service = service_serializer.save()
-                    if parts is not None:
-                        service_parts_to_create = Part.objects.filter(
-                            id__in=parts
+        with transaction.atomic():
+            data = request.data
+            data._mutable = True
+            parts = data.pop("parts", None)
+            service_serializer = ServiceWriteSerializer(
+                data=data,
+                context={"request": request},
+            )
+            service_serializer.is_valid(raise_exception=False)
+            print(service_serializer.errors)
+            if service_serializer.is_valid(raise_exception=True):
+                service = service_serializer.save()
+                if parts is not None:
+                    service_parts_to_create = Part.objects.filter(id__in=parts)
+                    for part in service_parts_to_create:
+                        ServicePart.objects.create(
+                            service=service, part=part, quantity=1
                         )
-                        for part in service_parts_to_create:
-                            ServicePart.objects.create(service=service, part=part, quantity=1)
-                return Response(service_serializer.data)
-    
+            return Response(service_serializer.data)
+
     @transaction.atomic
     def partial_update(self, request, *args, **kwargs):
         try:
             with transaction.atomic():
                 updated_service = self.get_object()
                 data = request.data
+                data._mutable = True
                 parts = data.pop("parts", None)
-                service_serializer = ServiceWriteSerializer(updated_service, data=data, partial=True)
+                service_serializer = ServiceWriteSerializer(
+                    updated_service,
+                    data=data,
+                    partial=True,
+                    context={"request": request},
+                )
                 if service_serializer.is_valid(raise_exception=True):
                     service_serializer.save()
                     if parts is not None:
-                        service_parts_fetched = Part.objects.filter(
-                            id__in=parts
-                        )
-                        
+                        service_parts_fetched = Part.objects.filter(id__in=parts)
+
                         ServicePart.objects.filter(
                             service__id=updated_service.pk
                         ).exclude(
@@ -296,18 +401,14 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                                 obj, created = ServicePart.objects.update_or_create(
                                     service=updated_service,
                                     part=part,
-                                    defaults={
-                                        "quantity": 1
-                                    },
+                                    defaults={"quantity": 1},
                                 )
                             except Exception as err:
                                 logging.error(traceback.format_exc())
                 return Response(service_serializer.data)
         except Exception as err:
-            return Response(
-                {"status": False, "error_description": 'Failed to update service.'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            logging.error(traceback.format_exc())
+            raise err
 
 
 class ServicePartViewSet(viewsets.ModelViewSet):
@@ -352,7 +453,9 @@ class AppointmentViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
             with transaction.atomic():
                 data = request.data
                 appointment_slots = data.pop("appointment_slots")
-                appointment_serializer = self.get_serializer_class()(data=data)
+                appointment_serializer = self.get_serializer_class()(
+                    data=data, context={"request": request}
+                )
                 if appointment_serializer.is_valid(raise_exception=True):
                     appointment = appointment_serializer.save()
                     slots = AppointmentSlot.objects.filter(
@@ -400,6 +503,9 @@ class AppointmentViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                     AppointmentSlot.appointments.through.objects.bulk_create(
                         through_appointments
                     )
+                appointment_creation_signal.send(
+                    sender=self.__class__, instance=appointment
+                )
                 return Response(
                     {
                         "status": True,
@@ -444,18 +550,22 @@ class AppointmentSlotViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
     def _filter_by_start_date(self, queryset):
         try:
             start_date = datetime.combine(
-                self.request.GET.get("start_date"), datetime.min.time()
+                datetime.strptime(
+                    self.request.GET.get("start_date"), "%Y-%m-%d"
+                ).date(),
+                datetime.min.time(),
             )
-            return queryset.filter(start_time__gte=start_date)
+            return queryset.filter(start_time__gte=make_aware(start_date))
         except:
             return queryset
 
     def _filter_by_end_date(self, queryset):
         try:
             end_date = datetime.combine(
-                self.request.GET.get("end_date"), datetime.max.time()
+                datetime.strptime(self.request.GET.get("end_date"), "%Y-%m-%d").date(),
+                datetime.max.time(),
             )
-            return queryset.filter(end_time__lte=end_date)
+            return queryset.filter(end_time__lte=make_aware(end_date))
         except:
             return queryset
 
@@ -500,6 +610,12 @@ class WorkOrderViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         elif self.action in ["create"]:
             return WorkOrderCreateSerializer
         return WorkOrderSerializer
+
+    @action(detail=True, methods=["post"])
+    def send_to_customer(self, request, *args, **kwargs):
+        work_order = self.get_object()
+        work_order.send_to_customer()
+        return Response({"status": "OK", "message": "Work order sent to customer."})
 
 
 class ShopAvailabilityViewSet(viewsets.ModelViewSet):

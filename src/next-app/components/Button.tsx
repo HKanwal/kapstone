@@ -9,6 +9,7 @@ type ButtonProps = {
   onClick?: () => void;
   disabled?: boolean;
   type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
+  id?: string;
 };
 
 const Button = (props: ButtonProps) => {
@@ -24,7 +25,9 @@ const Button = (props: ButtonProps) => {
       className={styles.button}
       style={{ width: props.width, margin: props.margin, backgroundColor: props.backgroundColor }}
       onClick={handleClick}
-      disabled={props.disabled}>
+      disabled={props.disabled}
+      id={props.id}
+    >
       {props.title}
     </button>
   );

@@ -16,6 +16,7 @@ export type AppointmentStatus =
 
 type RegistrationBody = {
   email: string;
+  phone_number: string;
   username: string;
   password: string;
   re_password: string;

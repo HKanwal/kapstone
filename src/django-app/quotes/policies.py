@@ -1,7 +1,7 @@
 from rest_access_policy import AccessPolicy
 from accounts.models import EmployeeData
 from shops.models import Shop
-from .models import QuoteRequest
+from .models import QuoteRequest, Quote
 
 
 class QuoteAccessPolicy(AccessPolicy):
@@ -84,6 +84,7 @@ class QuoteAccessPolicy(AccessPolicy):
     def is_editing_status(self, request, view, action):
         status = request.data.pop("status", None)
         if status is not None and not request.data:
+            request.data["status"] = status
             return True
         return False
 
@@ -100,6 +101,74 @@ class QuoteAccessPolicy(AccessPolicy):
         return (
             request.user.type == "shop_owner" and shop.shop_owner == request.user
         ) or (request.user.type == "employee" and request.user.id in shop.employees)
+
+
+class QuoteCommentAccessPolicy(AccessPolicy):
+    statements = [
+        {
+            "action": ["list"],
+            "principal": "authenticated",
+            "effect": "allow",
+        },
+        {
+            "action": ["retrieve"],
+            "principal": "authenticated",
+            "effect": "allow",
+        },
+        {
+            "action": ["create"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition": ["is_quote_related"],
+        },
+        {
+            "action": ["partial_update"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition": ["is_owner"],
+        },
+        {
+            "action": ["destroy"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition": ["is_owner"],
+        },
+        {
+            "action": ["update"],
+            "principal": "*",
+            "effect": "deny",
+        },
+    ]
+
+    @classmethod
+    def scope_queryset(cls, request, qs):
+        if request.user.type == "customer":
+            return qs.filter(quote__quote_request__user=request.user)
+        elif request.user.type == "shop_owner":
+            return qs.filter(quote__shop__shop_owner=request.user)
+        elif request.user.type == "employee":
+            employee_shop = EmployeeData.objects.get(user=request.user).shop
+            return qs.filter(quote__shop=employee_shop)
+        return qs.filter(user=request.user)
+
+    def is_quote_related(self, request, view, action):
+        quote_id = request.data.get("quote", None)
+        if quote_id is None:
+            return False
+
+        quote = Quote.objects.get(id=quote_id)
+        if request.user.type == "customer":
+            return quote.quote_request.user == request.user
+        elif request.user.type == "shop_owner":
+            return quote.shop.shop_owner == request.user
+        elif request.user.type == "employee":
+            employee_shop = EmployeeData.objects.get(user=request.user).shop
+            return quote.shop == employee_shop
+        return False
+
+    def is_owner(self, request, view, action):
+        quote_comment = view.get_object()
+        return quote_comment.user == request.user
 
 
 class QuoteRequestAccessPolicy(AccessPolicy):

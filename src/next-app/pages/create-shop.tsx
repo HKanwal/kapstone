@@ -16,7 +16,7 @@ import Cookies from 'js-cookie';
 const CreateShopPage: NextPage = ({ shop }: any) => {
   const router = useRouter();
   const [errors, setErrors] = useState([]);
-  const [services, setServices] = useState(shop?.shop_services ?? []);
+  // const [services, setServices] = useState(shop?.shop_services ?? []);
   const [shopHours, setShopHours] = useState(shop?.shophours_set ?? []);
   const schema = yup.object().shape({
     name: yup.string().required(),
@@ -83,7 +83,7 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
         onRightIconClick={() => router.push('/dashboard/')}
       />
       <div className="wrapper">
-        <div className="flex flex-row row-gap-large">
+        <div className="flex flex-col row-gap-large">
           {errors?.length > 0 && (
             <div className="flex flex-col row-gap-small">
               {errors.map((error: any, index) => {
@@ -230,6 +230,7 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
 };
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
+  //  TODO: Need API to get shop details of current shop_owner account to allow edit functionality of page
   const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const user_type = parsedCookies.user_type;
   if (user_type === 'shop_owner') {

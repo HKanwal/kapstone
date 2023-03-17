@@ -1,11 +1,14 @@
 from rest_framework import serializers
 
-from .models import Quote, QuoteRequest
+from .models import Quote, QuoteComment, QuoteRequest
 from shops.models import Shop
 from shops.serializers import ShopOverviewSerializer
 from accounts.serializers import UserViewSerializer
 from misc.models import ImageQuote
 from misc.serializers import ImageQuoteSerializer
+from rest_access_policy import PermittedPkRelatedField
+from shops.policies import ShopAccessPolicy
+from .policies import QuoteRequestAccessPolicy
 
 
 class QuoteRequestSerializer(serializers.ModelSerializer):
@@ -28,6 +31,7 @@ class QuoteRequestSerializer(serializers.ModelSerializer):
             "images",
             "vehicle",
             "status",
+            "created_at",
         )
         read_only_fields = ("id", "customer", "shop")
 
@@ -48,6 +52,9 @@ class QuoteRequestWriteSerializer(serializers.ModelSerializer):
         allow_null=True,
         default=[],
     )
+    shop = PermittedPkRelatedField(
+        access_policy=ShopAccessPolicy, queryset=Shop.objects.all()
+    )
 
     class Meta:
         model = QuoteRequest
@@ -61,6 +68,7 @@ class QuoteRequestWriteSerializer(serializers.ModelSerializer):
             "images",
             "uploaded_images",
             "vehicle",
+            "batch_id",
         )
         read_only_fields = ("id",)
         extra_kwargs = {
@@ -95,6 +103,10 @@ class QuoteSerializer(serializers.ModelSerializer):
 
 
 class QuoteWriteSerializer(serializers.ModelSerializer):
+    quote_request = PermittedPkRelatedField(
+        access_policy=QuoteRequestAccessPolicy, queryset=QuoteRequest.objects.all()
+    )
+
     class Meta:
         model = Quote
         fields = "__all__"
@@ -105,3 +117,46 @@ class QuoteWriteSerializer(serializers.ModelSerializer):
             quote_request = data["quote_request"]
             data["shop"] = quote_request.shop
         return data
+
+
+class QuoteCommentListSerializer(serializers.ModelSerializer):
+    has_edit_permission = serializers.SerializerMethodField()
+    user = UserViewSerializer()
+
+    class Meta:
+        model = QuoteComment
+        fields = "__all__"
+        read_only_fields = ("id", "user", "quote")
+
+    def get_has_edit_permission(self, obj):
+        return obj.user == self.context["request"].user
+
+
+class QuoteCommentSerializer(serializers.ModelSerializer):
+    has_edit_permission = serializers.SerializerMethodField()
+    quote = QuoteSerializer()
+    user = UserViewSerializer()
+
+    class Meta:
+        model = QuoteComment
+        fields = "__all__"
+        read_only_fields = ("id", "user", "quote")
+
+    def get_has_edit_permission(self, obj):
+        return obj.user == self.context["request"].user
+
+
+class QuoteCommentWriteSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = QuoteComment
+        fields = "__all__"
+        read_only_fields = ("id", "user")
+
+
+class QuoteCommentUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuoteComment
+        fields = "__all__"
+        read_only_fields = ("id", "user", "quote")

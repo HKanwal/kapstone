@@ -79,7 +79,7 @@ const Navbar = (props: NavbarProps) => {
           </div>
           <div className={styles['btn-contianer']}>
             <div style={{ position: 'relative' }}>
-              <IoMdContact className={styles['profile-btn']} onClick={toggleProfile} />
+              <IoMdContact className={styles['profile-btn']} id="profile" onClick={toggleProfile} />
               {profile ? (
                 <ProfileModal
                   headerName={props.headerName}
@@ -90,7 +90,7 @@ const Navbar = (props: NavbarProps) => {
               ) : null}
             </div>
             <div className={styles['logout-btn']}>
-              <Button title={buttonText} width="120%" onClick={logout} />
+              <Button title={buttonText} onClick={logout} />
             </div>
           </div>
         </div>

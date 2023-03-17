@@ -17,6 +17,9 @@
   padding-right: 4vw;
   padding-top: 2vh;
   padding-bottom: 2vh;
+  width: 80vw;
+  height: 90vh;
+  overflow-y: auto;
 }
 
 .header {

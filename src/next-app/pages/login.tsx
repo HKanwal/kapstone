@@ -41,7 +41,12 @@ const LoginPage: NextPage<LoginPageProps, {}> = (props) => {
                 localStorage.setItem('refresh_token', response.refresh);
                 props.onLogin(response);
               });
-              router.push('/dashboard');
+              if (router.query && router.query.from) {
+                // @ts-ignore
+                router.push(router.query.from);
+              } else {
+                router.push('/dashboard');
+              }
             } else {
               setErrors({
                 username: ['Invalid credentials.'],

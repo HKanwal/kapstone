@@ -1,4 +1,5 @@
 import uuid
+from django import dispatch
 from django.db import models, transaction
 from datetime import datetime
 import pytz
@@ -20,9 +21,11 @@ from phonenumber_field.modelfields import PhoneNumberField
 from vehicles.models import Vehicle, Part
 from .validators import validate_nonzero
 
+appointment_creation_signal = dispatch.Signal("instance")
+
 
 class Shop(models.Model):
-    shop_owner = models.ForeignKey("accounts.ShopOwner", on_delete=models.CASCADE)
+    shop_owner = models.OneToOneField("accounts.ShopOwner", on_delete=models.CASCADE)
     shop_email = models.EmailField(
         _("shop's email address"), max_length=255, blank=True, null=True
     )
@@ -61,6 +64,49 @@ class Shop(models.Model):
     def num_employees(self):
         EmployeeData = apps.get_model("accounts", "EmployeeData")
         return EmployeeData.objects.filter(shop__pk=self.pk).count()
+
+    def get_hours_for_day(self, day):
+        try:
+            return ShopHours.objects.get(shop=self, day=day)
+        except ShopHours.DoesNotExist:
+            return None
+
+    def get_available_employee_ids(self, from_time, to_time):
+        workorders = WorkOrder.objects.filter(shop=self).exclude(employee__isnull=True)
+
+        appointment_ids = workorders.values_list("appointment", flat=True)
+        appointments = self.appointment_set.filter(id__in=appointment_ids)
+
+        employee_ids = set(self.employees)
+        for appointment in appointments:
+            if any(
+                i == None
+                for i in [
+                    appointment.start_time,
+                    appointment.end_time,
+                    from_time,
+                    to_time,
+                ]
+            ):
+                continue
+            elif (
+                appointment.start_time <= to_time and from_time <= appointment.end_time
+            ):  # overlap
+                employee_ids.remove(workorders.get(appointment=appointment).employee.id)
+
+        return employee_ids
+
+    def get_number_of_available_employees(self, from_time, to_time):
+        return len(self.get_available_employee_ids(from_time, to_time))
+
+    def get_next_available_employee(self, from_time, to_time):
+        employee_ids = self.get_available_employee_ids(from_time, to_time)
+        if len(employee_ids) == 0:
+            return None
+
+        Employee = apps.get_model("accounts", "Employee")
+        employee = Employee.objects.get(id=employee_ids.pop())
+        return employee
 
     class Meta:
         verbose_name = "Shop"
@@ -135,15 +181,21 @@ class Appointment(models.Model):
         DONE = "done", "Done"
         REWORK = "rework", "Rework"
         PENDING = "pending", "Pending"
+        CANCELLED = "cancelled", "Cancelled"
 
     status = models.CharField(
         _("status"), max_length=12, choices=Status.choices, default=Status.PENDING
+    )
+    quote = models.ForeignKey(
+        "quotes.Quote", on_delete=models.SET_NULL, null=True, default=None
     )
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     customer = models.ForeignKey(
         "accounts.Customer", on_delete=models.CASCADE, null=True
     )
-    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
+    vehicle = models.ForeignKey(
+        Vehicle, on_delete=models.CASCADE, null=True, default=None
+    )
     duration = models.DurationField(_("Duration"), default=timedelta(minutes=30))
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -168,6 +220,33 @@ class Appointment(models.Model):
         if last_slot is not None:
             return last_slot.end_time
         return None
+
+    def send_cancellation_email(self):
+        if self.customer.email is None:
+            return
+
+        subject = f"Cancellation of Appointment with {self.shop.name}"
+        context = {
+            "shop_name": self.shop.name,
+        }
+        text_email_template = "appointments/email/appointment_cancellation.txt"
+        html_email_template = "appointments/email/appointment_cancellation.html"
+        text_body = render_to_string(text_email_template, context)
+        html_body = render_to_string(html_email_template, context)
+
+        message = EmailMultiAlternatives(
+            subject=subject,
+            body=text_body,
+            from_email=settings.EMAIL_HOST_USER,
+            to=[self.customer.email],
+        )
+        message.attach_alternative(html_body, "text/html")
+        message.send(fail_silently=False)
+
+    def cancel(self):
+        self.status = Appointment.Status.CANCELLED
+        self.save()
+        self.send_cancellation_email()
 
     class Meta:
         verbose_name = "Appointment"
@@ -352,7 +431,9 @@ class WorkOrder(models.Model):
     appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE)
     quote = models.ForeignKey("quotes.Quote", on_delete=models.CASCADE, null=False)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
-    employee = models.ForeignKey("accounts.Employee", on_delete=models.CASCADE)
+    employee = models.ForeignKey(
+        "accounts.Employee", on_delete=models.CASCADE, null=True
+    )
     odometer_reading_before = models.PositiveIntegerField(
         _("odometer reading before"), null=True
     )
@@ -364,9 +445,37 @@ class WorkOrder(models.Model):
     )
     notes = models.TextField(_("notes"), blank=True)
     grand_total = models.DecimalField(
-        _("grand total amount"), max_digits=10, decimal_places=2
+        _("grand total amount"), max_digits=10, decimal_places=2, null=True
     )
+    is_visible_to_customer = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Work Order"
         verbose_name_plural = "Work Orders"
+
+    def get_workorder_url(self):
+        return f"{settings.APP_URL}/work-orders/{self.pk}"
+
+    def send_to_customer(self):
+        self.is_visible_to_customer = True
+        self.save()
+        customer = self.appointment.customer
+
+        subject = f"WorkOrder Information from {self.shop.name}"
+        context = {
+            "shop_name": self.shop.name,
+            "workorder_url": self.get_workorder_url(),
+        }
+        text_invitation_email_template = "workorders/email/workorder_email.txt"
+        html_invitation_email_template = "workorders/email/workorder_email.html"
+        text_body = render_to_string(text_invitation_email_template, context)
+        html_body = render_to_string(html_invitation_email_template, context)
+
+        message = EmailMultiAlternatives(
+            subject=subject,
+            body=text_body,
+            from_email=settings.EMAIL_HOST_USER,
+            to=[customer.email],
+        )
+        message.attach_alternative(html_body, "text/html")
+        message.send(fail_silently=False)

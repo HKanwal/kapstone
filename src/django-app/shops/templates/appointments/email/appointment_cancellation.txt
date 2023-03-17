@@ -1,0 +1,8 @@
+Hi,
+
+Your appointment with {{ shop_name }} has been cancelled.
+
+Please login and create a different appointment.
+
+Thank you,
+Sayyara

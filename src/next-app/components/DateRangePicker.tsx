@@ -4,6 +4,7 @@ import TextInput from './TextInput';
 import styles from '../styles/components/DateRangePicker.module.css';
 
 type DateRangePickerProps = {
+  name: string;
   value: DateRangePickerValue;
   onChange: (newDates: DateRangePickerValue) => void;
 };
@@ -40,10 +41,11 @@ const DateRangePicker = (props: DateRangePickerProps) => {
   return (
     <div className={styles.container} ref={containerRef}>
       <TextInput
+        id={props.name}
         onClick={handleClick}
         placeholder="Pick date range..."
         value={start && end ? formatDate(start) + ' - ' + formatDate(end) : ''}
-        onChange={() => {}}
+        onChange={() => { }}
         disabled
       />
       {opened ? (
