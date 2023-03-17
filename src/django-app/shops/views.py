@@ -136,7 +136,6 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         try:
             with transaction.atomic():
-                print(request.data)
                 address = request.data.pop("address", None)
                 if address is not None and type(address) is dict:
                     address_serializer = AddressSerializer(
@@ -150,7 +149,24 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                 else:
                     request.data["address"] = address
 
-                return super().create(request, *args, **kwargs)
+                shop_hours = request.data.pop("shophours_set", None)
+
+                response = super().create(request, *args, **kwargs)
+                shop = Shop.objects.get(id=response.data["id"])
+
+                if shop_hours is not None:
+                    for shop_hour in shop_hours:
+                        try:
+                            ShopHours.objects.create(
+                                shop=shop,
+                                day=shop_hour.get("day", None),
+                                from_time=shop_hour.get("from_time", None),
+                                to_time=shop_hour.get("to_time", None),
+                            )
+                        except Exception as e:
+                            logging.error(traceback.format_exc())
+
+                return response
         except ValidationError as err:
             logging.error(traceback.format_exc())
             return Response(
