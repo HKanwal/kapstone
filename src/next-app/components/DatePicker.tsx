@@ -4,7 +4,7 @@ import TextInput from './TextInput';
 import styles from '../styles/components/DatePicker.module.css';
 
 type DatePickerProps = {
-  name: string;
+  name?: string;
   value: Date[];
   onChange: (newDates: Date[]) => void;
   single?: boolean;
@@ -62,7 +62,7 @@ const DatePicker = (props: DatePickerProps) => {
             );
           })
           .join('; ')}
-        onChange={() => { }}
+        onChange={() => {}}
         disabled
       />
       {opened ? (
