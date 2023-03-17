@@ -122,6 +122,9 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                     ShopHours.objects.filter(shop=shop).exclude(
                         day__in=shop_hours_days
                     ).delete()
+                    management.call_command(
+                        "generate_appointment_slots", "--shop", shop.id
+                    )
 
                 shop_serializer = ShopWriteSerializer(
                     shop, data=request.data, partial=True
@@ -166,6 +169,11 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                             )
                         except Exception as e:
                             logging.error(traceback.format_exc())
+
+                    # create shop appointment slots
+                    management.call_command(
+                        "generate_appointment_slots", "--shop", shop.id
+                    )
 
                 return response
         except ValidationError as err:
