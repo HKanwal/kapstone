@@ -392,7 +392,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
       props: {
         quotes: quotes.data,
         quoteRequest: quoteRequestBatch.data,
-        vehicle: vehicle ?? {},
+        vehicle: vehicle ? vehicle.data : {},
       },
     };
   } catch (error) {
