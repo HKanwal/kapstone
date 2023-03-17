@@ -58,7 +58,9 @@ const BookedAppointment = (props: BookedAppointmentProps) => {
           <div style={{ visibility: false ? 'visible' : 'hidden' }}>
             <CircularIconButton icon={BiTime} />
           </div>
-          <CircularIconButton icon={BsFillPencilFill} onClick={props.onClickEdit} />
+          <div style={{ visibility: 'hidden' /** TODO: implement edit functionality */ }}>
+            <CircularIconButton icon={BsFillPencilFill} onClick={props.onClickEdit} />
+          </div>
         </>
       </div>
     </div>
