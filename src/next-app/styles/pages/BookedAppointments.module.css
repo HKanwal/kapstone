@@ -17,3 +17,7 @@
   margin-top: 2vh;
   width: 100%;
 }
+
+.no-appts-msg {
+  color: grey;
+}

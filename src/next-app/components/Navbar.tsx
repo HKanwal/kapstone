@@ -59,6 +59,9 @@ const Navbar = (props: NavbarProps) => {
       router.push('/login');
     }
 
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+
     Cookies.remove('access');
     Cookies.remove('refresh');
     Cookies.remove('user_type');
@@ -78,13 +81,13 @@ const Navbar = (props: NavbarProps) => {
             <div style={{ position: 'relative' }}>
               <IoMdContact className={styles['profile-btn']} onClick={toggleProfile} />
               {profile ? (
-              <ProfileModal
-                headerName={props.headerName}
-                modalBody={props.modalBody}
-                profileURL={props.profileURL}
-                showProfileButton={props.showProfileButton}
-              />
-            ) : null}
+                <ProfileModal
+                  headerName={props.headerName}
+                  modalBody={props.modalBody}
+                  profileURL={props.profileURL}
+                  showProfileButton={props.showProfileButton}
+                />
+              ) : null}
             </div>
             <div className={styles['logout-btn']}>
               <Button title={buttonText} width="120%" onClick={logout} />

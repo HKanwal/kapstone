@@ -22,21 +22,25 @@ const BookedAppointmentsPage: NextPage = () => {
       <Header title="Booked Appointments" />
 
       <div className={styles.content}>
-        {query.data?.map((appointment) => {
-          const startTimeAsDate = new Date(appointment.start_time);
-          const endTimeAsDate = new Date(appointment.end_time);
-          return (
-            <div className={styles['appointment-container']}>
-              <BookedAppointment
-                date={startTimeAsDate.toDateString()}
-                startTime={startTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
-                endTime={endTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
-                shopName={appointment.shop.name}
-                key={appointment.start_time}
-              />
-            </div>
-          );
-        })}
+        {query.data?.length === 0 ? (
+          <h4 className={styles['no-appts-msg']}>You have no booked appointments.</h4>
+        ) : (
+          query.data?.map((appointment) => {
+            const startTimeAsDate = new Date(appointment.start_time);
+            const endTimeAsDate = new Date(appointment.end_time);
+            return (
+              <div className={styles['appointment-container']}>
+                <BookedAppointment
+                  date={startTimeAsDate.toDateString()}
+                  startTime={startTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
+                  endTime={endTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
+                  shopName={appointment.shop.name}
+                  key={appointment.start_time}
+                />
+              </div>
+            );
+          })
+        )}
       </div>
     </div>
   );
