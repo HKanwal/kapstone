@@ -174,7 +174,7 @@ class QuoteCommentAccessPolicy(AccessPolicy):
 class QuoteRequestAccessPolicy(AccessPolicy):
     statements = [
         {
-            "action": ["list"],
+            "action": ["list", "bulk_list", "batch_retrieve"],
             "principal": "authenticated",
             "effect": "allow",
         },
@@ -191,10 +191,18 @@ class QuoteRequestAccessPolicy(AccessPolicy):
             "condition": ["is_customer"],
         },
         {
-            "action": ["partial_update"],
+            "action": [
+                "partial_update"
+            ],
             "principal": "authenticated",
             "effect": "allow",
             "condition": ["is_owner"],
+        },
+        {
+            "action": ["bulk_patch"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition": ["is_bulk_patch_owner"],
         },
         {
             "action": ["update"],
@@ -220,6 +228,13 @@ class QuoteRequestAccessPolicy(AccessPolicy):
             quote_request.shop.shop_owner == request.user
             or quote_request.shop.has_employee(request.user.id)
         )
+
+    def is_bulk_patch_owner(self, request, view, action):
+        batch_id = request.data.get("batch_id", None)
+        if batch_id is None:
+            return False
+        quote_requests = QuoteRequest.objects.filter(batch_id=batch_id)
+        return not quote_requests.exclude(user=request.user).exists()
 
     def is_owner(self, request, view, action):
         quote_request = view.get_object()

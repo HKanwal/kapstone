@@ -13,6 +13,8 @@ import logging
 
 from .serializers import (
     QuoteRequestSerializer,
+    QuoteRequestBatchSerializer,
+    QuoteRequestBatchRetrieveSerializer,
     QuoteSerializer,
     QuoteCommentSerializer,
     QuoteCommentListSerializer,
@@ -35,7 +37,16 @@ class QuoteViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
     queryset = Quote.objects.all().order_by("pk")
 
     def get_queryset(self):
-        return self.access_policy.scope_queryset(self.request, self.queryset)
+        queryset = self.access_policy.scope_queryset(self.request, self.queryset)
+        queryset = self._filter_by_quote_request_batch_id(queryset)
+        return queryset
+
+    def _filter_by_quote_request_batch_id(self, queryset):
+        batch_id = self.request.GET.get("batch_id", None)
+        if batch_id is not None:
+            return queryset.filter(quote_request__batch_id=batch_id)
+        else:
+            return queryset
 
     def get_serializer_class(self):
         if self.action in ["create", "update", "partial_update"]:
@@ -51,7 +62,9 @@ class QuoteViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                         quote_request__batch_id=quote.quote_request.batch_id
                     ).exclude(pk=quote.pk)
                     for batch_quote in batch_quotes:
-                        batch_quote.status = "rejected"  # reject other quotes in the batch
+                        batch_quote.status = (
+                            "rejected"  # reject other quotes in the batch
+                        )
                     Quote.objects.bulk_update(batch_quotes, ["status"])
             response = super().partial_update(request, *args, **kwargs)
         return response
@@ -157,3 +170,73 @@ class QuoteRequestViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+    @action(detail=False, methods=["patch"])
+    def bulk_patch(self, request, *args, **kwargs):
+        try:
+            with transaction.atomic():
+                data = request.data
+                batch_id = data.pop("batch_id", None)
+                if batch_id is None:
+                    return Response(
+                        {
+                            "message": "Batch ID must be provided in thew request data.",
+                            "status": False,
+                        },
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+                quote_requests = list(self.get_queryset().filter(batch_id=batch_id))
+
+                for quote_request in quote_requests:
+                    for key, value in data.items():
+                        setattr(quote_request, key, value)
+
+                QuoteRequest.objects.bulk_update(quote_requests, [key for key in data])
+
+                return Response(
+                    {
+                        "message": f"{len(quote_requests)} quote requests updated.",
+                        "status": "OK",
+                    },
+                    status=status.HTTP_200_OK,
+                )
+        except Exception as err:
+            logging.error(traceback.format_exc())
+            return Response(
+                {
+                    "status": False,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+    @action(detail=False, methods=["get"])
+    def bulk_list(self, request, *args, **kwargs):
+        quote_requests = (
+            self.get_queryset()
+            .order_by("batch_id")
+            .distinct("batch_id")
+            .only("batch_id")
+        )
+        serializer = QuoteRequestBatchSerializer(quote_requests, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=["get"])
+    def batch_retrieve(self, request, *args, **kwargs):
+        if request.query_params.get("batch_id") is None:
+            return Response(
+                {
+                    "message": "Batch ID must be provided as query parameter.",
+                    "status": False,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        quote_request = (
+            self.get_queryset()
+            .filter(batch_id=request.query_params["batch_id"])
+            .order_by("batch_id")
+            .distinct("batch_id")
+            .only("batch_id")
+        ).first()
+        serializer = QuoteRequestBatchRetrieveSerializer(quote_request)
+        return Response(serializer.data, status=status.HTTP_200_OK)
