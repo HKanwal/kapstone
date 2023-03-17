@@ -2,6 +2,15 @@ import { createContext, useState } from 'react';
 import apiUrl from '../constants/api-url';
 
 export type accountTypes = 'shop_owner' | 'employee' | 'customer';
+export type QuoteStatus = 'new_quote' | 'accepted' | 'rejected' | 'in_progress' | 'done' | 'rework';
+export type AppointmentStatus =
+  | 'completed'
+  | 'no show'
+  | 'in_progress'
+  | 'done'
+  | 'rework'
+  | 'pending'
+  | 'cancelled';
 
 /** Mutations */
 
@@ -163,6 +172,91 @@ function getAppointmentSlots({
   };
 }
 
+type BookedAppointmentsResponse = {
+  id: number;
+  customer: {
+    id: number;
+    username: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone_number: string;
+  };
+  shop: {
+    id: number;
+    name: string;
+    shop_email: null | string;
+    shop_phone_number: null | string;
+  };
+  /** Time format: "2023-03-20T14:00:00Z" */
+  start_time: string;
+  end_time: string;
+  status_display: string;
+  quote: {
+    id: number;
+    shop: {
+      id: number;
+      name: string;
+      shop_email: null | string;
+      shop_phone_number: null | string;
+    };
+    quote_request: {
+      id: number;
+      shop: {
+        id: number;
+        name: string;
+        shop_email: null | string;
+        shop_phone_number: null | string;
+      };
+      customer: {
+        id: number;
+        username: string;
+        first_name: string;
+        last_name: string;
+        email: string;
+        phone_number: string;
+      };
+      preferred_date: null | string;
+      preferred_time: null | string;
+      preferred_phone_number: null | string;
+      preferred_email: null | string;
+      description: string;
+      vehicle: string;
+      status: QuoteStatus;
+      created_at: string;
+    };
+    status: QuoteStatus;
+    status_display: string;
+    /** Eg: "100.05" */
+    price: string;
+    /** Format: "hh:mm:ss" */
+    estimated_time: string;
+    /** Format: "YYYY-MM-DD" */
+    expiry_date: string;
+    /** Eg: "2023-03-15T19:05:27.256825-04:00" */
+    created_at: string;
+    notes: string;
+  };
+  status: AppointmentStatus;
+  duration: string;
+  created_at: string;
+  vehicle: string;
+}[];
+
+function getBookedAppointments(jwtToken: string) {
+  return () => {
+    return fetch(`${apiUrl}/shops/appointments/`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        Authorization: `JWT ${jwtToken}`,
+      },
+    }).then((res) => {
+      return res.json() as Promise<BookedAppointmentsResponse>;
+    });
+  };
+}
+
 type UserDetails = {
   email: string;
   type: accountTypes;
@@ -203,4 +297,5 @@ export {
   getAppointmentSlots,
   bookAppointment,
   getUserDetails,
+  getBookedAppointments,
 };

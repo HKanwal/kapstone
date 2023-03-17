@@ -35,8 +35,8 @@ function numberToTime(numTime: number): string {
 type BookedAppointmentProps = {
   shopName: string;
   date: string;
-  startTime: number;
-  endTime: number;
+  startTime: string;
+  endTime: string;
   onClick?: () => void;
   onClickEdit?: () => void;
   style?: CSSProperties;
@@ -50,7 +50,7 @@ const BookedAppointment = (props: BookedAppointmentProps) => {
         {false ? <span className={styles['canned-details']}>nothin' to see here</span> : <></>}
         <span className={styles.distance}>{props.date}</span>
         <span className={styles.distance}>
-          {numberToTime(props.startTime)} - {numberToTime(props.endTime)}
+          {props.startTime} - {props.endTime}
         </span>
       </div>
       <div className={styles['btns-container']}>

@@ -22,6 +22,6 @@ export const Default = Template.bind({});
 Default.args = {
   shopName: 'My Shop',
   date: 'Friday Jan 5, 2023',
-  startTime: 5.5,
-  endTime: 6,
+  startTime: '5:30',
+  endTime: '6:00',
 };
