@@ -47,7 +47,7 @@ const BookedAppointment = (props: BookedAppointmentProps) => {
     <div className={styles.container} style={props.style}>
       <div className={styles['labels-container']}>
         <span className={styles.name}>{props.shopName}</span>
-        {false ? <span className={styles['canned-details']}>nothin' to see here</span> : <></>}
+        {false ? <span className={styles['canned-details']}>nothing to see here</span> : <></>}
         <span className={styles.distance}>{props.date}</span>
         <span className={styles.distance}>
           {props.startTime} - {props.endTime}
