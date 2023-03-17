@@ -21,6 +21,7 @@ import { accountTypes } from '../utils/api';
 import * as cookie from 'cookie';
 import { CardTextField, CardTextArea, CardSelect } from '../components/CardComponents';
 import Button from '../components/Button';
+import Link from 'next/link';
 
 interface carModels {
   [make: string]: string[];
@@ -221,14 +222,15 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
                 .sort((a: any, b: any) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
                 .map((quote: any) => {
                   return (
-                    <Card
-                      key={quote.id}
-                      id={quote.id}
-                      name={quote.shop.name}
-                      status={quote.status === 'new_quote' ? 'Pending' : quote.status_display}
-                      date={quote.created_at}
-                      price={quote.price}
-                    />
+                    <Link key={quote.id} href={`/quote?id=${quote.id}`}>
+                      <Card
+                        id={quote.id}
+                        name={quote.shop.name}
+                        status={quote.status === 'new_quote' ? 'Pending' : quote.status_display}
+                        date={quote.created_at}
+                        price={quote.price}
+                      />
+                    </Link>
                   );
                 })
             ) : (
@@ -241,7 +243,7 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
       </div>
       <div className="container">
         <div className="wrapper">
-          <div className="flex flex-row row-gap-large">
+          <div className="flex flex-col row-gap-large">
             {errors.length > 0 && (
               <div className="flex flex-col row-gap-small">
                 {errors.map((error: any, index) => {
@@ -372,14 +374,18 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     const quoteRequest = await axios.get(`${apiUrl}/quotes/quote-requests/${id}`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
-    const vehicle = await axios.get(`${apiUrl}/vehicles/vehicles/${quoteRequest.data.vehicle}`, {
-      headers: { Authorization: `JWT ${access_token}` },
-    });
+    const vehicle = quoteRequest.data.vehicle
+      ? await axios
+          .get(`${apiUrl}/vehicles/vehicles/${quoteRequest.data.vehicle}`, {
+            headers: { Authorization: `JWT ${access_token}` },
+          })
+          .then((res) => res.data)
+      : null;
     return {
       props: {
         quotes: quotes.data,
         quoteRequest: quoteRequest.data,
-        vehicle: vehicle.data,
+        vehicle: vehicle ?? {},
       },
     };
   } catch (error) {

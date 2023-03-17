@@ -84,7 +84,7 @@ const WorkOrdersDetail: NextPage = ({ workOrder, employees }: any) => {
         onRightIconClick={() => setInEdit(!inEdit)}
       />
       <div className="wrapper">
-        <div className="flex flex-row row-gap-large padding-bottom-large">
+        <div className="flex flex-col row-gap-large padding-bottom-large">
           {errors.length > 0 && (
             <div className="flex flex-col row-gap-small">
               {errors.map((error: any, index) => {

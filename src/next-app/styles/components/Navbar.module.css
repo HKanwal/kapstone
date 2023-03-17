@@ -10,9 +10,9 @@
 }
 
 .menu-bars {
-  font-size: 8vmin;
+  font-size: 36px;
   background: none;
-  line-height: 6vmin;
+  /* line-height: 6vmin; */
   height: 100%;
   width: 100px;
   display: flex;
@@ -21,8 +21,8 @@
 }
 
 .menu-bars-active {
-  font-size: 8vmin;
-  line-height: 6vmin;
+  font-size: 36px;
+  /* line-height: 6vmin; */
   height: 100%;
   width: 100px;
   display: flex;
@@ -56,7 +56,7 @@
   align-items: center;
   margin-top: 2vh;
   margin-bottom: 2vh;
-  font-size: 8vmin;
+  font-size: 36px;
   background: none;
   /* padding-top: 1.5vh; */
   padding-right: 4vh;

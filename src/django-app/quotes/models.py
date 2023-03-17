@@ -3,9 +3,13 @@ from django.db import models
 from django.utils.translation import gettext as _
 from shops.models import Shop
 from accounts.models import Customer
+from vehicles.models import Vehicle
+from django.contrib.auth import get_user_model
 from vehicles.models import Vehicle, Part
 
 from phonenumber_field.modelfields import PhoneNumberField
+
+User = get_user_model()
 
 
 class Quote(models.Model):
@@ -80,3 +84,15 @@ class QuoteRequest(models.Model):
         user_name = self.user.username if self.user else "Null User"
         shop_name = self.shop.name if self.shop else "Null Shop"
         return f'User "{user_name}" to Shop "{shop_name}": "{self.description}"'
+
+
+class QuoteComment(models.Model):
+    quote = models.ForeignKey(Quote, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.TextField(_("comment"), blank=False)
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
+    updated_at = models.DateTimeField(_("updated at"), auto_now=True)
+
+    class Meta:
+        verbose_name = "Quote Comment"
+        verbose_name_plural = "Quote Comments"

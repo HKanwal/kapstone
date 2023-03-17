@@ -14,11 +14,19 @@ import logging
 from .serializers import (
     QuoteRequestSerializer,
     QuoteSerializer,
+    QuoteCommentSerializer,
+    QuoteCommentListSerializer,
+    QuoteCommentWriteSerializer,
+    QuoteCommentUpdateSerializer,
     QuoteRequestWriteSerializer,
     QuoteWriteSerializer,
 )
-from .models import Quote, QuoteRequest
-from .policies import QuoteAccessPolicy, QuoteRequestAccessPolicy
+from .models import Quote, QuoteComment, QuoteRequest
+from .policies import (
+    QuoteAccessPolicy,
+    QuoteCommentAccessPolicy,
+    QuoteRequestAccessPolicy,
+)
 from vehicles.models import Vehicle
 
 
@@ -47,6 +55,32 @@ class QuoteViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                     Quote.objects.bulk_update(batch_quotes, ["status"])
             response = super().partial_update(request, *args, **kwargs)
         return response
+
+
+class QuoteCommentViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
+    access_policy = QuoteCommentAccessPolicy
+    queryset = QuoteComment.objects.all().order_by("created_at")
+
+    def get_queryset(self):
+        queryset = self.access_policy.scope_queryset(self.request, self.queryset)
+        queryset = self._filter_by_quote(queryset)
+        return queryset
+
+    def _filter_by_quote(self, queryset):
+        quote_id = self.request.GET.get("quote")
+        if quote_id is not None:
+            return queryset.filter(quote=quote_id)
+        else:
+            return queryset
+
+    def get_serializer_class(self):
+        if self.action in ["create"]:
+            return QuoteCommentWriteSerializer
+        elif self.action in ["update", "partial_update"]:
+            return QuoteCommentUpdateSerializer
+        elif self.action in ["list"]:
+            return QuoteCommentListSerializer
+        return QuoteCommentSerializer
 
 
 class QuoteRequestViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
