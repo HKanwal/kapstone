@@ -7,10 +7,20 @@
   height: fit-content;
   display: flex;
   justify-content: flex-start;
+  flex-direction: column;
 }
 
 .appts-container {
   display: table;
   flex-direction: column;
   width: 80%;
+}
+
+.appointment-container {
+  width: 100%;
+  margin-top: 2vh;
+}
+
+.no-appts-msg {
+  color: grey;
 }
