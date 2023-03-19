@@ -1,14 +1,12 @@
 /* eslint-disable indent */
 import type { GetServerSideProps, NextPage } from 'next';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import * as yup from 'yup';
 import { useFormik, FormikProvider } from 'formik';
 import Header from '../components/Header';
 import styles from '../styles/pages/QuoteRequestDetails.module.css';
 import Dropdown from '../components/Dropdown';
 import FieldLabel from '../components/FieldLabel';
-import TextInput from '../components/TextInput';
-import carData from '../data/data.json';
 import Card from '../components/Card';
 import { GrFormEdit, GrFormClose } from 'react-icons/gr';
 import { useRouter } from 'next/router';
@@ -21,26 +19,16 @@ import { accountTypes } from '../utils/api';
 import * as cookie from 'cookie';
 import { CardTextField, CardTextArea, CardSelect } from '../components/CardComponents';
 import Button from '../components/Button';
+import Link from 'next/link';
 
-interface carModels {
-  [make: string]: string[];
-}
-
-const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: any) => {
+const QuoteRequestDetailsPage: NextPage = ({ quotes: quotesList, quoteRequest, vehicle }: any) => {
   const router = useRouter();
-  const { id } = router.query;
+  const { batch_id } = router.query;
   const [authData, setAuthData] = useState(useContext(AuthContext));
   const [status, setStatus] = useState('All');
   const [sortItem, setSortItem] = useState('Date');
   const [inEdit, setInEdit] = useState(false);
   const [errors, setErrors] = useState([]);
-  const [make, setMake] = useState('');
-  const [customMake, setCustomMake] = useState('');
-  const [model, setModel] = useState('');
-  const [modelYear, setModelYear] = useState('');
-  const [customModel, setCustomModel] = useState('');
-  const [makesList, setMakesList] = useState([] as string[]);
-  const [modelsList, setModelsList] = useState({} as carModels);
 
   const schema = yup.object().shape({
     description: yup.string().required(),
@@ -54,6 +42,8 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
   const form = useFormik({
     initialValues: {
       description: quoteRequest.description,
+      part_condition: quoteRequest.preferred_part_condition ?? 'none',
+      part_type: quoteRequest.preferred_part_type ?? 'none',
       vehicle: {
         manufacturer: vehicle.manufacturer,
         model: vehicle.model,
@@ -71,7 +61,10 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
       };
 
       const qrValuesToSend = {
+        batch_id: batch_id,
         description: values.description,
+        preferred_part_condition: values.part_condition === 'none' ? null : values.part_condition,
+        preferred_part_type: values.part_type === 'none' ? null : values.part_type,
       };
 
       const access_token = Cookies.get('access');
@@ -87,7 +80,7 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
         if (res.status === 200) {
           try {
             const res = await axios.patch(
-              `${apiUrl}/quotes/quote-requests/${id}/`,
+              `${apiUrl}/quotes/quote-requests/bulk_patch/`,
               qrValuesToSend,
               {
                 headers: { Authorization: `JWT ${access_token}` },
@@ -117,17 +110,8 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
     });
   }
 
-  const quotesList = quotes.filter((quote: any) => {
-    if (quote.quote_request.id === quoteRequest.id) {
-      return true;
-    } else {
-      return false;
-    }
-  });
-
   const date = new Date(quoteRequest.created_at);
   const dateString = date.toDateString();
-  console.log(quotesList);
   return (
     <div className={styles.container}>
       <Header
@@ -222,14 +206,15 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
                 .sort((a: any, b: any) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
                 .map((quote: any) => {
                   return (
-                    <Card
-                      key={quote.id}
-                      id={quote.id}
-                      name={quote.shop.name}
-                      status={quote.status === 'new_quote' ? 'Pending' : quote.status_display}
-                      date={quote.created_at}
-                      price={quote.price}
-                    />
+                    <Link key={quote.id} href={`/quote?id=${quote.id}`}>
+                      <Card
+                        id={quote.id}
+                        name={quote.shop.name}
+                        status={quote.status === 'new_quote' ? 'Pending' : quote.status_display}
+                        date={quote.created_at}
+                        price={quote.price}
+                      />
+                    </Link>
                   );
                 })
             ) : (
@@ -242,7 +227,7 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
       </div>
       <div className="container">
         <div className="wrapper">
-          <div className="flex flex-row row-gap-large">
+          <div className="flex flex-col row-gap-large">
             {errors.length > 0 && (
               <div className="flex flex-col row-gap-small">
                 {errors.map((error: any, index) => {
@@ -290,29 +275,51 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
                   <CardSelect
                     fieldName="part_condition"
                     fieldLabel="Part Condition"
-                    options={['No Preference', 'New Parts Only', 'Used Parts Only'].map(
-                      (op: any) => {
-                        return (
-                          <option key={op} value={op}>
-                            {op}
-                          </option>
-                        );
-                      }
-                    )}
+                    options={[
+                      {
+                        label: 'No Preference',
+                        value: 'none',
+                      },
+                      {
+                        label: 'New Parts Only',
+                        value: 'new',
+                      },
+                      {
+                        label: 'Used Parts Only',
+                        value: 'used',
+                      },
+                    ].map((op: any) => {
+                      return (
+                        <option key={op.value} value={op.value}>
+                          {op.label}
+                        </option>
+                      );
+                    })}
                     fieldDisabled={!inEdit}
                   />
                   <CardSelect
                     fieldName="part_type"
                     fieldLabel="Part Type"
-                    options={['No Preference', 'OEM Parts Only', 'Aftermarket Parts Only'].map(
-                      (op: any) => {
-                        return (
-                          <option key={op} value={op}>
-                            {op}
-                          </option>
-                        );
-                      }
-                    )}
+                    options={[
+                      {
+                        label: 'No Preference',
+                        value: 'none',
+                      },
+                      {
+                        label: 'OEM Parts Only',
+                        value: 'oem',
+                      },
+                      {
+                        label: 'Aftermarket Parts Only',
+                        value: 'aftermarket',
+                      },
+                    ].map((op: any) => {
+                      return (
+                        <option key={op.value} value={op.value}>
+                          {op.label}
+                        </option>
+                      );
+                    })}
                     fieldDisabled={!inEdit}
                   />
                   <CardTextArea
@@ -363,24 +370,30 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes, quoteRequest, vehicle }: an
 };
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-  const { id } = context.query;
+  const { batch_id } = context.query;
   const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const access_token = parsedCookies.access;
   try {
-    const quotes = await axios.get(`${apiUrl}/quotes/quotes`, {
+    const quotes = await axios.get(`${apiUrl}/quotes/quotes?batch_id=${batch_id}`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
-    const quoteRequest = await axios.get(`${apiUrl}/quotes/quote-requests/${id}`, {
-      headers: { Authorization: `JWT ${access_token}` },
-    });
-    const vehicle = await axios.get(`${apiUrl}/vehicles/vehicles/${quoteRequest.data.vehicle}`, {
-      headers: { Authorization: `JWT ${access_token}` },
-    });
+    const quoteRequestBatch = await axios.get(
+      `${apiUrl}/quotes/quote-requests/batch_retrieve?batch_id=${batch_id}`,
+      {
+        headers: { Authorization: `JWT ${access_token}` },
+      }
+    );
+    const vehicle = quoteRequestBatch.data.vehicle
+      ? await axios.get(`${apiUrl}/vehicles/vehicles/${quoteRequestBatch.data.vehicle}`, {
+          headers: { Authorization: `JWT ${access_token}` },
+        })
+      : null;
+    console.log(quoteRequestBatch.data);
     return {
       props: {
         quotes: quotes.data,
-        quoteRequest: quoteRequest.data,
-        vehicle: vehicle.data,
+        quoteRequest: quoteRequestBatch.data,
+        vehicle: vehicle ? vehicle.data : {},
       },
     };
   } catch (error) {

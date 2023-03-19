@@ -38,6 +38,14 @@ class ShopAccessPolicy(AccessPolicy):
             "effect": "allow",
             "condition": ["user_type_is_shop_owner"],
         },
+        {
+            "action": ["generate_appointment_slots"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition_expression": [
+                "(user_type_is_shop_owner or user_type_is_employee)"
+            ],
+        },
     ]
 
     @classmethod
@@ -52,6 +60,9 @@ class ShopAccessPolicy(AccessPolicy):
 
     def user_type_is_shop_owner(self, request, view, action):
         return request.user.type == "shop_owner"
+
+    def user_type_is_employee(self, request, view, action):
+        return request.user.type == "employee"
 
     def is_owner(self, request, view, action):
         return request.user == Shop.objects.get(id=view.kwargs.get("pk")).shop_owner

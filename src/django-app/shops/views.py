@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.apps import apps
 from django.utils.timezone import make_aware
 from django.conf import settings
+from django.core import management
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
@@ -121,6 +122,9 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                     ShopHours.objects.filter(shop=shop).exclude(
                         day__in=shop_hours_days
                     ).delete()
+                    management.call_command(
+                        "generate_appointment_slots", "--shop", shop.id
+                    )
 
                 shop_serializer = ShopWriteSerializer(
                     shop, data=request.data, partial=True
@@ -136,7 +140,6 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         try:
             with transaction.atomic():
-                print(request.data)
                 address = request.data.pop("address", None)
                 if address is not None and type(address) is dict:
                     address_serializer = AddressSerializer(
@@ -150,7 +153,29 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                 else:
                     request.data["address"] = address
 
-                return super().create(request, *args, **kwargs)
+                shop_hours = request.data.pop("shophours_set", None)
+
+                response = super().create(request, *args, **kwargs)
+                shop = Shop.objects.get(id=response.data["id"])
+
+                if shop_hours is not None:
+                    for shop_hour in shop_hours:
+                        try:
+                            ShopHours.objects.create(
+                                shop=shop,
+                                day=shop_hour.get("day", None),
+                                from_time=shop_hour.get("from_time", None),
+                                to_time=shop_hour.get("to_time", None),
+                            )
+                        except Exception as e:
+                            logging.error(traceback.format_exc())
+
+                    # create shop appointment slots
+                    management.call_command(
+                        "generate_appointment_slots", "--shop", shop.id
+                    )
+
+                return response
         except ValidationError as err:
             logging.error(traceback.format_exc())
             return Response(
@@ -169,6 +194,22 @@ class ShopViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         shop = Shop.objects.get(shop_owner=request.user)
         serializer = EmployeeDataSerializer(shop.get_employees(), many=True)
         return Response(serializer.data)
+
+    @action(detail=False, methods=["post"])
+    def generate_appointment_slots(self, request, *args, **kwargs):
+        if request.user.type == "shop_owner":
+            shop = self.get_queryset().get(shop_owner=request.user)
+        else:
+            shop = request.user.data.shop
+        if not shop:
+            return Response(
+                status=status.HTTP_404_NOT_FOUND,
+                message="No shop found.",
+            )
+        response = management.call_command(
+            "generate_appointment_slots", "--shop", shop.id
+        )
+        return Response(response, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=["get"])
     def me(self, request, *args, **kwargs):

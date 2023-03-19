@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Quote, QuoteRequest
+from .models import Quote, QuoteComment, QuoteRequest
 
 
 @admin.register(Quote)
@@ -17,6 +17,12 @@ class QuoteAdmin(admin.ModelAdmin):
     get_description.short_description = "Description"
 
 
+@admin.register(QuoteComment)
+class QuoteCommentAdmin(admin.ModelAdmin):
+    list_display = ("quote", "user", "comment", "created_at", "updated_at")
+
+
 @admin.register(QuoteRequest)
 class QuoteRequestAdmin(admin.ModelAdmin):
     list_display = ("description", "user", "shop")
+    exclude = ("batch_id",)

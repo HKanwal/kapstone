@@ -16,7 +16,7 @@ const ServicesList: NextPage = ({ services, shop }: any) => {
     return (
       <Link href={`/services/${service.id}`} key={service.id}>
         <div className="card hover-scale-up active-scale-down">
-          <div className="flex flex-row row-gap-small">
+          <div className="flex flex-col row-gap-small">
             <span>
               <b>Service Name</b>: {service.name}
             </span>
@@ -49,7 +49,7 @@ const ServicesList: NextPage = ({ services, shop }: any) => {
         </div>
       </div>
       <div className="wrapper">
-        <div className="flex flex-row row-gap-large">
+        <div className="grid-list">
           {servicesList.length > 0 ? servicesList : <p>No services found.</p>}
         </div>
       </div>

@@ -2,12 +2,25 @@ import styles from '../styles/components/QuoteRequestCard.module.css';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-type QuoteRequestProps = {
+interface QuoteRequestPropsBatchID {
+  batch_id: number;
+  description: string;
+  dateCreated?: string;
+  path?: string;
+}
+
+interface QuoteRequestPropsID {
   id: number;
   description: string;
   dateCreated?: string;
   path?: string;
-};
+}
+
+type QuoteRequestProps = QuoteRequestPropsBatchID | QuoteRequestPropsID;
+
+function isQuoteRequestPropsBatchID(props: QuoteRequestProps): props is QuoteRequestPropsBatchID {
+  return (props as QuoteRequestPropsBatchID).batch_id !== undefined;
+}
 
 const QuoteRequestCard = (props: QuoteRequestProps) => {
   let descriptionLabel = props.description;
@@ -25,12 +38,18 @@ const QuoteRequestCard = (props: QuoteRequestProps) => {
   }
   return (
     <div
-      key={props.id}
+      key={isQuoteRequestPropsBatchID(props) ? props.batch_id : props.id}
       className={styles.card}
       onClick={() => {
+        const query: any = {};
+        if (isQuoteRequestPropsBatchID(props)) {
+          query.batch_id = props.batch_id;
+        } else {
+          query.id = props.id;
+        }
         router.push({
           pathname: props.path ? props.path : 'quote-request-details',
-          query: { id: props.id },
+          query: query,
         });
       }}
     >

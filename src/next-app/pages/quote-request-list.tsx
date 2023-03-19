@@ -16,7 +16,7 @@ import axios from 'axios';
 // @ts-ignore
 import * as cookie from 'cookie';
 
-const QuoteRequestListPage: NextPage = ({ quoteRequests }: any) => {
+const QuoteRequestListPage: NextPage = () => {
   const router = useRouter();
   const [quoteRequestCards, setQuoteRequestCards] = useState([] as JSX.Element[]);
   const [authData, setAuthData] = useState(useContext(AuthContext));
@@ -31,6 +31,36 @@ const QuoteRequestListPage: NextPage = ({ quoteRequests }: any) => {
       user_type: Cookies.get('user_type') as accountTypes,
     });
   }
+
+  useEffect(() => {
+    const cards: JSX.Element[] = [];
+    fetch(`${apiUrl}/quotes/quote-requests/bulk_list`, {
+      method: 'GET',
+      headers: {
+        Authorization: `JWT ${authData.access}`,
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    }).then((data) => {
+      console.log(data);
+      data.json().then((data) => {
+        console.log(data);
+        data.forEach((quoteRequestBatch: any) => {
+          //console.log(quoteRequest);
+          // cards.push(<QuoteRequestCard id={quoteRequest.id} description={quoteRequest.description} dateCreated={quoteRequest.dateCreated} />)
+          const quoteRequest = quoteRequestBatch.quote_requests[0];
+          cards.push(
+            <QuoteRequestCard
+              key={quoteRequest.id}
+              batch_id={quoteRequest.batch_id}
+              description={quoteRequest.description}
+              dateCreated={quoteRequest.created_at}
+            />
+          );
+        });
+        setQuoteRequestCards(cards);
+      });
+    });
+  }, []);
 
   const handleAddClick = () => {
     router.push('/quote-request');
@@ -56,29 +86,18 @@ const QuoteRequestListPage: NextPage = ({ quoteRequests }: any) => {
         <TextField name="Search" placeholder="Search by ID or description" onChange={setQRFilter} />
       </div>
       <div className={styles['card-container']}>
-        {quoteRequests
+        {quoteRequestCards
           .filter((quoteRequest: any) => {
             if (
               QRFilter != '' &&
-              !(
-                quoteRequest.description.toLowerCase().includes(QRFilter.toLowerCase()) ||
-                String(quoteRequest.id).startsWith(QRFilter)
-              )
+              !quoteRequest.props.description.toLowerCase().includes(QRFilter.toLowerCase())
             )
               return false;
             else return true;
           })
-          .sort((a: any, b: any) => (Date.parse(a.created_at) < Date.parse(b.created_at) ? 1 : -1))
-          .map((quoteRequest: any) => {
-            return (
-              <QuoteRequestCard
-                key={quoteRequest.id}
-                id={Number(quoteRequest.id)}
-                description={quoteRequest.description}
-                dateCreated={quoteRequest.created_at}
-              />
-            );
-          })}
+          .sort((a: any, b: any) =>
+            Date.parse(a.props.created_at) < Date.parse(b.props.created_at) ? 1 : -1
+          )}
       </div>
       <Modal visible={modalVisible} onClose={hideModal}>
         <div className={styles['modal-content']}>
@@ -97,28 +116,6 @@ const QuoteRequestListPage: NextPage = ({ quoteRequests }: any) => {
       </Modal>
     </div>
   );
-};
-
-export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-  const parsedCookies = cookie.parse(String(context.req.headers.cookie));
-  const access_token = parsedCookies.access;
-  try {
-    const quoteRequests = await axios.get(`${apiUrl}/quotes/quote-requests/`, {
-      headers: { Authorization: `JWT ${access_token}` },
-    });
-    return {
-      props: {
-        quoteRequests: quoteRequests.data,
-      },
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      props: {
-        quoteRequests: [],
-      },
-    };
-  }
 };
 
 export default QuoteRequestListPage;

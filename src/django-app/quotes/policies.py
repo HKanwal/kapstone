@@ -1,7 +1,7 @@
 from rest_access_policy import AccessPolicy
 from accounts.models import EmployeeData
 from shops.models import Shop
-from .models import QuoteRequest
+from .models import QuoteRequest, Quote
 
 
 class QuoteAccessPolicy(AccessPolicy):
@@ -103,10 +103,78 @@ class QuoteAccessPolicy(AccessPolicy):
         ) or (request.user.type == "employee" and request.user.id in shop.employees)
 
 
-class QuoteRequestAccessPolicy(AccessPolicy):
+class QuoteCommentAccessPolicy(AccessPolicy):
     statements = [
         {
             "action": ["list"],
+            "principal": "authenticated",
+            "effect": "allow",
+        },
+        {
+            "action": ["retrieve"],
+            "principal": "authenticated",
+            "effect": "allow",
+        },
+        {
+            "action": ["create"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition": ["is_quote_related"],
+        },
+        {
+            "action": ["partial_update"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition": ["is_owner"],
+        },
+        {
+            "action": ["destroy"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition": ["is_owner"],
+        },
+        {
+            "action": ["update"],
+            "principal": "*",
+            "effect": "deny",
+        },
+    ]
+
+    @classmethod
+    def scope_queryset(cls, request, qs):
+        if request.user.type == "customer":
+            return qs.filter(quote__quote_request__user=request.user)
+        elif request.user.type == "shop_owner":
+            return qs.filter(quote__shop__shop_owner=request.user)
+        elif request.user.type == "employee":
+            employee_shop = EmployeeData.objects.get(user=request.user).shop
+            return qs.filter(quote__shop=employee_shop)
+        return qs.filter(user=request.user)
+
+    def is_quote_related(self, request, view, action):
+        quote_id = request.data.get("quote", None)
+        if quote_id is None:
+            return False
+
+        quote = Quote.objects.get(id=quote_id)
+        if request.user.type == "customer":
+            return quote.quote_request.user == request.user
+        elif request.user.type == "shop_owner":
+            return quote.shop.shop_owner == request.user
+        elif request.user.type == "employee":
+            employee_shop = EmployeeData.objects.get(user=request.user).shop
+            return quote.shop == employee_shop
+        return False
+
+    def is_owner(self, request, view, action):
+        quote_comment = view.get_object()
+        return quote_comment.user == request.user
+
+
+class QuoteRequestAccessPolicy(AccessPolicy):
+    statements = [
+        {
+            "action": ["list", "bulk_list", "batch_retrieve"],
             "principal": "authenticated",
             "effect": "allow",
         },
@@ -123,10 +191,18 @@ class QuoteRequestAccessPolicy(AccessPolicy):
             "condition": ["is_customer"],
         },
         {
-            "action": ["partial_update"],
+            "action": [
+                "partial_update"
+            ],
             "principal": "authenticated",
             "effect": "allow",
             "condition": ["is_owner"],
+        },
+        {
+            "action": ["bulk_patch"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition": ["is_bulk_patch_owner"],
         },
         {
             "action": ["update"],
@@ -152,6 +228,13 @@ class QuoteRequestAccessPolicy(AccessPolicy):
             quote_request.shop.shop_owner == request.user
             or quote_request.shop.has_employee(request.user.id)
         )
+
+    def is_bulk_patch_owner(self, request, view, action):
+        batch_id = request.data.get("batch_id", None)
+        if batch_id is None:
+            return False
+        quote_requests = QuoteRequest.objects.filter(batch_id=batch_id)
+        return not quote_requests.exclude(user=request.user).exists()
 
     def is_owner(self, request, view, action):
         quote_request = view.get_object()
