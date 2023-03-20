@@ -21,10 +21,11 @@ const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
   return (
     <div className={styles.container}>
       <Header
-        title={`Quote Request - ${quoteRequest.description.length > 10
-          ? quoteRequest.description.slice(0, 10) + '...'
-          : quoteRequest.description
-          }`}
+        title={`Quote Request - ${
+          quoteRequest.description.length > 10
+            ? quoteRequest.description.slice(0, 10) + '...'
+            : quoteRequest.description
+        }`}
         burgerMenu={[
           {
             option: 'Call Customer',
@@ -95,7 +96,19 @@ const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
             <div className={styles['images-field-container']}>
               <FieldLabel label="Images" />
               <div className={styles['images-container']}>
-                <span className={styles['no-images-text']}>no images uploaded</span>
+                {quoteRequest.images && quoteRequest.images.length > 0 ? (
+                  quoteRequest.images.map((image: any, index: number) => {
+                    return (
+                      <img
+                        src={`${apiUrl}${image.url}`}
+                        className={styles.image}
+                        key={`image_${index}`}
+                      />
+                    );
+                  })
+                ) : (
+                  <span className={styles['no-images-text']}>no images uploaded</span>
+                )}
               </div>
             </div>
           </div>
