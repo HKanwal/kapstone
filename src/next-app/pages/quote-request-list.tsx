@@ -34,32 +34,34 @@ const QuoteRequestListPage: NextPage = () => {
 
   useEffect(() => {
     const cards: JSX.Element[] = [];
-    fetch(`${apiUrl}/quotes/quote-requests/bulk_list`, {
-      method: 'GET',
-      headers: {
-        Authorization: `JWT ${authData.access}`,
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    }).then((data) => {
-      console.log(data);
-      data.json().then((data) => {
+    if (authData.access !== '') {
+      fetch(`${apiUrl}/quotes/quote-requests/bulk_list`, {
+        method: 'GET',
+        headers: {
+          Authorization: `JWT ${authData.access}`,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      }).then((data) => {
         console.log(data);
-        data.forEach((quoteRequestBatch: any) => {
-          //console.log(quoteRequest);
-          // cards.push(<QuoteRequestCard id={quoteRequest.id} description={quoteRequest.description} dateCreated={quoteRequest.dateCreated} />)
-          const quoteRequest = quoteRequestBatch.quote_requests[0];
-          cards.push(
-            <QuoteRequestCard
-              key={quoteRequest.id}
-              batch_id={quoteRequest.batch_id}
-              description={quoteRequest.description}
-              dateCreated={quoteRequest.created_at}
-            />
-          );
+        data.json().then((data) => {
+          console.log(data);
+          data.forEach((quoteRequestBatch: any) => {
+            //console.log(quoteRequest);
+            // cards.push(<QuoteRequestCard id={quoteRequest.id} description={quoteRequest.description} dateCreated={quoteRequest.dateCreated} />)
+            const quoteRequest = quoteRequestBatch.quote_requests[0];
+            cards.push(
+              <QuoteRequestCard
+                key={quoteRequest.id}
+                batch_id={quoteRequest.batch_id}
+                description={quoteRequest.description}
+                dateCreated={quoteRequest.created_at}
+              />
+            );
+          });
+          setQuoteRequestCards(cards);
         });
-        setQuoteRequestCards(cards);
       });
-    });
+    }
   }, []);
 
   const handleAddClick = () => {
