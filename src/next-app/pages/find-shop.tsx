@@ -7,21 +7,24 @@ import TextField from '../components/TextField';
 import { serviceTypes } from '../constants/service-types';
 import styles from '../styles/pages/FindShop.module.css';
 import formStyles from '../styles/pages/Form.module.css';
+import { useRouter } from 'next/router';
+import Cookies from 'js-cookie';
 
 const FindShopPage: NextPage = () => {
-  const [zipCode, setZipCode] = useState('');
+  const [postalCode, setPostalCode] = useState('');
   const [shopName, setShopName] = useState('');
   const [serviceType, setServiceType] = useState('');
   const [checked, setChecked] = useState(false);
-  const valid = zipCode.length > 0;
+  const valid = postalCode.length > 0;
+  const router = useRouter();
 
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     setChecked(e.target.checked);
   };
 
   const handleSubmit = () => {
-    // TODO: Redirect to shop results screen, send api req
-    console.log('TODO: Redirect to shop results screen');
+    Cookies.set("pocode", postalCode);
+    router.push({ pathname: '/shop-results' });
   };
 
   return (
@@ -33,7 +36,7 @@ const FindShopPage: NextPage = () => {
           <TextField
             name="Your Location"
             placeholder="Enter your postal code"
-            onChange={setZipCode}
+            onChange={setPostalCode}
             required
           />
         </div>
@@ -48,7 +51,7 @@ const FindShopPage: NextPage = () => {
           <label style={{ marginLeft: '1vw' }}>Show direct booking shops only</label>
         </div>
         <div className={formStyles['submit-container']}>
-          <Button title="Create" disabled={!valid} width="80%" onClick={handleSubmit} />
+          <Button title="Search" disabled={!valid} width="80%" onClick={handleSubmit} />
         </div>
       </div>
     </div>

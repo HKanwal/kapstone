@@ -33,10 +33,7 @@ type ShopResultProps = {
   /**
    * If canned details are provided, quick appointment button will be shown.
    */
-  cannedDetails?: {
-    cost: number;
-    time: string;
-  };
+  services?: [];
   onClickAppointment?: () => void;
   onClickCall?: () => void;
   style?: CSSProperties;
@@ -67,9 +64,9 @@ const ShopResult = (props: ShopResultProps) => {
     <div className={styles.container} style={props.style}>
       <div className={styles['labels-container']}>
         <span className={styles.name}>{props.name}</span>
-        {props.cannedDetails ? (
+        {props.services ? (
           <span className={styles['canned-details']}>
-            {'$' + props.cannedDetails.cost.toString() + ' - ' + props.cannedDetails.time}
+            {/* {'$' + props.cannedDetails.cost.toString() + ' - ' + props.cannedDetails.time} */}
           </span>
         ) : (
           <></>
@@ -79,10 +76,12 @@ const ShopResult = (props: ShopResultProps) => {
       <div className={styles['btns-container']}>
         {!props.inSelectMode ? (
           <>
-            <div style={{ visibility: props.cannedDetails ? 'visible' : 'hidden' }}>
+            <div style={{ visibility: props.services ? 'visible' : 'hidden' }}>
               <CircularIconButton icon={BiTime} onClick={props.onClickAppointment} />
             </div>
-            <CircularIconButton icon={AiFillPhone} onClick={props.onClickCall} />
+            <div style={{ visibility: props.onClickCall ? 'visible' : 'hidden' }}>
+              <CircularIconButton icon={AiFillPhone} onClick={props.onClickCall} />
+            </div>
           </>
         ) : (
           <div className={styles['checkbox-container']}>
