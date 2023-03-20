@@ -33,9 +33,18 @@ class ShopAccessPolicy(AccessPolicy):
             "effect": "allow",
         },
         {
-            "action": ["employees"],
+            "action": ["employees", "all_employees"],
             "principal": "authenticated",
             "effect": "allow",
+            "condition": ["user_type_is_shop_owner"],
+        },
+        {
+            "action": ["generate_appointment_slots"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition_expression": [
+                "(user_type_is_shop_owner or user_type_is_employee)"
+            ],
         },
     ]
 
@@ -51,6 +60,9 @@ class ShopAccessPolicy(AccessPolicy):
 
     def user_type_is_shop_owner(self, request, view, action):
         return request.user.type == "shop_owner"
+
+    def user_type_is_employee(self, request, view, action):
+        return request.user.type == "employee"
 
     def is_owner(self, request, view, action):
         return request.user == Shop.objects.get(id=view.kwargs.get("pk")).shop_owner
@@ -274,11 +286,19 @@ class AppointmentSlotAccessPolicy(AccessPolicy):
 class WorkOrderAccessPolicy(AccessPolicy):
     statements = [
         {
-            "action": ["list", "retrieve"],
+            "action": ["list"],
             "principal": "authenticated",
             "effect": "allow",
             "condition_expression": [
                 "(user_type_is_shop_owner or user_type_is_employee)"
+            ],
+        },
+        {
+            "action": ["retrieve"],
+            "principal": "authenticated",
+            "effect": "allow",
+            "condition_expression": [
+                "(user_type_is_shop_owner or user_type_is_employee) or visible_to_customer"
             ],
         },
         {
@@ -288,7 +308,7 @@ class WorkOrderAccessPolicy(AccessPolicy):
             "condition": ["is_shop_related"],
         },
         {
-            "action": ["partial_update"],
+            "action": ["partial_update", "send_to_customer"],
             "principal": "authenticated",
             "effect": "allow",
             "condition": ["is_shop_related"],
@@ -308,6 +328,8 @@ class WorkOrderAccessPolicy(AccessPolicy):
             elif request.user.type == "employee":
                 employee_shop = EmployeeData.objects.get(user=request.user).shop
                 return qs.filter(shop=employee_shop)
+            else:
+                return qs.filter(appointment__customer=request.user)
         return qs
 
     def is_shop_related(self, request, view, action):
@@ -323,3 +345,11 @@ class WorkOrderAccessPolicy(AccessPolicy):
 
     def user_type_is_employee(self, request, view, action):
         return request.user.type == "employee"
+
+    def visible_to_customer(self, request, view, action):
+        work_order = view.get_object()
+        customer = work_order.appointment.customer
+        return work_order.is_visible_to_customer and (
+            request.user.type == "customer"
+            and work_order.appointment.customer == customer
+        )

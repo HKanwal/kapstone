@@ -33,7 +33,7 @@ const NewQuoteRequestsPage: NextPage = ({ quoteRequests }: any) => {
 
   return (
     <div className={styles.container}>
-      <Header title="New Quote Requests" />
+      <Header title="New Quote Requests" backButtonPath="/quote-list" />
       <div className={styles['field-container']}>
         <div className={styles['filter-container']}>
           <TextField
@@ -48,20 +48,23 @@ const NewQuoteRequestsPage: NextPage = ({ quoteRequests }: any) => {
               if (
                 QRFilter != '' &&
                 !(
-                  newQuoteRequest.description.toLowerCase().startsWith(QRFilter.toLowerCase()) ||
+                  newQuoteRequest.description.toLowerCase().includes(QRFilter.toLowerCase()) ||
                   String(newQuoteRequest.id).startsWith(QRFilter)
                 )
               )
                 return false;
               else return true;
             })
+            .sort((a: any, b: any) =>
+              Date.parse(a.created_at) < Date.parse(b.created_at) ? 1 : -1
+            )
             .map((newQuoteRequest: any) => {
               return (
                 <QuoteRequestCard
                   key={newQuoteRequest.id}
                   id={Number(newQuoteRequest.id)}
                   description={newQuoteRequest.description}
-                  dateCreated={String(new Date())}
+                  dateCreated={newQuoteRequest.created_at}
                   path={`new-quote-requests/${newQuoteRequest.id}`}
                 />
               );

@@ -142,13 +142,17 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = "accounts.User"
 
 DJOSER = {
+    "HIDE_USERS": False,
     "LOGIN_FIELD": "username",
     "SEND_CONFIRMATION_EMAIL": False,
     "ACTIVATION_URL": "activate/{uid}/{token}",
     "SEND_ACTIVATION_EMAIL": False,
+    "PERMISSIONS": {
+        "user": ["accounts.permissions.CanEditUser"],
+    },
     "SERIALIZERS": {
         "user_create": "accounts.serializers.UserCreateSerializer",
-        "user": "accounts.serializers.UserCreateSerializer",
+        "user": "accounts.serializers.UserUpdateSerializer",
         "user_delete": "djoser.serializers.UserDeleteSerializer",
     },
 }

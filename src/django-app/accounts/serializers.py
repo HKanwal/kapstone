@@ -1,5 +1,6 @@
 from djoser.serializers import (
     UserCreatePasswordRetypeSerializer as BaseUserCreateSerializer,
+    UserSerializer as BaseUserUpdateSerializer,
 )
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import get_user_model
@@ -10,6 +11,17 @@ User = get_user_model()
 
 from .models import ShopOwnerData, EmployeeData, CustomerData
 from shops.models import Invitation, Shop
+
+
+class UserUpdateSerializer(BaseUserUpdateSerializer):
+    class Meta(BaseUserUpdateSerializer.Meta):
+        model = User
+        fields = (
+            "email",
+            "first_name",
+            "last_name",
+            "phone_number",
+        )
 
 
 class UserCreateSerializer(BaseUserCreateSerializer):

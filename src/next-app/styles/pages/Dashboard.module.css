@@ -3,7 +3,6 @@
 }
 .container {
   padding: 5vh;
-  width: 100vw;
   height: fit-content;
   display: flex;
   justify-content: flex-start;

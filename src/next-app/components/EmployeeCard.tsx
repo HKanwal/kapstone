@@ -7,6 +7,7 @@ type EmployeeProps = {
   name: string;
   phone: string;
   email: string;
+  shop_owner?: boolean;
 };
 
 const EmployeeCard = (props: EmployeeProps) => {
@@ -18,14 +19,20 @@ const EmployeeCard = (props: EmployeeProps) => {
   return (
     <div
       key={props.id}
-      className={styles.card}
+      className={props.shop_owner ? styles['shop-owner-card'] : styles.card}
       onClick={() => {
-        router.push({
-          pathname: `employees/${props.id}`,
-        });
+        props.shop_owner
+          ? router.push({
+              pathname: `employees/shop-owner/${props.id}`,
+            })
+          : router.push({
+              pathname: `employees/${props.id}`,
+            });
       }}
     >
-      <div className={styles['body-container']}>{nameLabel}</div>
+      <div className={styles['body-container']}>
+        {props.shop_owner ? `${nameLabel} [Shop Owner]` : `${nameLabel}`}
+      </div>
       <div className={styles['body-container']}>{phoneLabel}</div>
       <div className={styles['body-container']}>{emailLabel}</div>
     </div>

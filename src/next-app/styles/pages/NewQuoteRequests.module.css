@@ -16,15 +16,15 @@
   justify-content: center;
   padding-left: 4vw;
   padding-right: 4vw;
-  padding-top: 5vh;
+  padding-top: 3vh;
   padding-bottom: 5vh;
 }
 
 .filter-container {
-  display: inline-block;
+  display: block;
+  padding-top: 4vh;
   padding-left: 4vw;
   padding-right: 4vw;
-  padding-bottom: 1vh;
 }
 
 .btn-container {

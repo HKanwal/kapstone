@@ -21,7 +21,9 @@ const Dropdown = (props: DropdownProps) => {
       <div className={styles['dropdown-container']}>
         <select
           className={styles['custom-select']}
-          onChange={(item) => handleSelect(item.target.value)}>
+          id={props.name ? props.name : ''}
+          onChange={(item) => handleSelect(item.target.value)}
+        >
           {props.items.map((item, index) => (
             <option key={index} value={item}>
               {item}
