@@ -346,23 +346,38 @@ const QuoteRequestPage: NextPage = (props: any) => {
           width="80%"
           onClick={async () => {
             try {
+              const data = {
+                shops: shops.map((shop: any) => shop.id.toString()),
+                description: notes,
+                vehicle_vin: VIN,
+                vehicle_make: make === 'Other' ? customMake : make,
+                vehicle_model: model,
+                vehicle_year: modelYear,
+              };
+
+              const formData = new FormData();
+
+              for (const [key, value] of Object.entries(data)) {
+                formData.append(key, JSON.stringify(value));
+              }
+
+              for (let i = 0; i < imgFiles.length; i++) {
+                formData.append('uploaded_images', imgFiles[i], imgFiles[i].name);
+              }
+
               const res = await axios.post(
                 `${apiUrl}/quotes/quote-requests/bulk_create/`,
+                formData,
                 {
-                  shops: shops.map((shop: any) => shop.id.toString()),
-                  description: notes,
-                  vehicle_vin: VIN,
-                  vehicle_make: make === 'Other' ? customMake : make,
-                  vehicle_model: model,
-                  vehicle_year: modelYear,
-                },
-                {
-                  headers: { Authorization: `JWT ${authData.access}` },
+                  headers: {
+                    Authorization: `JWT ${authData.access}`,
+                  },
+                  maxBodyLength: Infinity,
                 }
               );
-              if (res.status === 201) {
-                router.push('/quote-request-list');
-              }
+                if (res.status === 201) {
+                  router.push('/quote-request-list');
+                }
             } catch (error: any) {
               setErrors(error.response.data?.errors);
               scrollTo(0, 0);
