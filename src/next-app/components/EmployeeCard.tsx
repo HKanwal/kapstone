@@ -21,11 +21,13 @@ const EmployeeCard = (props: EmployeeProps) => {
       key={props.id}
       className={props.shop_owner ? styles['shop-owner-card'] : styles.card}
       onClick={() => {
-        !props.shop_owner
+        props.shop_owner
           ? router.push({
-              pathname: `employees/${props.id}`,
+              pathname: `employees/shop-owner/${props.id}`,
             })
-          : {};
+          : router.push({
+              pathname: `employees/${props.id}`,
+            });
       }}
     >
       <div className={styles['body-container']}>

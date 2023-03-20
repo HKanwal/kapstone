@@ -43,7 +43,7 @@ const EmployeeDetailsPage: NextPage = ({ employee }: any) => {
       first_name: yup.string().required(),
       last_name: yup.string().required(),
       email: yup.string().required(),
-      phone_number: yup.string().optional(),
+      phone_number: yup.number().optional(),
     }),
     salary: yup.string().optional(),
   });
@@ -59,18 +59,39 @@ const EmployeeDetailsPage: NextPage = ({ employee }: any) => {
     },
     validationSchema: schema,
     onSubmit: async (values) => {
-      const valuesToSend = {
+      const employeeValuesToSend = {
         salary: values.salary,
+      };
+
+      const userValuesToSend = {
+        email: values.user.email,
+        first_name: values.user.first_name,
+        last_name: values.user.last_name,
+        phone_number: values.user.phone_number,
       };
 
       const access_token = Cookies.get('access');
 
       try {
-        const res = await axios.patch(`${apiUrl}/accounts/employee/${id}/`, valuesToSend, {
+        const res = await axios.patch(`${apiUrl}/accounts/employee/${id}/`, employeeValuesToSend, {
           headers: { Authorization: `JWT ${access_token}` },
         });
         if (res.status === 200) {
-          router.reload();
+          try {
+            const res = await axios.patch(
+              `${apiUrl}/auth/users/${employee.user.id}/`,
+              userValuesToSend,
+              {
+                headers: { Authorization: `JWT ${access_token}` },
+              }
+            );
+            if (res.status === 200) {
+              router.reload();
+            }
+          } catch (error: any) {
+            setErrors(error.response.data.errors);
+            scrollTo(0, 0);
+          }
         }
       } catch (error: any) {
         setErrors(error.response.data.errors);
@@ -109,7 +130,7 @@ const EmployeeDetailsPage: NextPage = ({ employee }: any) => {
                   fieldLabel="First Name"
                   fieldType="string"
                   fieldRequired
-                  fieldDisabled={true}
+                  fieldDisabled={!inEdit}
                   onChange={form.handleChange}
                   error={form.errors.user?.first_name}
                 />
@@ -119,7 +140,7 @@ const EmployeeDetailsPage: NextPage = ({ employee }: any) => {
                   fieldLabel="Last Name"
                   fieldType="string"
                   fieldRequired
-                  fieldDisabled={true}
+                  fieldDisabled={!inEdit}
                   onChange={form.handleChange}
                   error={form.errors.user?.last_name}
                 />
@@ -129,7 +150,7 @@ const EmployeeDetailsPage: NextPage = ({ employee }: any) => {
                   fieldLabel="Email"
                   fieldType="string"
                   fieldRequired
-                  fieldDisabled={true}
+                  fieldDisabled={!inEdit}
                   onChange={form.handleChange}
                   error={form.errors.user?.email}
                 />
@@ -138,7 +159,7 @@ const EmployeeDetailsPage: NextPage = ({ employee }: any) => {
                   fieldName="user.phone_number"
                   fieldLabel="Phone Number"
                   fieldType="string"
-                  fieldDisabled={true}
+                  fieldDisabled={!inEdit}
                   onChange={form.handleChange}
                   error={form.errors.user?.phone_number}
                 />
