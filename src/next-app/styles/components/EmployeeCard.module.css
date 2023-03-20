@@ -1,5 +1,5 @@
 .card {
-  margin-bottom: 4vh;
+  margin-bottom: 2vh;
   width: 100%;
   height: 10%;
   padding: 4vh;
@@ -7,6 +7,19 @@
   border-width: 1mm;
   border-radius: 1vh;
   background-color: var(--text-input-color);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.shop-owner-card {
+  margin-bottom: 2vh;
+  width: 100%;
+  height: 10%;
+  padding: 4vh;
+  padding-left: 2vw;
+  border-width: 1mm;
+  border-radius: 1vh;
+  background-color: #e5fbf4;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .body-container {

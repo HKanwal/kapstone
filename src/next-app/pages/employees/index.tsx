@@ -9,6 +9,7 @@ import { GrAddCircle } from 'react-icons/gr';
 import FieldLabel from '../../components/FieldLabel';
 import TextField from '../../components/TextField';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 // @ts-ignore
 import * as cookie from 'cookie';
 
@@ -59,6 +60,18 @@ const EmployeesPage: NextPage = ({ employees, shop }: any) => {
           <TextField name="" placeholder="Email" onChange={handleFilterChange('email')} />
         </div>
         <div className={styles['card-container']}>
+          {Cookies.get('user_type') === 'shop_owner' ? (
+            <EmployeeCard
+              key={shop.shop_owner.id}
+              id={Number(shop.shop_owner.id)}
+              name={shop.shop_owner.first_name + ' ' + shop.shop_owner.last_name}
+              phone={shop.shop_owner.phone_number}
+              email={shop.shop_owner.email}
+              shop_owner
+            />
+          ) : (
+            <></>
+          )}
           {employeesList
             .filter((employee: any) => {
               for (let field in employeeFilter) {

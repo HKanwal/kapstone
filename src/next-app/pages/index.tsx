@@ -18,7 +18,7 @@ const Home: NextPage = () => {
       <div className={styles.container}>
         <div className={styles['btns-container']}>
           <Button
-            title="Continue as a Customer"
+            title="Explore"
             onClick={() => {
               router.push('/dashboard');
             }}
