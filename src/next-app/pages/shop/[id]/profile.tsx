@@ -23,10 +23,10 @@ const ProfilePage: NextPage = ({ shop }: any) => {
   const [shopHours, setShopHours] = useState(shop?.shophours_set ?? []);
   const schema = yup.object().shape({
     name: yup.string().required(),
-    shop_email: yup.string().required(),
+    shop_email: yup.string().optional(),
     shop_phone_number: yup
       .string()
-      .required()
+      .optional()
       .matches(/^\+\d{11}$/, 'Please enter a valid 11 digit phone number. Example: +10123456789'),
     num_bays: yup.number().optional(),
     num_employees: yup.number().optional(),
@@ -127,7 +127,6 @@ const ProfilePage: NextPage = ({ shop }: any) => {
                   fieldName="shop_email"
                   fieldLabel="Shop Email"
                   fieldType="string"
-                  fieldRequired
                   fieldDisabled={!inEdit}
                   onChange={form.handleChange}
                   error={form.errors.shop_email}
@@ -137,7 +136,6 @@ const ProfilePage: NextPage = ({ shop }: any) => {
                   fieldName="shop_phone_number"
                   fieldLabel="Shop Phone Number"
                   fieldType="string"
-                  fieldRequired
                   fieldDisabled={!inEdit}
                   onChange={form.handleChange}
                   error={form.errors.shop_phone_number}
