@@ -30,6 +30,7 @@ const TextArea = (props: TextAreaProps) => {
       <div className={styles['input-container']}>
         <textarea
           className={styles['input']}
+          id={props.name}
           placeholder={props.placeholder}
           value={value}
           onChange={handleChange}

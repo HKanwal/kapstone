@@ -1,5 +1,3 @@
 # Automated tests
 
-The folders and files for this folder are as follows:
-
-Describe ...
+The functional tests for the application are located in /src/next-app/cypress

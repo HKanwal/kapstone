@@ -39,7 +39,12 @@ const LoginPage: NextPage<LoginPageProps, {}> = (props) => {
               data.json().then((response: Jwt) => {
                 props.onLogin(response);
               });
-              router.push('/dashboard');
+              if (router.query && router.query.from) {
+                // @ts-ignore
+                router.push(router.query.from);
+              } else {
+                router.push('/dashboard');
+              }
             } else {
               setErrors({
                 username: ['Invalid credentials.'],

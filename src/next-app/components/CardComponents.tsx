@@ -141,7 +141,7 @@ export const CardHoursField = (props: any) => {
           const from_date = moment('2023-02-20 ' + shop_hour.from_time),
             to_date = moment('2023-02-20 ' + shop_hour.to_time);
           return (
-            <div className="hour-field flex flex-row row-gap-small" key={shop_hour.day}>
+            <div className="hour-field flex flex-col row-gap-small" key={shop_hour.day}>
               <NativeSelect
                 data={days.filter(
                   (day: string) =>
@@ -160,7 +160,7 @@ export const CardHoursField = (props: any) => {
                   <span>{to_date.format('h:mm A')}</span>
                 </div>
               ) : (
-                <span className="flex flex-row">
+                <span className="flex flex-col">
                   <div>
                     <TimeInput
                       value={from_date.toDate()}
@@ -195,7 +195,7 @@ export const CardHoursField = (props: any) => {
         })}
         {!props.fieldDisabled && props.hours.length < 7 && (
           <div
-            className="hour-field flex flex-row row-gap-small cursor-pointer hover-scale-up active-scale-down justify-content-center align-items-center"
+            className="hour-field flex flex-col row-gap-small cursor-pointer hover-scale-up active-scale-down justify-content-center align-items-center"
             onClick={() =>
               props.onCreate({
                 day: days

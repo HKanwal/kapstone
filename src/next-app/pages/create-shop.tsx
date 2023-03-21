@@ -20,6 +20,8 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
   const [shopHours, setShopHours] = useState(shop?.shophours_set ?? []);
   const schema = yup.object().shape({
     name: yup.string().required(),
+    shop_email: yup.string().required(),
+    shop_phone_number: yup.string().required(),
     num_bays: yup.number().optional(),
     address: yup.object().shape({
       street: yup.string().required(),
@@ -32,6 +34,8 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
   const form = useFormik({
     initialValues: {
       name: shop.name,
+      shop_email: shop.shop_email,
+      shop_phone_number: shop.shop_phone_number,
       num_bays: shop.num_bays,
       address: {
         street: shop.address.street,
@@ -49,6 +53,8 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
         // shop_services: services
         //   .filter((service: any) => service.active)
         //   .map((service: any) => service.id)
+        shop_email: values.shop_email,
+        shop_phone_number: values.shop_phone_number,
         num_bays: values.num_bays,
         address: {
           street: values.address.street,
@@ -83,7 +89,7 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
         onRightIconClick={() => router.push('/dashboard/')}
       />
       <div className="wrapper">
-        <div className="flex flex-row row-gap-large">
+        <div className="flex flex-col row-gap-large">
           {errors?.length > 0 && (
             <div className="flex flex-col row-gap-small">
               {errors.map((error: any, index) => {
@@ -108,6 +114,26 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
                   fieldDisabled={!inEdit}
                   onChange={form.handleChange}
                   error={form.errors.name}
+                />
+                <CardTextField
+                  fieldValue={form.values.shop_email}
+                  fieldName="shop_email"
+                  fieldLabel="Shop Email"
+                  fieldType="string"
+                  fieldRequired
+                  fieldDisabled={!inEdit}
+                  onChange={form.handleChange}
+                  error={form.errors.shop_email}
+                />
+                <CardTextField
+                  fieldValue={form.values.shop_phone_number}
+                  fieldName="shop_phone_number"
+                  fieldLabel="Shop Phone Number"
+                  fieldType="string"
+                  fieldRequired
+                  fieldDisabled={!inEdit}
+                  onChange={form.handleChange}
+                  error={form.errors.shop_phone_number}
                 />
                 {/* <CardMultiSelect
                   fieldLabel="Shop Services"
@@ -230,30 +256,40 @@ const CreateShopPage: NextPage = ({ shop }: any) => {
 };
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-  //  TODO: Need API to get shop details of current shop_owner account to allow edit functionality of page
   const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const user_type = parsedCookies.user_type;
-  if (user_type === 'shop_owner') {
-    return {
-      props: {
-        shop: {
-          name: '',
-          num_bays: '',
-          address: {
-            street: '',
-            city: '',
-            province: '',
-            country: '',
-            postal_code: '',
+  const access_token = parsedCookies.access;
+
+  try {
+    const shop = await axios.get(`${apiUrl}/shops/shops/me/`, {
+      headers: { Authorization: `JWT ${access_token}` },
+    });
+    //If a shop already exists on a shop owner account then block users from accessing this page
+    if (shop.data.id) {
+      return { notFound: true }
+    } else {
+      return {
+        props: {
+          shop: {
+            name: '',
+            num_bays: '',
+            address: {
+              street: '',
+              city: '',
+              province: '',
+              country: '',
+              postal_code: '',
+            },
           },
         },
-      },
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      notFound: true,
     };
   }
-
-  return {
-    notFound: true,
-  };
 };
 
 export default CreateShopPage;

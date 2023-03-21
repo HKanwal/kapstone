@@ -42,6 +42,7 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 2 November 2022 & 1.0 & First iteration of V\&V Plan\\
+7 March 2023 & 1.1 & Update tests after test development\\
 \bottomrule
 \end{tabularx}
 
@@ -197,9 +198,9 @@ The tools we will be using, including testing libraries, frameworks, and continu
 
 For the front-end, the linter we are using is ESLint. ESLint can also be used to ensure full code coverage. Our front-end testing frameworks will be Jest and Cypress. Jest will be used for unit testing, while Cypress will be used for end-to-end testing.
 
-For the back-end, the linter we are using is pylint. Our back-end testing framework will be pytest.
+For the back-end, the linter we are using is pylint. Our back-end testing framework will be the base django test framework..
 
-To facilitate continuous integration, we are using GitHub actions. As an additional tool that was not mentioned in our development plan becuse we had not planed to deploy our project, we are using Vercel to facilitate continuous deployment of both our main branch and all development branches of our GitHub repository.
+To facilitate continuous integration, we are using GitHub actions. As an additional tool that was not mentioned in our development plan because we had not planed to deploy our project, we are using Vercel to facilitate continuous deployment of both our main branch and all development branches of our GitHub repository.
 
 \subsection{Software Validation Plan}
 
@@ -251,19 +252,6 @@ Output: The shop is added to the shop owner profile.
 
 How test will be performed: The test will be performed using the \textbf{cypress} library to automatically fill in valid shop registration details.
 
-\item{FT-RT-1.1\\}
-
-Control: Manual
-					
-Initial State: Back end server is running and a shop was added through the automatic testing
-					
-Input: None
-					
-Output: The shop is added to the shop owner profile database.
-
-How test will be performed: The test will be performed by manually checking the database to verify that the shop was correctly added to the shop owner profile.
-
-
 \item{FT-RT-2\\}
 
 Control: Automatic
@@ -284,7 +272,7 @@ How test will be performed: The test will be performed using the \textbf{cypress
 
 \item{FT-RT-3\\}
 
-Control: Manual
+Control: Automatic
 					
 Initial State: Invite employee page
 					
@@ -292,7 +280,8 @@ Input: Employee emails are entered.
 					
 Output: The employees receive an email allowing them to sign up.
 
-How test will be performed: The test will be performed by manually entering in emails to the invite employee page and then manually verifying that the emails were sent and received by the intended accounts.
+How test will be performed: The test will be performed using the \textbf{cypress} library by entering in the email of the employee into the invite employee page and then verifying that the emails were sent and received by the intended account using an API call.
+
 
 \item{FT-RT-4\\}
 
@@ -310,13 +299,25 @@ How test will be performed: The test will be performed using the \textbf{cypress
 
 Control: Automatic
 					
-Initial State: Shop owner or employee account created and logged in
+Initial State: Employee account created and logged in
 					
-Input: Valid shop owner or employee account information different from registration information is entered.
+Input: Valid employee account information different from registration information is entered.
 					
-Output: Shop owner or employee account is updated with new information.
+Output: Employee account is updated with new information.
 
-How test will be performed: The test will be performed using the \textbf{cypress} library to verify that shop owners and employees can edit their account information by entering valid data and confirming the account is updated with the new data.
+How test will be performed: The test will be performed using the \textbf{cypress} library to verify that employees can edit their account information by entering valid data and confirming the account is updated with the new data.
+
+\item{FT-RT-5.1\\}
+
+Control: Automatic
+					
+Initial State: Shop owner account created and logged in
+					
+Input: Valid shop owner account information different from registration information is entered.
+					
+Output: Shop owner account is updated with new information.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library to verify that shop owners can edit their account information by entering valid data and confirming the account is updated with the new data.
 
 \item{FT-RT-6\\}
 
@@ -332,15 +333,27 @@ How test will be performed: The test will be performed using the \textbf{cypress
 
 \item{FT-RT-7\\}
 
-Control: Manual
+Control: Automatic
 					
 Initial State: Shop owner logged in and shop has employees assigned to it.
 					
-Input: Shop owner can view employee list and from there they can view employees, add employees, remove employees, search for employees and filter the employee list.
+Input: Shop owner can view employee list and from there they can view employees, invite employees, search for employees and filter the employee list.
 					
-Output: The shop employee has been added or removed and the employee list has been filtered or returned the search results.
+Output: The  employee has been invited and the employee list has been filtered or returned the search results.
 
-How test will be performed: The test will be performed manually by viewing the employee page on a shop owner account and manually adding an employee, removing an employee, filtering the employee list and searching the employee list.
+How test will be performed: The test will be performed using the \textbf{cypress} library by checking the employee page on a shop owner account and inviting an employee, filtering the employee list and searching the employee list.
+
+\item{FT-RT-7.1\\}
+
+Control: Automatic
+					
+Initial State: Employee or customer logged in.
+					
+Input: The pages containing information related to employee information are opened.
+					
+Output: The users should be redirected to a 404 page and not given access to these pages.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library by checking the employee page on an employee and customer account and ensuring these pages cannot be accessed by these users.
 
 \end{enumerate}
 
@@ -360,24 +373,12 @@ Output: Shop owner or employee is logged in with access to their information and
 
 How test will be performed: The test will be performed using the \textbf{cypress} library by entering a valid username and password for a shop owner or employee account and then checking that the user is logged in with access to their relevant data.
 
-\item{FT-RT-9\\}
-
-Control: Automatic
-					
-Initial State: Shop owner or employee account created
-					
-Input: Valid account email or username is entered and then new valid password is entered.
-					
-Output: User account password is changed.
-
-How test will be performed: The test will be performed using the \textbf{cypress} library by entering a valid username or email for a shop owner or employee account then confirming that they receive a password reset email. It will then test that the user can change their password by entering a new valid password and verifying that they can log in with the new password.
-
 \end{enumerate}
 
 \subsubsection{Quotes, Appointments and Work Orders}
 \begin{enumerate}
 
-\item{FT-RT-10\\}
+\item{FT-RT-9\\}
 
 Control: Automatic
 					
@@ -385,11 +386,23 @@ Initial State: Submit quote request page
 					
 Input: Quote request data is entered.
 					
+Output: Quote request is submitted and can be viewed by the customer.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library by entering valid quote request data, submitting the quote request and viewing the details.
+
+\item{FT-RT-9.1\\}
+
+Control: Automatic
+					
+Initial State: Submit quote request page
+					
+Input: Quote request is created.
+					
 Output: Quote request is submitted and can be viewed by a shop owner for a shop that the quote request was sent to.
 
-How test will be performed: The test will be performed using the \textbf{cypress} library by entering valid quote request data and submitting the quote request to a list of selected shops.
+How test will be performed: The test will be performed using the \textbf{cypress} library by entering valid quote request data, submitting the quote request to a list of selected shops, and viewing the details on a shop owner account.
 
-\item{FT-RT-11\\}
+\item{FT-RT-10\\}
 
 Control: Automatic
 					
@@ -397,35 +410,35 @@ Initial State: Quote request is received.
 					
 Input: Quote information is entered and sent to a customer from a shop owner.
 					
-Output: Quote is created and can be viewed by customer.
+Output: Quote is created and can be viewed by shop owner.
 
-How test will be performed: The test will be performed using the \textbf{cypress} library by entering valid quote information for a received quote request. Then the test case will verify that the quote has been created and received by the customer.
+How test will be performed: The test will be performed using the \textbf{cypress} library by entering valid quote information for a received quote request. Then the test case will verify that the quote has been created.
 
-\item{FT-RT-12\\}
-
-Control: Automatic
-					
-Initial State: Quote is received by customer.
-					
-Input: Appointment is created by customer and shop owner can accept, reject and assign the appointment.
-					
-Output: The appointment has been accepted, rejected or assigned to an employee by a shop owner.
-
-How test will be performed: The test will be performed using the \textbf{cypress} library by sending a valid appointment request from a customer and then the shop owner can accept, reject or assign the appointment.
-
-\item{FT-RT-13\\}
+\item{FT-RT-10.1\\}
 
 Control: Automatic
 					
-Initial State: Quote is accepted by a customer, customer creates appointment and appointment accepted by shop owner.
+Initial State: Quote request is received.
 					
-Input: Work order is created by automatically obtaining relevant information from the accepted quote.
+Input: Quote is sent to customer.
 					
-Output: Work Order has been created.
+Output: Quote information can be viewed by customer and accepted.
 
-How test will be performed: The test will be performed using the \textbf{pytest} library to verify that the work order was correctly created in the database.
+How test will be performed: The test will be performed using the \textbf{cypress} library by opening quote information for a received quote request and clicking Accept button. Then the test case will verify the quote has an accepted status.
 
-\item{FT-RT-14\\}
+\item{FT-RT-10.2\\}
+
+Control: Automatic
+					
+Initial State: Quote request is received.
+					
+Input: Quote is sent to customer.
+					
+Output: Quote information can be viewed by customer and rejected.
+
+How test will be performed: The test will be performed using the \textbf{cypress} library by opening quote information for a received quote request and clicking Reject button. Then the test case will verify the quote has an rejected status.
+
+\item{FT-RT-11\\}
 
 Control: Automatic
 					
@@ -437,45 +450,33 @@ Output: Customer has received and can view the work order.
 
 How test will be performed: The test will be performed using the \textbf{cypress} library by sending a work order to customer and verifying that the customer it was sent to has received the work order and can view it.
 
-\item{FT-RT-15\\}
+\item{FT-RT-11.1\\}
 
 Control: Automatic
 
-Initial State: Shop receives appointment request from customer.
+Initial State: A work order has been created.
 
-Input: Shop employee can view and accept appointment requests.
+Input: The work order is not sent to the customer by the shop owner or an employee.
 
-Output: Appointment is created.
+Output: The customer should not be able to see work orders that have not been sent to them.
 
-How test will be performed: The test will be performed using the \textbf{cypress} library to verify that the appointment is created after the employee accepts the appointment request and that employees can view the appointment after its creation.
+How test will be performed: The test will be performed using the \textbf{cypress} library to verify that a work order that has not been sent is not visible to customers.
 
-\item{FT-RT-16\\}
-
-Control: Automatic
-
-Initial State: Shop is created and shop owner invites employees.
-
-Input: Shop employees can edit shop availability.
-
-Output: Shop availability updates to reflect changes made by employees.
-
-How test will be performed: The test will be performed using the \textbf{cypress} library to verify that changes made to shop availability by employees are visible after changes are saved.
-
-\item{FT-RT-17\\}
+\item{FT-RT-11.2\\}
 
 Control: Automatic
 
-Initial State: Shop completes a work order for a customer.
+Initial State: A work order has been created.
 
-Input: Customers can submit rework orders.
+Input: The work order is sent to the customer by the shop owner or an employee.
 
-Output: Shop receives rework order request from customer.
+Output: The customer should be able to see the work order that has been sent to them.
 
-How test will be performed: The test will be performed using the \textbf{cypress} library to verify that the rework order is visible to the shop after the customer submits the rework order request.
+How test will be performed: The test will be performed using the \textbf{cypress} library to verify that a work order that has been sent to the customer via email is visible to them.
 
-\item{FT-RT-18\\}
+\item{FT-RT-12\\}
 
-Control: Automatic
+Control: Manual
 
 Initial State: Quotes are created.
 
@@ -483,9 +484,9 @@ Input: Shop owners and employees can view, search for, and filter quotes.
 
 Output: Quotes are displayed when selected or searched for.
 
-How test will be performed: The test will be performed using the \textbf{cypress} library to verify that the proper quotes are displayed when selected, filtered, or searched for.
+How test will be performed: The test will be performed by manually inputting search terms and filters to verify that the proper quotes are displayed when selected, filtered, or searched for.
 
-\item{FT-RT-19\\}
+\item{FT-RT-13\\}
 
 Control: Automatic
 
@@ -497,37 +498,15 @@ Output: Work orders are displayed when selected or searched for.
 
 How test will be performed: The test will be performed using the \textbf{cypress} library to verify that the correct work orders are displayed when selected, filtered, or searched for.
 
-\item{FT-RT-20\\}
-
-Control: Automatic
-
-Initial State: Appointment is created.
-
-Input: Work order is created automatically when an appointment is booked and deleted automatically when appointment is cancelled.
-
-Output: Both the appointment and work order become visible upon creation and both are no longer visible after cancellation.
-
-How test will be performed: The test will be performed using the \textbf{cypress} library to verify that both the appointment and the work order appear when the appointment is created and both disappear when the appointment is cancelled.
-
-\item{FT-RT-21\\}
-
-Control: Automatic
-
-Initial State: Work orders are created.
-
-Input: Shop owners and employees can assign work orders to employees.
-
-Output: Employees receive work order assignment.
-
-How test will be performed: The test will be performed using the \textbf{cypress} library to verify that the correct work order is assigned to the correct employee.
-
 \end{enumerate}
+
+
 
 \subsubsection{View/Edit Shops and Shop Details}
 
 \begin{enumerate}
 
-\item{FT-RT-22\\}
+\item{FT-RT-14\\}
 
 Control: Automatic
 					
@@ -539,46 +518,22 @@ Output: The shop information has been edited with the new information.
 
 How test will be performed: The test will be performed using the \textbf{cypress} library to edit a shop's information with new information and then testing that the information has been updated with the new information that was inputted.
 
-\item{FT-RT-23\\}
-
-Control: Automatic
-
-Initial State: Shop and shop profile are created.
-
-Input: Any user can view a shop profile.
-
-Output: Shop profile displayed to the user.
-
-How test will be performed: The test will be performed using the \textbf{cypress} library to verify that the shop profile is visible when a user chooses to view it.
-
-\item{FT-RT-24\\}
-
-Control: Automatic
-
-Initial State: Customers access the system.
-
-Input: Customers can view, search for, and filter shops.
-
-Output: Shops are displayed to customers when selected and searched for.
-
-How test will be performed: The test will be performed using the \textbf{cypress} library to verify that the correct shop is displayed to the customer when selected, filtered, or searched for.
-
 \end{enumerate}
 
 \subsubsection{Call and Chat Functionality}
 
 \begin{enumerate}
-    \item{FT-RT-25\\}
+    \item{FT-RT-15\\}
 
-Control: Automatic and Manual
+Control: Manual
 
 Initial State: Shop is created and shop owner invites employees.
 
-Input: Shop owners and employees can call and chat with customers.
+Input: Shop owners and employees can call customers.
 
-Output: Shop owners and employees communicate with customers through the call and chat functionality.
+Output: Shop owners and employees communicate with customers through the call functionality.
 
-How test will be performed: The test for the chat functionality will be performed using the \textbf{cypress} library to verify that shops and customers can send and receive messages to and from each other. The test for the call functionality will be performed manually to ensure that shops and customers can also correspond through audio calls.
+How test will be performed: The test for the call functionality will be performed manually to ensure that shops and customers can also correspond through audio calls.
 \end{enumerate}
 
 \subsection{Tests for Nonfunctional Requirements}
@@ -626,18 +581,6 @@ Output/Result: After a few minutes using the application, 85\% of a representati
 					
 How test will be performed: After being introduced to the application for the first time, a group of individuals representing the target audience will be questioned about whether they feel that the application is professional and trustworthy. It should be considered successful if more than 85\% of individuals agree that the application looks professional and trustworthy.
 
-\item{NFT-LF-3}
-
-Type: Structural, Static, Manual
-					
-Initial State: The application source code is downloaded onto a computer.
-					
-Input: A team of developers is asked to go through the code and conduct an informal review of the fonts and styles used.
-					
-Output: The developers shall not be able to find inconsistencies in the fonts and styles used throughout the application.
-					
-How test will be performed: A team of developers will be given the source code on a computer and be asked to review the code to find inconsistencies in the fonts and styles used throughout the application. The developers should not be able to find any such inconsistencies.
-
 \end{enumerate}
 
 \subsubsection{Usability}
@@ -669,21 +612,10 @@ How test will be performed: A diverse group of users will be shown the different
 
 \subsubsection{Performance}
 \begin{enumerate}
+
 \item{NFT-PF-1}
 
-Type: Dynamic, Automatic
-					
-Initial State: The application is deployed and launched on a web server.
-					
-Input/Condition: Messages are sent from one user to another.
-					
-Output/Result: Messages should be received by the receiving user within 2 seconds.
-					
-How test will be performed: The \textbf{cypress} library will be used to simulate two instances of users. One instance will send a message to another to verify if the messages are received within the desired time. If the messages are received within 2 seconds for 90 percent of the times, and less than 5 seconds for the rest of the times, then the test would be considered successful.
-
-\item{NFT-PF-2}
-
-Type: Dynamic, Automatic
+Type: Dynamic, Manual
 					
 Initial State: The application is deployed and launched on a web server.
 					
@@ -691,80 +623,8 @@ Input/Condition: Different pages of the application are visited.
 					
 Output/Result: The loading time between different pages shall be no more than 5 seconds.
 					
-How test will be performed: The \textbf{cypress} library will be used to simulate navigation between different pages. The test will be considered successful if the application takes less than 2 seconds 95\% of times, and less than 4 seconds rest of the times.
+How test will be performed: Users will manually navigate between different pages. The test will be considered successful if the application takes less than 2 seconds 90\% of times, and less than 4 seconds rest of the times.
 \end{enumerate}
-
-\subsubsection{Operational and Environmental}
-\begin{enumerate}
-\item{NFT-OE-1}
-
-Type: Dynamic, Manual
-					
-Initial State: The application is deployed on a web server and is made available via a URL.
-					
-Input/Condition: Users from different parts of the world are asked to access the application using the URL.
-					
-Output/Result: The application is accessible regardless of the user's location.
-					
-How test will be performed: Users from around the world will be asked to access the website using the provided URL. If the application is accessible from everywhere, this test would be considered a success.
-\end{enumerate}
-
-\subsubsection{Maintainability and Support}
-\begin{enumerate}
-\item{NFT-MS-1}
-
-Type: Dynamic, Manual
-					
-Initial State: The application is deployed on a web server.
-					
-Input/Condition: Install and launch the application on different mobile and desktop devices, and on modern web browsers.
-					
-Output/Result: The application should launch successfully on all devices tested on.
-					
-How test will be performed: The application will be deployed on a web server. It will be accessed via a URL and run on modern web browsers. It will also be installed on different mobile and desktop devices as a Progressive Web App (PWA). This will be used to verify if the application can operate on multiple platforms.
-\end{enumerate}
-
-\subsubsection{Security}
-\begin{enumerate}
-\item{NFT-ST-1}
-
-Type: Structural, Static, Manual
-					
-Initial State: The application source code is downloaded onto a computer.
-					
-Input/Condition: A security firm is asked to inspect the code to find potential areas where log reports can leak from.
-					
-Output/Result: The security firm is unable to find any security risks related to log reports.
-					
-How test will be performed: A security firm will be asked to inspect the code and find security risks where log reports can get accessed from someone other than the developers or other members of the company. The test will be considered successful if the security firm can certify that only company employees and developers have access to the internal bug and crash log reports.
-
-\item{NFT-ST-2}
-
-Type: Structural, Static, Manual
-					
-Initial State: The application source code is downloaded onto a computer.
-					
-Input/Condition: A security firm is asked to inspect the code to determine if there is a flaw that allows users to directly access the database.
-					
-Output/Result: The security firm is unable to find any security risks related to database access.
-					
-How test will be performed: A security firm will be asked to inspect the code to see if there is a vulnerability that enables users to access the database directly. The test will be considered successful if the security firm can certify that the database cannot be accessed by the users directly.
-
-\item{NFT-ST-3}
-
-Type: Dynamic, Automatic
-					
-Initial State: The application is deployed on a web server.
-					
-Input/Condition: The application is launched.
-					
-Output/Result: A notification is displayed to notify the user that the application uses cookies.
-					
-How test will be performed: The \textbf{cypress} library will be used to open the application and verify if a notification is shown related to storing of cookies.
-\end{enumerate}
-
-
-\pagebreak
 
 \subsection{Traceability Between Test Cases and Requirements}
 
@@ -783,9 +643,7 @@ The following tables show the traceability between functional and non-functional
      \textbf{Test Case ID} & \textbf{Related Requirement(s)}\\ 
     \hline 
     \hline
-    FT-RT-1 & FR-1\\
-    \hline
-     FT-RT-1.1 & FR-1\\
+     FT-RT-1 & FR-1\\
     \hline
     FT-RT-2 & FR-2\\
     \hline
@@ -795,19 +653,17 @@ The following tables show the traceability between functional and non-functional
     \hline
     FT-RT-5 & FR-6\\
     \hline
+    FT-RT-5.1 & FR-6\\
+    \hline
     FT-RT-6 & FR-7\\
     \hline
     FT-RT-7 & FR-5, FR-13, FR-14\\
     \hline
+    FT-RT-7.1 & FR-5, FR-13, FR-14\\
+    \hline
     FT-RT-8 & FR-8\\
     \hline
-    FT-RT-9 & FR-9\\
-    \hline
-    FT-RT-10 & FR-29\\
-    \hline
-    FT-RT-11 & FR-10, FR-11\\
-    \hline
-    FT-RT-12 & FR-12\\
+    FT-RT-9 & FR-29\\
     \hline
 \end{tabular}
 \quad
@@ -816,31 +672,27 @@ The following tables show the traceability between functional and non-functional
      \textbf{Test Case ID} & \textbf{Related Requirement(s)}\\ 
     \hline 
     \hline 
-    FT-RT-13 & FR-15\\
+    FT-RT-9.1 & FR-33\\
     \hline
-    FT-RT-14 & FR-16\\
+    FT-RT-10 & FR-10, FR-11, FR-22\\
     \hline
-    FT-RT-15 & FR-18, FR-28\\
+    FT-RT-10.1 &  FR-11, FR-32\\
     \hline
-    FT-RT-16 & FR-19\\
+    FT-RT-10.2 & FR-11, FR-32\\
     \hline
-    FT-RT-17 & FR-21\\
+    FT-RT-11 & FR-16\\
     \hline
-    FT-RT-18 & FR-22\\
+     FT-RT-11.1 & FR-16\\
     \hline
-    FT-RT-19 & FR-23\\
+     FT-RT-11.2 & FR-16\\
     \hline
-    FT-RT-20 & FR-25, FR-26, FR-28\\
+    FT-RT-12 & FR-22\\
     \hline
-    FT-RT-21 & FR-27\\
+    FT-RT-13 & FR-23\\
     \hline
-    FT-RT-22 & FR-17\\
+    FT-RT-14 & FR-17\\
     \hline 
-    FT-RT-23 & FR-20\\
-    \hline
-    FT-RT-24 & FR-30\\
-    \hline
-    FT-RT-25 & FR-24\\
+    FT-RT-15 & FR-24\\
     \hline
 \end{tabular}}
 \end{table}
@@ -858,25 +710,11 @@ The following tables show the traceability between functional and non-functional
     \hline
     NFT-LF-2 & NFR-4\\
     \hline
-    NFT-LF-3 & NFR-5\\
-    \hline
     NFT-UT-1 & NFR-6, NFR-7\\
     \hline
     NFT-UT-2 & NFR-10\\
     \hline
-    NFT-PF-1 & NFR-11\\
-    \hline
-    NFT-PF-2 & NFR-12\\
-    \hline
-    NFT-OE-1 & NFR-19\\
-    \hline
-    NFT-MS-1 & NFR-21\\
-    \hline
-    NFT-ST-1 & NFR-22\\
-    \hline
-    NFT-ST-2 & NFR-23\\
-    \hline
-    NFT-ST-3 & NFR-25\\
+    NFT-PF-1 & NFR-12\\
     \hline
 \end{tabular}}
 \end{table}
