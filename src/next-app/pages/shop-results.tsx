@@ -13,6 +13,7 @@ import { DateRangePickerValue } from '@mantine/dates';
 import * as cookie from 'cookie';
 import axios from 'axios';
 import apiUrl from '../constants/api-url';
+import Cookies from 'js-cookie';
 
 type ShopResult = {
   name: string;
@@ -32,9 +33,14 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
   const [shopList, setShopList] = useState(shops);
   const [distance, setDistance] = useState('');
   const [unit, setUnit] = useState('km');
-  const [unitList, setUnitList] = useState(['km', 'miles'])
+  const [unitList, setUnitList] = useState(['km', 'miles']);
+  const [shopModalVisible, setShopModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState(<div></div>);
   const [dateRange, setDateRange] = useState('');
   const [customDates, setCustomDates] = useState<DateRangePickerValue>([null, null]);
+  const nameFilter = Cookies.get('shopName');
+  const service = Cookies.get('service');
+  const bookings = Cookies.get('bookings');
 
   const handleFilterClick = () => {
     setFilterOpen((prev) => !prev);
@@ -50,8 +56,6 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
 
   const applyFilters = () => {
     const filteredList: any = [];
-
-    console.log(unit);
 
     if (distance !== '') {
       let distanceInMeters = parseFloat(distance);
@@ -75,26 +79,158 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
     setDistance('');
   };
 
-  console.log(shops);
+  const openShopModal = (shop: any) => {
+    setShopModalVisible(true);
+    console.log(shop);
+    const hours: any = [];
+    const services: any = [];
+
+    shop.shophours_set.forEach((day: any) => {
+      hours.push(
+        <div key={day.id}>
+          {day.day.toUpperCase()}
+          <br></br>
+          {day.from_time} - {day.to_time}
+        </div>
+      );
+    });
+
+    shop.shop_services.forEach((service: any) => {
+      services.push(
+        <div key={service.name}>
+          {service.name}
+        </div>
+      );
+    });
+
+    const content = (
+      <div>
+        {shop.name}
+        <br></br>
+        {shop.address.street}, {shop.address.city}, {shop.address.province}, {shop.address.country}, {shop.address.postal_code}
+        <br></br>
+        {shop.shop_phone_number ? `Phone Number: ${shop.shop_phone_number}` : ''}
+        <br></br>
+        {shop.shop_email ? `Email: ${shop.shop_email}` : ''}
+        <br></br>
+        <div style={{ paddingTop: '2vh' }}>
+          {hours.length > 0 ? 'Hours:' : ''}
+          <div style={{ paddingLeft: '10vw' }}>
+            {hours}
+          </div>
+        </div>
+        <div style={{ paddingTop: '2vh' }}>
+          {services.length > 0 ? 'Services:' : ''}
+          <div style={{ paddingLeft: '10vw' }}>
+            {services}
+          </div>
+        </div>
+      </div >
+    );
+    setModalContent(content);
+  }
+
+  const shopResult = (shop: any) => {
+    return (
+      <div key={shop.id} className={styles['result-container']} onClick={() => openShopModal(shop)}>
+        <ShopResult
+          name={shop.name}
+          distance={shop.distance_from_user}
+          services={shop.shop_services.length > 0 ? shop.shop_services : undefined}
+          // onClickAppointment={
+          //   shop.shops_services.length() > 0 ? () => handleAppointmentClick(shop) : undefined
+          // }
+          onClickCall={shop.shop_phone_number !== null ? () => handleCallClick(shop.shop_phone_number) : undefined}
+        />
+      </div>
+    );
+  }
 
   useEffect(() => {
     const results: any = [];
+    console.log(shops);
     console.log(shopList);
-    shopList.forEach((shop: any) => {
-      results.push(
-        <div key={shop.id} className={styles['result-container']}>
-          <ShopResult
-            name={shop.name}
-            distance={shop.distance_from_user}
-            services={shop.shop_services.length > 0 ? shop.shop_services : undefined}
-            // onClickAppointment={
-            //   shop.shops_services.length() > 0 ? () => handleAppointmentClick(shop) : undefined
-            // }
-            onClickCall={shop.shop_phone_number !== null ? () => handleCallClick(shop.shop_phone_number) : undefined}
-          />
-        </div>
-      )
-    });
+
+    if (bookings && bookings == 'true') {
+      if (nameFilter && !service) {
+        shopList.forEach((shop: any) => {
+          if (shop.name.toUpperCase().includes(nameFilter.toUpperCase()) && shop.shop_services.length > 0) {
+            results.push(shopResult(shop));
+          }
+        });
+      } else if (!nameFilter && service) {
+        shopList.forEach((shop: any) => {
+          let hasService = false;
+          shop.shop_services.forEach((serviceType: any) => {
+            if (serviceType.name === service) {
+              hasService = true;
+            }
+          });
+
+          if (hasService) {
+            results.push(shopResult(shop));
+          }
+        });
+      } else if (nameFilter && service) {
+        shopList.forEach((shop: any) => {
+          let hasService = false;
+          shop.shop_services.forEach((serviceType: any) => {
+            if (serviceType.name === service) {
+              hasService = true;
+            }
+          });
+
+          if (shop.name.toUpperCase().includes(nameFilter.toUpperCase()) && hasService) {
+            results.push(shopResult(shop));
+          }
+        });
+      } else {
+        console.log('a');
+        shopList.forEach((shop: any) => {
+          if (shop.shop_services.length > 0) {
+            results.push(shopResult(shop));
+          }
+        });
+      }
+    } else {
+      if (nameFilter && !service) {
+        shopList.forEach((shop: any) => {
+          if (shop.name.toUpperCase().includes(nameFilter.toUpperCase())) {
+            results.push(shopResult(shop));
+          }
+        });
+      } else if (!nameFilter && service) {
+        shopList.forEach((shop: any) => {
+          let hasService = false;
+          shop.shop_services.forEach((serviceType: any) => {
+            if (serviceType.name === service) {
+              hasService = true;
+            }
+          });
+
+          if (hasService) {
+            results.push(shopResult(shop));
+          }
+        });
+      } else if (nameFilter && service) {
+        shopList.forEach((shop: any) => {
+          let hasService = false;
+          shop.shop_services.forEach((serviceType: any) => {
+            if (serviceType.name === service) {
+              hasService = true;
+            }
+          });
+
+          if (shop.name.toUpperCase().includes(nameFilter.toUpperCase()) && hasService) {
+            results.push(shopResult(shop));
+          }
+        });
+      } else {
+        shopList.forEach((shop: any) => {
+          results.push(shopResult(shop));
+        });
+      }
+    }
     setShopResults(results);
   }, [shopList]);
 
@@ -104,6 +240,9 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
       <div className={styles.content}>
         {shopResults}
       </div>
+      <Modal visible={shopModalVisible} onClose={() => setShopModalVisible(false)}>
+        {modalContent}
+      </Modal>
       <Modal visible={filterOpen} onClose={() => setFilterOpen(false)} style={{ width: '85vw' }}>
         <div className={styles['field-container']}>
           <SingleTextField
@@ -151,7 +290,6 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const access_token = parsedCookies.access;
   const postalCode = parsedCookies.pocode;
-
   try {
     const shops = await axios.get(`${apiUrl}/shops/shops/distance/?postal_code=${postalCode}`, {
       headers: { Authorization: `JWT ${access_token}` },

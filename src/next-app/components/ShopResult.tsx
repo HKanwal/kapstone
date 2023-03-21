@@ -3,7 +3,7 @@ import { BiTime } from 'react-icons/bi';
 import { AiFillPhone } from 'react-icons/ai';
 import styles from '../styles/components/ShopResult.module.css';
 import IconButton from './IconButton';
-import { CSSProperties, ChangeEvent } from 'react';
+import { CSSProperties, ChangeEvent, useState } from 'react';
 import { Checkbox } from '@mantine/core';
 
 type CircularIconButtonProps = {
@@ -89,7 +89,7 @@ const ShopResult = (props: ShopResultProps) => {
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
 };
 
