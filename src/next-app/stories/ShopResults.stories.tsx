@@ -26,10 +26,6 @@ export const Canned = Template.bind({});
 Canned.args = {
   name: 'Example Shop',
   distance: '15km',
-  cannedDetails: {
-    cost: 500,
-    time: '1 hour',
-  },
 };
 
 export const SelectMode = Template.bind({});
