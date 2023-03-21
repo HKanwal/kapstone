@@ -13,7 +13,7 @@ import axios from 'axios';
 import apiUrl from '../constants/api-url';
 import * as cookie from 'cookie';
 
-const FindShopPage: NextPage = ({ services }: any) => {
+const FindShopPage: NextPage = ({ services, title }: any) => {
   const [postalCode, setPostalCode] = useState('');
   const [shopName, setShopName] = useState('');
   const [serviceOptions, setServiceOptions] = useState([]);
@@ -21,6 +21,7 @@ const FindShopPage: NextPage = ({ services }: any) => {
   const [checked, setChecked] = useState(false);
   const valid = postalCode.length > 0;
   const router = useRouter();
+  const qr = Cookies.get('qr');
 
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     setChecked(e.target.checked);
@@ -31,11 +32,15 @@ const FindShopPage: NextPage = ({ services }: any) => {
     Cookies.set("shopName", shopName);
     Cookies.set("service", serviceType);
     Cookies.set("bookings", checked.toString());
-    router.push({ pathname: '/shop-results' });
+
+    if (qr && qr === 'true') {
+      router.push({ pathname: '/shop-results-qr' });
+    } else {
+      router.push({ pathname: '/shop-results' });
+    }
   };
 
   useEffect(() => {
-    console.log(services);
     const tempServices: any = [];
     services.forEach((service: any) => {
       tempServices.push(service.name);
@@ -45,7 +50,7 @@ const FindShopPage: NextPage = ({ services }: any) => {
 
   return (
     <div className={formStyles['page-container']}>
-      <Header title="Find Shop" />
+      <Header title={title} />
 
       <div className={formStyles.content}>
         <div className={formStyles['field-container']}>
@@ -77,6 +82,11 @@ const FindShopPage: NextPage = ({ services }: any) => {
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const access_token = parsedCookies.access;
+  const qr = parsedCookies.qr;
+  let title = 'Find Shop';
+  if (qr && qr === 'true') {
+    title = 'Send to Shops';
+  }
 
   try {
     const services = await axios.get(`${apiUrl}/shops/services/`, {
@@ -85,6 +95,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     return {
       props: {
         services: services.data,
+        title: title,
       },
     };
   } catch (error) {
@@ -92,6 +103,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     return {
       props: {
         services: [],
+        title: 'Find Shop',
       },
     };
   }

@@ -12,6 +12,7 @@
 
 .labels-container {
   display: flex;
+  width: 70%;
   flex-direction: column;
   margin-left: min(5%, 40px);
 }

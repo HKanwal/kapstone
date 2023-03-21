@@ -4,7 +4,7 @@ import styles from '../styles/pages/ShopResults.module.css';
 import { BsFilter } from 'react-icons/bs';
 import ShopResult from '../components/ShopResult';
 import Modal from '../components/Modal';
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import Button from '../components/Button';
 import SingleTextField from '../components/SingleTextField';
 import DropdownField from '../components/DropdownField';
@@ -38,13 +38,17 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
   const [modalContent, setModalContent] = useState(<div></div>);
   const [dateRange, setDateRange] = useState('');
   const [customDates, setCustomDates] = useState<DateRangePickerValue>([null, null]);
+  const qr = Cookies.get('qr');
   const nameFilter = Cookies.get('shopName');
   const service = Cookies.get('service');
   const bookings = Cookies.get('bookings');
-
+  let inSelectMode = qr && qr === 'true' ? true : false;
+  const [showSubmitButton, setShowSubmitButton] = useState(false);
   const handleFilterClick = () => {
     setFilterOpen((prev) => !prev);
   };
+  const [checkBoxesChanged, setCheckBoxesChanged] = useState(false);
+  const [selectedShops, setSelectedShops] = useState<string[]>([]);
 
   const handleAppointmentClick = (shop: any) => {
     console.log('TODO: handle appointment click');
@@ -64,7 +68,7 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
       } else {
         distanceInMeters = distanceInMeters * 1609.34;
       }
-      console.log(distanceInMeters);
+
       shops.forEach((shop: any) => {
         if (parseFloat(shop.distance_from_user_in_meters) <= distanceInMeters) {
           filteredList.push(shop);
@@ -81,7 +85,6 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
 
   const openShopModal = (shop: any) => {
     setShopModalVisible(true);
-    console.log(shop);
     const hours: any = [];
     const services: any = [];
 
@@ -130,12 +133,25 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
     setModalContent(content);
   }
 
+  const onSelect = (id: number) => {
+    setSelectedShops([...selectedShops, id.toString()]);
+  }
+
+  const onDeselect = (id: number) => {
+    setSelectedShops(selectedShops.filter((selectedShopId) => selectedShopId !== id.toString()));
+  }
+
   const shopResult = (shop: any) => {
     return (
-      <div key={shop.id} className={styles['result-container']} onClick={() => openShopModal(shop)}>
+      <div key={shop.id} className={styles['result-container']}>
         <ShopResult
           name={shop.name}
+          id={shop.id}
+          onClick={() => openShopModal(shop)}
           distance={shop.distance_from_user}
+          inSelectMode={inSelectMode}
+          onSelect={onSelect}
+          onDeselect={onDeselect}
           services={shop.shop_services.length > 0 ? shop.shop_services : undefined}
           // onClickAppointment={
           //   shop.shops_services.length() > 0 ? () => handleAppointmentClick(shop) : undefined
@@ -148,9 +164,7 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
 
   useEffect(() => {
     const results: any = [];
-    console.log(shops);
-    console.log(shopList);
-
+    setShowSubmitButton(inSelectMode);
     if (bookings && bookings == 'true') {
       if (nameFilter && !service) {
         shopList.forEach((shop: any) => {
@@ -185,7 +199,6 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
           }
         });
       } else {
-        console.log('a');
         shopList.forEach((shop: any) => {
           if (shop.shop_services.length > 0) {
             results.push(shopResult(shop));
@@ -232,7 +245,7 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
       }
     }
     setShopResults(results);
-  }, [shopList]);
+  }, [shopList, selectedShops]);
 
   return (
     <div className={styles.container}>
@@ -240,6 +253,10 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
       <div className={styles.content}>
         {shopResults}
       </div>
+      {showSubmitButton ?
+        (<div style={{ paddingLeft: '17%', paddingBottom: '5vh' }}>
+          <Button title='Send Quote Request' width={'80%'} disabled={false} onClick={() => console.log(selectedShops)} />
+        </div>) : ''}
       <Modal visible={shopModalVisible} onClose={() => setShopModalVisible(false)}>
         {modalContent}
       </Modal>

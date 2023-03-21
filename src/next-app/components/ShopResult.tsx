@@ -28,6 +28,7 @@ const CircularIconButton = (props: CircularIconButtonProps) => {
 
 type ShopResultProps = {
   name: string;
+  id: number;
   distance: string;
   onClick?: () => void;
   /**
@@ -44,25 +45,25 @@ type ShopResultProps = {
   /**
    * Only triggered if inSelectMode = true.
    */
-  onSelect?: () => void;
+  onSelect?: (id: number) => void;
   /**
    * Only triggered if inSelectMode = true.
    */
-  onDeselect?: () => void;
+  onDeselect?: (id: number) => void;
 };
 
 const ShopResult = (props: ShopResultProps) => {
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      props.onSelect && props.onSelect();
+      props.onSelect && props.onSelect(props.id);
     } else {
-      props.onDeselect && props.onDeselect();
+      props.onDeselect && props.onDeselect(props.id);
     }
   };
 
   return (
     <div className={styles.container} style={props.style}>
-      <div className={styles['labels-container']}>
+      <div className={styles['labels-container']} onClick={props.onClick}>
         <span className={styles.name}>{props.name}</span>
         {props.services ? (
           <span className={styles['canned-details']}>
