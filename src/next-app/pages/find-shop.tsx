@@ -32,11 +32,7 @@ const FindShopPage: NextPage = ({ services, title }: any) => {
     Cookies.set("service", serviceType);
     Cookies.set("bookings", checked.toString());
 
-    if (qr && qr === 'true') {
-      router.push({ pathname: '/shop-results-qr' });
-    } else {
-      router.push({ pathname: '/shop-results' });
-    }
+    router.push({ pathname: '/shop-results' });
   };
 
   useEffect(() => {
