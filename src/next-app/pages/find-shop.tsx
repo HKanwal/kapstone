@@ -84,9 +84,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   }
 
   try {
-    const services = await axios.get(`${apiUrl}/shops/services/`, {
-      headers: { Authorization: `JWT ${access_token}` },
-    });
+    const services = await axios.get(`${apiUrl}/shops/services/`);
     return {
       props: {
         services: services.data,

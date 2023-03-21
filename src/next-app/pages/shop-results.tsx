@@ -4,7 +4,7 @@ import styles from '../styles/pages/ShopResults.module.css';
 import { BsFilter } from 'react-icons/bs';
 import ShopResult from '../components/ShopResult';
 import Modal from '../components/Modal';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '../components/Button';
 import SingleTextField from '../components/SingleTextField';
 import DropdownField from '../components/DropdownField';
@@ -47,7 +47,7 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
   const handleFilterClick = () => {
     setFilterOpen((prev) => !prev);
   };
-  const [checkBoxesChanged, setCheckBoxesChanged] = useState(false);
+  const [buttonEnabled, setButtonEnabled] = useState(false);
   const [selectedShops, setSelectedShops] = useState<string[]>([]);
 
   const handleAppointmentClick = (shop: any) => {
@@ -165,6 +165,13 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
   useEffect(() => {
     const results: any = [];
     setShowSubmitButton(inSelectMode);
+
+    if (selectedShops.length > 0) {
+      setButtonEnabled(true);
+    } else {
+      setButtonEnabled(false);
+    }
+
     if (bookings && bookings == 'true') {
       if (nameFilter && !service) {
         shopList.forEach((shop: any) => {
@@ -255,7 +262,7 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
       </div>
       {showSubmitButton ?
         (<div style={{ paddingLeft: '17%', paddingBottom: '5vh' }}>
-          <Button title='Send Quote Request' width={'80%'} disabled={false} onClick={() => console.log(selectedShops)} />
+          <Button title='Send Quote Request' width={'80%'} disabled={!buttonEnabled} onClick={() => console.log(selectedShops)} />
         </div>) : ''}
       <Modal visible={shopModalVisible} onClose={() => setShopModalVisible(false)}>
         {modalContent}
@@ -305,12 +312,9 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   const parsedCookies = cookie.parse(String(context.req.headers.cookie));
-  const access_token = parsedCookies.access;
   const postalCode = parsedCookies.pocode;
   try {
-    const shops = await axios.get(`${apiUrl}/shops/shops/distance/?postal_code=${postalCode}`, {
-      headers: { Authorization: `JWT ${access_token}` },
-    });
+    const shops = await axios.get(`${apiUrl}/shops/shops/distance/?postal_code=${postalCode}`);
     return {
       props: {
         shops: shops.data,
