@@ -9,7 +9,7 @@ export const CustomerNavbarData = [
   },
   {
     title: 'Shop Search',
-    path: '/shop-results',
+    path: '/find-shop',
     icon: <IoIcons.IoMdMap />,
   },
   {

@@ -4,7 +4,6 @@ import Button from '../components/Button';
 import DropdownField from '../components/DropdownField';
 import Header from '../components/Header';
 import TextField from '../components/TextField';
-import { serviceTypes } from '../constants/service-types';
 import styles from '../styles/pages/FindShop.module.css';
 import formStyles from '../styles/pages/Form.module.css';
 import { useRouter } from 'next/router';
