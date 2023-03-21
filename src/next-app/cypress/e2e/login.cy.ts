@@ -4,7 +4,7 @@ describe('login page shows continue option', () => {
     cy.visit('/');
 
     // Find a button with text "Continue"
-    cy.get('button').contains('Continue').click();
+    cy.get('button').contains('Explore').click();
 
     // The new url should include "/dashboard"
     cy.url().should('include', '/dashboard');
