@@ -15,14 +15,14 @@ import Cookies from 'js-cookie';
 import * as cookie from 'cookie';
 import Link from '../components/Link';
 
-const CreateAppointment: NextPage = (any) => {
+const CreateAppointment: NextPage = ({ shop }: any) => {
   const router = useRouter();
   const [errors, setErrors] = useState([]);
   const schema = yup.object().shape({
     firstName: yup.string().required(),
     lastName: yup.string().required(),
-    phone: yup.number().max(15).required(),
-    email: yup.string(),
+    phone: yup.number().required(),
+    email: yup.string().required(),
     address: yup.string(),
     carYear: yup.number().positive().required(),
     carMake: yup.string().required(),
@@ -46,7 +46,38 @@ const CreateAppointment: NextPage = (any) => {
     validationSchema: schema,
     validateOnChange: false,
     validateOnBlur: false,
-    onSubmit: async (values) => {},
+    onSubmit: async (values) => {
+      const email = values.email;
+      const access_token = Cookies.get('access');
+
+      try {
+        const customer_res = await axios.get(`${apiUrl}/accounts/customer/get_customer_by_email`, {
+          headers: { Authorization: `JWT ${access_token}` },
+          params: { email: email },
+        });
+        if (customer_res.status === 201) {
+          const customer = customer_res.data['id'];
+          const valuesToSend = {
+            customer: customer,
+            shop: shop.id,
+            //TODO: CONFIGURE OTHER VALUES
+          };
+          try {
+            const res = await axios.post(`${apiUrl}/shops/appointments/`, valuesToSend, {
+              headers: { Authorization: `JWT ${access_token}` },
+            });
+            if (res.status === 201) {
+              router.replace('/dashboard');
+            }
+          } catch (error: any) {
+            setErrors(error.response.data.errors);
+          }
+          console.log('Fetched customer successfully.');
+        }
+      } catch (error: any) {
+        console.log('Failed to fetch customer with given email.');
+      }
+    },
   });
 
   return (
@@ -81,7 +112,7 @@ const CreateAppointment: NextPage = (any) => {
                 <CardTextField
                   fieldValue={form.values.lastName}
                   fieldName="lastName"
-                  fieldLabel="First Name"
+                  fieldLabel="Last Name"
                   fieldType="string"
                   fieldRequired
                   onChange={form.handleChange}
@@ -99,8 +130,9 @@ const CreateAppointment: NextPage = (any) => {
                 <CardTextField
                   fieldValue={form.values.email}
                   fieldName="email"
-                  fieldLabel="Email Address (Optional)"
+                  fieldLabel="Email Address"
                   fieldType="string"
+                  fieldRequired
                   onChange={form.handleChange}
                   error={form.errors.email}
                 />
@@ -168,6 +200,27 @@ const CreateAppointment: NextPage = (any) => {
       </div>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
+  const { id } = context.query;
+  const parsedCookies = cookie.parse(String(context.req.headers.cookie));
+  const access_token = parsedCookies.access;
+  try {
+    const shop = await axios.get(`${apiUrl}/shops/shops/me/`, {
+      headers: { Authorization: `JWT ${access_token}` },
+    });
+    return {
+      props: {
+        shop: shop.data,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      notFound: true,
+    };
+  }
 };
 
 export default CreateAppointment;
