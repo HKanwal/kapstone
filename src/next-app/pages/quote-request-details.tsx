@@ -38,6 +38,8 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes: quotesList, quoteRequest, v
       color: yup.string().optional(),
       year: yup.number().required().positive().integer(),
     }),
+    part_condition: yup.string().required(),
+    part_type: yup.string().required(),
   });
   const form = useFormik({
     initialValues: {

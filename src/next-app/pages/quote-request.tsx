@@ -355,6 +355,18 @@ const QuoteRequestPage: NextPage = (props: any) => {
                   vehicle_make: make === 'Other' ? customMake : make,
                   vehicle_model: model,
                   vehicle_year: modelYear,
+                  preferred_part_condition:
+                    partCondition === 'New Parts Only'
+                      ? 'new'
+                      : partCondition === 'Used Parts Only'
+                      ? 'used'
+                      : 'none',
+                  preferred_part_type:
+                    partType === 'OEM Parts Only'
+                      ? 'oem'
+                      : partCondition === 'Aftermarket Parts Only'
+                      ? 'aftermarket'
+                      : 'none',
                 },
                 {
                   headers: { Authorization: `JWT ${authData.access}` },
