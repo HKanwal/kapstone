@@ -255,9 +255,13 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     const appointment = await axios.get(`${apiUrl}/shops/appointments/${id}`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
-    const vehicle = await axios.get(`${apiUrl}/vehicles/vehicles/${appointment.data.vehicle}/`, {
-      headers: { Authorization: `JWT ${access_token}` },
-    });
+
+    const vehicle = appointment.data.vehicle
+      ? await axios.get(`${apiUrl}/vehicles/vehicles/${appointment.data.vehicle}/`, {
+          headers: { Authorization: `JWT ${access_token}` },
+        })
+      : null;
+
     const workOrders = await axios.get(`${apiUrl}/shops/work-orders/`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
@@ -265,7 +269,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     return {
       props: {
         appointment: appointment.data,
-        vehicle: vehicle.data,
+        vehicle: vehicle ? vehicle.data : {},
         workOrders: workOrders.data,
       },
     };
