@@ -4,9 +4,10 @@ import TextInput from './TextInput';
 import styles from '../styles/components/DatePicker.module.css';
 
 type DatePickerProps = {
-  name: string;
+  name?: string;
   value: Date[];
   onChange: (newDates: Date[]) => void;
+  single?: boolean;
 };
 
 const DatePicker = (props: DatePickerProps) => {
@@ -15,6 +16,20 @@ const DatePicker = (props: DatePickerProps) => {
 
   const handleClick = () => {
     handlers.toggle();
+  };
+
+  const handleCalendarChange = (newValue: Date | Date[] | null) => {
+    if (newValue !== null) {
+      if (newValue instanceof Date) {
+        props.onChange([newValue]);
+      } else {
+        props.onChange(newValue);
+      }
+
+      if (props.single) {
+        handlers.close();
+      }
+    }
   };
 
   return (
@@ -41,18 +56,23 @@ const DatePicker = (props: DatePickerProps) => {
                 'December',
               ][date.getMonth()] +
               ' ' +
-              date.getDay() +
+              date.getDate() +
               ', ' +
               date.getFullYear()
             );
           })
           .join('; ')}
-        onChange={() => { }}
+        onChange={() => {}}
         disabled
       />
       {opened ? (
         <div className={styles['calendar-container']}>
-          <Calendar value={props.value} onChange={props.onChange} fullWidth multiple />
+          <Calendar
+            value={props.value}
+            onChange={handleCalendarChange}
+            fullWidth
+            multiple={!props.single}
+          />
         </div>
       ) : (
         <></>

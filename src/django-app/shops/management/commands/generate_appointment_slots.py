@@ -7,6 +7,9 @@ from django.utils.timezone import make_aware
 class Command(BaseCommand):
     help = "Generates a list of available slots for two weeks"
 
+    def add_arguments(self, parser):
+        parser.add_argument("-s", "--shop", type=int)
+
     def _generate_shop_availability(self, shop, date, shop_hours):
         if shop_hours == None:
             return
@@ -30,9 +33,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         days = 14
-        shops = Shop.objects.all()
-        for shop in shops:
 
+        if options["shop"]:
+            shops = Shop.objects.filter(id=options["shop"])
+        else:
+            shops = Shop.objects.all()
+
+        for shop in shops:
             for i in range(days):
                 date = make_aware(datetime.now()) + timedelta(days=i)
                 self._manage_slots_for_date(shop, date)
@@ -41,6 +48,8 @@ class Command(BaseCommand):
                 self.style.SUCCESS("Generating appointments for Shop: %s" % shop.name)
             )
 
-        self.stdout.write(
-            self.style.SUCCESS("Successfully generated appointments for all shops.")
-        )
+        success_message = f"Successfully generated appointments for: {', '.join([shop.name for shop in shops])}"
+
+        self.stdout.write(self.style.SUCCESS(success_message))
+
+        return success_message

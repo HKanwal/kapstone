@@ -1,0 +1,118 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 4vh;
+  padding-bottom: 0vh;
+  height: 100%;
+  overflow: hidden;
+}
+
+.date-selection {
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 4vh;
+}
+
+.calendar {
+  background-color: #f3f6ff;
+  height: 100%;
+  width: 100%;
+  padding-bottom: 8vh;
+  overflow: scroll;
+}
+
+.time-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.time-container {
+  width: 20vw;
+  position: relative;
+}
+
+.time-inner-container {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  bottom: -50%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.time {
+  padding-right: 10%;
+}
+
+.slot {
+  width: 80vw;
+  border-left: 1px solid black;
+  border-bottom: 2px dotted black;
+}
+
+.sub-slot {
+  width: 100%;
+  height: 4vh;
+  border-bottom: 1px dotted black;
+  position: relative;
+}
+
+.bookable {
+  background-color: var(--primary-color);
+}
+
+.bookable:hover {
+  cursor: pointer;
+}
+
+.booking {
+  background-color: #5297ff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.booking:hover {
+  cursor: auto;
+}
+
+.booking-inner-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.booking-close-container {
+  position: absolute;
+  top: 2vw;
+  left: 2vw;
+}
+
+.booking-close-container:hover {
+  cursor: pointer;
+}
+
+.loader-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 20vh;
+}

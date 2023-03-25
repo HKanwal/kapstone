@@ -63,6 +63,7 @@ const InvitePage: NextPage = ({ shop }: any) => {
           width="80%"
           onClick={inviteEmployees}
           disabled={emails.length === 0}
+          id="invite-button"
         />
         <span className={styles.or}>OR</span>
         <Button title="Skip" width="80%" onClick={() => router.push('/dashboard')} />

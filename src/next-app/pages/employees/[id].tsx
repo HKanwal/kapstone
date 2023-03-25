@@ -17,6 +17,7 @@ import * as cookie from 'cookie';
 import Button from '../../components/Button';
 import employees from '.';
 import { CardTextField, CardSelect, CardTextArea } from '../../components/CardComponents';
+import Modal from '../../components/Modal';
 
 type info = {
   [key: string]: any;
@@ -27,13 +28,22 @@ const EmployeeDetailsPage: NextPage = ({ employee }: any) => {
   const { id } = router.query;
   const [inEdit, setInEdit] = useState(false);
   const [errors, setErrors] = useState([]);
+  const [modalVisible, setModalVisisble] = useState<boolean>(false);
+
+  const showModal = () => {
+    setModalVisisble(true);
+  };
+
+  const hideModal = () => {
+    setModalVisisble(false);
+  };
 
   const schema = yup.object().shape({
     user: yup.object().shape({
       first_name: yup.string().required(),
       last_name: yup.string().required(),
       email: yup.string().required(),
-      phone_number: yup.string().optional(),
+      phone_number: yup.number().optional(),
     }),
     salary: yup.string().optional(),
   });
@@ -49,18 +59,39 @@ const EmployeeDetailsPage: NextPage = ({ employee }: any) => {
     },
     validationSchema: schema,
     onSubmit: async (values) => {
-      const valuesToSend = {
+      const employeeValuesToSend = {
         salary: values.salary,
+      };
+
+      const userValuesToSend = {
+        email: values.user.email,
+        first_name: values.user.first_name,
+        last_name: values.user.last_name,
+        phone_number: values.user.phone_number,
       };
 
       const access_token = Cookies.get('access');
 
       try {
-        const res = await axios.patch(`${apiUrl}/accounts/employee/${id}/`, valuesToSend, {
+        const res = await axios.patch(`${apiUrl}/accounts/employee/${id}/`, employeeValuesToSend, {
           headers: { Authorization: `JWT ${access_token}` },
         });
         if (res.status === 200) {
-          router.reload();
+          try {
+            const res = await axios.patch(
+              `${apiUrl}/auth/users/${employee.user.id}/`,
+              userValuesToSend,
+              {
+                headers: { Authorization: `JWT ${access_token}` },
+              }
+            );
+            if (res.status === 200) {
+              router.reload();
+            }
+          } catch (error: any) {
+            setErrors(error.response.data.errors);
+            scrollTo(0, 0);
+          }
         }
       } catch (error: any) {
         setErrors(error.response.data.errors);
@@ -77,7 +108,7 @@ const EmployeeDetailsPage: NextPage = ({ employee }: any) => {
         onRightIconClick={() => setInEdit(!inEdit)}
       />
       <div className="wrapper">
-        <div className="flex flex-row row-gap-large">
+        <div className="flex flex-col row-gap-large">
           {errors.length > 0 && (
             <div className="flex flex-col row-gap-small">
               {errors.map((error: any, index) => {
@@ -99,7 +130,7 @@ const EmployeeDetailsPage: NextPage = ({ employee }: any) => {
                   fieldLabel="First Name"
                   fieldType="string"
                   fieldRequired
-                  fieldDisabled={true}
+                  fieldDisabled={!inEdit}
                   onChange={form.handleChange}
                   error={form.errors.user?.first_name}
                 />
@@ -109,7 +140,7 @@ const EmployeeDetailsPage: NextPage = ({ employee }: any) => {
                   fieldLabel="Last Name"
                   fieldType="string"
                   fieldRequired
-                  fieldDisabled={true}
+                  fieldDisabled={!inEdit}
                   onChange={form.handleChange}
                   error={form.errors.user?.last_name}
                 />
@@ -119,7 +150,7 @@ const EmployeeDetailsPage: NextPage = ({ employee }: any) => {
                   fieldLabel="Email"
                   fieldType="string"
                   fieldRequired
-                  fieldDisabled={true}
+                  fieldDisabled={!inEdit}
                   onChange={form.handleChange}
                   error={form.errors.user?.email}
                 />
@@ -128,23 +159,74 @@ const EmployeeDetailsPage: NextPage = ({ employee }: any) => {
                   fieldName="user.phone_number"
                   fieldLabel="Phone Number"
                   fieldType="string"
-                  fieldDisabled={true}
+                  fieldDisabled={!inEdit}
                   onChange={form.handleChange}
                   error={form.errors.user?.phone_number}
                 />
                 <CardTextField
                   fieldValue={form.values.salary ? form.values.salary : ''}
                   fieldName="salary"
-                  fieldLabel="Salary"
+                  fieldLabel="Salary ($)"
                   fieldType="string"
                   fieldDisabled={!inEdit}
                   onChange={form.handleChange}
                   error={form.errors.salary}
                 />
                 {inEdit && <Button type="submit" title="Save" width={'100%'}></Button>}
+                <div className={styles['field-container']}>
+                  {inEdit && (
+                    <Button
+                      backgroundColor="red"
+                      title="Delete"
+                      onClick={showModal}
+                      width={'100%'}
+                    ></Button>
+                  )}
+                </div>
               </div>
             </form>
           </FormikProvider>
+          <Modal visible={modalVisible} onClose={hideModal}>
+            <div className={styles['modal-content']}>
+              <div className={styles['modal-title-container']}>
+                <span className={styles['modal-title']}>
+                  {`Are you sure you wish to delete the following employee: ${form.values.user.first_name}
+                  ${form.values.user.last_name}`}
+                </span>
+              </div>
+              <div className={styles['modal-submit']}>
+                <Button
+                  title="Delete"
+                  backgroundColor="red"
+                  onClick={async () => {
+                    const access_token = Cookies.get('access');
+                    try {
+                      const res = await axios.delete(
+                        `${apiUrl}/accounts/employee/${employee.id}/`,
+                        {
+                          headers: { Authorization: `JWT ${access_token}` },
+                        }
+                      );
+                      if (res.status === 204) {
+                        hideModal();
+                        router.push({
+                          pathname: '/employees',
+                        });
+                      }
+                    } catch (error: any) {
+                      hideModal();
+                      scrollTo(0, 0);
+                      console.log(error);
+                    }
+                  }}
+                  width="100%"
+                />
+              </div>
+              <div className={styles['modal-submit']}>
+                <Button title="Cancel" onClick={hideModal} width="100%" />
+              </div>
+            </div>
+          </Modal>
         </div>
       </div>
     </div>

@@ -3,13 +3,18 @@ import { IconType } from 'react-icons';
 import styles from '../styles/components/Header.module.css';
 import IconButton from './IconButton';
 import { IoMdArrowBack } from 'react-icons/io';
+import { CSSProperties } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { useClickOutside, useDisclosure } from '@mantine/hooks';
+import { StringNullableChain } from 'cypress/types/lodash';
 
 type HeaderProps = {
   title?: string;
   rightIcon?: IconType;
+  rightIconStyle?: CSSProperties;
   backButtonDisabled?: boolean;
+  backButtonPath?: string;
+  backButtonQuery?: string;
   onRightIconClick?: () => void;
   /**
    * Create burger menu using given items. Overrides rightIcon.
@@ -34,7 +39,19 @@ const Header = (props: HeaderProps) => {
     <div className={styles.header}>
       {!props.backButtonDisabled && (
         <div className={styles['back-btn-container']}>
-          <IconButton icon={IoMdArrowBack} onClick={() => router.back()} />
+          <IconButton
+            icon={IoMdArrowBack}
+            onClick={() =>
+              props.backButtonPath && props.backButtonQuery
+                ? router.push({
+                    pathname: props.backButtonPath,
+                    query: { id: props.backButtonQuery },
+                  })
+                : props.backButtonPath
+                ? router.push(props.backButtonPath)
+                : router.back()
+            }
+          />
         </div>
       )}
       {!!props.title ? (
@@ -75,7 +92,11 @@ const Header = (props: HeaderProps) => {
         </div>
       ) : !!props.rightIcon ? (
         <div className={styles['right-btn-container']}>
-          <IconButton icon={props.rightIcon} onClick={props.onRightIconClick} />
+          <IconButton
+            icon={props.rightIcon}
+            onClick={props.onRightIconClick}
+            iconStyle={props.rightIconStyle}
+          />
         </div>
       ) : (
         <></>
