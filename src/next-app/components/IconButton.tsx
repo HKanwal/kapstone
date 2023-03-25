@@ -18,7 +18,6 @@ const IconButton = (props: IconButtonProps) => {
       style={props.style}
     >
       <props.icon className={styles.icon} onClick={props.onClick} style={props.iconStyle} />
-      <props.icon className={styles.icon} onClick={props.onClick} />
     </button>
   );
 };
