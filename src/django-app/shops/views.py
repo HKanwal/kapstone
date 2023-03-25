@@ -378,7 +378,6 @@ class ServiceViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         with transaction.atomic():
             data = request.data
-            data._mutable = True
             parts = data.pop("parts", None)
             service_serializer = ServiceWriteSerializer(
                 data=data,
