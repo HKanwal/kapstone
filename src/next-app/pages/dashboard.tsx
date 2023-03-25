@@ -3,10 +3,12 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Navbar from '../components/Navbar';
 import styles from '../styles/pages/Dashboard.module.css';
-import { AuthContext, Jwt, accountTypes, refreshToken } from '../utils/api';
+import { AuthContext, Jwt, accountTypes, getBookedAppointments, refreshToken } from '../utils/api';
 import apiUrl from '../constants/api-url';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import { useQuery } from 'react-query';
+import BookedAppointment from '../components/BookedAppointment';
 
 type DashboardPageProps = {
   onLogin: (jwt: Jwt) => void;
@@ -16,6 +18,25 @@ const Dashboard: NextPage<DashboardPageProps, {}> = (props) => {
   const [headerName, setHeaderName] = useState('');
   const [modalBody, setModalBody] = useState([] as JSX.Element[]);
   const [profileURL, setProfileURL] = useState<null | string>(null);
+  const [accessToken, setAccessToken] = useState<undefined | string>(undefined);
+  const query = useQuery('getBookedAppointments', getBookedAppointments(accessToken || ''), {
+    refetchOnWindowFocus: false,
+    enabled: !!accessToken,
+  });
+  const todaysAppointments = query.data?.filter((appointment) => {
+    const startTimeAsDate = new Date(appointment.start_time);
+    const today = new Date();
+    /** Source: https://flaviocopes.com/how-to-determine-date-is-today-javascript/ */
+    return (
+      startTimeAsDate.getDate() == today.getDate() &&
+      startTimeAsDate.getMonth() == today.getMonth() &&
+      startTimeAsDate.getFullYear() == today.getFullYear()
+    );
+  });
+
+  useEffect(() => {
+    setAccessToken(localStorage.getItem('access_token') || '');
+  }, []);
 
   useEffect(() => {
     if (authData.access !== '') {
@@ -95,6 +116,24 @@ const Dashboard: NextPage<DashboardPageProps, {}> = (props) => {
       />
       <div className={styles.container}>
         <h2>Today&apos;s Appointments</h2>
+        {todaysAppointments?.length === 0 ? (
+          <h4 className={styles['no-appts-msg']}>You have no appointments for today.</h4>
+        ) : (
+          todaysAppointments?.map((appointment) => {
+            const startTimeAsDate = new Date(appointment.start_time);
+            const endTimeAsDate = new Date(appointment.end_time);
+            return (
+              <div className={styles['appointment-container']} key={appointment.start_time}>
+                <BookedAppointment
+                  date={startTimeAsDate.toDateString()}
+                  startTime={startTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
+                  endTime={endTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
+                  shopName={appointment.shop.name}
+                />
+              </div>
+            );
+          })
+        )}
       </div>
     </div>
   );
