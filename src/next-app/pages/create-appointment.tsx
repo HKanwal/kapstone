@@ -14,21 +14,23 @@ import Cookies from 'js-cookie';
 // @ts-ignore
 import * as cookie from 'cookie';
 import Link from '../components/Link';
+import { calculateSizeAdjustValues } from 'next/dist/server/font-utils';
 
 const CreateAppointment: NextPage = ({ shop }: any) => {
   const router = useRouter();
   const [errors, setErrors] = useState([]);
+  const [services, setServices] = useState(shop?.shop_services);
   const schema = yup.object().shape({
     firstName: yup.string().required(),
     lastName: yup.string().required(),
-    phone: yup.number().required(),
+    phone: yup.string().required(),
     email: yup.string().required(),
-    address: yup.string(),
     carYear: yup.number().positive().required(),
     carMake: yup.string().required(),
     carModel: yup.string().required(),
     vin: yup.number().positive().required(),
     licensePlate: yup.string().max(8).min(2).required(),
+    service: yup.number(),
   });
   const form = useFormik({
     initialValues: {
@@ -36,46 +38,85 @@ const CreateAppointment: NextPage = ({ shop }: any) => {
       lastName: '',
       phone: '',
       email: '',
-      address: '',
       carYear: '',
       carMake: '',
       carModel: '',
       vin: '',
-      licensePlate: '   ',
+      licensePlate: '',
+      service: 0,
     },
     validationSchema: schema,
     validateOnChange: false,
     validateOnBlur: false,
     onSubmit: async (values) => {
-      const email = values.email;
       const access_token = Cookies.get('access');
-
+      const vehicleValuesToSend = {
+        manufacturer: values.carMake,
+        year: values.carYear,
+        model: values.carModel,
+        vin: values.vin,
+        color: '',
+      };
       try {
-        const customer_res = await axios.get(`${apiUrl}/accounts/customer/get_customer_by_email`, {
+        const vehicle_res = await axios.post(`${apiUrl}/vehicles/vehicles/`, vehicleValuesToSend, {
           headers: { Authorization: `JWT ${access_token}` },
-          params: { email: email },
         });
-        if (customer_res.status === 201) {
-          const customer = customer_res.data['id'];
-          const valuesToSend = {
-            customer: customer,
-            shop: shop.id,
-            //TODO: CONFIGURE OTHER VALUES
+        const vehicle = vehicle_res.data['vin'];
+        if (vehicle_res.status === 201) {
+          const pass = 'pass' + Math.random().toString(36).slice(-8);
+          const customerValuesToSend = {
+            first_name: values.firstName,
+            last_name: values.lastName,
+            phone_number: values.phone,
+            email: values.email,
+            password: pass,
+            re_password: pass,
+            username: 'user' + Math.random().toString(36).slice(-8),
+            type: 'customer',
           };
           try {
-            const res = await axios.post(`${apiUrl}/shops/appointments/`, valuesToSend, {
-              headers: { Authorization: `JWT ${access_token}` },
-            });
-            if (res.status === 201) {
-              router.replace('/dashboard');
+            const customer_res = await axios.post(`${apiUrl}/auth/users/`, customerValuesToSend);
+            const customer_email = customer_res.data['email'];
+            if (customer_res.status === 201) {
+              try {
+                const customer_email_res = await axios.get(
+                  `${apiUrl}/accounts/customer/get_customer_by_email`,
+                  {
+                    headers: { Authorization: `JWT ${access_token}` },
+                    params: { email: customer_email },
+                  }
+                );
+                if (customer_email_res.status === 200) {
+                  const customer = customer_email_res.data['id'];
+                  const valuesToSend = {
+                    customer: customer,
+                    shop: shop.id,
+                    service: values.service,
+                    vehicle: vehicle,
+                    //TODO: Add appointment slots to data.
+                  };
+                  try {
+                    const res = await axios.post(`${apiUrl}/shops/appointments/`, valuesToSend, {
+                      headers: { Authorization: `JWT ${access_token}` },
+                    });
+                    if (res.status === 201) {
+                      //TODO: Route to calendar instead of dashboard.
+                      router.replace('/dashboard');
+                    }
+                  } catch (error: any) {
+                    setErrors(error.response.data.errors);
+                  }
+                }
+              } catch (error: any) {
+                setErrors(error.response.data.errors);
+              }
             }
           } catch (error: any) {
             setErrors(error.response.data.errors);
           }
-          console.log('Fetched customer successfully.');
         }
       } catch (error: any) {
-        console.log('Failed to fetch customer with given email.');
+        setErrors(error.response.data.errors);
       }
     },
   });
@@ -98,6 +139,26 @@ const CreateAppointment: NextPage = ({ shop }: any) => {
           )}
           <FormikProvider value={form}>
             <form onSubmit={form.handleSubmit}>
+              <h2 className="form-header">Service</h2>
+              <div className={`card edit`} style={{ marginBottom: '12px' }}>
+                {services ? (
+                  <CardSelect
+                    fieldName="service"
+                    fieldLabel="Service"
+                    fieldRequired
+                    options={services.map((service: any) => {
+                      return (
+                        <option key={service.id} value={service.id}>
+                          {service.name}
+                        </option>
+                      );
+                    })}
+                    error={form.errors.service}
+                  />
+                ) : (
+                  <h2 className="form-header">No Services.</h2>
+                )}
+              </div>
               <h2 className="form-header">Customer Bio</h2>
               <div className={`card edit`} style={{ marginBottom: '12px' }}>
                 <CardTextField
@@ -122,7 +183,7 @@ const CreateAppointment: NextPage = ({ shop }: any) => {
                   fieldValue={form.values.phone}
                   fieldName="phone"
                   fieldLabel="Phone Number"
-                  fieldType="number"
+                  fieldType="string"
                   fieldRequired
                   onChange={form.handleChange}
                   error={form.errors.phone}
@@ -135,14 +196,6 @@ const CreateAppointment: NextPage = ({ shop }: any) => {
                   fieldRequired
                   onChange={form.handleChange}
                   error={form.errors.email}
-                />
-                <CardTextField
-                  fieldValue={form.values.address}
-                  fieldName="address"
-                  fieldLabel="Address (Optional)"
-                  fieldType="string"
-                  onChange={form.handleChange}
-                  error={form.errors.address}
                 />
               </div>
               <h2 className="form-header">Car Details</h2>
