@@ -15,8 +15,15 @@ import { AuthContext } from '../utils/api';
 import Cookies from 'js-cookie';
 import { accountTypes } from '../utils/api';
 import axios from 'axios';
-import { CardMultiSelect } from '../components/CardComponents';
+import { CardMultiSelect, CardTextField } from '../components/CardComponents';
 import { useRouter } from 'next/router';
+import Modal from '../components/Modal';
+import { FormikProvider, useFormik } from 'formik';
+import * as yup from 'yup';
+import Skeleton from 'react-loading-skeleton';
+// import { Link as NextLink } from 'next/link';
+
+const SKELETON_LIST_LENGTH = 10;
 
 interface carModels {
   [make: string]: string[];
@@ -29,7 +36,7 @@ const QuoteRequestPage: NextPage = (props: any) => {
   const [model, setModel] = useState('');
   const [modelYear, setModelYear] = useState('');
   const [customModel, setCustomModel] = useState('');
-  const [firstName, setFirstName] = useState('');
+  const [shopSelectionModal, setShopSelectionModal] = useState(false);
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
@@ -43,7 +50,9 @@ const QuoteRequestPage: NextPage = (props: any) => {
   const addImageInputRef = useRef<HTMLInputElement>(null);
   const [imgFiles, setImgFiles] = useState<File[]>([]);
   const [VIN, setVIN] = useState('');
-  const [shops, setShops] = useState([]);
+  const [shops, setShops] = useState<any>([]);
+  const [shopsList, setShopsList] = useState<any>(props.shops ?? []);
+  const [shopsLoading, setShopsLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState([]);
   const router = useRouter();
 
@@ -138,6 +147,74 @@ const QuoteRequestPage: NextPage = (props: any) => {
     }
   };
 
+  const shopList = shopsList.map((shop: any) => {
+    return (
+      <div
+        key={shop.id}
+        onClick={() => {
+          if (shops.includes(shop?.id)) {
+            setShops(shops.filter((s: any) => s !== shop.id));
+          } else {
+            setShops([...shops, shop.id]);
+          }
+        }}
+      >
+        <div
+          className={`card hover-scale-up ${
+            shops.includes(shop?.id) ? 'selected-card' : 'unselected-card'
+          }`}
+        >
+          <div className="flex flex-col row-gap-small">
+            <span>
+              <b>{shop.name}</b>
+            </span>
+            {shop.distance_from_user && <span>{shop.distance_from_user}</span>}
+          </div>
+        </div>
+      </div>
+    );
+  });
+
+  const skeletonShopList = Array(SKELETON_LIST_LENGTH)
+    .fill(0)
+    .map((shop: any, index: number) => {
+      return (
+        <Skeleton
+          baseColor="#f3f6fe"
+          highlightColor="#dbdde5"
+          height={'60px'}
+          borderRadius={'12px'}
+          className="card"
+          key={'skeleton_' + index}
+        />
+      );
+    });
+
+  const shopSchema = yup.object().shape({
+    postal_code: yup.string().required('Postal code is required'),
+  });
+  const shopForm = useFormik({
+    initialValues: {
+      postal_code: '',
+    },
+    validationSchema: shopSchema,
+    validateOnChange: false,
+    onSubmit: async (values) => {
+      setShopsLoading(true);
+      try {
+        const shops = await axios.get(
+          `${apiUrl}/shops/shops/distance/?postal_code=${values.postal_code}`
+        );
+        setShopsList(shops.data);
+        setShopsLoading(false);
+      } catch (error) {
+        setShopsList([]);
+        setShopsLoading(false);
+        console.log(error);
+      }
+    },
+  });
+
   return (
     <div className={styles.container}>
       <Header title="Create Quote Request" />
@@ -154,6 +231,60 @@ const QuoteRequestPage: NextPage = (props: any) => {
             })}
           </div>
         )}
+        <Modal
+          visible={shopSelectionModal}
+          onClose={() => setShopSelectionModal(false)}
+          title="Select a shop"
+        >
+          <div className="modal-content">
+            <div className="wrapper">
+              <FormikProvider value={shopForm}>
+                <form onSubmit={shopForm.handleSubmit}>
+                  <FieldLabel label="Filter by Postal Code:" />
+                  <div
+                    className="flex flex-row align-items-center"
+                    style={{ gap: '10px', marginTop: '10px' }}
+                  >
+                    {/* <CardTextField
+                      fieldValue={`${shopForm.values.postal_code}`}
+                      fieldName="postal_code"
+                      fieldLabel="Postal Code:"
+                      fieldType="string"
+                      fieldDisabled={false}
+                      onChange={shopForm.handleChange}
+                      error={shopForm.errors.postal_code}
+                    /> */}
+                    <input
+                      id={'postal_code'}
+                      className="input card-field"
+                      style={{ height: '20px' }}
+                      name={'postal_code'}
+                      value={`${shopForm.values.postal_code}`}
+                      type="string"
+                      onChange={shopForm.handleChange}
+                      disabled={props.fieldDisabled}
+                    />
+                    <button className="small-button hover-scale-up active-scale-down" type="submit">
+                      Search
+                    </button>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="error">{shopForm.errors.postal_code}</span>
+                  </div>
+                </form>
+              </FormikProvider>
+              <div className="grid-list" id="shop-list" style={{ marginTop: '10px' }}>
+                {shopsLoading ? (
+                  skeletonShopList
+                ) : shopList.length > 0 ? (
+                  shopList
+                ) : (
+                  <p>No shops found.</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </Modal>
         <div className={styles.section}>
           <span className={styles['section-header']}>Vehicle Information</span>
           <div
@@ -215,25 +346,18 @@ const QuoteRequestPage: NextPage = (props: any) => {
         <div className={styles.section}>
           <span className={styles['section-header']}>Shops</span>
           <div className={styles['field-container'] + ' padding-bottom-zero'}>
-            <CardMultiSelect
-              fieldLabel="Shops"
-              fieldData={props.shops.map((shop: any) => {
-                return { value: shop.id.toString(), label: shop.name };
-              })}
-              fieldValues={shops.map((shop: any) => {
-                return shop.id.toString();
-              })}
-              onChange={(values) => {
-                const newShops = props.shops.filter((shop: any) => {
-                  return values.includes(shop.id.toString());
-                });
-                setShops(newShops);
-              }}
-              fieldPlaceholder="Select the shops"
-              fieldSearchable
-              fieldDisabled={false}
-              className="input-multiselect"
-            />
+            <Button onClick={() => setShopSelectionModal(true)} title="Select Shop"></Button>
+            <div style={{ marginTop: '10px' }}>
+              <b>Selected Shops: </b>
+              {shops.length > 0
+                ? shopsList
+                    .filter((shop: any) => {
+                      return shops.includes(shop.id);
+                    })
+                    .map((shop: any) => shop.name)
+                    .join(', ')
+                : 'None.'}
+            </div>
           </div>
         </div>
         {/* <div className={styles.section}>
