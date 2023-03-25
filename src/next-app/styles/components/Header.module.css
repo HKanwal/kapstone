@@ -15,7 +15,7 @@
 }
 
 .title {
-  font-size: var(--title-font-size);
+  font-size: 7vmin;
   padding-top: 2vh;
   padding-bottom: 2vh;
   font-weight: bold;
