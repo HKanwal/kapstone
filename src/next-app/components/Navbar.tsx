@@ -28,7 +28,7 @@ const Navbar = (props: NavbarProps) => {
   const router = useRouter();
   const [NavbarData, setNavBarData] = useState(CustomerNavbarData);
   const [buttonText, setButtonText] = useState('Login');
-  const [sidebar, setSidebar] = useState(false);
+  const [sidebarOpen, sidebarHandlers] = useDisclosure(false);
   const [profileOpen, profileHandlers] = useDisclosure(false);
   const profileRef = useClickOutside<HTMLDivElement>(() => profileHandlers.close());
 
@@ -47,8 +47,6 @@ const Navbar = (props: NavbarProps) => {
       setNavBarData(CustomerNavbarData);
     }
   }, [props.authData]);
-
-  const toggleSidebar = () => setSidebar((prevSidebar) => !prevSidebar);
 
   const logout = () => {
     props.onLogin({
@@ -73,9 +71,9 @@ const Navbar = (props: NavbarProps) => {
     <div>
       <IconContext.Provider value={{ color: '#000' }}>
         <div className={styles.navbar}>
-          <div className={sidebar ? styles['menu-bars-active'] : styles['menu-bars']}>
-            <span onClick={toggleSidebar}>
-              {sidebar ? <IoIosCloseCircleOutline /> : <IoMdMenu />}
+          <div className={sidebarOpen ? styles['menu-bars-active'] : styles['menu-bars']}>
+            <span onClick={() => sidebarHandlers.toggle()}>
+              {sidebarOpen ? <IoIosCloseCircleOutline /> : <IoMdMenu />}
             </span>
           </div>
           <div className={styles['btn-contianer']}>
@@ -83,7 +81,10 @@ const Navbar = (props: NavbarProps) => {
               <IoMdContact
                 className={styles['profile-btn']}
                 id="profile"
-                onClick={() => profileHandlers.toggle()}
+                onClick={() => {
+                  profileHandlers.toggle();
+                  sidebarHandlers.close();
+                }}
               />
               {profileOpen ? (
                 <ProfileModal
@@ -98,8 +99,8 @@ const Navbar = (props: NavbarProps) => {
           </div>
         </div>
 
-        <nav className={sidebar ? styles['nav-menu-active'] : styles['nav-menu']}>
-          <ul className={styles['nav-menu-items']} onClick={toggleSidebar}>
+        <nav className={sidebarOpen ? styles['nav-menu-active'] : styles['nav-menu']}>
+          <ul className={styles['nav-menu-items']} onClick={() => sidebarHandlers.close()}>
             {NavbarData.map((item, index) => {
               return (
                 <Link href={item.path} key={index}>
