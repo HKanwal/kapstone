@@ -317,8 +317,7 @@ const Quote: NextPage = ({ quote, comments }: any) => {
                       );
                       if (res.status === 200) {
                         router.push({
-                          pathname: 'quote-request-details',
-                          query: { id: quote.quote_request.id },
+                          pathname: 'quote-request-list',
                         });
                       }
                     } catch (error: any) {
@@ -346,8 +345,8 @@ const Quote: NextPage = ({ quote, comments }: any) => {
                       );
                       if (res.status === 200) {
                         router.push({
-                          pathname: 'quote-request-details',
-                          query: { id: quote.quote_request.id },
+                          pathname: 'quote',
+                          query: { id: quote.id },
                         });
                       }
                     } catch (error: any) {
