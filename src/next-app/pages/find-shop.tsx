@@ -12,7 +12,7 @@ import axios from 'axios';
 import apiUrl from '../constants/api-url';
 import * as cookie from 'cookie';
 
-const FindShopPage: NextPage = ({ services, title }: any) => {
+const FindShopPage: NextPage = ({ services }: any) => {
   const [postalCode, setPostalCode] = useState('');
   const [shopName, setShopName] = useState('');
   const [serviceOptions, setServiceOptions] = useState([]);
@@ -20,7 +20,6 @@ const FindShopPage: NextPage = ({ services, title }: any) => {
   const [checked, setChecked] = useState(false);
   const valid = postalCode.length > 0;
   const router = useRouter();
-  const qr = Cookies.get('qr');
 
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     setChecked(e.target.checked);
@@ -45,7 +44,7 @@ const FindShopPage: NextPage = ({ services, title }: any) => {
 
   return (
     <div className={formStyles['page-container']}>
-      <Header title={title} />
+      <Header title={'Find Shop'} />
 
       <div className={formStyles.content}>
         <div className={formStyles['field-container']}>
@@ -75,20 +74,11 @@ const FindShopPage: NextPage = ({ services, title }: any) => {
 };
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-  const parsedCookies = cookie.parse(String(context.req.headers.cookie));
-  const access_token = parsedCookies.access;
-  const qr = parsedCookies.qr;
-  let title = 'Find Shop';
-  if (qr && qr === 'true') {
-    title = 'Send to Shops';
-  }
-
   try {
     const services = await axios.get(`${apiUrl}/shops/services/`);
     return {
       props: {
         services: services.data,
-        title: title,
       },
     };
   } catch (error) {
@@ -96,7 +86,6 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     return {
       props: {
         services: [],
-        title: 'Find Shop',
       },
     };
   }

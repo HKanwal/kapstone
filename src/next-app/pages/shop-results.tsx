@@ -14,6 +14,7 @@ import * as cookie from 'cookie';
 import axios from 'axios';
 import apiUrl from '../constants/api-url';
 import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
 
 type ShopResult = {
   name: string;
@@ -38,20 +39,18 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
   const [modalContent, setModalContent] = useState(<div></div>);
   const [dateRange, setDateRange] = useState('');
   const [customDates, setCustomDates] = useState<DateRangePickerValue>([null, null]);
-  const qr = Cookies.get('qr');
   const nameFilter = Cookies.get('shopName');
   const service = Cookies.get('service');
   const bookings = Cookies.get('bookings');
-  let inSelectMode = qr && qr === 'true' ? true : false;
-  const [showSubmitButton, setShowSubmitButton] = useState(false);
   const handleFilterClick = () => {
     setFilterOpen((prev) => !prev);
   };
   const [buttonEnabled, setButtonEnabled] = useState(false);
   const [selectedShops, setSelectedShops] = useState<string[]>([]);
+  const router = useRouter();
 
   const handleAppointmentClick = (shop: any) => {
-    console.log('TODO: handle appointment click');
+    router.push('/book-appointment')
   };
 
   const handleCallClick = (phoneNumber: string) => {
@@ -149,10 +148,10 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
           id={shop.id}
           onClick={() => openShopModal(shop)}
           distance={shop.distance_from_user}
-          inSelectMode={inSelectMode}
           onSelect={onSelect}
           onDeselect={onDeselect}
-          services={shop.shop_services.length > 0 ? shop.shop_services : undefined}
+          services={shop.shop_services.length > 0 && service ? shop.shop_services : undefined}
+          onClickAppointment={shop.shop_services.length > 0 && service ? handleAppointmentClick(shop) : undefined}
           // onClickAppointment={
           //   shop.shops_services.length() > 0 ? () => handleAppointmentClick(shop) : undefined
           // }
@@ -164,7 +163,6 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
 
   useEffect(() => {
     const results: any = [];
-    setShowSubmitButton(inSelectMode);
 
     if (selectedShops.length > 0) {
       setButtonEnabled(true);
@@ -260,10 +258,6 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
       <div className={styles.content}>
         {shopResults}
       </div>
-      {showSubmitButton ?
-        (<div style={{ paddingLeft: '17%', paddingBottom: '5vh' }}>
-          <Button title='Send Quote Request' width={'80%'} disabled={!buttonEnabled} onClick={() => console.log(selectedShops)} />
-        </div>) : ''}
       <Modal visible={shopModalVisible} onClose={() => setShopModalVisible(false)}>
         {modalContent}
       </Modal>
