@@ -76,7 +76,6 @@ def create_workorder(sender, instance, **kwargs):
     end_time = instance.end_time
     WorkOrder.objects.create(
         appointment=instance,
-        quote=instance.quote,
         shop=instance.shop,
         employee=instance.shop.get_next_available_employee(start_time, end_time),
     )
