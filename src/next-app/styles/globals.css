@@ -49,6 +49,22 @@ a {
   gap: 12px;
 }
 
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.notification-icon-number {
+  position: absolute;
+  top: 0px;
+  left: 27px;
+  font-size: medium;
+  font-weight: 700;
+}
+
 .flex {
   display: flex;
 }
@@ -381,4 +397,26 @@ button:disabled.shadow-card-footer-item {
 
 .border-right {
   border-right: 1px solid #ededed;
+}
+
+.notification-unread {
+  border-left: 4px solid #96a1ff;
+}
+
+.notification-read {
+  border-left: 4px solid transparent;
+}
+
+.notification-title {
+  margin: 4px 0;
+  font-size: 24px;
+}
+
+.notification-date {
+  font-size: 18px;
+  font-weight: 200;
+}
+
+.notification-message {
+  font-size: 18px;
 }

@@ -62,10 +62,11 @@
   padding-right: 4vh;
   height: 10vh;
   position: relative;
+  gap: 21px;
 }
 
 .profile-btn {
-  margin-right: 4vh;
+  /* margin-right: 4vh; */
 }
 
 .profile-btn:hover {
