@@ -61,7 +61,7 @@
 }
 
 .profile-btn-container {
-  display: flex;
+  position: relative;
 }
 
 .profile-btn {
