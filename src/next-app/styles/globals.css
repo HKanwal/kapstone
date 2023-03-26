@@ -9,7 +9,6 @@ body {
 
   --font-size: 18px;
   font-size: var(--font-size);
-  --title-font-size: 32px;
   --section-header-font-size: 26px;
 
   /* Theme */

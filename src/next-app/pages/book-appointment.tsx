@@ -12,8 +12,11 @@ import { useMutation, useQuery } from 'react-query';
 import {
   AppointmentSlot,
   AppointmentSlotsResponse,
+  Weekday,
   bookAppointment,
   getAppointmentSlots,
+  getShopDetails,
+  getShopHours,
   getUserDetails,
 } from '../utils/api';
 import { Loader } from '@mantine/core';
@@ -25,6 +28,12 @@ function createEmptyArray(n: number): undefined[] {
     a.push(undefined);
   }
   return a;
+}
+
+function getWeekday(date: Date): Weekday {
+  return (
+    ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] as Weekday[]
+  )[date.getDay()];
 }
 
 const Booking = ({
@@ -121,6 +130,12 @@ function startTimeEquals(slot: AppointmentSlot, startTime: number): boolean {
 const BookAppointmentPage: NextPage = () => {
   const router = useRouter();
   const { appointmentLength, shopId, quoteId } = router.query;
+  const parsedShopId =
+    typeof shopId === 'object'
+      ? parseInt(shopId[0])
+      : typeof shopId === 'string'
+      ? parseInt(shopId)
+      : -1;
   const appointmentLengthNum =
     typeof appointmentLength === 'string'
       ? parseInt(appointmentLength)
@@ -160,12 +175,26 @@ const BookAppointmentPage: NextPage = () => {
   const mutation = useMutation({
     mutationFn: bookAppointment,
   });
+  const shopHoursQuery = useQuery('getShopHours', getShopHours(parsedShopId), {
+    refetchOnWindowFocus: false,
+    enabled: !!shopId,
+  });
 
   // all times are represented as a number between 0 and 24
   // start time can only be x.00 (xx:00), x.25 (xx:15), x.50 (xx:30), or x.75 (xx:45)
-  // TODO: these times should not be hardcoded; change once endpoint is created
-  const [startTime, setStartTime] = useState(3); //useState(availability[0].startTime);
-  const [endTime, setEndTime] = useState(18); //useState(availability[availability.length - 1].endTime);
+  const [startTime, setStartTime] = useState(6);
+  const [endTime, setEndTime] = useState(17);
+
+  useEffect(() => {
+    const currentWeekday = getWeekday(date);
+    const hours = shopHoursQuery.data?.shophours_set.find((hours) => {
+      return hours.day === currentWeekday;
+    });
+    if (hours !== undefined) {
+      setStartTime(timeToNumber(hours.from_time.substring(0, hours.from_time.length - 3)));
+      setEndTime(timeToNumber(hours.to_time.substring(0, hours.to_time.length - 3)));
+    }
+  }, [date, shopHoursQuery.data]);
 
   // # of sub-slots before first xx:00 mark
   // minimum of 1 for aesthetic purposes
