@@ -161,9 +161,9 @@ class AppointmentSerializer(serializers.ModelSerializer):
     start_time = serializers.SerializerMethodField()
     end_time = serializers.SerializerMethodField()
     status_display = serializers.SerializerMethodField()
-    quote = QuoteSerializer()
-    service = ServiceSerializer()
-    vehicle = VehicleSerializer()
+    quote = QuoteSerializer(allow_null=True, required=False)
+    service = serializers.SerializerMethodField("get_service")
+    vehicle = VehicleSerializer(allow_null=True, required=False)
 
     class Meta:
         model = Appointment
@@ -177,6 +177,12 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
     def get_status_display(self, obj):
         return obj.get_status_display()
+
+    def get_service(self, obj):
+        if obj.service is None:
+            return None
+        serializer_context = {"request": self.context.get("request")}
+        return ServiceSerializer(obj.service, context=serializer_context).data
 
 
 class AppointmentCreateSerializer(serializers.ModelSerializer):
@@ -225,7 +231,7 @@ class AppointmentUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = "__all__"
-        read_only_fields = ("id", "shop", "customer", "quote")
+        read_only_fields = ("id", "shop", "customer", "quote", "service")
 
 
 class AppointmentSlotSerializer(serializers.ModelSerializer):
