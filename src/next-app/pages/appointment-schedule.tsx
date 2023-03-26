@@ -8,7 +8,7 @@ import { BiPlus } from 'react-icons/bi';
 import { AiOutlineCheck } from 'react-icons/ai';
 import IconButton from '../components/IconButton';
 import DatePicker from '../components/DatePicker';
-import { useState, MouseEvent, useEffect } from 'react';
+import { useState, MouseEvent, useEffect, useMemo } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import {
   AppointmentSlot,
@@ -46,25 +46,24 @@ function convertStatus(status: AppointmentStatus): BookingStatus {
   }
 }
 
-const Booking = ({
-  appointmentLength,
-  width,
-  status,
-}: {
+const Booking = (props: {
   appointmentLength: number;
   width: number;
   status: BookingStatus;
+  text: string;
+  onClick: () => void;
 }) => {
   return (
     <div
       className={styles.booking + ' ' + status.split(' ').join('-')}
       style={{
-        height: 'calc(' + appointmentLength + '*4vh)',
-        width: width + '%',
+        height: 'calc(' + props.appointmentLength + '*4vh)',
+        width: props.width + '%',
       }}
+      onClick={props.onClick}
     >
       <div className={styles['booking-inner-container']}>
-        <span>Selected Booking</span>
+        <span>{props.text}</span>
       </div>
     </div>
   );
@@ -72,22 +71,28 @@ const Booking = ({
 
 type SubSlotProps = {
   startTime: number;
-  appointmentLengths: number[];
-  statuses: BookingStatus[];
+  bookings: {
+    appointmentLength: number;
+    status: BookingStatus;
+    text: string;
+    onClick: () => void;
+  }[];
 };
 
-const SubSlot = ({ startTime, appointmentLengths, statuses }: SubSlotProps) => {
-  const bookingWidth = 100 / appointmentLengths.length;
+const SubSlot = (props: SubSlotProps) => {
+  const bookingWidth = 100 / props.bookings.length;
 
   return (
     <div className={styles['sub-slot']}>
-      {appointmentLengths.map((length, i) => {
+      {props.bookings.map((booking, i) => {
         return (
           <Booking
-            appointmentLength={length}
-            status={statuses[i]}
+            appointmentLength={booking.appointmentLength}
+            status={booking.status}
             width={bookingWidth}
-            key={startTime + '-' + i}
+            text={booking.text}
+            onClick={booking.onClick}
+            key={props.startTime + '-' + i}
           />
         );
       })}
@@ -120,7 +125,6 @@ function startTimeEquals(slot: AppointmentSlot, startTime: number): boolean {
 const BookAppointmentPage: NextPage = () => {
   const router = useRouter();
   const [date, setDate] = useState(new Date());
-  const strDate = date.toISOString().split('T')[0];
   const [accessToken, setAccessToken] = useState<undefined | string>(undefined);
   useEffect(() => {
     setAccessToken(localStorage.getItem('access_token') || '');
@@ -129,34 +133,45 @@ const BookAppointmentPage: NextPage = () => {
     refetchOnWindowFocus: false,
     enabled: !!accessToken,
   });
-  const daysAppointments = query.data
-    ?.filter((appointment) => {
-      const startTimeAsDate = new Date(appointment.start_time);
-      /** Source: https://flaviocopes.com/how-to-determine-date-is-today-javascript/ */
-      return (
-        startTimeAsDate.getDate() == date.getDate() &&
-        startTimeAsDate.getMonth() == date.getMonth() &&
-        startTimeAsDate.getFullYear() == date.getFullYear()
-      );
-    })
-    .map((a) => {
-      const startTimeAsDate = new Date(a.start_time);
-      const startHour = startTimeAsDate.getHours();
-      const startMinutes = startTimeAsDate.getMinutes();
-      const startTime = startHour + startMinutes / 60;
-      const endTimeAsDate = new Date(a.end_time);
-      const endHour = endTimeAsDate.getHours();
-      const endMinutes = endTimeAsDate.getMinutes();
-      const endTime = endHour + endMinutes / 60;
-      const appointmentLength = (endTime - startTime) / 0.25;
-      return { startTime: startTime, length: appointmentLength, appointment: a };
-    });
+  const daysAppointments = useMemo(() => {
+    return query.data
+      ?.filter((appointment) => {
+        const startTimeAsDate = new Date(appointment.start_time);
+        /** Source: https://flaviocopes.com/how-to-determine-date-is-today-javascript/ */
+        return (
+          startTimeAsDate.getDate() == date.getDate() &&
+          startTimeAsDate.getMonth() == date.getMonth() &&
+          startTimeAsDate.getFullYear() == date.getFullYear()
+        );
+      })
+      .map((a) => {
+        const startTimeAsDate = new Date(a.start_time);
+        const startHour = startTimeAsDate.getHours();
+        const startMinutes = startTimeAsDate.getMinutes();
+        const startTime = startHour + startMinutes / 60;
+        const endTimeAsDate = new Date(a.end_time);
+        const endHour = endTimeAsDate.getHours();
+        const endMinutes = endTimeAsDate.getMinutes();
+        const endTime = endHour + endMinutes / 60;
+        const appointmentLength = (endTime - startTime) / 0.25;
+        return { startTime: startTime, length: appointmentLength, appointment: a };
+      })
+      .sort((a, b) => {
+        if (a.startTime < b.startTime) {
+          return -1;
+        } else if (a.startTime === b.startTime) {
+          return 0;
+        } else {
+          return 1;
+        }
+      });
+  }, [query.data, date]);
 
   // all times are represented as a number between 0 and 24
   // start time can only be x.00 (xx:00), x.25 (xx:15), x.50 (xx:30), or x.75 (xx:45)
-  // TODO: these times should not be hardcoded; change once endpoint is created
-  const [startTime, setStartTime] = useState(3); //useState(availability[0].startTime);
-  const [endTime, setEndTime] = useState(18); //useState(availability[availability.length - 1].endTime);
+  // TODO: don't hardcode this
+  const [startTime, setStartTime] = useState(6);
+  const [endTime, setEndTime] = useState(17);
 
   // # of sub-slots before first xx:00 mark
   // minimum of 1 for aesthetic purposes
@@ -228,23 +243,20 @@ const BookAppointmentPage: NextPage = () => {
                     return (
                       <SubSlot
                         startTime={Math.ceil(startTime) + i + j}
-                        appointmentLengths={
+                        bookings={
                           daysAppointments
                             ?.filter((a) => {
                               return a.startTime === Math.ceil(startTime) + i + j;
                             })
                             .map((a) => {
-                              console.log('start time: ' + a.startTime + ' length: ' + a.length);
-                              return a.length;
-                            }) || []
-                        }
-                        statuses={
-                          daysAppointments
-                            ?.filter((a) => {
-                              return a.startTime === Math.ceil(startTime) + i + j;
-                            })
-                            .map((a) => {
-                              return convertStatus(a.appointment.status);
+                              return {
+                                appointmentLength: a.length,
+                                status: convertStatus(a.appointment.status),
+                                text: a.appointment.service?.name || 'custom',
+                                onClick: () => {
+                                  router.push(`/appointment-details?id=${a.appointment.id}`);
+                                },
+                              };
                             }) || []
                         }
                         key={i + '-' + j}

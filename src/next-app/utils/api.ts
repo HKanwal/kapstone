@@ -173,6 +173,13 @@ function getAppointmentSlots({
   };
 }
 
+type Shop = {
+  id: number;
+  name: string;
+  shop_email: null | string;
+  shop_phone_number: null | string;
+};
+
 type BookedAppointmentsResponse = {
   id: number;
   customer: {
@@ -183,17 +190,12 @@ type BookedAppointmentsResponse = {
     email: string;
     phone_number: string;
   };
-  shop: {
-    id: number;
-    name: string;
-    shop_email: null | string;
-    shop_phone_number: null | string;
-  };
+  shop: Shop;
   /** Time format: "2023-03-20T14:00:00Z" */
   start_time: string;
   end_time: string;
   status_display: string;
-  quote: {
+  quote: null | {
     id: number;
     shop: {
       id: number;
@@ -203,12 +205,7 @@ type BookedAppointmentsResponse = {
     };
     quote_request: {
       id: number;
-      shop: {
-        id: number;
-        name: string;
-        shop_email: null | string;
-        shop_phone_number: null | string;
-      };
+      shop: Shop;
       customer: {
         id: number;
         username: string;
@@ -237,6 +234,22 @@ type BookedAppointmentsResponse = {
     /** Eg: "2023-03-15T19:05:27.256825-04:00" */
     created_at: string;
     notes: string;
+  };
+  service: null | {
+    id: number;
+    price: string;
+    parts: {
+      id: number;
+      name: string;
+      condition: 'new' | 'used';
+      type: 'oem' | 'aftermarket';
+      price: string;
+    }[];
+    has_edit_permission: boolean;
+    name: string;
+    description: null | string;
+    active: boolean;
+    shop: number;
   };
   status: AppointmentStatus;
   duration: string;
