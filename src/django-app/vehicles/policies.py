@@ -19,7 +19,6 @@ class VehicleAccessPolicy(AccessPolicy):
             "action": ["create"],
             "principal": "authenticated",
             "effect": "allow",
-            "condition": ["is_customer"],
         },
         {
             "action": ["partial_update", "destroy"],
