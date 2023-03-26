@@ -1,23 +1,21 @@
-#wrapper {
-  margin: 0 auto;
-}
 .container {
-  padding: 5vh;
-  height: fit-content;
   display: flex;
-  justify-content: flex-start;
   flex-direction: column;
+  align-items: center;
 }
 
-.appts-container {
-  display: table;
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-direction: column;
-  width: 80%;
+  width: 90%;
+  height: 100%;
 }
 
 .appointment-container {
-  width: 100%;
   margin-top: 2vh;
+  width: 100%;
 }
 
 .no-appts-msg {

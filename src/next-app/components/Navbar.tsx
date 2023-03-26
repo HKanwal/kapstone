@@ -59,6 +59,9 @@ const Navbar = (props: NavbarProps) => {
       router.push('/login');
     }
 
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+
     Cookies.remove('access');
     Cookies.remove('refresh');
     Cookies.remove('user_type');

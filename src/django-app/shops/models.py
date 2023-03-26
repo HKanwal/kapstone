@@ -187,14 +187,17 @@ class Appointment(models.Model):
         _("status"), max_length=12, choices=Status.choices, default=Status.PENDING
     )
     quote = models.ForeignKey(
-        "quotes.Quote", on_delete=models.SET_NULL, null=True, default=None
+        "quotes.Quote", on_delete=models.SET_NULL, null=True, blank=True, default=None
+    )
+    service = models.ForeignKey(
+        "shops.Service", on_delete=models.SET_NULL, null=True, blank=True, default=None
     )
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     customer = models.ForeignKey(
         "accounts.Customer", on_delete=models.CASCADE, null=True
     )
     vehicle = models.ForeignKey(
-        Vehicle, on_delete=models.CASCADE, null=True, default=None
+        Vehicle, on_delete=models.SET_NULL, null=True, blank=True, default=None
     )
     duration = models.DurationField(_("Duration"), default=timedelta(minutes=30))
     created_at = models.DateTimeField(auto_now_add=True)
@@ -251,6 +254,13 @@ class Appointment(models.Model):
     class Meta:
         verbose_name = "Appointment"
         verbose_name_plural = "Appointments"
+        constraints = [
+            models.CheckConstraint(
+                check=(Q(quote__isnull=False) & Q(service__isnull=True))
+                | (Q(quote__isnull=True) & Q(service__isnull=False)),
+                name="either_provide_quote_or_service_not_both",
+            )
+        ]
 
     def __str__(self):
         return f"{self.shop} - {self.customer} - {self.start_time} - {self.end_time}"
@@ -429,7 +439,6 @@ class ServicePart(models.Model):
 
 class WorkOrder(models.Model):
     appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE)
-    quote = models.ForeignKey("quotes.Quote", on_delete=models.CASCADE, null=False)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     employee = models.ForeignKey(
         "accounts.Employee", on_delete=models.CASCADE, null=True

@@ -14,7 +14,7 @@ export const CustomerNavbarData = [
   },
   {
     title: 'Appointments',
-    path: '#',
+    path: '/booked-appointments',
     icon: <IoIcons.IoMdCalendar />,
   },
   {

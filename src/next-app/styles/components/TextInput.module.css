@@ -71,3 +71,7 @@
 .input[type='number'] {
   -moz-appearance: textfield;
 }
+
+.input[disabled] {
+  pointer-events: none;
+}

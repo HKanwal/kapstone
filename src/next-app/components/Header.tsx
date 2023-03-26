@@ -3,6 +3,7 @@ import { IconType } from 'react-icons';
 import styles from '../styles/components/Header.module.css';
 import IconButton from './IconButton';
 import { IoMdArrowBack } from 'react-icons/io';
+import { CSSProperties } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { useClickOutside, useDisclosure } from '@mantine/hooks';
 import { StringNullableChain } from 'cypress/types/lodash';
@@ -10,6 +11,7 @@ import { StringNullableChain } from 'cypress/types/lodash';
 type HeaderProps = {
   title?: string;
   rightIcon?: IconType;
+  rightIconStyle?: CSSProperties;
   backButtonDisabled?: boolean;
   backButtonPath?: string;
   backButtonQuery?: string;
@@ -90,7 +92,11 @@ const Header = (props: HeaderProps) => {
         </div>
       ) : !!props.rightIcon ? (
         <div className={styles['right-btn-container']}>
-          <IconButton icon={props.rightIcon} onClick={props.onRightIconClick} />
+          <IconButton
+            icon={props.rightIcon}
+            onClick={props.onRightIconClick}
+            iconStyle={props.rightIconStyle}
+          />
         </div>
       ) : (
         <></>
