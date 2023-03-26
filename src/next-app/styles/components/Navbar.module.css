@@ -60,6 +60,10 @@
   position: relative;
 }
 
+.profile-btn-container {
+  display: flex;
+}
+
 .profile-btn {
   margin-right: 4vh;
 }

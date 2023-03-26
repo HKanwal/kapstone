@@ -78,7 +78,7 @@ const Navbar = (props: NavbarProps) => {
             </span>
           </div>
           <div className={styles['btn-contianer']}>
-            <div style={{ position: 'relative' }}>
+            <div className={styles['profile-btn-container']}>
               <IoMdContact className={styles['profile-btn']} id="profile" onClick={toggleProfile} />
               {profile ? (
                 <ProfileModal
