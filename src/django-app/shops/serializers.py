@@ -15,11 +15,12 @@ from .models import (
 )
 from accounts.serializers import UserViewSerializer
 from vehicles.serializers import PartSerializer
-from .policies import ShopAccessPolicy, AppointmentAccessPolicy
+from .policies import ShopAccessPolicy, AppointmentAccessPolicy, ServiceAccessPolicy
 from quotes.policies import QuoteAccessPolicy
 from quotes.models import Quote
 from vehicles.policies import VehicleAccessPolicy
 from vehicles.models import Vehicle
+from vehicles.serializers import VehicleSerializer
 
 
 class ServicePartSerializer(serializers.ModelSerializer):
@@ -161,6 +162,8 @@ class AppointmentSerializer(serializers.ModelSerializer):
     end_time = serializers.SerializerMethodField()
     status_display = serializers.SerializerMethodField()
     quote = QuoteSerializer()
+    service = ServiceSerializer()
+    vehicle = VehicleSerializer()
 
     class Meta:
         model = Appointment
@@ -186,7 +189,12 @@ class AppointmentCreateSerializer(serializers.ModelSerializer):
         required=False,
     )
     quote = PermittedPkRelatedField(
-        access_policy=QuoteAccessPolicy, queryset=Quote.objects.all()
+        access_policy=QuoteAccessPolicy, queryset=Quote.objects.all(), required=False
+    )
+    service = PermittedPkRelatedField(
+        access_policy=ServiceAccessPolicy,
+        queryset=Service.objects.all(),
+        required=False,
     )
 
     class Meta:
@@ -271,9 +279,6 @@ class WorkOrderUpdateSerializer(serializers.ModelSerializer):
     odometer_reading_after = serializers.IntegerField(default=0)
     discount = serializers.DecimalField(max_digits=5, decimal_places=2, default=0)
     grand_total = serializers.DecimalField(max_digits=10, decimal_places=2, default=0)
-    quote = PermittedPkRelatedField(
-        access_policy=QuoteAccessPolicy, queryset=Quote.objects.all()
-    )
     appointment = PermittedPkRelatedField(
         access_policy=AppointmentAccessPolicy, queryset=Appointment.objects.all()
     )
@@ -291,9 +296,6 @@ class WorkOrderCreateSerializer(serializers.ModelSerializer):
     grand_total = serializers.DecimalField(max_digits=10, decimal_places=2, default=0)
     shop = PermittedPkRelatedField(
         access_policy=ShopAccessPolicy, queryset=Shop.objects.all()
-    )
-    quote = PermittedPkRelatedField(
-        access_policy=QuoteAccessPolicy, queryset=Quote.objects.all()
     )
     appointment = PermittedPkRelatedField(
         access_policy=AppointmentAccessPolicy, queryset=Appointment.objects.all()
