@@ -40,7 +40,7 @@ const AppointmentDetails: NextPage = ({ appointment, workOrders }: any) => {
 
       try {
         const res = await axios.patch(
-          `${apiUrl}/shops/apponitments/${id}/`,
+          `${apiUrl}/shops/appointments/${id}/`,
           appointmentValuesToSend,
           {
             headers: { Authorization: `JWT ${access_token}` },
