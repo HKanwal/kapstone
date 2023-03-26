@@ -15,7 +15,7 @@ import Cookies from 'js-cookie';
 import * as cookie from 'cookie';
 import Link from '../components/Link';
 
-const AppointmentDetails: NextPage = ({ appointment, vehicle, workOrders }: any) => {
+const AppointmentDetails: NextPage = ({ appointment, workOrders }: any) => {
   const router = useRouter();
   const { id } = router.query;
   //const id = 1;
@@ -186,7 +186,7 @@ const AppointmentDetails: NextPage = ({ appointment, vehicle, workOrders }: any)
                 />
                 <h2 className="form-header">Vehicle Information</h2>
                 <CardTextField
-                  fieldValue={vehicle.manufacturer}
+                  fieldValue={appointment.vehicle.manufacturer}
                   fieldName="vehicle.manufacturer"
                   fieldLabel="Manufacturer"
                   fieldType="String"
@@ -194,7 +194,7 @@ const AppointmentDetails: NextPage = ({ appointment, vehicle, workOrders }: any)
                   onChange={form.handleChange}
                 />
                 <CardTextField
-                  fieldValue={vehicle.model}
+                  fieldValue={appointment.vehicle.model}
                   fieldName="vehicle.model"
                   fieldLabel="Model"
                   fieldType="String"
@@ -202,7 +202,7 @@ const AppointmentDetails: NextPage = ({ appointment, vehicle, workOrders }: any)
                   onChange={form.handleChange}
                 />
                 <CardTextField
-                  fieldValue={vehicle.year}
+                  fieldValue={appointment.vehicle.year}
                   fieldName="vehicle.year"
                   fieldLabel="Year"
                   fieldType="String"
@@ -210,7 +210,7 @@ const AppointmentDetails: NextPage = ({ appointment, vehicle, workOrders }: any)
                   onChange={form.handleChange}
                 />
                 <CardTextField
-                  fieldValue={vehicle.color}
+                  fieldValue={appointment.vehicle.color}
                   fieldName="vehicle.color"
                   fieldLabel="Color"
                   fieldType="String"
@@ -218,7 +218,7 @@ const AppointmentDetails: NextPage = ({ appointment, vehicle, workOrders }: any)
                   onChange={form.handleChange}
                 />
                 <CardTextField
-                  fieldValue={vehicle.vin}
+                  fieldValue={appointment.vehicle.vin}
                   fieldName="vehicle.vin"
                   fieldLabel="VIN"
                   fieldType="String"
@@ -237,19 +237,12 @@ const AppointmentDetails: NextPage = ({ appointment, vehicle, workOrders }: any)
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   const { id } = context.query;
-  //const id = 1;
   const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const access_token = parsedCookies.access;
   try {
     const appointment = await axios.get(`${apiUrl}/shops/appointments/${id}`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
-
-    const vehicle = appointment.data.vehicle
-      ? await axios.get(`${apiUrl}/vehicles/vehicles/${appointment.data.vehicle}/`, {
-          headers: { Authorization: `JWT ${access_token}` },
-        })
-      : null;
 
     const workOrders = await axios.get(`${apiUrl}/shops/work-orders/`, {
       headers: { Authorization: `JWT ${access_token}` },
@@ -258,7 +251,6 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     return {
       props: {
         appointment: appointment.data,
-        vehicle: vehicle ? vehicle.data : {},
         workOrders: workOrders.data,
       },
     };
