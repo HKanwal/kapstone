@@ -15,6 +15,7 @@ import axios from 'axios';
 import apiUrl from '../constants/api-url';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
+import { props } from 'cypress/types/bluebird';
 
 type ShopResult = {
   name: string;
@@ -48,10 +49,6 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
   const [buttonEnabled, setButtonEnabled] = useState(false);
   const [selectedShops, setSelectedShops] = useState<string[]>([]);
   const router = useRouter();
-
-  const handleAppointmentClick = (shop: any) => {
-    router.push('/book-appointment')
-  };
 
   const handleCallClick = (phoneNumber: string) => {
     window.open(`tel: ${phoneNumber}`)
@@ -140,18 +137,23 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
     setSelectedShops(selectedShops.filter((selectedShopId) => selectedShopId !== id.toString()));
   }
 
+  const handleAppointmentClick = (shop: any) => {
+    router.push('/book-appointment')
+  };
+
   const shopResult = (shop: any) => {
     return (
       <div key={shop.id} className={styles['result-container']}>
         <ShopResult
           name={shop.name}
           id={shop.id}
+          shop={shop}
           onClick={() => openShopModal(shop)}
           distance={shop.distance_from_user}
           onSelect={onSelect}
           onDeselect={onDeselect}
           services={shop.shop_services.length > 0 && service ? shop.shop_services : undefined}
-          onClickAppointment={shop.shop_services.length > 0 && service ? handleAppointmentClick(shop) : undefined}
+          onClickAppointment={shop.shop_services.length > 0 && service ? () => handleAppointmentClick(shop) : undefined}
           // onClickAppointment={
           //   shop.shops_services.length() > 0 ? () => handleAppointmentClick(shop) : undefined
           // }

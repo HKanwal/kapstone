@@ -29,13 +29,14 @@ const CircularIconButton = (props: CircularIconButtonProps) => {
 type ShopResultProps = {
   name: string;
   id: number;
+  shop: any;
   distance: string;
   onClick?: () => void;
   /**
    * If canned details are provided, quick appointment button will be shown.
    */
   services?: [];
-  onClickAppointment?: () => void;
+  onClickAppointment?: (shop: any) => void;
   onClickCall?: () => void;
   style?: CSSProperties;
   /**
@@ -78,7 +79,7 @@ const ShopResult = (props: ShopResultProps) => {
         {!props.inSelectMode ? (
           <>
             <div style={{ visibility: props.services ? 'visible' : 'hidden' }}>
-              <CircularIconButton icon={BiTime} onClick={props.onClickAppointment} />
+              <CircularIconButton icon={BiTime} onClick={props.onClickAppointment ? () => props.onClickAppointment : undefined} />
             </div>
             <div style={{ visibility: props.onClickCall ? 'visible' : 'hidden' }}>
               <CircularIconButton icon={AiFillPhone} onClick={props.onClickCall} />
