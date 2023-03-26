@@ -3,9 +3,11 @@ import { useRouter } from 'next/router';
 import axios, { AxiosError } from 'axios';
 import Header from '../../components/Header';
 import apiUrl from '../../constants/api-url';
+import { CgArrowTopRightR } from 'react-icons/cg';
 // @ts-ignore
 import * as cookie from 'cookie';
 import moment from 'moment';
+import Link from 'next/link';
 
 const NotificationDetail: NextPage = ({ notification }: any) => {
   const router = useRouter();
@@ -21,6 +23,14 @@ const NotificationDetail: NextPage = ({ notification }: any) => {
           </span>
           <p className="notification-message">{notification.message}</p>
         </div>
+        {notification.link && (
+          <Link href={notification.link} className='link-button'>
+            <div className="flex align-items-center gap">
+              <span>Visit link</span>
+              <CgArrowTopRightR />
+            </div>
+          </Link>
+        )}
       </div>
     </div>
   );

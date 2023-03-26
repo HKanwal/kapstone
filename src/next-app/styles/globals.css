@@ -420,3 +420,15 @@ button:disabled.shadow-card-footer-item {
 .notification-message {
   font-size: 18px;
 }
+
+.link-button {
+  padding: 12px;
+  margin: 12px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 16px;
+  background-color: #b1b8fd;
+  font-size: 18px;
+  font-weight: 700;
+}
