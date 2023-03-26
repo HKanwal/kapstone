@@ -17,8 +17,8 @@ import Link from '../components/Link';
 
 const AppointmentDetails: NextPage = ({ appointment, vehicle, workOrders }: any) => {
   const router = useRouter();
-  //const { id } = router.query;
-  const id = 1;
+  const { id } = router.query;
+  //const id = 1;
   const [inEdit, setInEdit] = useState(false);
   const [errors, setErrors] = useState([]);
   const schema = yup.object().shape({
@@ -236,8 +236,8 @@ const AppointmentDetails: NextPage = ({ appointment, vehicle, workOrders }: any)
 };
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-  //const { id } = context.query;
-  const id = 1;
+  const { id } = context.query;
+  //const id = 1;
   const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const access_token = parsedCookies.access;
   try {
