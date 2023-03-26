@@ -138,7 +138,10 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
   }
 
   const handleAppointmentClick = (shop: any) => {
-    router.push('/book-appointment')
+    router.push({
+      pathname: '/book-appointment',
+      query: { shopId: shop.id },
+    });
   };
 
   const shopResult = (shop: any) => {
@@ -153,10 +156,8 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
           onSelect={onSelect}
           onDeselect={onDeselect}
           services={shop.shop_services.length > 0 && service ? shop.shop_services : undefined}
-          onClickAppointment={shop.shop_services.length > 0 && service ? () => handleAppointmentClick(shop) : undefined}
-          // onClickAppointment={
-          //   shop.shops_services.length() > 0 ? () => handleAppointmentClick(shop) : undefined
-          // }
+          showAppointment={shop.shop_services.length > 0 && service ? true : false}
+          onClickAppointment={shop.shop_services.length > 0 && service ? () => handleAppointmentClick(shop) : () => { }}
           onClickCall={shop.shop_phone_number !== null ? () => handleCallClick(shop.shop_phone_number) : undefined}
         />
       </div>

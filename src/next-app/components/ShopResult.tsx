@@ -9,7 +9,7 @@ import { Checkbox } from '@mantine/core';
 type CircularIconButtonProps = {
   icon: IconType;
   bgColor?: string;
-  onClick?: () => void;
+  onClick?: any;
 };
 
 const CircularIconButton = (props: CircularIconButtonProps) => {
@@ -36,6 +36,7 @@ type ShopResultProps = {
    * If canned details are provided, quick appointment button will be shown.
    */
   services?: [];
+  showAppointment: boolean;
   onClickAppointment?: (shop: any) => void;
   onClickCall?: () => void;
   style?: CSSProperties;
@@ -78,8 +79,8 @@ const ShopResult = (props: ShopResultProps) => {
       <div className={styles['btns-container']}>
         {!props.inSelectMode ? (
           <>
-            <div style={{ visibility: props.services ? 'visible' : 'hidden' }}>
-              <CircularIconButton icon={BiTime} onClick={props.onClickAppointment ? () => props.onClickAppointment : undefined} />
+            <div style={{ visibility: props.showAppointment ? 'visible' : 'hidden' }}>
+              <CircularIconButton icon={BiTime} onClick={props.showAppointment ? props.onClickAppointment : undefined} />
             </div>
             <div style={{ visibility: props.onClickCall ? 'visible' : 'hidden' }}>
               <CircularIconButton icon={AiFillPhone} onClick={props.onClickCall} />
