@@ -14,9 +14,12 @@ import {
   AppointmentSlot,
   AppointmentSlotsResponse,
   AppointmentStatus,
+  Weekday,
   bookAppointment,
   getAppointmentSlots,
   getBookedAppointments,
+  getShopDetails,
+  getShopHours,
   getUserDetails,
 } from '../utils/api';
 import { Loader } from '@mantine/core';
@@ -28,6 +31,12 @@ function createEmptyArray(n: number): undefined[] {
     a.push(undefined);
   }
   return a;
+}
+
+function getWeekday(date: Date): Weekday {
+  return (
+    ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] as Weekday[]
+  )[date.getDay()];
 }
 
 type BookingStatus = 'no show' | 'in progress' | 'completed' | 'future';
@@ -129,12 +138,20 @@ const BookAppointmentPage: NextPage = () => {
   useEffect(() => {
     setAccessToken(localStorage.getItem('access_token') || '');
   }, []);
-  const query = useQuery('getAppointments', getBookedAppointments(accessToken || ''), {
+  const appointmentsQuery = useQuery('getAppointments', getBookedAppointments(accessToken || ''), {
     refetchOnWindowFocus: false,
     enabled: !!accessToken,
   });
+  const shopDetailsQuery = useQuery('getShopDetails', getShopDetails(accessToken || ''), {
+    refetchOnWindowFocus: false,
+    enabled: !!accessToken,
+  });
+  const shopHoursQuery = useQuery('getShopHours', getShopHours(shopDetailsQuery.data?.id || -1), {
+    refetchOnWindowFocus: false,
+    enabled: !!shopDetailsQuery.data,
+  });
   const daysAppointments = useMemo(() => {
-    return query.data
+    return appointmentsQuery.data
       ?.filter((appointment) => {
         const startTimeAsDate = new Date(appointment.start_time);
         /** Source: https://flaviocopes.com/how-to-determine-date-is-today-javascript/ */
@@ -165,13 +182,23 @@ const BookAppointmentPage: NextPage = () => {
           return 1;
         }
       });
-  }, [query.data, date]);
+  }, [appointmentsQuery.data, date]);
 
   // all times are represented as a number between 0 and 24
   // start time can only be x.00 (xx:00), x.25 (xx:15), x.50 (xx:30), or x.75 (xx:45)
-  // TODO: don't hardcode this
   const [startTime, setStartTime] = useState(6);
   const [endTime, setEndTime] = useState(17);
+
+  useEffect(() => {
+    const currentWeekday = getWeekday(date);
+    const hours = shopHoursQuery.data?.shophours_set.find((hours) => {
+      return hours.day === currentWeekday;
+    });
+    if (hours !== undefined) {
+      setStartTime(timeToNumber(hours.from_time.substring(0, hours.from_time.length - 3)));
+      setEndTime(timeToNumber(hours.to_time.substring(0, hours.to_time.length - 3)));
+    }
+  }, [date, shopHoursQuery.data]);
 
   // # of sub-slots before first xx:00 mark
   // minimum of 1 for aesthetic purposes
@@ -213,7 +240,7 @@ const BookAppointmentPage: NextPage = () => {
           <DatePicker value={[date]} onChange={handleDateChange} single />
           <IconButton icon={BsChevronRight} onClick={incrementDate} />
         </div>
-        {query.isLoading || query.isFetching ? (
+        {appointmentsQuery.isLoading || appointmentsQuery.isFetching ? (
           <div className={styles['loader-container']}>
             <Loader />
           </div>

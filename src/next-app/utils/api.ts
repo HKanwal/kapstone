@@ -271,6 +271,39 @@ function getBookedAppointments(jwtToken: string) {
   };
 }
 
+export type Weekday =
+  | 'sunday'
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday';
+
+type GetShopHoursResponse = {
+  shophours_set: {
+    id: number;
+    day: Weekday;
+    from_time: string;
+    to_time: string;
+    shop: number;
+  }[];
+  // other properties or response were ignored
+};
+
+function getShopHours(shopId: number) {
+  return () => {
+    return fetch(`${apiUrl}/shops/shops/${shopId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    }).then((res) => {
+      return res.json() as Promise<GetShopHoursResponse>;
+    });
+  };
+}
+
 type UserDetails = {
   email: string;
   type: accountTypes;
@@ -288,6 +321,25 @@ function getUserDetails(jwtToken: string) {
       },
     }).then((res) => {
       return res.json() as Promise<UserDetails>;
+    });
+  };
+}
+
+type ShopDetails = {
+  id: number;
+  // other properties of response were ignored
+};
+
+function getShopDetails(jwtToken: string) {
+  return () => {
+    return fetch(`${apiUrl}/shops/shops/me`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        Authorization: `JWT ${jwtToken}`,
+      },
+    }).then((res) => {
+      return res.json() as Promise<ShopDetails>;
     });
   };
 }
@@ -312,4 +364,6 @@ export {
   bookAppointment,
   getUserDetails,
   getBookedAppointments,
+  getShopHours,
+  getShopDetails,
 };
