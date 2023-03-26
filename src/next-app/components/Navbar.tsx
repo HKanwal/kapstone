@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../styles/components/Navbar.module.css';
-import Button from './Button';
 import ProfileModal from './ProfileModal';
 import { IoMdMenu, IoMdContact, IoIosCloseCircleOutline } from 'react-icons/io';
 import Link from 'next/link';
@@ -13,6 +12,7 @@ import { IconContext } from 'react-icons';
 import Cookies from 'js-cookie';
 import { Jwt } from '../utils/api';
 import { useRouter } from 'next/router';
+import SmallButton from './SmallButton';
 
 type NavbarProps = {
   authData: Jwt;
@@ -89,9 +89,7 @@ const Navbar = (props: NavbarProps) => {
                 />
               ) : null}
             </div>
-            <div className={styles['logout-btn']}>
-              <Button title={buttonText} onClick={logout} />
-            </div>
+            <SmallButton title={buttonText} onClick={logout} />
           </div>
         </div>
 
