@@ -175,7 +175,7 @@ class ServiceAccessPolicy(AccessPolicy):
             elif request.user.type == "employee":
                 employee_shop = EmployeeData.objects.get(user=request.user).shop
                 return qs.filter(shop=employee_shop)
-        return qs
+        return qs.filter()
 
     def user_type_is_shop_owner(self, request, view, action):
         return request.user.type == "shop_owner"
