@@ -23,7 +23,7 @@ const CreateAppointment: NextPage = ({ shop }: any) => {
   const schema = yup.object().shape({
     firstName: yup.string().required(),
     lastName: yup.string().required(),
-    phone: yup.string().required(),
+    phone: yup.number().required(),
     email: yup.string().required(),
     carYear: yup.number().positive().required(),
     carMake: yup.string().required(),
@@ -67,7 +67,7 @@ const CreateAppointment: NextPage = ({ shop }: any) => {
           const customerValuesToSend = {
             first_name: values.firstName,
             last_name: values.lastName,
-            phone_number: values.phone,
+            phone_number: '+' + values.phone,
             email: values.email,
             password: pass,
             re_password: pass,
@@ -183,7 +183,7 @@ const CreateAppointment: NextPage = ({ shop }: any) => {
                   fieldValue={form.values.phone}
                   fieldName="phone"
                   fieldLabel="Phone Number"
-                  fieldType="string"
+                  fieldType="number"
                   fieldRequired
                   onChange={form.handleChange}
                   error={form.errors.phone}
