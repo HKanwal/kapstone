@@ -230,7 +230,7 @@ const BookAppointmentPage: NextPage = () => {
         title="Appointments"
         rightIcon={BiPlus}
         onRightIconClick={() => {
-          console.log('TODO: redirect to new appointment page');
+          router.push('/create-appointment');
         }}
       />
 
