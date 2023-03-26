@@ -13,6 +13,7 @@ import Cookies from 'js-cookie';
 import { Jwt } from '../utils/api';
 import { useRouter } from 'next/router';
 import SmallButton from './SmallButton';
+import { useClickOutside, useDisclosure } from '@mantine/hooks';
 
 type NavbarProps = {
   authData: Jwt;
@@ -28,7 +29,8 @@ const Navbar = (props: NavbarProps) => {
   const [NavbarData, setNavBarData] = useState(CustomerNavbarData);
   const [buttonText, setButtonText] = useState('Login');
   const [sidebar, setSidebar] = useState(false);
-  const [profile, setProfile] = useState(false);
+  const [profileOpen, profileHandlers] = useDisclosure(false);
+  const profileRef = useClickOutside<HTMLDivElement>(() => profileHandlers.close());
 
   useEffect(() => {
     if (props.authData.access !== '') {
@@ -47,7 +49,6 @@ const Navbar = (props: NavbarProps) => {
   }, [props.authData]);
 
   const toggleSidebar = () => setSidebar((prevSidebar) => !prevSidebar);
-  const toggleProfile = () => setProfile((prevProfile) => !prevProfile);
 
   const logout = () => {
     props.onLogin({
@@ -78,9 +79,13 @@ const Navbar = (props: NavbarProps) => {
             </span>
           </div>
           <div className={styles['btn-contianer']}>
-            <div className={styles['profile-btn-container']}>
-              <IoMdContact className={styles['profile-btn']} id="profile" onClick={toggleProfile} />
-              {profile ? (
+            <div className={styles['profile-btn-container']} ref={profileRef}>
+              <IoMdContact
+                className={styles['profile-btn']}
+                id="profile"
+                onClick={() => profileHandlers.toggle()}
+              />
+              {profileOpen ? (
                 <ProfileModal
                   headerName={props.headerName}
                   modalBody={props.modalBody}
