@@ -69,9 +69,8 @@ const Booking = (props: {
         height: 'calc(' + props.appointmentLength + '*4vh)',
         width: props.width + '%',
       }}
-      onClick={props.onClick}
     >
-      <div className={styles['booking-inner-container']}>
+      <div className={styles['booking-inner-container']} onClick={props.onClick}>
         <span>{props.text}</span>
       </div>
     </div>
@@ -281,6 +280,7 @@ const BookAppointmentPage: NextPage = () => {
                                 status: convertStatus(a.appointment.status),
                                 text: a.appointment.service?.name || 'custom',
                                 onClick: () => {
+                                  console.log('clicked');
                                   router.push(`/appointment-details?id=${a.appointment.id}`);
                                 },
                               };
