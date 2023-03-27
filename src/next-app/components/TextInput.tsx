@@ -65,10 +65,10 @@ const TextInput = forwardRef((props: TextInputProps, ref: Ref<TextInputRef>) => 
       paddingRight: props.rightItems
         ? 'calc(1em + 35%)'
         : props.onRemove
-          ? '3em'
-          : props.style?.paddingRight ?? '1em',
+        ? '3em'
+        : props.style?.paddingRight ?? '1em',
     };
-  }, [props.width, props.style, props.onRemove]);
+  }, [props.width, props.style, props.onRemove, props.rightItems]);
 
   useImperativeHandle(ref, () => {
     return {

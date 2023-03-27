@@ -225,7 +225,7 @@ const BookAppointmentPage: NextPage = () => {
 
   useEffect(() => {
     query.refetch();
-  }, [date]);
+  }, [date, query]);
 
   const handleBookableClick = (startTime: number) => {
     let flag = false;
