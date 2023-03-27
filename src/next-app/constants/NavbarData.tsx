@@ -14,7 +14,7 @@ export const CustomerNavbarData = [
   },
   {
     title: 'Appointments',
-    path: '#',
+    path: '/booked-appointments',
     icon: <IoIcons.IoMdCalendar />,
   },
   {
@@ -37,7 +37,7 @@ export const ShopOwnerNavbarData = [
   },
   {
     title: 'Appointments',
-    path: '#',
+    path: '/appointment-schedule',
     icon: <IoIcons.IoMdCalendar />,
   },
   {

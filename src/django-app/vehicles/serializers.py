@@ -24,5 +24,7 @@ class VehicleWriteSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "customer")
 
     def create(self, validated_data):
-        validated_data["customer"] = self.context["request"].user
+        if self.context["request"].user.type == "customer":
+            validated_data["customer"] = self.context["request"].user
+
         return Vehicle.objects.create(**validated_data)

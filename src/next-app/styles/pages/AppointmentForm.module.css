@@ -1,0 +1,65 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.field-container {
+  width: 80%;
+  padding-bottom: 3vh;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding-top: 4vh;
+  padding-bottom: 4vh;
+}
+
+.section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2vh;
+}
+
+.section-header {
+  font-weight: bold;
+  font-size: var(--section-header-font-size);
+  width: 80%;
+  margin-bottom: 2vh;
+}
+
+/* */
+
+.subtitle {
+  padding-left: 10%;
+  padding-top: 2%;
+  padding-bottom: 1%;
+}
+
+.select-shop-button-container {
+  width: 100%;
+  padding-left: 35%;
+  padding-bottom: 3vh;
+}
+
+.modal-title {
+  padding-bottom: 10vh;
+}
+
+.select-shops-modal {
+  width: 50vw;
+}
+
+.card-container {
+  margin-bottom: 5vh;
+}
+
+.date-container {
+  display: inline-flex;
+}
