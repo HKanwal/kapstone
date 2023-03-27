@@ -44,6 +44,7 @@ const NotificationList: NextPage = ({ notifications }: any) => {
 };
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
+  context.res.setHeader('Cache-Control', 'no-store');
   const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const access_token = parsedCookies.access;
   try {
