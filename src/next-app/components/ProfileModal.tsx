@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from '../styles/components/ProfileModal.module.css';
-import ButtonLink from './ButtonLink';
+import { useRouter } from 'next/router';
+import SmallButton from './SmallButton';
 
 type ProfileModalProps = {
   headerName: string;
@@ -10,13 +11,19 @@ type ProfileModalProps = {
 };
 
 const ProfileModal = (props: ProfileModalProps) => {
+  const router = useRouter();
+
+  const handleBtnClick = () => {
+    router.push(props.profileURL);
+  };
+
   return (
     <div className={styles.container}>
-      <h2>{props.headerName}</h2>
+      <h2 style={{ marginTop: '1vh', marginBottom: '1vh' }}>{props.headerName}</h2>
       {props.modalBody}
       {props.showProfileButton && (
         <div className={styles['profile-btn']}>
-          <ButtonLink title="Profile" width="80%" href={props.profileURL} />
+          <SmallButton title="Profile" width="80%" onClick={handleBtnClick} />
         </div>
       )}
     </div>

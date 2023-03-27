@@ -9,7 +9,7 @@ export const CustomerNavbarData = [
   },
   {
     title: 'Shop Search',
-    path: '/shop-results',
+    path: '/find-shop',
     icon: <IoIcons.IoMdMap />,
   },
   {
@@ -37,7 +37,7 @@ export const ShopOwnerNavbarData = [
   },
   {
     title: 'Appointments',
-    path: '#',
+    path: '/appointment-schedule',
     icon: <IoIcons.IoMdCalendar />,
   },
   {

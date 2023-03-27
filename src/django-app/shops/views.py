@@ -534,11 +534,14 @@ class AppointmentViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                     {
                         "status": True,
                         "results": "Appointment Created",
-                        "data": AppointmentSerializer(appointment).data,
+                        "data": AppointmentSerializer(
+                            appointment, context={"request": request}
+                        ).data,
                     },
                     status=status.HTTP_201_CREATED,
                 )
         except ValidationError as err:
+            logging.error(traceback.format_exc())
             return Response(
                 {"status": False, "error_description": err.message},
                 status=status.HTTP_400_BAD_REQUEST,

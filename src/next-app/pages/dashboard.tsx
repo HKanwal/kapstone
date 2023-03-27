@@ -68,13 +68,15 @@ const Dashboard: NextPage<DashboardPageProps, {}> = (props) => {
           const shop = response.data;
           setHeaderName(shop.name);
           setModalBody([
-            <p key="1">{shop.address?.street}</p>,
-            <p key="2">
+            <span style={{ display: 'block' }} key="1">
+              {shop.address?.street}
+            </span>,
+            <span style={{ display: 'block' }} key="2">
               {shop.address?.city}, {shop.address?.province}
-            </p>,
-            <p key="3">
+            </span>,
+            <span style={{ display: 'block' }} key="3">
               {shop.address?.country}, {shop.address?.postal_code}
-            </p>,
+            </span>,
           ]);
           setProfileURL(`/shop/${shop.id}/profile`);
         })
