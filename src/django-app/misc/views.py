@@ -38,7 +38,8 @@ class NotificationViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"])
     def count(self, request, *args, **kwargs):
+        count = self.get_queryset().filter(read=False).count()
         return Response(
-            {"count": self.get_queryset().filter(read=False).count()},
+            {"count": count},
             status=status.HTTP_200_OK,
         )
