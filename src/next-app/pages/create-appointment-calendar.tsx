@@ -176,6 +176,9 @@ const BookAppointmentPage: NextPage = () => {
   );
   const mutation = useMutation({
     mutationFn: bookAppointment,
+    onSuccess: (res, body, context) => {
+      router.replace('/appointment-schedule');
+    },
   });
   const shopHoursQuery = useQuery('getShopHours', getShopHours(shopDetailsQuery.data?.id || -1), {
     refetchOnWindowFocus: false,
