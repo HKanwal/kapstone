@@ -161,8 +161,9 @@ const QuoteRequestPage: NextPage = (props: any) => {
         }}
       >
         <div
-          className={`card hover-scale-up ${shops.includes(shop?.id) ? 'selected-card' : 'unselected-card'
-            }`}
+          className={`card hover-scale-up ${
+            shops.includes(shop?.id) ? 'selected-card' : 'unselected-card'
+          }`}
         >
           <div className="flex flex-col row-gap-small">
             <span>
@@ -275,15 +276,15 @@ const QuoteRequestPage: NextPage = (props: any) => {
                 </form>
               </FormikProvider>
               <div className="grid-list" id="shop-list" style={{ marginTop: '10px' }}>
-                {shopForm.values.postal_code && searchButtonClicked ?
+                {shopForm.values.postal_code && searchButtonClicked ? (
                   shopsLoading ? (
                     skeletonShopList
                   ) : shopList.length > 0 ? (
                     shopList
                   ) : (
                     <p>No shops found.</p>
-                  ) : undefined
-                }
+                  )
+                ) : undefined}
               </div>
             </div>
           </div>
@@ -354,11 +355,11 @@ const QuoteRequestPage: NextPage = (props: any) => {
               <b>Selected Shops: </b>
               {shops.length > 0
                 ? shopsList
-                  .filter((shop: any) => {
-                    return shops.includes(shop.id);
-                  })
-                  .map((shop: any) => shop.name)
-                  .join(', ')
+                    .filter((shop: any) => {
+                      return shops.includes(shop.id);
+                    })
+                    .map((shop: any) => shop.name)
+                    .join(', ')
                 : 'None.'}
             </div>
           </div>
@@ -473,21 +474,45 @@ const QuoteRequestPage: NextPage = (props: any) => {
           width="80%"
           onClick={async () => {
             try {
-              console.log();
+              const data = {
+                shops: shops.map((shop: any) => shop.id.toString()),
+                description: notes,
+                vehicle_vin: VIN,
+                vehicle_make: make === 'Other' ? customMake : make,
+                vehicle_model: model,
+                vehicle_year: modelYear,
+                preferred_part_condition:
+                  partCondition === 'New Parts Only'
+                    ? 'new'
+                    : partCondition === 'Used Parts Only'
+                    ? 'used'
+                    : '',
+                preferred_part_type:
+                  partType === 'OEM Parts Only'
+                    ? 'oem'
+                    : partType === 'Aftermarket Parts Only'
+                    ? 'aftermarket'
+                    : '',
+              };
+
+              const formData = new FormData();
+
+              for (const [key, value] of Object.entries(data)) {
+                formData.append(key, JSON.stringify(value));
+              }
+
+              for (let i = 0; i < imgFiles.length; i++) {
+                formData.append('uploaded_images', imgFiles[i], imgFiles[i].name);
+              }
+
               const res = await axios.post(
                 `${apiUrl}/quotes/quote-requests/bulk_create/`,
+                formData,
                 {
-                  shops: shops.map((shop: any) => shop.toString()),
-                  description: notes,
-                  vehicle_vin: VIN,
-                  vehicle_make: make === 'Other' ? customMake : make,
-                  vehicle_model: model,
-                  vehicle_year: modelYear,
-                  preferred_part_condition: partCondition === 'New Parts Only' ? 'new' : partCondition === 'Used Parts Only' ? 'used' : '',
-                  preferred_part_type: partType === 'OEM Parts Only' ? 'oem' : partType === 'Aftermarket Parts Only' ? 'aftermarket' : '',
-                },
-                {
-                  headers: { Authorization: `JWT ${authData.access}` },
+                  headers: {
+                    Authorization: `JWT ${authData.access}`,
+                  },
+                  maxBodyLength: Infinity,
                 }
               );
               if (res.status === 201) {
@@ -500,7 +525,7 @@ const QuoteRequestPage: NextPage = (props: any) => {
           }}
         />
       </div>
-    </div >
+    </div>
   );
 };
 

@@ -14,7 +14,7 @@ from .policies import QuoteRequestAccessPolicy
 class QuoteRequestSerializer(serializers.ModelSerializer):
     shop = ShopOverviewSerializer()
     customer = UserViewSerializer(source="user")
-    images = ImageQuoteSerializer(many=True, read_only=True)
+    images = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
 
     class Meta:
@@ -40,6 +40,10 @@ class QuoteRequestSerializer(serializers.ModelSerializer):
 
     def get_status(self, obj):
         return obj.status
+    
+    def get_images(self, obj):
+        images = ImageQuote.objects.filter(quote_request_batch_id=obj.batch_id)
+        return ImageQuoteSerializer(images, many=True).data
 
 
 class QuoteRequestBatchSerializer(serializers.ModelSerializer):
@@ -57,7 +61,7 @@ class QuoteRequestBatchSerializer(serializers.ModelSerializer):
 
 class QuoteRequestBatchRetrieveSerializer(serializers.ModelSerializer):
     customer = UserViewSerializer(source="user")
-    images = ImageQuoteSerializer(many=True, read_only=True)
+    images = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
 
     class Meta:
@@ -81,6 +85,10 @@ class QuoteRequestBatchRetrieveSerializer(serializers.ModelSerializer):
 
     def get_status(self, obj):
         return obj.status
+    
+    def get_images(self, obj):
+        images = ImageQuote.objects.filter(quote_request_batch_id=obj.batch_id)
+        return ImageQuoteSerializer(images, many=True).data
 
 
 class QuoteRequestWriteSerializer(serializers.ModelSerializer):

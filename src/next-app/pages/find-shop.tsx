@@ -26,10 +26,10 @@ const FindShopPage: NextPage = ({ services }: any) => {
   };
 
   const handleSubmit = () => {
-    Cookies.set("pocode", postalCode);
-    Cookies.set("shopName", shopName);
-    Cookies.set("service", serviceType);
-    Cookies.set("bookings", checked.toString());
+    Cookies.set('pocode', postalCode);
+    Cookies.set('shopName', shopName);
+    Cookies.set('service', serviceType);
+    Cookies.set('bookings', checked.toString());
 
     router.push({ pathname: '/shop-results' });
   };
@@ -40,7 +40,7 @@ const FindShopPage: NextPage = ({ services }: any) => {
       tempServices.push(service.name);
     });
     setServiceOptions(tempServices);
-  }, [])
+  }, [services]);
 
   return (
     <div className={formStyles['page-container']}>
@@ -56,7 +56,11 @@ const FindShopPage: NextPage = ({ services }: any) => {
           />
         </div>
         <div className={formStyles['field-container']}>
-          <TextField name="Shop Name" placeholder="Search for a specific shop" onChange={setShopName} />
+          <TextField
+            name="Shop Name"
+            placeholder="Search for a specific shop"
+            onChange={setShopName}
+          />
         </div>
         <div className={formStyles['field-container']}>
           <DropdownField name="Service Type" items={serviceOptions} onSelect={setServiceType} />

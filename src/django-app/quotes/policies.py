@@ -191,9 +191,7 @@ class QuoteRequestAccessPolicy(AccessPolicy):
             "condition": ["is_customer"],
         },
         {
-            "action": [
-                "partial_update"
-            ],
+            "action": ["partial_update"],
             "principal": "authenticated",
             "effect": "allow",
             "condition": ["is_owner"],
