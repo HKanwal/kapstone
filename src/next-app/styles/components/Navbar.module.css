@@ -46,10 +46,6 @@
   opacity: 0.5;
 }
 
-.logout-btn {
-  zoom: 0.6;
-}
-
 .btn-contianer {
   display: flex;
   justify-content: center;
@@ -62,10 +58,15 @@
   padding-right: 4vh;
   height: 10vh;
   position: relative;
+  gap: 21px;
+}
+
+.profile-btn-container {
+  position: relative;
 }
 
 .profile-btn {
-  margin-right: 4vh;
+  /* margin-right: 4vh; */
 }
 
 .profile-btn:hover {

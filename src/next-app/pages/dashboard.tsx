@@ -3,19 +3,41 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Navbar from '../components/Navbar';
 import styles from '../styles/pages/Dashboard.module.css';
-import { AuthContext, Jwt, accountTypes, refreshToken } from '../utils/api';
+import { AuthContext, Jwt, accountTypes, getBookedAppointments, refreshToken } from '../utils/api';
 import apiUrl from '../constants/api-url';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import { useQuery } from 'react-query';
+import BookedAppointment from '../components/BookedAppointment';
 
 type DashboardPageProps = {
   onLogin: (jwt: Jwt) => void;
 };
 const Dashboard: NextPage<DashboardPageProps, {}> = (props) => {
   const [authData, setAuthData] = useState(useContext(AuthContext));
+  const [notificationCount, setNotificationCount] = useState(0);
   const [headerName, setHeaderName] = useState('');
   const [modalBody, setModalBody] = useState([] as JSX.Element[]);
   const [profileURL, setProfileURL] = useState<null | string>(null);
+  const [accessToken, setAccessToken] = useState<undefined | string>(undefined);
+  const query = useQuery('getBookedAppointments', getBookedAppointments(accessToken || ''), {
+    refetchOnWindowFocus: false,
+    enabled: !!accessToken,
+  });
+  const todaysAppointments = query.data?.filter((appointment) => {
+    const startTimeAsDate = new Date(appointment.start_time);
+    const today = new Date();
+    /** Source: https://flaviocopes.com/how-to-determine-date-is-today-javascript/ */
+    return (
+      startTimeAsDate.getDate() == today.getDate() &&
+      startTimeAsDate.getMonth() == today.getMonth() &&
+      startTimeAsDate.getFullYear() == today.getFullYear()
+    );
+  });
+
+  useEffect(() => {
+    setAccessToken(localStorage.getItem('access_token') || '');
+  }, []);
 
   useEffect(() => {
     if (authData.access !== '') {
@@ -27,6 +49,15 @@ const Dashboard: NextPage<DashboardPageProps, {}> = (props) => {
       });
     }
 
+    const access_token = Cookies.get('access');
+    axios
+      .get(`${apiUrl}/misc/notifications/count/`, {
+        headers: { Authorization: `JWT ${access_token}` },
+      })
+      .then((response) => {
+        setNotificationCount(response.data.count);
+      });
+
     if (['shop_owner', 'employee'].includes(authData.user_type)) {
       const access_token = Cookies.get('access');
       axios
@@ -37,13 +68,15 @@ const Dashboard: NextPage<DashboardPageProps, {}> = (props) => {
           const shop = response.data;
           setHeaderName(shop.name);
           setModalBody([
-            <p key="1">{shop.address?.street}</p>,
-            <p key="2">
+            <span style={{ display: 'block' }} key="1">
+              {shop.address?.street}
+            </span>,
+            <span style={{ display: 'block' }} key="2">
               {shop.address?.city}, {shop.address?.province}
-            </p>,
-            <p key="3">
+            </span>,
+            <span style={{ display: 'block' }} key="3">
               {shop.address?.country}, {shop.address?.postal_code}
-            </p>,
+            </span>,
           ]);
           setProfileURL(`/shop/${shop.id}/profile`);
         })
@@ -92,9 +125,28 @@ const Dashboard: NextPage<DashboardPageProps, {}> = (props) => {
         modalBody={modalBody}
         profileURL={profileURL ?? ''}
         showProfileButton={profileURL !== null}
+        notificationCount={notificationCount}
       />
       <div className={styles.container}>
         <h2>Today&apos;s Appointments</h2>
+        {todaysAppointments?.length === 0 ? (
+          <h4 className={styles['no-appts-msg']}>You have no appointments for today.</h4>
+        ) : (
+          todaysAppointments?.map((appointment) => {
+            const startTimeAsDate = new Date(appointment.start_time);
+            const endTimeAsDate = new Date(appointment.end_time);
+            return (
+              <div className={styles['appointment-container']} key={appointment.start_time}>
+                <BookedAppointment
+                  date={startTimeAsDate.toDateString()}
+                  startTime={startTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
+                  endTime={endTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
+                  shopName={appointment.shop.name}
+                />
+              </div>
+            );
+          })
+        )}
       </div>
     </div>
   );

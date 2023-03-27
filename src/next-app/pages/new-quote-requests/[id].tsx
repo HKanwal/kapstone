@@ -26,6 +26,7 @@ const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
             ? quoteRequest.description.slice(0, 10) + '...'
             : quoteRequest.description
         }`}
+        backButtonPath="/new-quote-requests"
         burgerMenu={[
           {
             option: 'Call Customer',

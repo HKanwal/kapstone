@@ -9,7 +9,6 @@ body {
 
   --font-size: 18px;
   font-size: var(--font-size);
-  --title-font-size: 32px;
   --section-header-font-size: 26px;
 
   /* Theme */
@@ -47,6 +46,22 @@ a {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 12px;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.notification-icon-number {
+  position: absolute;
+  top: 0px;
+  left: 27px;
+  font-size: medium;
+  font-weight: 700;
 }
 
 .flex {
@@ -381,4 +396,38 @@ button:disabled.shadow-card-footer-item {
 
 .border-right {
   border-right: 1px solid #ededed;
+}
+
+.notification-unread {
+  border-left: 4px solid #96a1ff;
+}
+
+.notification-read {
+  border-left: 4px solid transparent;
+}
+
+.notification-title {
+  margin: 4px 0;
+  font-size: 24px;
+}
+
+.notification-date {
+  font-size: 18px;
+  font-weight: 200;
+}
+
+.notification-message {
+  font-size: 18px;
+}
+
+.link-button {
+  padding: 12px;
+  margin: 12px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 16px;
+  background-color: #b1b8fd;
+  font-size: 18px;
+  font-weight: 700;
 }

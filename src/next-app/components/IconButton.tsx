@@ -4,6 +4,7 @@ import { IconType } from 'react-icons';
 
 type IconButtonProps = {
   icon: IconType;
+  iconStyle?: CSSProperties;
   onClick?: () => void;
   style?: CSSProperties;
 };
@@ -16,7 +17,7 @@ const IconButton = (props: IconButtonProps) => {
       disabled={!props.onClick}
       style={props.style}
     >
-      <props.icon className={styles.icon} onClick={props.onClick} />
+      <props.icon className={styles.icon} onClick={props.onClick} style={props.iconStyle} />
     </button>
   );
 };

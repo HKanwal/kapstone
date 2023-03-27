@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 90%;
+  height: 100%;
+}
+
+.appointment-container {
+  margin-top: 2vh;
+  width: 100%;
+}
+
+.no-appts-msg {
+  color: grey;
+}
