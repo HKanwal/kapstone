@@ -184,47 +184,51 @@ const AppointmentDetails: NextPage = ({ appointment, workOrders }: any) => {
                   fieldDisabled={true}
                   onChange={form.handleChange}
                 />
-                <h2 className="form-header">Vehicle Information</h2>
-                <CardTextField
-                  fieldValue={appointment.vehicle.manufacturer}
-                  fieldName="vehicle.manufacturer"
-                  fieldLabel="Manufacturer"
-                  fieldType="String"
-                  fieldDisabled={true}
-                  onChange={form.handleChange}
-                />
-                <CardTextField
-                  fieldValue={appointment.vehicle.model}
-                  fieldName="vehicle.model"
-                  fieldLabel="Model"
-                  fieldType="String"
-                  fieldDisabled={true}
-                  onChange={form.handleChange}
-                />
-                <CardTextField
-                  fieldValue={appointment.vehicle.year}
-                  fieldName="vehicle.year"
-                  fieldLabel="Year"
-                  fieldType="String"
-                  fieldDisabled={true}
-                  onChange={form.handleChange}
-                />
-                <CardTextField
-                  fieldValue={appointment.vehicle.color}
-                  fieldName="vehicle.color"
-                  fieldLabel="Color"
-                  fieldType="String"
-                  fieldDisabled={true}
-                  onChange={form.handleChange}
-                />
-                <CardTextField
-                  fieldValue={appointment.vehicle.vin}
-                  fieldName="vehicle.vin"
-                  fieldLabel="VIN"
-                  fieldType="String"
-                  fieldDisabled={true}
-                  onChange={form.handleChange}
-                />
+                {appointment.vehicle ? (
+                  <div>
+                    <h2 className="form-header">Vehicle Information</h2>
+                    <CardTextField
+                      fieldValue={appointment.vehicle.manufacturer}
+                      fieldName="vehicle.manufacturer"
+                      fieldLabel="Manufacturer"
+                      fieldType="String"
+                      fieldDisabled={true}
+                      onChange={form.handleChange}
+                    />
+                    <CardTextField
+                      fieldValue={appointment.vehicle.model}
+                      fieldName="vehicle.model"
+                      fieldLabel="Model"
+                      fieldType="String"
+                      fieldDisabled={true}
+                      onChange={form.handleChange}
+                    />
+                    <CardTextField
+                      fieldValue={appointment.vehicle.year}
+                      fieldName="vehicle.year"
+                      fieldLabel="Year"
+                      fieldType="String"
+                      fieldDisabled={true}
+                      onChange={form.handleChange}
+                    />
+                    <CardTextField
+                      fieldValue={appointment.vehicle.color}
+                      fieldName="vehicle.color"
+                      fieldLabel="Color"
+                      fieldType="String"
+                      fieldDisabled={true}
+                      onChange={form.handleChange}
+                    />
+                    <CardTextField
+                      fieldValue={appointment.vehicle.vin}
+                      fieldName="vehicle.vin"
+                      fieldLabel="VIN"
+                      fieldType="String"
+                      fieldDisabled={true}
+                      onChange={form.handleChange}
+                    />
+                  </div>
+                ) : null}
                 {inEdit && <Button type="submit" title="Save" width={'100%'}></Button>}
               </div>
             </form>
