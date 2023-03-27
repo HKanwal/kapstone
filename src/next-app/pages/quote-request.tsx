@@ -475,7 +475,7 @@ const QuoteRequestPage: NextPage = (props: any) => {
           onClick={async () => {
             try {
               const data = {
-                shops: shops.map((shop: any) => shop.id.toString()),
+                shops: shops.map((shop: any) => shop),
                 description: notes,
                 vehicle_vin: VIN,
                 vehicle_make: make === 'Other' ? customMake : make,
@@ -519,6 +519,7 @@ const QuoteRequestPage: NextPage = (props: any) => {
                 router.push('/quote-request-list');
               }
             } catch (error: any) {
+              console.log(error);
               setErrors(error.response);
               scrollTo(0, 0);
             }
