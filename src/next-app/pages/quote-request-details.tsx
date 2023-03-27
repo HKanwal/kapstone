@@ -332,7 +332,19 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes: quotesList, quoteRequest, v
                   />
                   <FieldLabel label="Images" />
                   <div className={styles['images-container']}>
-                    <span className={styles['images-text']}>no images uploaded</span>
+                    {quoteRequest.images && quoteRequest.images.length > 0 ? (
+                      quoteRequest.images.map((image: any, index: number) => {
+                        return (
+                          <img
+                            src={`${apiUrl}${image.url}`}
+                            className={styles.image}
+                            key={`image_${index}`}
+                          />
+                        );
+                      })
+                    ) : (
+                      <span className={styles['no-images-text']}>no images uploaded</span>
+                    )}
                   </div>
                   {inEdit && <Button type="submit" title="Save" width={'100%'}></Button>}
                 </div>
@@ -383,6 +395,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
         headers: { Authorization: `JWT ${access_token}` },
       }
     );
+    console.log(quoteRequestBatch);
     const vehicle = quoteRequestBatch.data.vehicle
       ? await axios.get(`${apiUrl}/vehicles/vehicles/${quoteRequestBatch.data.vehicle}`, {
           headers: { Authorization: `JWT ${access_token}` },

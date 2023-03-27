@@ -1,3 +1,4 @@
+import json
 import uuid
 from django.shortcuts import render
 from django.db import transaction
@@ -30,6 +31,7 @@ from .policies import (
     QuoteRequestAccessPolicy,
 )
 from vehicles.models import Vehicle
+from misc.models import ImageQuote
 
 
 class QuoteViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
@@ -98,7 +100,7 @@ class QuoteCommentViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
 
 class QuoteRequestViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
     access_policy = QuoteRequestAccessPolicy
-    queryset = QuoteRequest.objects.all().order_by("pk")
+    queryset = QuoteRequest.objects.all().order_by("-created_at")
 
     def get_queryset(self):
         return self.access_policy.scope_queryset(self.request, self.queryset)
@@ -112,12 +114,18 @@ class QuoteRequestViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
     def bulk_create(self, request, *args, **kwargs):
         try:
             with transaction.atomic():
-                quote_request = request.data
+                uploaded_images = request.FILES.getlist("uploaded_images", None)
+
+                quote_request = {}
+                for key, value in request.data.items():
+                    if key != "uploaded_images":
+                        quote_request[key] = json.loads(value)
 
                 vehicle_vin = quote_request.pop("vehicle_vin", None)
                 vehicle_make = quote_request.pop("vehicle_make", None)
                 vehicle_model = quote_request.pop("vehicle_model", None)
                 vehicle_year = quote_request.pop("vehicle_year", None)
+
                 vehicle, created = Vehicle.objects.get_or_create(
                     vin=vehicle_vin,
                     defaults={
@@ -153,6 +161,15 @@ class QuoteRequestViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                 created_quote_requests = QuoteRequest.objects.bulk_create(
                     quote_requests
                 )
+
+                if uploaded_images is not None and len(uploaded_images) > 0:
+                    created_quote_request = created_quote_requests[0]
+                    for image in uploaded_images:
+                        ImageQuote.objects.create(
+                            quote_request_batch_id=created_quote_request.batch_id,
+                            photo=image,
+                        )
+
                 return Response(
                     {
                         "message": f"{len(quote_requests)} quote requests created.",
@@ -212,12 +229,15 @@ class QuoteRequestViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"])
     def bulk_list(self, request, *args, **kwargs):
-        quote_requests = (
+        unique_quote_requests = (
             self.get_queryset()
             .order_by("batch_id")
             .distinct("batch_id")
             .only("batch_id")
         )
+        quote_requests = (
+            self.get_queryset().filter(pk__in=unique_quote_requests)
+        ).order_by("-created_at")
         serializer = QuoteRequestBatchSerializer(quote_requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
