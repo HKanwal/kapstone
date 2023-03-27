@@ -260,6 +260,7 @@ const BookAppointmentPage: NextPage = () => {
   const handleConfirmClick = () => {
     if (quoteId !== undefined) {
       const duration: number = appointmentLengthNum * 0.25;
+      const parsedQuoteId = typeof quoteId === 'object' ? parseInt(quoteId[0]) : parseInt(quoteId);
       mutation.mutate({
         status: 'pending',
         duration: `${Math.floor(duration)}:${(duration % 1) * 60 || '00'}:00`,
@@ -273,7 +274,7 @@ const BookAppointmentPage: NextPage = () => {
             }) || [],
         customer: userQuery.data?.id || -1,
         shop: (typeof shopId === 'string' ? parseInt(shopId) : -1) || -1,
-        vehicle: 5, // TODO: should be removed and should have an association with quote in its place
+        quote: parsedQuoteId, // TODO: should be removed and should have an association with quote in its place
         jwtToken: localStorage.getItem('access_token') || '',
       });
     } else {
