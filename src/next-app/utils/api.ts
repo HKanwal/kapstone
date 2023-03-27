@@ -103,8 +103,10 @@ type AppointmentBody = {
   duration: string;
   shop: number;
   customer: number;
-  vehicle: number;
+  vehicle?: string;
   appointment_slots: number[];
+  service?: number;
+  quote?: number;
   jwtToken: string;
 };
 

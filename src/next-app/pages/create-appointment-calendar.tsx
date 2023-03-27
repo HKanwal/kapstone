@@ -129,13 +129,20 @@ function startTimeEquals(slot: AppointmentSlot, startTime: number): boolean {
 
 const BookAppointmentPage: NextPage = () => {
   const router = useRouter();
-  const { appointmentLength, shopId, quoteId } = router.query;
-  const parsedShopId =
-    typeof shopId === 'object'
-      ? parseInt(shopId[0])
-      : typeof shopId === 'string'
-      ? parseInt(shopId)
-      : -1;
+  const { appointmentLength, service, customerId, vehicle } = router.query;
+  const parsedService =
+    typeof service === 'object'
+      ? parseInt(service[0])
+      : service === undefined
+      ? -1
+      : parseInt(service);
+  const parsedCustomerId =
+    typeof customerId === 'object'
+      ? parseInt(customerId[0])
+      : customerId === undefined
+      ? -1
+      : parseInt(customerId);
+  const parsedVehicle = typeof vehicle === 'object' ? vehicle[0] : vehicle ?? '';
   const appointmentLengthNum =
     typeof appointmentLength === 'string'
       ? parseInt(appointmentLength)
@@ -148,7 +155,7 @@ const BookAppointmentPage: NextPage = () => {
   useEffect(() => {
     setAccessToken(localStorage.getItem('access_token') || '');
   }, []);
-  const userQuery = useQuery('getUserDetails', getUserDetails(accessToken || ''), {
+  const shopDetailsQuery = useQuery('getShopDetails', getShopDetails(accessToken || ''), {
     refetchOnWindowFocus: false,
     enabled: !!accessToken,
   });
@@ -158,26 +165,24 @@ const BookAppointmentPage: NextPage = () => {
       startDate: strDate,
       endDate: strDate,
       availableOnly: true,
-      shop:
-        typeof shopId === 'string'
-          ? parseInt(shopId)
-          : shopId === undefined
-          ? -1
-          : parseInt(shopId[0]),
+      shop: shopDetailsQuery.data?.id || -1,
       minutes: appointmentLengthNum * 15,
     }),
     {
       refetchOnWindowFocus: false,
       refetchOnMount: true,
-      enabled: !!userQuery.data?.id,
+      enabled: !!shopDetailsQuery.data?.id,
     }
   );
   const mutation = useMutation({
     mutationFn: bookAppointment,
+    onSuccess: (res, body, context) => {
+      router.replace('/appointment-schedule');
+    },
   });
-  const shopHoursQuery = useQuery('getShopHours', getShopHours(parsedShopId), {
+  const shopHoursQuery = useQuery('getShopHours', getShopHours(shopDetailsQuery.data?.id || -1), {
     refetchOnWindowFocus: false,
-    enabled: !!shopId,
+    enabled: !!shopDetailsQuery.data,
   });
 
   // all times are represented as a number between 0 and 24
@@ -225,7 +230,7 @@ const BookAppointmentPage: NextPage = () => {
 
   useEffect(() => {
     query.refetch();
-  }, [date, query]);
+  }, [date]);
 
   const handleBookableClick = (startTime: number) => {
     let flag = false;
@@ -258,28 +263,24 @@ const BookAppointmentPage: NextPage = () => {
   };
 
   const handleConfirmClick = () => {
-    if (quoteId !== undefined) {
-      const duration: number = appointmentLengthNum * 0.25;
-      const parsedQuoteId = typeof quoteId === 'object' ? parseInt(quoteId[0]) : parseInt(quoteId);
-      mutation.mutate({
-        status: 'pending',
-        duration: `${Math.floor(duration)}:${(duration % 1) * 60 || '00'}:00`,
-        appointment_slots:
-          query.data?.slots
-            .find((slots) => {
-              return startTimeEquals(slots[0], booking || -1);
-            })
-            ?.map((slots) => {
-              return slots.id;
-            }) || [],
-        customer: userQuery.data?.id || -1,
-        shop: (typeof shopId === 'string' ? parseInt(shopId) : -1) || -1,
-        quote: parsedQuoteId, // TODO: should be removed and should have an association with quote in its place
-        jwtToken: localStorage.getItem('access_token') || '',
-      });
-    } else {
-      router.push('/appointment-form');
-    }
+    const duration: number = appointmentLengthNum * 0.25;
+    mutation.mutate({
+      status: 'pending',
+      duration: `${Math.floor(duration)}:${(duration % 1) * 60 || '00'}:00`,
+      appointment_slots:
+        query.data?.slots
+          .find((slots) => {
+            return startTimeEquals(slots[0], booking || -1);
+          })
+          ?.map((slots) => {
+            return slots.id;
+          }) || [],
+      customer: parsedCustomerId,
+      shop: shopDetailsQuery.data?.id || -1,
+      service: parsedService,
+      vehicle: parsedVehicle,
+      jwtToken: localStorage.getItem('access_token') || '',
+    });
   };
 
   const isBookable = (startTime: number) => {
