@@ -46,6 +46,9 @@ const NotificationList: NextPage = ({ notifications }: any) => {
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   const parsedCookies = cookie.parse(String(context.req.headers.cookie));
   const access_token = parsedCookies.access;
+
+  context.res.setHeader('Cache-Control', 'no-cache');
+
   try {
     const notifications = await axios.get(`${apiUrl}/misc/notifications/`, {
       headers: { Authorization: `JWT ${access_token}` },
