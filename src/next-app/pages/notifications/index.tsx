@@ -30,6 +30,7 @@ const NotificationList: NextPage = ({ notifications }: any) => {
       </Link>
     );
   });
+  console.log(notifications);
   return (
     <div className="container">
       <Header title="Notifications" />
