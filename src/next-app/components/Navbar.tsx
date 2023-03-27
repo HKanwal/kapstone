@@ -78,14 +78,14 @@ const Navbar = (props: NavbarProps) => {
             </span>
           </div>
           <div className={styles['btn-contianer']}>
-            <div className="relative" onClick={() => router.push('/notifications')}>
+            <Link href={'/notifications'} className="relative">
               <div className="absolute notification-icon-number">
                 {props.notificationCount > 99 ? '99+' : props.notificationCount}
               </div>
               <div className="relative">
                 <IoIosNotifications />
               </div>
-            </div>
+            </Link>
             <div className={styles['profile-btn-container']} ref={profileRef}>
               <IoMdContact
                 className={styles['profile-btn']}
