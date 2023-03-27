@@ -43,7 +43,7 @@ const CreateAppointment: NextPage = ({ shop }: any) => {
       carModel: '',
       vin: '',
       licensePlate: '',
-      service: services?.[0].id || -1,
+      service: services === undefined || services.length === 0 ? -1 : services[0].id,
     },
     validationSchema: schema,
     validateOnChange: false,
