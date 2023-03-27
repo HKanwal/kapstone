@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  generateEtags: false,
 };
 
 const withPWA = require('next-pwa')({
