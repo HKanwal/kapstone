@@ -258,27 +258,35 @@ const BookAppointmentPage: NextPage = () => {
   };
 
   const handleConfirmClick = () => {
+    const appointmentSlots =
+      query.data?.slots
+        .find((slots) => {
+          return startTimeEquals(slots[0], booking || -1);
+        })
+        ?.map((slots) => {
+          return slots.id;
+        }) || [];
     if (quoteId !== undefined) {
       const duration: number = appointmentLengthNum * 0.25;
       const parsedQuoteId = typeof quoteId === 'object' ? parseInt(quoteId[0]) : parseInt(quoteId);
       mutation.mutate({
         status: 'pending',
         duration: `${Math.floor(duration)}:${(duration % 1) * 60 || '00'}:00`,
-        appointment_slots:
-          query.data?.slots
-            .find((slots) => {
-              return startTimeEquals(slots[0], booking || -1);
-            })
-            ?.map((slots) => {
-              return slots.id;
-            }) || [],
+        appointment_slots: appointmentSlots,
         customer: userQuery.data?.id || -1,
         shop: (typeof shopId === 'string' ? parseInt(shopId) : -1) || -1,
         quote: parsedQuoteId, // TODO: should be removed and should have an association with quote in its place
         jwtToken: localStorage.getItem('access_token') || '',
       });
     } else {
-      router.push('/appointment-form');
+      router.push(
+        `/appointment-form/?shopId=${parsedShopId}&` +
+          appointmentSlots
+            .map((slot) => {
+              return `appointmentSlots=${slot}`;
+            })
+            .join('&')
+      );
     }
   };
 
