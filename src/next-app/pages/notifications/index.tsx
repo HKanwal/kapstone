@@ -8,8 +8,8 @@ import apiUrl from '../../constants/api-url';
 // @ts-ignore
 import * as cookie from 'cookie';
 
-const NotificationList: NextPage = ({ notifications, accessToken }: any) => {
-  console.log(accessToken);
+const NotificationList: NextPage = ({ notifications, accessToken, cookie }: any) => {
+  console.log(accessToken, cookie);
   const notificationsList = notifications.map((notification: any) => {
     return (
       <Link href={`/notifications/${notification.id}`} key={notification.id} legacyBehavior>
