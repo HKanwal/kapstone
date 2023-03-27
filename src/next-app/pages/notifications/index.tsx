@@ -44,7 +44,7 @@ const NotificationList: NextPage = () => {
       <Header title="Notifications" />
       <div className="wrapper">
         <div className="flex flex-col"></div>
-        {notificationsList === undefined ? (
+        {notificationsList === undefined || query.isLoading || query.isFetching ? (
           <div
             style={{
               display: 'flex',
