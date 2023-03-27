@@ -51,7 +51,7 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
   const router = useRouter();
 
   const handleCallClick = (phoneNumber: string) => {
-    window.open(`tel: ${phoneNumber}`)
+    window.open(`tel: ${phoneNumber}`);
   };
 
   const applyFilters = () => {
@@ -95,18 +95,15 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
     });
 
     shop.shop_services.forEach((service: any) => {
-      services.push(
-        <div key={service.name}>
-          {service.name}
-        </div>
-      );
+      services.push(<div key={service.name}>{service.name}</div>);
     });
 
     const content = (
       <div>
         {shop.name}
         <br></br>
-        {shop.address.street}, {shop.address.city}, {shop.address.province}, {shop.address.country}, {shop.address.postal_code}
+        {shop.address.street}, {shop.address.city}, {shop.address.province}, {shop.address.country},{' '}
+        {shop.address.postal_code}
         <br></br>
         {shop.shop_phone_number ? `Phone Number: ${shop.shop_phone_number}` : ''}
         <br></br>
@@ -114,33 +111,29 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
         <br></br>
         <div style={{ paddingTop: '2vh' }}>
           {hours.length > 0 ? 'Hours:' : ''}
-          <div style={{ paddingLeft: '10vw' }}>
-            {hours}
-          </div>
+          <div style={{ paddingLeft: '10vw' }}>{hours}</div>
         </div>
         <div style={{ paddingTop: '2vh' }}>
           {services.length > 0 ? 'Services:' : ''}
-          <div style={{ paddingLeft: '10vw' }}>
-            {services}
-          </div>
+          <div style={{ paddingLeft: '10vw' }}>{services}</div>
         </div>
-      </div >
+      </div>
     );
     setModalContent(content);
-  }
+  };
 
   const onSelect = (id: number) => {
     setSelectedShops([...selectedShops, id.toString()]);
-  }
+  };
 
   const onDeselect = (id: number) => {
     setSelectedShops(selectedShops.filter((selectedShopId) => selectedShopId !== id.toString()));
-  }
+  };
 
   const handleAppointmentClick = (shop: any) => {
     router.push({
       pathname: '/book-appointment',
-      query: { shopId: shop.id },
+      query: { shopId: shop.id, appointmentLength: 2 },
     });
   };
 
@@ -157,12 +150,18 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
           onDeselect={onDeselect}
           services={shop.shop_services.length > 0 && service ? shop.shop_services : undefined}
           showAppointment={shop.shop_services.length > 0 && service ? true : false}
-          onClickAppointment={shop.shop_services.length > 0 && service ? () => handleAppointmentClick(shop) : () => { }}
-          onClickCall={shop.shop_phone_number !== null ? () => handleCallClick(shop.shop_phone_number) : undefined}
+          onClickAppointment={
+            shop.shop_services.length > 0 && service ? () => handleAppointmentClick(shop) : () => {}
+          }
+          onClickCall={
+            shop.shop_phone_number !== null
+              ? () => handleCallClick(shop.shop_phone_number)
+              : undefined
+          }
         />
       </div>
     );
-  }
+  };
 
   useEffect(() => {
     const results: any = [];
@@ -176,7 +175,10 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
     if (bookings && bookings == 'true') {
       if (nameFilter && !service) {
         shopList.forEach((shop: any) => {
-          if (shop.name.toUpperCase().includes(nameFilter.toUpperCase()) && shop.shop_services.length > 0) {
+          if (
+            shop.name.toUpperCase().includes(nameFilter.toUpperCase()) &&
+            shop.shop_services.length > 0
+          ) {
             results.push(shopResult(shop));
           }
         });
@@ -258,9 +260,7 @@ const ShopResultsPage: NextPage = ({ shops }: any) => {
   return (
     <div className={styles.container}>
       <Header title="Shop Results" rightIcon={BsFilter} onRightIconClick={handleFilterClick} />
-      <div className={styles.content}>
-        {shopResults}
-      </div>
+      <div className={styles.content}>{shopResults}</div>
       <Modal visible={shopModalVisible} onClose={() => setShopModalVisible(false)}>
         {modalContent}
       </Modal>
