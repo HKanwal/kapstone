@@ -53,6 +53,7 @@ const QuoteRequestPage: NextPage = (props: any) => {
   const [shops, setShops] = useState<any>([]);
   const [shopsList, setShopsList] = useState<any>(props.shops ?? []);
   const [shopsLoading, setShopsLoading] = useState<boolean>(false);
+  const [searchButtonClicked, setSearchButtonClicked] = useState<boolean>(false);
   const [errors, setErrors] = useState([]);
   const router = useRouter();
 
@@ -160,9 +161,8 @@ const QuoteRequestPage: NextPage = (props: any) => {
         }}
       >
         <div
-          className={`card hover-scale-up ${
-            shops.includes(shop?.id) ? 'selected-card' : 'unselected-card'
-          }`}
+          className={`card hover-scale-up ${shops.includes(shop?.id) ? 'selected-card' : 'unselected-card'
+            }`}
         >
           <div className="flex flex-col row-gap-small">
             <span>
@@ -201,6 +201,7 @@ const QuoteRequestPage: NextPage = (props: any) => {
     validateOnChange: false,
     onSubmit: async (values) => {
       setShopsLoading(true);
+      setSearchButtonClicked(true);
       try {
         const shops = await axios.get(
           `${apiUrl}/shops/shops/distance/?postal_code=${values.postal_code}`
@@ -240,7 +241,7 @@ const QuoteRequestPage: NextPage = (props: any) => {
             <div className="wrapper">
               <FormikProvider value={shopForm}>
                 <form onSubmit={shopForm.handleSubmit}>
-                  <FieldLabel label="Filter by Postal Code:" />
+                  <FieldLabel label="Search by Postal Code:" />
                   <div
                     className="flex flex-row align-items-center"
                     style={{ gap: '10px', marginTop: '10px' }}
@@ -274,13 +275,15 @@ const QuoteRequestPage: NextPage = (props: any) => {
                 </form>
               </FormikProvider>
               <div className="grid-list" id="shop-list" style={{ marginTop: '10px' }}>
-                {shopsLoading ? (
-                  skeletonShopList
-                ) : shopList.length > 0 ? (
-                  shopList
-                ) : (
-                  <p>No shops found.</p>
-                )}
+                {shopForm.values.postal_code && searchButtonClicked ?
+                  shopsLoading ? (
+                    skeletonShopList
+                  ) : shopList.length > 0 ? (
+                    shopList
+                  ) : (
+                    <p>No shops found.</p>
+                  ) : undefined
+                }
               </div>
             </div>
           </div>
@@ -345,17 +348,17 @@ const QuoteRequestPage: NextPage = (props: any) => {
         </div>
         <div className={styles.section}>
           <span className={styles['section-header']}>Shops</span>
-          <div className={styles['field-container'] + ' padding-bottom-zero'}>
+          <div className={styles['field-container']}>
             <Button onClick={() => setShopSelectionModal(true)} title="Select Shop"></Button>
             <div style={{ marginTop: '10px' }}>
               <b>Selected Shops: </b>
               {shops.length > 0
                 ? shopsList
-                    .filter((shop: any) => {
-                      return shops.includes(shop.id);
-                    })
-                    .map((shop: any) => shop.name)
-                    .join(', ')
+                  .filter((shop: any) => {
+                    return shops.includes(shop.id);
+                  })
+                  .map((shop: any) => shop.name)
+                  .join(', ')
                 : 'None.'}
             </div>
           </div>
@@ -469,40 +472,32 @@ const QuoteRequestPage: NextPage = (props: any) => {
           disabled={!valid}
           width="80%"
           onClick={async () => {
-            Cookies.set('qr', 'true');
-            Cookies.set('description', notes);
-            Cookies.set('vehicle_vin', VIN);
-            Cookies.set('vehicle_make', make === 'Other' ? customMake : make);
-            Cookies.set('vehicle_model', model);
-            Cookies.set('vehicle_year', modelYear);
-
-            router.push('/find-shop');
-            // try {
-            //   const res = await axios.post(
-            //     `${apiUrl}/quotes/quote-requests/bulk_create/`,
-            //     {
-            //       shops: shops.map((shop: any) => shop.id.toString()),
-            //       description: notes,
-            //       vehicle_vin: VIN,
-            //       vehicle_make: make === 'Other' ? customMake : make,
-            //       vehicle_model: model,
-            //       vehicle_year: modelYear,
-            //     },
-            //     {
-            //       headers: { Authorization: `JWT ${authData.access}` },
-            //     }
-            //   );
-            //   if (res.status === 201) {
-            //     router.push('/quote-request-list');
-            //   }
-            // } catch (error: any) {
-            //   setErrors(error.response.data?.errors);
-            //   scrollTo(0, 0);
-            // }
+            try {
+              const res = await axios.post(
+                `${apiUrl}/quotes/quote-requests/bulk_create/`,
+                {
+                  shops: shops.map((shop: any) => shop.id.toString()),
+                  description: notes,
+                  vehicle_vin: VIN,
+                  vehicle_make: make === 'Other' ? customMake : make,
+                  vehicle_model: model,
+                  vehicle_year: modelYear,
+                },
+                {
+                  headers: { Authorization: `JWT ${authData.access}` },
+                }
+              );
+              if (res.status === 201) {
+                router.push('/quote-request-list');
+              }
+            } catch (error: any) {
+              setErrors(error.response.data?.errors);
+              scrollTo(0, 0);
+            }
           }}
         />
       </div>
-    </div>
+    </div >
   );
 };
 
