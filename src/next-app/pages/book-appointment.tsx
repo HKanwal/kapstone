@@ -180,6 +180,8 @@ const BookAppointmentPage: NextPage = () => {
     enabled: !!shopId,
   });
 
+  console.log(accessToken);
+
   // all times are represented as a number between 0 and 24
   // start time can only be x.00 (xx:00), x.25 (xx:15), x.50 (xx:30), or x.75 (xx:45)
   const [startTime, setStartTime] = useState(6);
@@ -194,7 +196,8 @@ const BookAppointmentPage: NextPage = () => {
       setStartTime(timeToNumber(hours.from_time.substring(0, hours.from_time.length - 3)));
       setEndTime(timeToNumber(hours.to_time.substring(0, hours.to_time.length - 3)));
     }
-  }, [date, shopHoursQuery.data]);
+    query.refetch();
+  }, [date]);
 
   // # of sub-slots before first xx:00 mark
   // minimum of 1 for aesthetic purposes
@@ -222,10 +225,6 @@ const BookAppointmentPage: NextPage = () => {
       return newDate;
     });
   };
-
-  useEffect(() => {
-    query.refetch();
-  }, [date, query]);
 
   const handleBookableClick = (startTime: number) => {
     let flag = false;
