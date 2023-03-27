@@ -38,7 +38,8 @@ class NotificationAccessPolicy(AccessPolicy):
 
     @classmethod
     def scope_queryset(cls, request, qs):
-        return qs.filter(user=request.user)
+        queryset = qs.filter(user=request.user)
+        return queryset.filter()
 
     def is_owner(self, request, view, action):
         notification = view.get_object()
