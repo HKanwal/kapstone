@@ -4,9 +4,8 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'quote-images', views.ImageUploadQuote)
+router.register(r"quote-images", views.ImageUploadQuote)
+router.register(r"notifications", views.NotificationViewSet)
 
 
-urlpatterns = [
-    path('', include(router.urls))
-]
+urlpatterns = [path("", include(router.urls))]

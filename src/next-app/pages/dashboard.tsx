@@ -15,6 +15,7 @@ type DashboardPageProps = {
 };
 const Dashboard: NextPage<DashboardPageProps, {}> = (props) => {
   const [authData, setAuthData] = useState(useContext(AuthContext));
+  const [notificationCount, setNotificationCount] = useState(0);
   const [headerName, setHeaderName] = useState('');
   const [modalBody, setModalBody] = useState([] as JSX.Element[]);
   const [profileURL, setProfileURL] = useState<null | string>(null);
@@ -47,6 +48,15 @@ const Dashboard: NextPage<DashboardPageProps, {}> = (props) => {
         user_type: Cookies.get('user_type') as accountTypes,
       });
     }
+
+    const access_token = Cookies.get('access');
+    axios
+      .get(`${apiUrl}/misc/notifications/count/`, {
+        headers: { Authorization: `JWT ${access_token}` },
+      })
+      .then((response) => {
+        setNotificationCount(response.data.count);
+      });
 
     if (['shop_owner', 'employee'].includes(authData.user_type)) {
       const access_token = Cookies.get('access');
@@ -115,6 +125,7 @@ const Dashboard: NextPage<DashboardPageProps, {}> = (props) => {
         modalBody={modalBody}
         profileURL={profileURL ?? ''}
         showProfileButton={profileURL !== null}
+        notificationCount={notificationCount}
       />
       <div className={styles.container}>
         <h2>Today&apos;s Appointments</h2>
