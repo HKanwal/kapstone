@@ -8,7 +8,8 @@ import apiUrl from '../../constants/api-url';
 // @ts-ignore
 import * as cookie from 'cookie';
 
-const NotificationList: NextPage = ({ notifications }: any) => {
+const NotificationList: NextPage = ({ notifications, accessToken }: any) => {
+  console.log(accessToken);
   const notificationsList = notifications.map((notification: any) => {
     return (
       <Link href={`/notifications/${notification.id}`} key={notification.id} legacyBehavior>
@@ -30,7 +31,6 @@ const NotificationList: NextPage = ({ notifications }: any) => {
       </Link>
     );
   });
-  console.log(notifications);
   return (
     <div className="container">
       <Header title="Notifications" />
@@ -54,6 +54,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     return {
       props: {
         notifications: notifications.data,
+        accessToken: access_token,
       },
     };
   } catch (error) {
