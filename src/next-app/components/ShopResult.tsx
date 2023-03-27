@@ -3,13 +3,13 @@ import { BiTime } from 'react-icons/bi';
 import { AiFillPhone } from 'react-icons/ai';
 import styles from '../styles/components/ShopResult.module.css';
 import IconButton from './IconButton';
-import { CSSProperties, ChangeEvent } from 'react';
+import { CSSProperties, ChangeEvent, useState } from 'react';
 import { Checkbox } from '@mantine/core';
 
 type CircularIconButtonProps = {
   icon: IconType;
   bgColor?: string;
-  onClick?: () => void;
+  onClick?: any;
 };
 
 const CircularIconButton = (props: CircularIconButtonProps) => {
@@ -28,16 +28,16 @@ const CircularIconButton = (props: CircularIconButtonProps) => {
 
 type ShopResultProps = {
   name: string;
+  id: number;
+  shop: any;
   distance: string;
   onClick?: () => void;
   /**
    * If canned details are provided, quick appointment button will be shown.
    */
-  cannedDetails?: {
-    cost: number;
-    time: string;
-  };
-  onClickAppointment?: () => void;
+  services?: [];
+  showAppointment: boolean;
+  onClickAppointment?: (shop: any) => void;
   onClickCall?: () => void;
   style?: CSSProperties;
   /**
@@ -47,29 +47,29 @@ type ShopResultProps = {
   /**
    * Only triggered if inSelectMode = true.
    */
-  onSelect?: () => void;
+  onSelect?: (id: number) => void;
   /**
    * Only triggered if inSelectMode = true.
    */
-  onDeselect?: () => void;
+  onDeselect?: (id: number) => void;
 };
 
 const ShopResult = (props: ShopResultProps) => {
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      props.onSelect && props.onSelect();
+      props.onSelect && props.onSelect(props.id);
     } else {
-      props.onDeselect && props.onDeselect();
+      props.onDeselect && props.onDeselect(props.id);
     }
   };
 
   return (
     <div className={styles.container} style={props.style}>
-      <div className={styles['labels-container']}>
+      <div className={styles['labels-container']} onClick={props.onClick}>
         <span className={styles.name}>{props.name}</span>
-        {props.cannedDetails ? (
+        {props.services ? (
           <span className={styles['canned-details']}>
-            {'$' + props.cannedDetails.cost.toString() + ' - ' + props.cannedDetails.time}
+            {/* {'$' + props.cannedDetails.cost.toString() + ' - ' + props.cannedDetails.time} */}
           </span>
         ) : (
           <></>
@@ -79,10 +79,12 @@ const ShopResult = (props: ShopResultProps) => {
       <div className={styles['btns-container']}>
         {!props.inSelectMode ? (
           <>
-            <div style={{ visibility: props.cannedDetails ? 'visible' : 'hidden' }}>
-              <CircularIconButton icon={BiTime} onClick={props.onClickAppointment} />
+            <div style={{ visibility: props.showAppointment ? 'visible' : 'hidden' }}>
+              <CircularIconButton icon={BiTime} onClick={props.showAppointment ? props.onClickAppointment : undefined} />
             </div>
-            <CircularIconButton icon={AiFillPhone} onClick={props.onClickCall} />
+            <div style={{ visibility: props.onClickCall ? 'visible' : 'hidden' }}>
+              <CircularIconButton icon={AiFillPhone} onClick={props.onClickCall} />
+            </div>
           </>
         ) : (
           <div className={styles['checkbox-container']}>
@@ -90,7 +92,7 @@ const ShopResult = (props: ShopResultProps) => {
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
 };
 

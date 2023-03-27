@@ -345,28 +345,36 @@ const QuoteRequestPage: NextPage = (props: any) => {
           disabled={!valid}
           width="80%"
           onClick={async () => {
-            try {
-              const res = await axios.post(
-                `${apiUrl}/quotes/quote-requests/bulk_create/`,
-                {
-                  shops: shops.map((shop: any) => shop.id.toString()),
-                  description: notes,
-                  vehicle_vin: VIN,
-                  vehicle_make: make === 'Other' ? customMake : make,
-                  vehicle_model: model,
-                  vehicle_year: modelYear,
-                },
-                {
-                  headers: { Authorization: `JWT ${authData.access}` },
-                }
-              );
-              if (res.status === 201) {
-                router.push('/quote-request-list');
-              }
-            } catch (error: any) {
-              setErrors(error.response.data?.errors);
-              scrollTo(0, 0);
-            }
+            Cookies.set('qr', 'true');
+            Cookies.set('description', notes);
+            Cookies.set('vehicle_vin', VIN);
+            Cookies.set('vehicle_make', make === 'Other' ? customMake : make);
+            Cookies.set('vehicle_model', model);
+            Cookies.set('vehicle_year', modelYear);
+
+            router.push('/find-shop');
+            // try {
+            //   const res = await axios.post(
+            //     `${apiUrl}/quotes/quote-requests/bulk_create/`,
+            //     {
+            //       shops: shops.map((shop: any) => shop.id.toString()),
+            //       description: notes,
+            //       vehicle_vin: VIN,
+            //       vehicle_make: make === 'Other' ? customMake : make,
+            //       vehicle_model: model,
+            //       vehicle_year: modelYear,
+            //     },
+            //     {
+            //       headers: { Authorization: `JWT ${authData.access}` },
+            //     }
+            //   );
+            //   if (res.status === 201) {
+            //     router.push('/quote-request-list');
+            //   }
+            // } catch (error: any) {
+            //   setErrors(error.response.data?.errors);
+            //   scrollTo(0, 0);
+            // }
           }}
         />
       </div>
