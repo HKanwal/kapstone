@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../styles/components/Navbar.module.css';
 import ProfileModal from './ProfileModal';
-import { IoMdMenu, IoMdContact, IoIosCloseCircleOutline } from 'react-icons/io';
+import { IoMdMenu, IoMdContact, IoIosCloseCircleOutline, IoIosNotifications } from 'react-icons/io';
 import Link from 'next/link';
 import {
   CustomerNavbarData,
@@ -22,6 +22,7 @@ type NavbarProps = {
   modalBody: JSX.Element[];
   profileURL: string;
   showProfileButton: boolean;
+  notificationCount: number;
 };
 
 const Navbar = (props: NavbarProps) => {
@@ -77,6 +78,14 @@ const Navbar = (props: NavbarProps) => {
             </span>
           </div>
           <div className={styles['btn-contianer']}>
+            <Link href="/notifications" className="relative">
+              <div className="absolute notification-icon-number">
+                {props.notificationCount > 99 ? '99+' : props.notificationCount}
+              </div>
+              <div className="relative">
+                <IoIosNotifications />
+              </div>
+            </Link>
             <div className={styles['profile-btn-container']} ref={profileRef}>
               <IoMdContact
                 className={styles['profile-btn']}

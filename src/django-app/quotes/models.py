@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.utils.translation import gettext as _
+from .managers import QuoteRequestManager
 from shops.models import Shop
 from accounts.models import Customer
 from vehicles.models import Vehicle
@@ -44,6 +45,8 @@ class Quote(models.Model):
 
 
 class QuoteRequest(models.Model):
+    objects = QuoteRequestManager()
+
     # These are allowed to be null, as right now there are no shops or users in the system to assign them to.
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)
