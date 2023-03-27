@@ -83,11 +83,29 @@ const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
           <span className={styles['section-header']}>Additional Information</span>
           <div className={styles['field-container']}>
             <FieldLabel label="Part Condition" />
-            <TextInput value="" disabled />
+            <TextInput
+              value={
+                quoteRequest.preferred_part_condition === 'new'
+                  ? 'New Parts Only'
+                  : quoteRequest.preferred_part_condition === 'used'
+                  ? 'Used Parts Only'
+                  : 'No Preference'
+              }
+              disabled
+            />
           </div>
           <div className={styles['field-container']}>
             <FieldLabel label="Part Type" />
-            <TextInput value="" disabled />
+            <TextInput
+              value={
+                quoteRequest.preferred_part_type === 'oem'
+                  ? 'OEM Parts Only'
+                  : quoteRequest.preferred_part_type === 'aftermaket'
+                  ? 'Aftermarket Parts Only'
+                  : 'No Preference'
+              }
+              disabled
+            />
           </div>
           <div className={styles['field-container']}>
             <FieldLabel label="Notes" />
