@@ -1,15 +1,24 @@
-import type { NextPage, GetServerSideProps } from 'next';
-import axios from 'axios';
+import type { NextPage } from 'next';
 import Header from '../../components/Header';
 import Link from 'next/link';
 import moment from 'moment';
 import 'moment-timezone';
-import apiUrl from '../../constants/api-url';
 // @ts-ignore
-import * as cookie from 'cookie';
+import { useQuery } from 'react-query';
+import { getNotifications } from '../../utils/api';
+import { useEffect, useState } from 'react';
+import { Loader } from '@mantine/core';
 
-const NotificationList: NextPage = ({ notifications }: any) => {
-  const notificationsList = notifications.map((notification: any) => {
+const NotificationList: NextPage = () => {
+  const [accessToken, setAccessToken] = useState<undefined | string>(undefined);
+  useEffect(() => {
+    setAccessToken(localStorage.getItem('access_token') || '');
+  }, []);
+  const query = useQuery('getNotifications', getNotifications(accessToken || ''), {
+    refetchOnWindowFocus: false,
+    enabled: !!accessToken,
+  });
+  const notificationsList = query.data?.map((notification: any) => {
     return (
       <Link href={`/notifications/${notification.id}`} key={notification.id} legacyBehavior>
         <a
@@ -35,35 +44,25 @@ const NotificationList: NextPage = ({ notifications }: any) => {
       <Header title="Notifications" />
       <div className="wrapper">
         <div className="flex flex-col"></div>
-        <div className="grid-list" id="work-orders-list">
-          {notificationsList.length > 0 ? notificationsList : <p>No notifications found.</p>}
-        </div>
+        {notificationsList === undefined || query.isLoading || query.isFetching ? (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+            }}
+          >
+            <Loader />
+          </div>
+        ) : (
+          <div className="grid-list" id="work-orders-list">
+            {notificationsList.length > 0 ? notificationsList : <p>No notifications found.</p>}
+          </div>
+        )}
       </div>
     </div>
   );
-};
-
-export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-  const parsedCookies = cookie.parse(String(context.req.headers.cookie));
-  const access_token = parsedCookies.access;
-  try {
-    const notifications = await axios.get(`${apiUrl}/misc/notifications/`, {
-      headers: { Authorization: `JWT ${access_token}` },
-    });
-    return {
-      props: {
-        notifications: notifications.data,
-      },
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      notFound: true,
-      props: {
-        notifications: [],
-      },
-    };
-  }
 };
 
 export default NotificationList;

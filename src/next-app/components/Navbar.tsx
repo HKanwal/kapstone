@@ -78,7 +78,7 @@ const Navbar = (props: NavbarProps) => {
             </span>
           </div>
           <div className={styles['btn-contianer']}>
-            <Link href="/notifications" className="relative">
+            <Link href={'/notifications'} className="relative">
               <div className="absolute notification-icon-number">
                 {props.notificationCount > 99 ? '99+' : props.notificationCount}
               </div>

@@ -349,6 +349,39 @@ function getShopDetails(jwtToken: string) {
   };
 }
 
+type Notification = {
+  id: number;
+  user: {
+    id: number;
+    username: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone_number: string;
+    type: accountTypes;
+  };
+  title: string;
+  message: string;
+  link: string;
+  read: boolean;
+  read_at: string;
+  created_at: string;
+};
+
+function getNotifications(jwtToken: string) {
+  return () => {
+    return fetch(`${apiUrl}/misc/notifications/`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        Authorization: `JWT ${jwtToken}`,
+      },
+    }).then((res) => {
+      return res.json() as Promise<Notification[]>;
+    });
+  };
+}
+
 function getServices(shopId: number) {
   return () => {
     return fetch(`${apiUrl}/shops/shops/${shopId}`, {
@@ -388,5 +421,6 @@ export {
   getBookedAppointments,
   getShopHours,
   getShopDetails,
+  getNotifications,
   getServices,
 };
