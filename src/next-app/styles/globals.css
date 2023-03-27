@@ -116,6 +116,24 @@ a {
   padding-bottom: 3vh;
 }
 
+.unselected-card {
+  border: 2px solid transparent;
+}
+
+.selected-card {
+  border: 2px solid rgb(45, 94, 255);
+  background-color: white;
+}
+
+.small-button {
+  background-color: #3fdeae;
+  color: white;
+  cursor: pointer;
+  padding: 12px;
+  border-radius: 12px;
+  /* max-height: 40px; */
+}
+
 .input {
   background-color: var(--text-input-color);
   border: 0;
