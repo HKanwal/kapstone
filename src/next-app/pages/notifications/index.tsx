@@ -9,7 +9,7 @@ import apiUrl from '../../constants/api-url';
 import * as cookie from 'cookie';
 
 const NotificationList: NextPage = ({ notifications, accessToken, cookie }: any) => {
-  console.log(accessToken, cookie);
+  console.log('access=' + accessToken + ', cookie=' + cookie);
   const notificationsList = notifications.map((notification: any) => {
     return (
       <Link href={`/notifications/${notification.id}`} key={notification.id} legacyBehavior>
