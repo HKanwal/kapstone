@@ -43,7 +43,7 @@ const CreateAppointment: NextPage = ({ shop }: any) => {
       carModel: '',
       vin: '',
       licensePlate: '',
-      service: 0,
+      service: services?.[0].id || -1,
     },
     validationSchema: schema,
     validateOnChange: false,
@@ -76,36 +76,21 @@ const CreateAppointment: NextPage = ({ shop }: any) => {
           };
           try {
             const customer_res = await axios.post(`${apiUrl}/auth/users/`, customerValuesToSend);
-            const customer_email = customer_res.data['email'];
             if (customer_res.status === 201) {
               try {
-                const customer_email_res = await axios.get(
-                  `${apiUrl}/accounts/customer/get_customer_by_email`,
-                  {
-                    headers: { Authorization: `JWT ${access_token}` },
-                    params: { email: customer_email },
-                  }
-                );
-                if (customer_email_res.status === 200) {
-                  const customer = customer_email_res.data['id'];
-                  const valuesToSend = {
-                    customer: customer,
-                    shop: shop.id,
-                    service: values.service,
-                    vehicle: vehicle,
-                    //TODO: Add appointment slots to data.
-                  };
-                  try {
-                    const res = await axios.post(`${apiUrl}/shops/appointments/`, valuesToSend, {
-                      headers: { Authorization: `JWT ${access_token}` },
-                    });
-                    if (res.status === 201) {
-                      //TODO: Route to calendar instead of dashboard.
-                      router.replace('/dashboard');
-                    }
-                  } catch (error: any) {
-                    setErrors(error.response.data.errors);
-                  }
+                const customer_details_res = await axios.get(`${apiUrl}/auth/users/me`, {
+                  headers: { Authorization: `JWT ${access_token}` },
+                });
+                if (customer_details_res.status === 200) {
+                  const customer = customer_details_res.data['id'];
+                  router.push(
+                    '/create-appointment-calendar?appointmentLength=2&service=' +
+                      values.service +
+                      '&customerId=' +
+                      customer +
+                      '&vehicle=' +
+                      vehicle
+                  ); // TODO: service model (BE) needs to have duration field according to which appointmentLength is determined
                 }
               } catch (error: any) {
                 setErrors(error.response.data.errors);
