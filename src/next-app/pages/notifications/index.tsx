@@ -55,6 +55,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
       props: {
         notifications: notifications.data,
         accessToken: access_token,
+        cookie: String(context.req.headers.cookie),
       },
     };
   } catch (error) {
