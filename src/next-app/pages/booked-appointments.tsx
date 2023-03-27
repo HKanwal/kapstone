@@ -19,7 +19,7 @@ const BookedAppointmentsPage: NextPage = () => {
 
   return (
     <div className={styles.container}>
-      <Header title="Booked Appointments" />
+      <Header title="Booked Appointments" backButtonPath="/dashboard" />
 
       <div className={styles.content}>
         {query.data?.length === 0 ? (
