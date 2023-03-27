@@ -78,11 +78,15 @@ const CreateAppointment: NextPage = ({ shop }: any) => {
             const customer_res = await axios.post(`${apiUrl}/auth/users/`, customerValuesToSend);
             if (customer_res.status === 201) {
               try {
-                const customer_details_res = await axios.get(`${apiUrl}/auth/users/me`, {
-                  headers: { Authorization: `JWT ${access_token}` },
-                });
+                const customer_details_res = await axios.get(
+                  `${apiUrl}/accounts/customer/get_customer_by_email/`,
+                  {
+                    headers: { Authorization: `JWT ${access_token}` },
+                    params: { email: customer_res.data['email'] },
+                  }
+                );
                 if (customer_details_res.status === 200) {
-                  const customer = customer_details_res.data['id'];
+                  const customer = customer_details_res.data.user['id'];
                   router.push(
                     '/create-appointment-calendar?appointmentLength=2&service=' +
                       values.service +
