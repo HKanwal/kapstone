@@ -43,7 +43,7 @@ const DropdownField = (props: DropdownFieldProps) => {
     if (type === 'single-select') {
       setValue(props.selectedItems?.[0] ?? '');
     }
-  }, [props.selectedItems]);
+  }, [props.selectedItems, type]);
 
   const handleSelect = (item: string) => {
     props.onSelect && props.onSelect(item, selectedItems);
@@ -117,7 +117,7 @@ const DropdownField = (props: DropdownFieldProps) => {
         setValue(selectedItems[0]);
       }
     }
-  }, [expanded]);
+  }, [expanded, props.disabled, selectedItems, type, value]);
 
   return (
     <div className={styles.container} style={props.style}>

@@ -109,7 +109,7 @@ const Dashboard: NextPage<DashboardPageProps, {}> = (props) => {
         setHeaderName('Not Logged In');
       }
     }
-  }, [authData]);
+  }, [authData, props.onLogin]);
 
   return (
     <div id={styles.wrapper}>

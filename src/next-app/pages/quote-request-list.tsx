@@ -62,7 +62,7 @@ const QuoteRequestListPage: NextPage = () => {
         });
       });
     }
-  }, []);
+  }, [authData.access]);
 
   const handleAddClick = () => {
     router.push('/quote-request');
