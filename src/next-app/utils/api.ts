@@ -182,6 +182,23 @@ type Shop = {
   shop_phone_number: null | string;
 };
 
+type Service = {
+  id: number;
+  price: string;
+  parts: {
+    id: number;
+    name: string;
+    condition: 'new' | 'used';
+    type: 'oem' | 'aftermarket';
+    price: string;
+  }[];
+  has_edit_permission: boolean;
+  name: string;
+  description: null | string;
+  active: boolean;
+  shop: number;
+};
+
 type BookedAppointmentsResponse = {
   id: number;
   customer: {
@@ -237,22 +254,7 @@ type BookedAppointmentsResponse = {
     created_at: string;
     notes: string;
   };
-  service: null | {
-    id: number;
-    price: string;
-    parts: {
-      id: number;
-      name: string;
-      condition: 'new' | 'used';
-      type: 'oem' | 'aftermarket';
-      price: string;
-    }[];
-    has_edit_permission: boolean;
-    name: string;
-    description: null | string;
-    active: boolean;
-    shop: number;
-  };
+  service: null | Service;
   status: AppointmentStatus;
   duration: string;
   created_at: string;
@@ -329,6 +331,7 @@ function getUserDetails(jwtToken: string) {
 
 type ShopDetails = {
   id: number;
+  shop_services: Service[];
   // other properties of response were ignored
 };
 
@@ -343,6 +346,23 @@ function getShopDetails(jwtToken: string) {
     }).then((res) => {
       return res.json() as Promise<ShopDetails>;
     });
+  };
+}
+
+function getServices(shopId: number) {
+  return () => {
+    return fetch(`${apiUrl}/shops/shops/${shopId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then((res) => {
+        return res.json() as Promise<ShopDetails>;
+      })
+      .then((json) => {
+        return json.shop_services;
+      });
   };
 }
 
@@ -368,4 +388,5 @@ export {
   getBookedAppointments,
   getShopHours,
   getShopDetails,
+  getServices,
 };
