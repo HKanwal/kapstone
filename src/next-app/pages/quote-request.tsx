@@ -473,15 +473,18 @@ const QuoteRequestPage: NextPage = (props: any) => {
           width="80%"
           onClick={async () => {
             try {
+              console.log();
               const res = await axios.post(
                 `${apiUrl}/quotes/quote-requests/bulk_create/`,
                 {
-                  shops: shops.map((shop: any) => shop.id.toString()),
+                  shops: shops.map((shop: any) => shop.toString()),
                   description: notes,
                   vehicle_vin: VIN,
                   vehicle_make: make === 'Other' ? customMake : make,
                   vehicle_model: model,
                   vehicle_year: modelYear,
+                  preferred_part_condition: partCondition === 'New Parts Only' ? 'new' : partCondition === 'Used Parts Only' ? 'used' : '',
+                  preferred_part_type: partType === 'OEM Parts Only' ? 'oem' : partType === 'Aftermarket Parts Only' ? 'aftermarket' : '',
                 },
                 {
                   headers: { Authorization: `JWT ${authData.access}` },
@@ -491,7 +494,7 @@ const QuoteRequestPage: NextPage = (props: any) => {
                 router.push('/quote-request-list');
               }
             } catch (error: any) {
-              setErrors(error.response.data?.errors);
+              setErrors(error.response);
               scrollTo(0, 0);
             }
           }}
