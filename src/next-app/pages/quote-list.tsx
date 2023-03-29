@@ -98,7 +98,11 @@ const QuoteListPage: NextPage = ({ quotes }: any) => {
                 <Card
                   key={quote.id}
                   id={quote.id}
-                  name={quote.quote_request.description}
+                  name={
+                    quote.quote_request.description.length > 15
+                      ? quote.quote_request.description.slice(0, 15) + '...'
+                      : quote.quote_request.description
+                  }
                   status={quote.status === 'new_quote' ? 'Pending' : quote.status_display}
                   price={quote.price}
                   date={quote.created_at}

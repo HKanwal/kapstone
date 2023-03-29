@@ -45,7 +45,6 @@ const EmployeeDetailsPage: NextPage = ({ employee }: any) => {
       email: yup.string().required(),
       phone_number: yup.number().optional(),
     }),
-    salary: yup.string().optional(),
   });
   const form = useFormik({
     initialValues: {

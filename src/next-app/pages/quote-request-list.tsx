@@ -98,7 +98,7 @@ const QuoteRequestListPage: NextPage = () => {
             else return true;
           })
           .sort((a: any, b: any) =>
-            Date.parse(a.props.created_at) < Date.parse(b.props.created_at) ? 1 : -1
+            Date.parse(a.props.created_at) < Date.parse(b.props.created_at) ? -1 : 1
           )}
       </div>
       <Modal visible={modalVisible} onClose={hideModal}>

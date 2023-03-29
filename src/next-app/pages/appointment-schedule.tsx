@@ -231,6 +231,7 @@ const BookAppointmentPage: NextPage = () => {
         onRightIconClick={() => {
           router.push('/create-appointment');
         }}
+        backButtonPath="/dashboard"
       />
 
       <div className={styles.content}>

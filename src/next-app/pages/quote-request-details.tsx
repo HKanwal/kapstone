@@ -141,7 +141,7 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes: quotesList, quoteRequest, v
                 onSelect={setStatus}
               />
             </div>
-            {status === 'Accepted' ? (
+            {status === 'Pending' ? (
               <div className={styles['filter-container']}>
                 <Dropdown name="Sort By" items={['Date', 'Price']} onSelect={setSortItem} />
               </div>
@@ -149,7 +149,27 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes: quotesList, quoteRequest, v
               <></>
             )}
 
-            {status != 'All' && status != 'Accepted' ? (
+            {status != 'All' && status != 'Pending' ? (
+              quotesList
+                .filter((quote: any) => quote.status_display == status)
+                .sort((a: any, b: any) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
+                .map((quote: any) => {
+                  return (
+                    <Card
+                      key={quote.id}
+                      id={quote.id}
+                      name={
+                        quote.shop.name.length > 14
+                          ? quote.shop.name.slice(0, 14) + '...'
+                          : quote.shop.name
+                      }
+                      status={quote.status === 'new_quote' ? 'Pending' : quote.status_display}
+                      date={quote.created_at}
+                      price={quote.price}
+                    />
+                  );
+                })
+            ) : status == 'Pending' && sortItem == 'Date' ? (
               quotesList
                 .filter((quote: any) =>
                   quote.status == 'new_quote'
@@ -162,39 +182,35 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes: quotesList, quoteRequest, v
                     <Card
                       key={quote.id}
                       id={quote.id}
-                      name={quote.shop.name}
+                      name={
+                        quote.shop.name.length > 14
+                          ? quote.shop.name.slice(0, 14) + '...'
+                          : quote.shop.name
+                      }
                       status={quote.status === 'new_quote' ? 'Pending' : quote.status_display}
                       date={quote.created_at}
                       price={quote.price}
                     />
                   );
                 })
-            ) : status == 'Accepted' && sortItem == 'Date' ? (
+            ) : status == 'Pending' && sortItem == 'Price' ? (
               quotesList
-                .filter((quote: any) => quote.status_display == status)
-                .sort((a: any, b: any) => (Date.parse(a.date) < Date.parse(b.date) ? -1 : 1))
+                .filter((quote: any) =>
+                  quote.status == 'new_quote'
+                    ? status == 'Pending' && quote.status == 'new_quote'
+                    : quote.status_display == status
+                )
+                .sort((a: any, b: any) => (a.price && b.price && a.price > b.price ? -1 : 1))
                 .map((quote: any) => {
                   return (
                     <Card
                       key={quote.id}
                       id={quote.id}
-                      name={quote.shop.name}
-                      status={quote.status === 'new_quote' ? 'Pending' : quote.status_display}
-                      date={quote.created_at}
-                      price={quote.price}
-                    />
-                  );
-                })
-            ) : status == 'Accepted' && sortItem == 'Price' ? (
-              quotesList
-                .filter((quote: any) => quote.status_display == status)
-                .sort((a: any, b: any) => (a.price && b.price && a.price > b.price ? 1 : -1))
-                .map((quote: any) => {
-                  return (
-                    <Card
-                      key={quote.id}
-                      id={quote.id}
-                      name={quote.shop.name}
+                      name={
+                        quote.shop.name.length > 14
+                          ? quote.shop.name.slice(0, 14) + '...'
+                          : quote.shop.name
+                      }
                       status={quote.status === 'new_quote' ? 'Pending' : quote.status_display}
                       date={quote.created_at}
                       price={quote.price}
@@ -209,7 +225,11 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes: quotesList, quoteRequest, v
                     <Link key={quote.id} href={`/quote?id=${quote.id}`}>
                       <Card
                         id={quote.id}
-                        name={quote.shop.name}
+                        name={
+                          quote.shop.name.length > 14
+                            ? quote.shop.name.slice(0, 14) + '...'
+                            : quote.shop.name
+                        }
                         status={quote.status === 'new_quote' ? 'Pending' : quote.status_display}
                         date={quote.created_at}
                         price={quote.price}
