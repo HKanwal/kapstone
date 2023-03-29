@@ -44,7 +44,7 @@ type BookedAppointmentProps = {
 
 const BookedAppointment = (props: BookedAppointmentProps) => {
   return (
-    <div className={styles.container} style={props.style}>
+    <div className={styles.container} style={props.style} onClick={props.onClick}>
       <div className={styles['labels-container']}>
         <span className={styles.name}>{props.shopName}</span>
         {false ? <span className={styles['canned-details']}>nothing to see here</span> : <></>}

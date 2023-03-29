@@ -9,11 +9,13 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import { useQuery } from 'react-query';
 import BookedAppointment from '../components/BookedAppointment';
+import { useRouter } from 'next/router';
 
 type DashboardPageProps = {
   onLogin: (jwt: Jwt) => void;
 };
 const Dashboard: NextPage<DashboardPageProps, {}> = (props) => {
+  const router = useRouter();
   const [authData, setAuthData] = useState(useContext(AuthContext));
   const [notificationCount, setNotificationCount] = useState(0);
   const [headerName, setHeaderName] = useState('');
@@ -142,6 +144,16 @@ const Dashboard: NextPage<DashboardPageProps, {}> = (props) => {
                   startTime={startTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
                   endTime={endTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
                   shopName={appointment.shop.name}
+                  onClick={
+                    authData.user_type === 'shop_owner'
+                      ? () => {
+                          router.push({
+                            pathname: '/appointment-details',
+                            query: { id: `${appointment.id}` },
+                          });
+                        }
+                      : undefined
+                  }
                 />
               </div>
             );

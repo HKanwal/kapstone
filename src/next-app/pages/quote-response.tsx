@@ -63,8 +63,8 @@ const QuoteResponsePage: NextPage = ({ quoteRequest, shop }: any) => {
     <div className={styles.container}>
       <Header
         title={`Quote Response - ${
-          quoteRequest.description.length > 10
-            ? quoteRequest.description.slice(0, 10) + '...'
+          quoteRequest.description.length > 8
+            ? quoteRequest.description.slice(0, 8) + '...'
             : quoteRequest.description
         }`}
       />
