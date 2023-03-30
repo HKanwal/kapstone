@@ -143,7 +143,17 @@ const Dashboard: NextPage<DashboardPageProps, {}> = (props) => {
                   date={startTimeAsDate.toDateString()}
                   startTime={startTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
                   endTime={endTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
-                  shopName={appointment.shop.name}
+                  serviceName={
+                    appointment.service
+                      ? appointment.service?.name
+                      : appointment.quote?.quote_request.description
+                  }
+                  shopName={authData.user_type === 'customer' ? appointment.shop.name : undefined}
+                  customerName={
+                    authData.user_type === 'shop_owner'
+                      ? `${appointment.customer.first_name} ${appointment.customer.last_name}`
+                      : undefined
+                  }
                   onClick={
                     authData.user_type === 'shop_owner'
                       ? () => {

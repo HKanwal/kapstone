@@ -35,6 +35,11 @@ const BookedAppointmentsPage: NextPage = () => {
                   startTime={startTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
                   endTime={endTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
                   shopName={appointment.shop.name}
+                  serviceName={
+                    appointment.service
+                      ? appointment.service?.name
+                      : appointment.quote?.quote_request.description
+                  }
                 />
               </div>
             );
