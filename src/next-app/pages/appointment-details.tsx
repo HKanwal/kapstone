@@ -27,6 +27,7 @@ const AppointmentDetails: NextPage = ({ appointment, workOrders }: any) => {
   });
   const form = useFormik({
     initialValues: {
+      service: appointment.service?.name ?? appointment.quote.quote_request.description,
       duration: appointment.duration,
       price: appointment.quote?.price ?? appointment.service?.price,
     },
@@ -110,6 +111,15 @@ const AppointmentDetails: NextPage = ({ appointment, workOrders }: any) => {
           <FormikProvider value={form}>
             <form onSubmit={form.handleSubmit}>
               <div className={`card${inEdit ? 'edit' : ''}`} style={{ marginBottom: '12px' }}>
+                <CardTextField
+                  fieldValue={form.values.service}
+                  fieldName="service"
+                  fieldLabel="Service"
+                  fieldType="string"
+                  fieldDisabled={true}
+                  onChange={form.handleChange}
+                  error={form.errors.service}
+                />
                 <CardTextField
                   fieldValue={form.values.duration}
                   fieldName="duration"
