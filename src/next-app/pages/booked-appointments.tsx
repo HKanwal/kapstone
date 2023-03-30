@@ -29,7 +29,7 @@ const BookedAppointmentsPage: NextPage = () => {
             const startTimeAsDate = new Date(appointment.start_time);
             const endTimeAsDate = new Date(appointment.end_time);
             return (
-              <div className={styles['appointment-container']} key={appointment.start_time}>
+              <div className={styles['appointment-container']} key={appointment.id}>
                 <BookedAppointment
                   date={startTimeAsDate.toDateString()}
                   startTime={startTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
