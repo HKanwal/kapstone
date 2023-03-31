@@ -154,16 +154,12 @@ const Dashboard: NextPage<DashboardPageProps, {}> = (props) => {
                       ? `${appointment.customer.first_name} ${appointment.customer.last_name}`
                       : undefined
                   }
-                  onClick={
-                    authData.user_type === 'shop_owner'
-                      ? () => {
-                          router.push({
-                            pathname: '/appointment-details',
-                            query: { id: `${appointment.id}` },
-                          });
-                        }
-                      : undefined
-                  }
+                  onClick={() => {
+                    router.push({
+                      pathname: '/appointment-details',
+                      query: { id: `${appointment.id}` },
+                    });
+                  }}
                 />
               </div>
             );

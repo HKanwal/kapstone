@@ -5,8 +5,10 @@ import { useQuery } from 'react-query';
 import { getBookedAppointments } from '../utils/api';
 import { useEffect, useState } from 'react';
 import BookedAppointment from '../components/BookedAppointment';
+import { useRouter } from 'next/router';
 
 const BookedAppointmentsPage: NextPage = () => {
+  const router = useRouter();
   const [accessToken, setAccessToken] = useState<undefined | string>(undefined);
   const query = useQuery('getBookedAppointments', getBookedAppointments(accessToken || ''), {
     refetchOnWindowFocus: false,
@@ -40,6 +42,12 @@ const BookedAppointmentsPage: NextPage = () => {
                       ? appointment.service?.name
                       : appointment.quote?.quote_request.description
                   }
+                  onClick={() => {
+                    router.push({
+                      pathname: '/appointment-details',
+                      query: { id: `${appointment.id}` },
+                    });
+                  }}
                 />
               </div>
             );

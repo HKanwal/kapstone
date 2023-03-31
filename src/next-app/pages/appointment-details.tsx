@@ -15,7 +15,7 @@ import Cookies from 'js-cookie';
 import * as cookie from 'cookie';
 import Link from '../components/Link';
 
-const AppointmentDetails: NextPage = ({ appointment, workOrders }: any) => {
+const AppointmentDetails: NextPage = ({ appointment, workOrders, shop }: any) => {
   const router = useRouter();
   const { id } = router.query;
   //const id = 1;
@@ -145,7 +145,7 @@ const AppointmentDetails: NextPage = ({ appointment, workOrders }: any) => {
                     <Link
                       text="View Quote"
                       onClick={() =>
-                        router.push({ pathname: '/quote', query: appointment.quote.id })
+                        router.push({ pathname: '/quote', query: { id: appointment.quote.id } })
                       }
                     />
                   </div>
@@ -157,43 +157,76 @@ const AppointmentDetails: NextPage = ({ appointment, workOrders }: any) => {
                     />
                   </div>
                 ) : null}
-                <Link
-                  text="View Work Order"
-                  onClick={() => router.push(`/work-orders/${workOrder.id}`)}
-                />
-                <h2 className="form-header">Customer Information</h2>
-                <CardTextField
-                  fieldValue={appointment.customer.first_name}
-                  fieldName="customer.first_name"
-                  fieldLabel="First Name"
-                  fieldType="String"
-                  fieldDisabled={true}
-                  onChange={form.handleChange}
-                />
-                <CardTextField
-                  fieldValue={appointment.customer.last_name}
-                  fieldName="customer.last_name"
-                  fieldLabel="Last Name"
-                  fieldType="String"
-                  fieldDisabled={true}
-                  onChange={form.handleChange}
-                />
-                <CardTextField
-                  fieldValue={appointment.customer.phone_number}
-                  fieldName="customer.phone_number"
-                  fieldLabel="Phone Number"
-                  fieldType="String"
-                  fieldDisabled={true}
-                  onChange={form.handleChange}
-                />
-                <CardTextField
-                  fieldValue={appointment.customer.email}
-                  fieldName="customer.email"
-                  fieldLabel="Email"
-                  fieldType="String"
-                  fieldDisabled={true}
-                  onChange={form.handleChange}
-                />
+                {Cookies.get('user_type') === 'shop_owner' ? (
+                  <Link
+                    text="View Work Order"
+                    onClick={() => router.push(`/work-orders/${workOrder.id}`)}
+                  />
+                ) : (
+                  <></>
+                )}
+
+                {Cookies.get('user_type') === 'shop_owner' ? (
+                  <div>
+                    <h2 className="form-header">Customer Information</h2>
+                    <CardTextField
+                      fieldValue={appointment.customer.first_name}
+                      fieldName="customer.first_name"
+                      fieldLabel="First Name"
+                      fieldType="String"
+                      fieldDisabled={true}
+                      onChange={form.handleChange}
+                    />
+                    <CardTextField
+                      fieldValue={appointment.customer.last_name}
+                      fieldName="customer.last_name"
+                      fieldLabel="Last Name"
+                      fieldType="String"
+                      fieldDisabled={true}
+                      onChange={form.handleChange}
+                    />
+                    <CardTextField
+                      fieldValue={appointment.customer.phone_number}
+                      fieldName="customer.phone_number"
+                      fieldLabel="Phone Number"
+                      fieldType="String"
+                      fieldDisabled={true}
+                      onChange={form.handleChange}
+                    />
+                    <CardTextField
+                      fieldValue={appointment.customer.email}
+                      fieldName="customer.email"
+                      fieldLabel="Email"
+                      fieldType="String"
+                      fieldDisabled={true}
+                      onChange={form.handleChange}
+                    />
+                  </div>
+                ) : (
+                  <></>
+                )}
+                {Cookies.get('user_type') === 'customer' ? (
+                  <div>
+                    <h2 className="form-header">Shop Information</h2>
+                    <CardTextField
+                      fieldValue={appointment.shop.name}
+                      fieldName="shop.name"
+                      fieldLabel="Shop Name"
+                      fieldType="String"
+                      fieldDisabled={true}
+                      onChange={form.handleChange}
+                    />
+                    <CardTextArea
+                      fieldValue={`${shop.address.street}\n${shop.address.city} ${shop.address.province} ${shop.address.country}\n${shop.address.postal_code}`}
+                      fieldName="shop.address"
+                      fieldLabel="Shop Address"
+                      fieldDisabled={true}
+                      onChange={form.handleChange}
+                    />
+                  </div>
+                ) : (
+                  <></>
+                )}
                 {appointment.vehicle ? (
                   <div>
                     <h2 className="form-header">Vehicle Information</h2>
@@ -258,14 +291,21 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
       headers: { Authorization: `JWT ${access_token}` },
     });
 
-    const workOrders = await axios.get(`${apiUrl}/shops/work-orders/`, {
+    const workOrders =
+      parsedCookies.user_type === 'shop_owner'
+        ? await axios.get(`${apiUrl}/shops/work-orders/`, {
+            headers: { Authorization: `JWT ${access_token}` },
+          })
+        : null;
+
+    const shop = await axios.get(`${apiUrl}/shops/shops/${appointment.data.shop.id}`, {
       headers: { Authorization: `JWT ${access_token}` },
     });
-
     return {
       props: {
         appointment: appointment.data,
-        workOrders: workOrders.data,
+        workOrders: workOrders ? workOrders.data : [],
+        shop: shop ? shop.data : {},
       },
     };
   } catch (error) {
