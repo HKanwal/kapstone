@@ -33,7 +33,9 @@ function numberToTime(numTime: number): string {
 }
 
 type BookedAppointmentProps = {
-  shopName: string;
+  serviceName?: string;
+  shopName?: string;
+  customerName?: string;
   date: string;
   startTime: string;
   endTime: string;
@@ -46,8 +48,14 @@ const BookedAppointment = (props: BookedAppointmentProps) => {
   return (
     <div className={styles.container} style={props.style} onClick={props.onClick}>
       <div className={styles['labels-container']}>
-        <span className={styles.name}>{props.shopName}</span>
+        {props.serviceName ? (
+          <span className={styles.name}>{props.serviceName}</span>
+        ) : (
+          <span className={styles.name}>{props.shopName}</span>
+        )}
         {false ? <span className={styles['canned-details']}>nothing to see here</span> : <></>}
+        {props.shopName ? <span className={styles.distance}>{props.shopName}</span> : <></>}
+        {props.customerName ? <span className={styles.distance}>{props.customerName}</span> : <></>}
         <span className={styles.distance}>{props.date}</span>
         <span className={styles.distance}>
           {props.startTime} - {props.endTime}

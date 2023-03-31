@@ -5,8 +5,10 @@ import { useQuery } from 'react-query';
 import { getBookedAppointments } from '../utils/api';
 import { useEffect, useState } from 'react';
 import BookedAppointment from '../components/BookedAppointment';
+import { useRouter } from 'next/router';
 
 const BookedAppointmentsPage: NextPage = () => {
+  const router = useRouter();
   const [accessToken, setAccessToken] = useState<undefined | string>(undefined);
   const query = useQuery('getBookedAppointments', getBookedAppointments(accessToken || ''), {
     refetchOnWindowFocus: false,
@@ -29,12 +31,23 @@ const BookedAppointmentsPage: NextPage = () => {
             const startTimeAsDate = new Date(appointment.start_time);
             const endTimeAsDate = new Date(appointment.end_time);
             return (
-              <div className={styles['appointment-container']} key={appointment.start_time}>
+              <div className={styles['appointment-container']} key={appointment.id}>
                 <BookedAppointment
                   date={startTimeAsDate.toDateString()}
                   startTime={startTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
                   endTime={endTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
                   shopName={appointment.shop.name}
+                  serviceName={
+                    appointment.service
+                      ? appointment.service?.name
+                      : appointment.quote?.quote_request.description
+                  }
+                  onClick={() => {
+                    router.push({
+                      pathname: '/appointment-details',
+                      query: { id: `${appointment.id}` },
+                    });
+                  }}
                 />
               </div>
             );
