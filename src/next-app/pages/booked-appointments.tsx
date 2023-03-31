@@ -27,31 +27,35 @@ const BookedAppointmentsPage: NextPage = () => {
         {query.data?.length === 0 ? (
           <h4 className={styles['no-appts-msg']}>You have no booked appointments.</h4>
         ) : (
-          query.data?.map((appointment) => {
-            const startTimeAsDate = new Date(appointment.start_time);
-            const endTimeAsDate = new Date(appointment.end_time);
-            return (
-              <div className={styles['appointment-container']} key={appointment.id}>
-                <BookedAppointment
-                  date={startTimeAsDate.toDateString()}
-                  startTime={startTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
-                  endTime={endTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
-                  shopName={appointment.shop.name}
-                  serviceName={
-                    appointment.service
-                      ? appointment.service?.name
-                      : appointment.quote?.quote_request.description
-                  }
-                  onClick={() => {
-                    router.push({
-                      pathname: '/appointment-details',
-                      query: { id: `${appointment.id}` },
-                    });
-                  }}
-                />
-              </div>
-            );
-          })
+          query.data
+            ?.sort((a: any, b: any) =>
+              Date.parse(a.start_time) > Date.parse(b.start_time) ? -1 : 1
+            )
+            .map((appointment) => {
+              const startTimeAsDate = new Date(appointment.start_time);
+              const endTimeAsDate = new Date(appointment.end_time);
+              return (
+                <div className={styles['appointment-container']} key={appointment.id}>
+                  <BookedAppointment
+                    date={startTimeAsDate.toDateString()}
+                    startTime={startTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
+                    endTime={endTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
+                    shopName={appointment.shop.name}
+                    serviceName={
+                      appointment.service
+                        ? appointment.service?.name
+                        : appointment.quote?.quote_request.description
+                    }
+                    onClick={() => {
+                      router.push({
+                        pathname: '/appointment-details',
+                        query: { id: `${appointment.id}` },
+                      });
+                    }}
+                  />
+                </div>
+              );
+            })
         )}
       </div>
     </div>
