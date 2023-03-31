@@ -95,7 +95,7 @@ const AppointmentDetails: NextPage = ({ appointment, workOrders, shop }: any) =>
                   {
                     option: 'Call Shop',
                     onClick() {
-                      window.open(`tel: ${shop.phone_number}`);
+                      window.open(`tel: ${shop.shop_phone_number}`);
                     },
                   },
                 ]
