@@ -21,11 +21,11 @@ const ViewQuoteRequestsPage: NextPage = ({ quoteRequest, vehicle }: any) => {
   return (
     <div className={styles.container}>
       <Header
-        title={`Quote Request - ${
-          quoteRequest.description.length > 8
-            ? quoteRequest.description.slice(0, 8) + '...'
+        title={
+          quoteRequest.description.length > 20
+            ? quoteRequest.description.slice(0, 20) + '...'
             : quoteRequest.description
-        }`}
+        }
         backButtonPath="/new-quote-requests"
         burgerMenu={[
           {

@@ -115,11 +115,11 @@ const QuoteRequestDetailsPage: NextPage = ({ quotes: quotesList, quoteRequest, v
   return (
     <div className={styles.container}>
       <Header
-        title={`Quote Request - ${
-          quoteRequest.description.length > 10
-            ? quoteRequest.description.slice(0, 10) + '...'
+        title={
+          quoteRequest.description.length > 20
+            ? quoteRequest.description.slice(0, 20) + '...'
             : quoteRequest.description
-        }`}
+        }
         backButtonPath="/quote-request-list"
         rightIcon={inEdit ? GrFormClose : GrFormEdit}
         onRightIconClick={() => setInEdit(!inEdit)}

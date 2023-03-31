@@ -29,7 +29,7 @@ const QuoteResponsePage: NextPage = ({ quoteRequest, shop }: any) => {
   aYearFromNow.setFullYear(aYearFromNow.getFullYear() + 1);
   const [price, setPrice] = useState('');
   const [estimatedTime, setEstimatedTime] = useState('');
-  const [expiraryDate, setExpiraryDate] = useState(aYearFromNow.toISOString().split('T')[0]);
+  const [expiryDate, setExpiryDate] = useState(aYearFromNow.toISOString().split('T')[0]);
   const [notes, setNotes] = useState('');
 
   const handleSubmit = () => {
@@ -40,7 +40,7 @@ const QuoteResponsePage: NextPage = ({ quoteRequest, shop }: any) => {
         status: 'new_quote',
         price: price,
         estimated_time: estimatedTime,
-        expiry_date: expiraryDate,
+        expiry_date: expiryDate,
         notes: notes,
         quote_request: id,
       }),
@@ -61,13 +61,7 @@ const QuoteResponsePage: NextPage = ({ quoteRequest, shop }: any) => {
 
   return (
     <div className={styles.container}>
-      <Header
-        title={`Quote Response - ${
-          quoteRequest.description.length > 8
-            ? quoteRequest.description.slice(0, 8) + '...'
-            : quoteRequest.description
-        }`}
-      />
+      <Header title={`Quote Response`} />
 
       <div className={styles.content}>
         <div className={styles.section}>
@@ -88,11 +82,11 @@ const QuoteResponsePage: NextPage = ({ quoteRequest, shop }: any) => {
             />
           </div>
           <div className={styles['field-container']}>
-            <FieldLabel label="Expirary Date" />
+            <FieldLabel label="Expiry Date" />
             <DatePicker
-              placeholder="Enter Expirary Date"
+              placeholder="Enter Expiry Date"
               onChange={(date) => {
-                date != null ? setExpiraryDate(date.toISOString().split('T')[0]) : null;
+                date != null ? setExpiryDate(date.toISOString().split('T')[0]) : null;
               }}
               dropdownType="modal"
             />
