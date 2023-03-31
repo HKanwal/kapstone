@@ -68,28 +68,37 @@ const AppointmentDetails: NextPage = ({ appointment, workOrders, shop }: any) =>
         title={`Appointment Details`}
         burgerMenu={
           !inEdit
-            ? [
-                {
-                  option: 'Edit',
-                  onClick() {
-                    setInEdit(true);
+            ? Cookies.get('user_type') === 'shop_owner'
+              ? [
+                  {
+                    option: 'Edit',
+                    onClick() {
+                      setInEdit(true);
+                    },
                   },
-                },
-                {
-                  option: 'Cancel',
-                  onClick() {},
-                },
-                {
-                  option: 'Reschedule',
-                  onClick() {},
-                },
-                {
-                  option: 'Call Customer',
-                  onClick() {
-                    window.open(`tel: ${appointment.customer.phone_number}`);
+                  {
+                    option: 'Cancel',
+                    onClick() {},
                   },
-                },
-              ]
+                  {
+                    option: 'Reschedule',
+                    onClick() {},
+                  },
+                  {
+                    option: 'Call Customer',
+                    onClick() {
+                      window.open(`tel: ${appointment.customer.phone_number}`);
+                    },
+                  },
+                ]
+              : [
+                  {
+                    option: 'Call Shop',
+                    onClick() {
+                      window.open(`tel: ${shop.phone_number}`);
+                    },
+                  },
+                ]
             : undefined
         }
         rightIcon={inEdit ? GrFormClose : undefined}
