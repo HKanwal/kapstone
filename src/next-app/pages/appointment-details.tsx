@@ -149,7 +149,7 @@ const AppointmentDetails: NextPage = ({ appointment, workOrders, shop }: any) =>
                       }
                     />
                   </div>
-                ) : appointment.service ? (
+                ) : (Cookies.get('user_type') === 'shop_owner') & appointment.service ? (
                   <div className={styles['link-container']}>
                     <Link
                       text="View Service"
