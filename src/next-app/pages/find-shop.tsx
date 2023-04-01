@@ -63,7 +63,11 @@ const FindShopPage: NextPage = ({ services }: any) => {
           />
         </div>
         <div className={formStyles['field-container']}>
-          <DropdownField name="Service Type" items={serviceOptions} onSelect={setServiceType} />
+          <DropdownField
+            name="Service Type"
+            items={serviceOptions.sort((a, b) => (a < b ? -1 : 1))}
+            onSelect={setServiceType}
+          />
         </div>
         <div className={formStyles['field-container']}>
           <input type="checkbox" checked={checked} onChange={handleCheckboxChange} />
