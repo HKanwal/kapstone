@@ -138,22 +138,28 @@ const Dashboard: NextPage<DashboardPageProps, {}> = (props) => {
             const startTimeAsDate = new Date(appointment.start_time);
             const endTimeAsDate = new Date(appointment.end_time);
             return (
-              <div className={styles['appointment-container']} key={appointment.start_time}>
+              <div className={styles['appointment-container']} key={appointment.id}>
                 <BookedAppointment
                   date={startTimeAsDate.toDateString()}
                   startTime={startTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
                   endTime={endTimeAsDate.toTimeString().split(' ')[0].substring(0, 5)}
-                  shopName={appointment.shop.name}
-                  onClick={
+                  serviceName={
+                    appointment.service
+                      ? appointment.service?.name
+                      : appointment.quote?.quote_request.description
+                  }
+                  shopName={authData.user_type === 'customer' ? appointment.shop.name : undefined}
+                  customerName={
                     authData.user_type === 'shop_owner'
-                      ? () => {
-                          router.push({
-                            pathname: '/appointment-details',
-                            query: { id: `${appointment.id}` },
-                          });
-                        }
+                      ? `${appointment.customer.first_name} ${appointment.customer.last_name}`
                       : undefined
                   }
+                  onClick={() => {
+                    router.push({
+                      pathname: '/appointment-details',
+                      query: { id: `${appointment.id}` },
+                    });
+                  }}
                 />
               </div>
             );
