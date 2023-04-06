@@ -43,6 +43,7 @@
 \midrule
 2 November 2022 & 1.0 & First iteration of V\&V Plan\\
 7 March 2023 & 1.1 & Update tests after test development\\
+April 5th, 2023 & 1.2 & Rev 1\\
 \bottomrule
 \end{tabularx}
 
@@ -139,8 +140,6 @@ To execute the team's verification and validation plan, each team member was giv
 \endlastfoot
 
 Tevis Doe & Back-End Tester  &  Write back-end tests using PyTest. \\
-\hline
-Caitlin Bridel & Documentation Reviewer & Review documentation and ensure that it meets standards. \\ 
 \hline
 Gilbert Cherrie & Front-End \& End-to-End Tester &  Write front-end unit tests and end-to-end tests.  \\ 
 \hline
@@ -478,6 +477,18 @@ How test will be performed: The test will be performed using the \textbf{cypress
 
 Control: Manual
 
+Initial State: A work order has been created.
+
+Input: An employee is assigned to the work order by the shop owner.
+
+Output: The work order is listed as assigned to the employee and the employee can view.
+
+How test will be performed: The test will be performed by manually altering the employee that the work order is assigned to on a shop owner account.
+
+\item{FT-RT-13\\}
+
+Control: Manual
+
 Initial State: Quotes are created.
 
 Input: Shop owners and employees can view, search for, and filter quotes.
@@ -486,7 +497,7 @@ Output: Quotes are displayed when selected or searched for.
 
 How test will be performed: The test will be performed by manually inputting search terms and filters to verify that the proper quotes are displayed when selected, filtered, or searched for.
 
-\item{FT-RT-13\\}
+\item{FT-RT-14\\}
 
 Control: Automatic
 
@@ -498,15 +509,73 @@ Output: Work orders are displayed when selected or searched for.
 
 How test will be performed: The test will be performed using the \textbf{cypress} library to verify that the correct work orders are displayed when selected, filtered, or searched for.
 
+\item{FT-RT-15\\}
+
+Control: Manual
+
+Initial State: Shop Owner has active services listed
+
+Input: Customer can search for a shop, view profile and book an appointment for a service listed by the shop
+
+Output: Booked appointment appears listed on the Booked Appointments page
+
+How test will be performed: The test will be performed manually by inputting a postal code into the find shops page and a service and booking an appointment.
+
+\item{FT-RT-16\\}
+
+Control: Manual
+
+Initial State: Appointment is booked.
+
+Input: Customer can view appointment details.
+
+Output: Appointment and shop details are displayed.
+
+How test will be performed: The test will be performed manually by clicking on a booked appointment.
+
+\item{FT-RT-16.1\\}
+
+Control: Manual
+
+Initial State: Appointment is booked.
+
+Input: Shop owner can view appointment on calendar.
+
+Output: Appointment is visible in calendar and shop owner can view details.
+
+How test will be performed: The test will be performed manually by navigating to the appointment date in the calendar and clicking on the appointment.
+
+\item{FT-RT-17\\}
+
+Control: Manual
+
+Initial State: Shop is created by shop owner.
+
+Input: Shop owner can create an appointment for customer
+
+Output: Appointment is visible in calendar.
+
+How test will be performed: The test will be performed manually creating an appointment as a shop owner and viewing the details.
+
+\item{FT-RT-18\\}
+
+Control: Manual
+
+Initial State: Appointment is created.
+
+Input: Work order is created automatically when an appointment is booked.
+
+Output: Both the appointment and work order become visible upon creation.
+
+How test will be performed: The test will be performed manually to verify that both the appointment and the work order appear when the appointment is created.
+
 \end{enumerate}
-
-
 
 \subsubsection{View/Edit Shops and Shop Details}
 
 \begin{enumerate}
 
-\item{FT-RT-14\\}
+\item{FT-RT-19\\}
 
 Control: Automatic
 					
@@ -523,7 +592,7 @@ How test will be performed: The test will be performed using the \textbf{cypress
 \subsubsection{Call and Chat Functionality}
 
 \begin{enumerate}
-    \item{FT-RT-15\\}
+    \item{FT-RT-20\\}
 
 Control: Manual
 
@@ -581,6 +650,18 @@ Output/Result: After a few minutes using the application, 85\% of a representati
 					
 How test will be performed: After being introduced to the application for the first time, a group of individuals representing the target audience will be questioned about whether they feel that the application is professional and trustworthy. It should be considered successful if more than 85\% of individuals agree that the application looks professional and trustworthy.
 
+\item{NFT-LF-3}
+
+Type: Dynamic, Manual
+					
+Initial State: The application is deployed to a web server.
+					
+Input/Condition: Different pages of the application are visited on at least 5  devices of different sizes.
+					
+Output/Result: The appearance of the app is largely consistent accross all devices tested.
+					
+How test will be performed: The team will load the app on at least 5 different devices in google developer that are of different sizes(including phone, tablet, and laptop screens) and verify that the appearance is consistent across the devices.
+
 \end{enumerate}
 
 \subsubsection{Usability}
@@ -624,7 +705,20 @@ Input/Condition: Different pages of the application are visited.
 Output/Result: The loading time between different pages shall be no more than 5 seconds.
 					
 How test will be performed: Users will manually navigate between different pages. The test will be considered successful if the application takes less than 2 seconds 90\% of times, and less than 4 seconds rest of the times.
+
+\item{NFT-PF-2}
+
+Type: Dynamic, Manual
+					
+Initial State: The application is deployed and launched on a web server.
+					
+Input/Condition: Messages are sent via quote comments from a customer and shop owner account
+					
+Output/Result: The messages are received within two seconds of being sent
+					
+How test will be performed: This test will be manually tested by two team members logging in to a customer and shop owner account and sending messages and timing the responses.
 \end{enumerate}
+
 
 \subsection{Traceability Between Test Cases and Requirements}
 
@@ -665,6 +759,12 @@ The following tables show the traceability between functional and non-functional
     \hline
     FT-RT-9 & FR-29\\
     \hline
+     FT-RT-9.1 & FR-33\\
+    \hline
+    FT-RT-10 & FR-10, FR-11, FR-22\\
+    \hline
+    FT-RT-10.1 &  FR-11, FR-31, FR-32\\
+    \hline
 \end{tabular}
 \quad
   \begin{tabular}{|c|c|} 
@@ -672,13 +772,7 @@ The following tables show the traceability between functional and non-functional
      \textbf{Test Case ID} & \textbf{Related Requirement(s)}\\ 
     \hline 
     \hline 
-    FT-RT-9.1 & FR-33\\
-    \hline
-    FT-RT-10 & FR-10, FR-11, FR-22\\
-    \hline
-    FT-RT-10.1 &  FR-11, FR-32\\
-    \hline
-    FT-RT-10.2 & FR-11, FR-32\\
+    FT-RT-10.2 & FR-11, FR-31 FR-32\\
     \hline
     FT-RT-11 & FR-16\\
     \hline
@@ -686,17 +780,30 @@ The following tables show the traceability between functional and non-functional
     \hline
      FT-RT-11.2 & FR-16\\
     \hline
-    FT-RT-12 & FR-22\\
+    FT-RT-12 & FR-27\\
     \hline
-    FT-RT-13 & FR-23\\
+    FT-RT-13 & FR-22\\
     \hline
-    FT-RT-14 & FR-17\\
+    FT-RT-14 & FR-23\\
+    \hline
+    FT-RT-15 & FR-20, FR-28, FR-30\\
     \hline 
-    FT-RT-15 & FR-24\\
+    FT-RT-16 & FR-28\\
+    \hline
+    FT-RT-16.1 & FR-18, FR-28\\
+    \hline 
+    FT-RT-17 & FR-12\\
+    \hline
+    FT-RT-18 & FR-15, FR-26\\
+    \hline 
+    FT-RT-19 & FR-17, FR-19\\
+    \hline 
+    FT-RT-20 & FR-24\\
     \hline
 \end{tabular}}
 \end{table}
 
+Due to the nature of this project, some non-functional requirements are not able to be tested due to lack of resources such as time, necessary tools and ability to locate a security company to perform tests. As a result of these shortcomings, the following nonfunctional requirements will not appear in the following traceability table: NFR-12, NFR-14, NFR-15, NFR-18, NFR-20, NFR-21, NFR-22. These requirements are necessary for after the app is taken over by our project supervisor and is launched on a larger scale. On the other hand, NFR-13, NFR-16 and NFR-17 were tested through implementation and are verified and so will not be tested formally by tests in this plan.
 \begin{table}[H]
   \centering
   \caption{Traceability Table for Non-Functional Test Cases and Requirements}
@@ -706,15 +813,19 @@ The following tables show the traceability between functional and non-functional
      \textbf{Test Case ID} & \textbf{Related Requirement(s)}\\ 
     \hline 
     \hline
-    NFT-LF-1 & NFR-1\\
+    NFT-LF-1 & NFR-1, NFR-17\\
     \hline
-    NFT-LF-2 & NFR-4\\
+    NFT-LF-2 & NFR-3, NFR-17, NFR-23\\
     \hline
-    NFT-UT-1 & NFR-6, NFR-7\\
+    NFT-LF-3 & NFR-2, NFR-4, NFR-17, NFR-19\\
     \hline
-    NFT-UT-2 & NFR-10\\
+    NFT-UT-1 & NFR-5, NFR-6, NFR-7, NFR-17\\
     \hline
-    NFT-PF-1 & NFR-12\\
+    NFT-UT-2 & NFR-8, NFR-17\\
+    \hline
+    NFT-PF-1 & NFR-10, NFR-11, NFR-17\\
+    \hline
+    NFT-PF-2 & NFR-9, NFR-17\\
     \hline
 \end{tabular}}
 \end{table}
@@ -743,122 +854,6 @@ Document review will be carried out as required on documents at fixed times, at 
 \subsection{Walkthroughs}
 
 Informal walkthroughs will be performed, as needed, when a given team member has issues thinking of test cases for a given component. As such, the primary purpose of walkthroughs for this project is to generate test cases, and figure out expected outputs to said test cases. The given team member and at least one other team member will group together, inspect a piece of code, and brainstorm different test cases. Once a valid test case is thought up, the group will draft different outputs to different inputs, making sure to include normal inputs, fringe cases, etc. Test cases generated through this method will then be turned into dynamic tests that will be run by the continuous integration portion of this project on all new changes to the system.
-
-% \section{Unit Test Description}
-
-% \wss{Reference your MIS (detailed design document) and explain your overall
-%   philosophy for test case selection.}  
-% \wss{This section should not be filled in until after the MIS (detailed design
-%   document) has been completed.}
-
-% \subsection{Unit Testing Scope}
-
-% \wss{What modules are outside of the scope.  If there are modules that are
-%   developed by someone else, then you would say here if you aren't planning on
-%   verifying them.  There may also be modules that are part of your software, but
-%   have a lower priority for verification than others.  If this is the case,
-%   explain your rationale for the ranking of module importance.}
-
-% \subsection{Tests for Functional Requirements}
-
-% \wss{Most of the verification will be through automated unit testing.  If
-%   appropriate specific modules can be verified by a non-testing based
-%   technique.  That can also be documented in this section.}
-
-% \subsubsection{Module 1}
-
-% \wss{Include a blurb here to explain why the subsections below cover the module.
-%   References to the MIS would be good.  You will want tests from a black box
-%   perspective and from a white box perspective.  Explain to the reader how the
-%   tests were selected.}
-
-% \begin{enumerate}
-
-% \item{test-id1\\}
-
-% Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-%   be automatic}
-					
-% Initial State: 
-					
-% Input: 
-					
-% Output: \wss{The expected result for the given inputs}
-
-% Test Case Derivation: \wss{Justify the expected value given in the Output field}
-
-% How test will be performed: 
-					
-% \item{test-id2\\}
-
-% Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-%   be automatic}
-					
-% Initial State: 
-					
-% Input: 
-					
-% Output: \wss{The expected result for the given inputs}
-
-% Test Case Derivation: \wss{Justify the expected value given in the Output field}
-
-% How test will be performed: 
-
-% \item{...\\}
-    
-% \end{enumerate}
-
-% \subsubsection{Module 2}
-
-% ...
-
-% \subsection{Tests for Nonfunctional Requirements}
-
-% \wss{If there is a module that needs to be independently assessed for
-%   performance, those test cases can go here.  In some projects, planning for
-%   nonfunctional tests of units will not be that relevant.}
-
-% \wss{These tests may involve collecting performance data from previously
-%   mentioned functional tests.}
-
-% \subsubsection{Module ?}
-		
-% \begin{enumerate}
-
-% \item{test-id1\\}
-
-% Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-%   be automatic}
-					
-% Initial State: 
-					
-% Input/Condition: 
-					
-% Output/Result: 
-					
-% How test will be performed: 
-					
-% \item{test-id2\\}
-
-% Type: Functional, Dynamic, Manual, Static etc.
-					
-% Initial State: 
-					
-% Input: 
-					
-% Output: 
-					
-% How test will be performed: 
-
-% \end{enumerate}
-
-% \subsubsection{Module ?}
-
-% ...
-
-% \subsection{Traceability Between Test Cases and Modules}
-
-% \wss{Provide evidence that all of the modules have been considered.}
 				
 \bibliographystyle{plainnat}
 
@@ -946,11 +941,6 @@ Tevis Doe &  \begin{itemize}
     \item User Surveying
     \item Jest Testing Framework
 \end{itemize} \\
-\hline
-Caitlin Bridel &  \begin{itemize}
-    \item Jest testing framework
-    \item Cypress testing framework
-\end{itemize}\\ 
 \hline
 Gilbert Cherrie & \begin{itemize}
     \item End-to-End Testing

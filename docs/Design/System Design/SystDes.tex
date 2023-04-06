@@ -50,6 +50,7 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
  Jan 18th, 2023 & 0.0 & Rev 0\\
+ April 5th, 2023 & 1.0 & Rev 1\\
 \bottomrule
 \end{tabularx}
 
@@ -119,7 +120,6 @@ The Sayyara Automotive Matcher is an app that assists in communication between a
 The team will endeavor to minimize the amounts of undesired events as much as possible, however, they are inevitable, and so when an undesired event occurs, the team will follow these steps.
 
 \begin{enumerate}
-    \item 
     \item Present an error message to the user, and bar them from continuing.
     \begin{itemize}
         \item Preferably, this error message will be as specific as possible, using the user's terminology. Keep things simple.
@@ -164,11 +164,11 @@ FR7: Added delete functionality to the account page to allow users to delete the
 \newline
 FR8: Created the login page to allow shop owners, employees and customers to login to their accounts using a username and password.
 \newline
-FR9: Added forgot password functionality to the login page to allow users to reset their password.
-\newline
 FR10, 11: Created the quote response page to allow shop owners and employees to create quotes and send them to customers.
 \newline
 FR12: Created the shop appointment page to allow shop owners and employees to accept or reject an appointment submitted by a customer.
+\newline
+FR13: Allowed shop owners to invite employees via email invite. Employees are then allowed to create an account.
 \newline
 FR14: Created the employee list page to allow shop owners view, search for, and filter all employees as well as add and remove employees.
 \newline
@@ -176,17 +176,15 @@ FR15, 16: Created the work order page to allow shop owners and employees to crea
 \newline
 FR17, 19: Added edit functionality to the shop profile page to allow shop owners to edit their shop profile and set shop availability.
 \newline
-FR20, 30: Created the shop search screen that users can access without an account to allow all customers to search for and filter shops and view shop profiles.
+FR18: Added functionality to allow both shop owners/employees to view,  accept, or deny appointments created by a customers.
 \newline
-FR21: Added functionality for customers to submit rework requests through the quote screen to allow for customer rework requests.
+FR20, 30: Created the shop search screen that users can access without an account to allow all customers to search for and filter shops and view shop profiles.
 \newline
 FR22: Created the submitted quote request list screen to allow shop owners and employees to view, search for, and filter quote requests.
 \newline
 FR23: Created the work order list screen to allow shop owners and employees to view, search for, and filter work orders.
 \newline
 FR24: Created the chat functionality to allow customers to chat with shop owners and employees.
-\newline
-FR25: Added back-end functionality that will automatically delete a work order if the appointment is cancelled.
 \newline
 FR26: Added back-end functionality that will automatically create a work order if an appointment is created.
 \newline
@@ -195,6 +193,12 @@ FR27: Added functionality to the work order page to allow shop owners and employ
 FR28: Created the appointment page to allow customers to book appointments.
 \newline
 FR29: Created the quote request page to allow customers to submit quote requests.
+\newline
+FR31: Added functionality for customers to view quotes sent by shop owners.
+\newline
+FR32: Created the quote response page in order for customers to accept, reject, or comment on quotes sent to them.
+\newline
+FR33: Added a search bar with functionality to the quote request page, allowing customers and shop owners to filter quote requests by name, ID, etc.
 
 \section{User Interfaces}
 
