@@ -1,5 +1,5 @@
 \documentclass[12pt, titlepage]{article}
-\usepackage[margin=1in]{geometry}
+\usepackage[margin=0.8in]{geometry}
 \usepackage{graphicx}
 \graphicspath{ {./survey_results/} }
 \usepackage[dvipsnames]{xcolor}
@@ -43,7 +43,8 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 8 March 2023 & 1.0 & First iteration of V\&V Report \\
-Date 2 & 1.1 & Notes\\
+27 March 2023 & 1.1 & Updated results for previously failed tests\\
+3 April 2023 & 1.1 & Added results for appointment tests. Rev 1.\\
 \bottomrule
 \end{tabularx}
 
@@ -85,7 +86,7 @@ This document covers the results of the actions carried out detailed in the Veri
 %\centering
 The following table summarizes the results of the functional tests provided in our \href{https://github.com/HKanwal/kapstone/blob/main/docs/VnVPlan/VnVPlan.pdf}{Verification and Validation Plan}.
 \renewcommand{\arraystretch}{1.8}%
-\begin{longtable}{| m{.1\linewidth} |>{\raggedright\arraybackslash} m{.15\linewidth} |>{\raggedright\arraybackslash} m{.22\linewidth}|>{\raggedright\arraybackslash} m{.21\linewidth} |>{\raggedright\arraybackslash} m{.21\linewidth}|>{\centering\arraybackslash} m{.08\linewidth}|}
+\begin{longtable}{| m{.1\linewidth} |>{\raggedright\arraybackslash} m{.14\linewidth} |>{\raggedright\arraybackslash} m{.2\linewidth}|>{\raggedright\arraybackslash} m{.21\linewidth} |>{\raggedright\arraybackslash} m{.18\linewidth}|>{\centering\arraybackslash} m{.08\linewidth}|}
 \caption{Functional Test Description and Results}
 \label{tab:funcTestResults}
 \\ \hline
@@ -104,7 +105,7 @@ The following table summarizes the results of the functional tests provided in o
 \endlastfoot
 FT-RT-1 & Create a shop on a newly created shop owner account & Randomly generated shop name, hours of Monday 10:00 to 17:00, 2 bays, an address of 123 Main Rd., Hamilton, Ontario, Canada, A1B2C3 and then save is clicked. & A shop is created in the database with these values and added to the shop profile for the currently signed in shop owner account and the user is redirected to the dashboard. & A shop is created in the database with these values and added to the shop profile for the currently signed in shop owner account and the user is redirected to the dashboard. & \textcolor{Green}{Pass} \\
 \hline
-FT-RT-2 & Navigate to the registration page and create a shop owner account. & Navigate to registration page, and enter values of First Name: John, Last Name: Smith, Phone Number: +16472224448, email: test@email.com, a randomly generated username, Password: ShopPass123, and select Shop Owner from the account type drop down. Then click the Create button. & A shop owner account is created with the provided values and the user in redirected to the Create Shop Page & A shop owner account is created with the provided values and the user in redirected to the Create Shop Page & \textcolor{Green}{Pass}\\
+FT-RT-2 & Navigate to the registration page and create a shop owner account. & Navigate to registration page, enter values of First Name: John, Last Name: Smith, Phone Number: +16472224448, email: test@email.com, a randomly generated username, Password: ShopPass123, and select Shop Owner from the account type drop down. Then click Create button. & A shop owner account is created with the provided values and the user in redirected to the Create Shop Page & A shop owner account is created with the provided values and the user in redirected to the Create Shop Page & \textcolor{Green}{Pass}\\
 \hline
 FT-RT-3 & Employees should receive invitation email when they are invited & Cypress is used to navigate to the invitations page and enter the employee's email. After a short wait, it queries the Email API server to check if the invitation email was received by the employee. & The employee has received an email with a link to register an account. & The email was successfully sent to the employee with a valid invitation link. &  \textcolor{Green}{Pass}\\
 \hline
@@ -112,9 +113,9 @@ FT-RT-4 & Employees should be able to use the invitation link in their invite em
 \hline
 FT-RT-5 & Navigate to employee profile/ details page and edit employee information & Log in to shop owner account, navigate to employee list page, click on random employee from the list. Click pencil icon to enter edit mode and change Salary value to a different randomized value and click Save button  & Employee information is updated with new inputted information & Employee information is updated with new inputted information & \textcolor{Green}{Pass}\\
 \hline
-FT-RT-5.1 & Navigate to shop owner profile/ details page and edit shop owner information & Log in to shop owner account, navigate to employee list page, click on shop owner from the list. Click pencil icon to enter edit mode and change account information and click Save button  & Shop owner information is updated with new inputted information & Unable to find shop owner in list & \textcolor{Red}{Fail}\\
+FT-RT-5.1 & Navigate to shop owner profile/ details page and edit shop owner information & Log in to shop owner account, navigate to employee list page, click on shop owner from the list. Click pencil icon to enter edit mode and change account information and click Save button  & Shop owner information is updated with new inputted information & Shop owner information is updated with new inputted information & \textcolor{Green}{Pass}\\
 \hline
-FT-RT-6 & Employee account should be deleted and removed from shop on request. & Cypress is used to login to an employee account, visit the account page, and click on the 'Delete Account' button. & The employee's account is deleted from the database and should be removed from the shop's employee list. & No option present to delete the employee. & \textcolor{Red}{Fail}\\
+FT-RT-6 & Employee account should be deleted and removed from shop on request. & Cypress is used to login to an employee account, visit the account page, and click on the 'Delete Account' button. & The employee's account is deleted from the database and should be removed from the shop's employee list. & Employee's account is deleted from the database and removed from the shop's employee list. & \textcolor{Green}{Pass}\\
 \hline
 FT-RT-7 & Shop owners should be able to add, remove, and search for employees. & Cypress is used to login as a shop owner and navigate to the employee pages (invite page, list view, detail view) to verify if these features work successfully. & The shop owner is able to access all of the employee pages, filter them using search and add/delete them. & The shop owner was able to access all of the employee pages, filter them using search and add/delete them & \textcolor{Green}{Pass}\\
 \hline
@@ -126,9 +127,9 @@ FT-RT-9 & User with customer account can create a quote request and submit it to
 \hline
 FT-RT-9.1 & User with shop owner account can view the details of a quote request sent to their shop & Log in to customer account, navigate to quote request page and enter the following details: VIN = '123456789', manufacturer = 'BMW', model = 'i7', modelYear = '2005', shop = "Sam's Workshop", quoteRequest = `QUOTEREQUEST-[random integer]` and click Create button. Log in to shop owner account, navigate to new quote request list page, find card containing quote request name, click on the card and confirm detail page opens and all details match inputted information.  & Quote request is submitted to shop owner's shop, can be viewed by shop owner and details match inputted information & Quote request is submitted to shop owner's shop, can be viewed by shop owner and details match inputted information & \textcolor{Green}{Pass}\\
 \hline
-FT-RT-10 & Shop owner can respond to quote request sent to their shop and then view the details of the quote & Create quote request on customer account. Login to shop owner account, navigate to new quote request list page and click card containing quote request name. Click Respond button and enter the following details on the Quote Response page: const price = '50', estimatedTime = '2 days', expiryDate = 'March 29 2023', notes = 'This is a test quote.' and click Submit Quote button. Then navigate to quote details page and verify inputted information & Quote is submitted, can be viewed by shop owner and details match inputted information & Quote is submitted, can be viewed by shop owner and details match inputted information & \textcolor{Green}{Pass}\\
+FT-RT-10 & Shop owner can respond to quote request sent to their shop and then view the details of the quote & Create quote request on customer account. Login to shop owner account, navigate to new quote request list page and click card containing quote request name. Click Respond button and enter the following details: const price = '50', estimatedTime = '2 days', expiryDate = 'March 29 2023', notes = 'This is a test quote.' and click Submit Quote button. & Quote is submitted, can be viewed by shop owner and details match inputted information & \textcolor{Green}{Pass}\\
 \hline
-FT-RT-10.1 & Customers can view quotes sent in response to their quote requests and accept it & Create quote request as customer and then respond to it as shop owner. Then log in to customer account and open details page for created quote request. Verify quote is visible in quotes list and has 'Pending' status. Click on quote and view/verify quote details, then click 'Accept' button & Quote's status is changed to 'Accepted' & Quote's status is changed to 'Accepted' & \textcolor{Green}{Pass} \\
+FT-RT-10.1 & Customers can view quotes sent in response to their quote requests and accept it & Create quote request as customer and then respond to it as shop owner. Then log in to customer account and open details page. Verify quote is visible in quotes list and has 'Pending' status. Click on quote and view details, then click 'Accept' button & Quote's status is changed to 'Accepted' & Quote's status is changed to 'Accepted' & \textcolor{Green}{Pass} \\
 \hline
 FT-RT-10.2 & Customers can view quotes sent in response to their quote requests and reject it & Create quote request on customer account and then respond to it on shop owner account. Then log in to customer account and open details page for created quote request. Verify quote is visible in quotes list and has 'Pending' status. Click on quote and view quote details. Verify details and click 'Reject' button & Quote's status is changed to 'Rejected' & Quote's status is changed to 'Rejected' & \textcolor{Green}{Pass}\\
 \hline
@@ -138,17 +139,29 @@ FT-RT-11.1 & A work order that has not been sent to the customer should not be v
 \hline
 FT-RT-11.2 & A work order that has been sent to the customer should be viewable by the customer. & Using Cypress, login to a customer account and navigate to a work order that has been sent to the customer via email. & The page should be viewable by the user. & The page is viewable by the user. & \textcolor{Green}{Pass}\\
 \hline
-FT-RT-12 & Shop owners can search for and filter quotes by name, status or customer & Login to shop owner account, navigate to quote list page and enter text into search bar & Truncated list of quotes should be visible based on inputed search terms/filter & Unable to search for or filter quotes. Only full list is shown & \textcolor{Red}{Fail}\\
+FT-RT-11.2 & A work order that has been created can be assigned to an employee by a shop owner. & Login to a shop owner account, click on an active work order and change the assignee to a new employee and click the save button. & The work order is now assigned to the new employee & The work order is now assigned to the new employee & \textcolor{Green}{Pass}\\
 \hline
-FT-RT-13 & Test that shop owners and employees can view work orders. & Login to a shop owner account and navigate to work orders page. Then login to an employee account and navigate to the work orders page. & Work orders are visible to the logged in shop owner and employee users. & Work orders are visible to the logged in shop owner and employee users. & \textcolor{Green}{Pass}\\
+FT-RT-13 & Shop owners can search for and filter quotes by name, status or customer & Login to shop owner account, navigate to quote list page and enter text into search bar & Truncated list of quotes should be visible based on inputed search terms/filter & Truncated list of quotes should be visible based on inputed search terms/filter & \textcolor{Green}{Pass}\\
 \hline
-FT-RT-14 & Shop owner can edit shop information & Log in as shop owner and navigate to shop profile page. Click pencil icon to enter edit mode and replace values with following values: name: "Sam's New Workshop", address: '100 New Street', city: 'Hamilton', province: 'ON', country: 'Canada', postalCode: 'M6A3X7' and click Save button &  Text boxes are disabled and values on page match inputted values & Text boxes are disabled and values on page match inputted values & \textcolor{Green}{Pass} \\
+FT-RT-14 & Test that shop owners and employees can view work orders. & Login to a shop owner account and navigate to work orders page. Then login to an employee account and navigate to the work orders page. & Work orders are visible to the logged in shop owner and employee users. & Work orders are visible to the logged in shop owner and employee users. & \textcolor{Green}{Pass}\\
 \hline
-FT-RT-15 & Manual test to verify shop owners and employees are able to call customers via the call functionality & Log into shop owner/employee account on a cellular device and navigate to quote request and use drop down menu option to call customer & Device shows pop-up asking to call phone number that matches customer account, device navigates to phone app & Device shows pop-up asking to call phone number that matches customer account, device navigates to phone app & \textcolor{Green}{Pass} \\
+FT-RT-15 & Test that customer can book an appointment & Login to a customer account, navigate to find shops page, enter postal code and select 'Tire change form drop down. Click the book appointment button and choose future date. Fill out appointment details and submit. & Appointment displays in booked appointment list with correct date and time & Appointment displays in booked appointment list with correct date and time & \textcolor{Green}{Pass}\\
+\hline
+FT-RT-16 & Test that customer can view appointment details & Login to a customer account and create new appointment. Then click appointment to view details. & Appointment details match inputted information & Appointment details match inputted information & \textcolor{Green}{Pass}\\
+\hline
+FT-RT-16.1 & Test that shop owner can view appointment details & Login to a customer account and create new appointment. Then login to shop owner account, verify appointment is in calendar and click appointment to view details. & Appointment details match inputted information & Appointment details match inputted information & \textcolor{Green}{Pass}\\
+\hline
+FT-RT-17 & Test that shop owner can create an appointment for a customer & Login to a shop owner account and navigate to appointments page. Create a new appointment by filling out the details and selecting a date & Appointment is visible in calendar and details match inputted information. & Appointment is visible in calendar and details match inputted information. & \textcolor{Green}{Pass}\\
+\hline
+FT-RT-18 & Test that work orders are automatically created when appointment is created & Login to a shop owner account and create an appointment. Then navigate to the work orders page. & Work order for created appointment is visible. & Work order for created appointment is visible. & \textcolor{Green}{Pass}\\
+\hline
+FT-RT-19 & Shop owner can edit shop information & Log in as shop owner and navigate to shop profile page. Click edit button and replace values with: name: "Sam's New Workshop", address: '100 New Street', city: 'Hamilton', province: 'ON', country: 'Canada', postalCode: 'M6A3X7' and click Save button &  Text boxes are disabled and values on page match inputted values & Text boxes are disabled and values on page match inputted values & \textcolor{Green}{Pass} \\
+\hline
+FT-RT-20 & Manual test to verify shop owners and employees are able to call customers via the call functionality & Log into shop owner/employee account on a cellular device and navigate to quote request and use drop down menu option to call customer & Device shows pop-up asking to call phone number that matches customer account, device navigates to phone app & Device shows pop-up asking to call phone number that matches customer account, device navigates to phone app & \textcolor{Green}{Pass} \\
 \hline
 \end{longtable}
 
-\newpage{}
+%\newpage{}
 \section{Nonfunctional Requirements Evaluation}
 
 \subsection{Look and Feel}
@@ -156,7 +169,7 @@ FT-RT-15 & Manual test to verify shop owners and employees are able to call cust
 The following evaluation is based on our \href{https://forms.gle/GUkhZDEA7SVjYAVi8}{usability survey} results. The detailed results can be found in the \hyperref[sec:AppSurveyResults]{Appendix}.
 
 \renewcommand{\arraystretch}{1.8}%
-\begin{longtable}{| m{.12\linewidth} |>{\raggedright\arraybackslash} m{.16\linewidth} |>{\raggedright\arraybackslash} m{.19\linewidth}|>{\raggedright\arraybackslash} m{.21\linewidth} |>{\raggedright\arraybackslash} m{.21\linewidth}|>{\centering\arraybackslash} m{.08\linewidth}|}
+\begin{longtable}{| m{.1\linewidth} |>{\raggedright\arraybackslash} m{.14\linewidth} |>{\raggedright\arraybackslash} m{.19\linewidth}|>{\raggedright\arraybackslash} m{.21\linewidth} |>{\raggedright\arraybackslash} m{.19\linewidth}|>{\centering\arraybackslash} m{.08\linewidth}|}
 \caption{Nonfunctional Test - Look and Feel Description and Results}
 \label{tab:LookAndFeelTestResults}
 \\ \hline
@@ -170,41 +183,37 @@ NFT-LF-1 & Measure of visual appeal of application to users & Group of users are
 \hline
 NFT-LF-2 & Measure of professionalism and trustworthiness of application to users & Group of users are asked to use the app and rate the professionalism and trustworthiness of the app out of 5 & A minimum of 90\% of users rate professionalism and trustworthiness of app at least a 4/5 on usability survey & 95.5\% of users rated professionalism and trustworthiness of app at least a 4/5 on usability survey & \textcolor{Green}{Pass} \\
 \hline
+NFT-LF-3 & Measure of consistency in appearance across devices & Users access different pages across the app in different devices and check appearance, theme, and font sizes & Appearance, theme, and font size are voted to be consistent across app by the team & Appearance, theme, and font size are voted to be consistent across app by the team & \textcolor{Green}{Pass} \\
+\hline
 
 \end{longtable}
+
 
 \subsection{Usability}
 
 The following evaluation is based on our \href{https://forms.gle/GUkhZDEA7SVjYAVi8}{usability survey} results. The detailed results can be found in the \hyperref[sec:AppSurveyResults]{Appendix}.
 
 \renewcommand{\arraystretch}{1.8}%
-\begin{longtable}{| m{.12\linewidth} |>{\raggedright\arraybackslash} m{.16\linewidth} |>{\raggedright\arraybackslash} m{.19\linewidth}|>{\raggedright\arraybackslash} m{.21\linewidth} |>{\raggedright\arraybackslash} m{.21\linewidth}|>{\centering\arraybackslash} m{.08\linewidth}|}
+\begin{longtable}{| m{.1\linewidth} |>{\raggedright\arraybackslash} m{.14\linewidth} |>{\raggedright\arraybackslash} m{.19\linewidth}|>{\raggedright\arraybackslash} m{.21\linewidth} |>{\raggedright\arraybackslash} m{.19\linewidth}|>{\centering\arraybackslash} m{.08\linewidth}|}
 \caption{Nonfunctional Test - Usability Description and Results}
 \label{tab:UsabilityTestResults}
 \\ \hline
 \textbf{Test ID} & \textbf{Description} & \textbf{Inputs} & \textbf{Expected Output} & \textbf{Actual Output} & \textbf{Result} \\
 \hline
 \endfirsthead
-
-\multicolumn{6}{c}
-{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
-\hline \multicolumn{1}{|c|}{\textbf{Test ID}} & \multicolumn{1}{c|}{\textbf{Description}} & \multicolumn{1}{c|}{\textbf{Inputs}} & \multicolumn{1}{c|}{\textbf{Expected Output}} & \multicolumn{1}{c|}{\textbf{Actual Output}} & \multicolumn{1}{c|}{\textbf{Result}} \\ \hline 
-\endhead
-
-\hline \multicolumn{6}{|r|}{{Continued on next page}} \\ \hline
 \endfoot
-
 \endlastfoot
 NFT-UT-1 & Measuores users' ability to complete task with minimal instruction & Group of users are given the task of creating a customer account and submitting a quote request to 'Sam's Workshop' & A minimum of 80\% of users rate ease of use at least a 4/5 on usability survey & 81.8\% of users rated ease of use 4/5 on usability survey & \textcolor{Green}{Pass} \\
 \hline
 NFT-UT-2 & Measure of users ability to recognize icons used in the application & Group of users are asked to use the app and rate their ability to recognize icons used & A minimum of 90\% of users rate ability to recognize icons a 5 on usability survey & 100\% of users rated ability to recognize icons a 5 on usability survey & \textcolor{Green}{Pass} \\
 \hline
 \end{longtable}
-		
+
+\newpage
 \subsection{Performance}
 
 \renewcommand{\arraystretch}{1.8}%
-\begin{longtable}{| m{.12\linewidth} |>{\raggedright\arraybackslash} m{.16\linewidth} |>{\raggedright\arraybackslash} m{.19\linewidth}|>{\raggedright\arraybackslash} m{.21\linewidth} |>{\raggedright\arraybackslash} m{.21\linewidth}|>{\centering\arraybackslash} m{.08\linewidth}|}
+\begin{longtable}{| m{.1\linewidth} |>{\raggedright\arraybackslash} m{.14\linewidth} |>{\raggedright\arraybackslash} m{.19\linewidth}|>{\raggedright\arraybackslash} m{.21\linewidth} |>{\raggedright\arraybackslash} m{.19\linewidth}|>{\centering\arraybackslash} m{.08\linewidth}|}
 \caption{Nonfunctional Test - Performance Description and Results}
 \label{tab:UsabilityTestResults}
 \\ \hline
@@ -219,7 +228,9 @@ NFT-UT-2 & Measure of users ability to recognize icons used in the application &
 
 
 \endlastfoot
-NFT-PF-2 & Asseses the spped in which different pages in the application load & Group of users are given the task of navigating to various pages & Pages responded within 2 seconds 90\% of the time and within 4 seconds the rest of the time & Pages responded within 2 seconds 90\% of the time and within 4 seconds the rest of the time & \textcolor{Green}{Pass} \\
+NFT-PF-1 & Asseses the speed in which different pages in the application load & Group of users are given the task of navigating to various pages & Pages responded within 2 seconds 90\% of the time and within 4 seconds the rest of the time & Pages responded within 2 seconds 90\% of the time and within 4 seconds the rest of the time & \textcolor{Green}{Pass} \\
+\hline
+NFT-PF-2 & Asseses the speed in which quote comments are sent across the app & Two team members log in to shop owner and customer accounts and send multiple quote comments to each other & Comments are received within 2 seconds of being sent &  Comments are received within 2 seconds of being sent & \textcolor{Green}{Pass} \\
 \hline
 \end{longtable}
 
@@ -231,7 +242,8 @@ This section will detail the unit tests that relate to the back-end of the proje
 
 For each model included in the back-end of the project, a test was implemented to test the creation of the model. The input for these tests were values to fill each instance of the model with, and the expected result was that each value in the instance matched the expected value. It should be noted these tests were only created for models created by our team, and not models available by default in Django, nor the ones imported from libraries. An example of one such common test is as detailed in this table:
 
-\begin{longtable}{|>{\raggedright\arraybackslash} p{.15\linewidth} |>{\raggedright\arraybackslash} p{.2\linewidth} |>{\raggedright\arraybackslash} p{.23\linewidth}|>{\raggedright\arraybackslash} p{.23\linewidth} |>{\centering\arraybackslash} p{.08\linewidth}|}
+\renewcommand{\arraystretch}{1.8}%
+\begin{longtable}{|>{\raggedright\arraybackslash} m{.18\linewidth} |>{\raggedright\arraybackslash} m{.25\linewidth}|>{\raggedright\arraybackslash} m{.21\linewidth} |>{\raggedright\arraybackslash} m{.19\linewidth}|>{\centering\arraybackslash} m{.08\linewidth}|}
 \caption{Common Tests Description with Results}
 \label{tab:funcTestResults}
 \\ \hline \textbf{Description} & \textbf{Inputs} & \textbf{Expected Output} & \textbf{Actual Output} & \textbf{Result} \\
@@ -264,7 +276,8 @@ Test input data varies for each different model, however, valid inputs were chos
 
 Apart from the above common tests, some models require more specific tests for the custom methods the team created. This section will detail these extra tests. Some inputs will be in plain text, while others will use plain language for better descriptions.
 
-\begin{longtable}{|>{\raggedright\arraybackslash} p{.18\linewidth} |>{\raggedright\arraybackslash} p{.275\linewidth} |>{\raggedright\arraybackslash} p{.2\linewidth}|>{\raggedright\arraybackslash} p{.2\linewidth} |>{\centering\arraybackslash} p{.1\linewidth}|}
+\renewcommand{\arraystretch}{1.8}%
+\begin{longtable}{|>{\raggedright\arraybackslash} m{.18\linewidth} |>{\raggedright\arraybackslash} m{.25\linewidth}|>{\raggedright\arraybackslash} m{.21\linewidth} |>{\raggedright\arraybackslash} m{.19\linewidth}|>{\centering\arraybackslash} m{.08\linewidth}|}
 \caption{Specific Tests Description with Results}
 \label{tab:funcTestResults}
 \\ \hline \textbf{Description} & \textbf{Inputs} & \textbf{Expected Output} & \textbf{Actual Output} & \textbf{Result} \\
@@ -347,7 +360,7 @@ As specified in the Verification and Validation plan, automated testing tools we
      \textbf{Test Case ID} & \textbf{Related Requirement(s)}\\ 
     \hline 
     \hline
-    FT-RT-1 & FR-1\\
+     FT-RT-1 & FR-1\\
     \hline
     FT-RT-2 & FR-2\\
     \hline
@@ -369,6 +382,12 @@ As specified in the Verification and Validation plan, automated testing tools we
     \hline
     FT-RT-9 & FR-29\\
     \hline
+     FT-RT-9.1 & FR-33\\
+    \hline
+    FT-RT-10 & FR-10, FR-11, FR-22\\
+    \hline
+    FT-RT-10.1 &  FR-11, FR-31, FR-32\\
+    \hline
 \end{tabular}
 \quad
   \begin{tabular}{|c|c|} 
@@ -376,13 +395,7 @@ As specified in the Verification and Validation plan, automated testing tools we
      \textbf{Test Case ID} & \textbf{Related Requirement(s)}\\ 
     \hline 
     \hline 
-    FT-RT-9.1 & FR-33\\
-    \hline
-    FT-RT-10 & FR-10, FR-11, FR-22\\
-    \hline
-    FT-RT-10.1 &  FR-11, FR-32\\
-    \hline
-    FT-RT-10.2 & FR-11, FR-32\\
+    FT-RT-10.2 & FR-11, FR-31 FR-32\\
     \hline
     FT-RT-11 & FR-16\\
     \hline
@@ -390,13 +403,25 @@ As specified in the Verification and Validation plan, automated testing tools we
     \hline
      FT-RT-11.2 & FR-16\\
     \hline
-    FT-RT-12 & FR-22\\
+    FT-RT-12 & FR-27\\
     \hline
-    FT-RT-13 & FR-23\\
+    FT-RT-13 & FR-22\\
     \hline
-    FT-RT-14 & FR-17\\
+    FT-RT-14 & FR-23\\
+    \hline
+    FT-RT-15 & FR-20, FR-28, FR-30\\
     \hline 
-    FT-RT-15 & FR-24\\
+    FT-RT-16 & FR-28\\
+    \hline
+    FT-RT-16.1 & FR-18, FR-28\\
+    \hline 
+    FT-RT-17 & FR-12\\
+    \hline
+    FT-RT-18 & FR-15, FR-26\\
+    \hline 
+    FT-RT-19 & FR-17, FR-19\\
+    \hline 
+    FT-RT-20 & FR-24\\
     \hline
 \end{tabular}}
 \end{table}
@@ -404,21 +429,26 @@ As specified in the Verification and Validation plan, automated testing tools we
 \begin{table}[H]
   \centering
   \caption{Traceability Table for Non-Functional Test Cases and Requirements}
-  \label{tab:NFRTraceReq}
+  \label{tab:NFRTrace}
  \makebox[\textwidth]{\begin{tabular}{|c|c|} 
     \hline
      \textbf{Test Case ID} & \textbf{Related Requirement(s)}\\ 
     \hline 
     \hline
-    NFT-LF-1 & NFR-1\\
+    NFT-LF-1 & NFR-1, NFR-17\\
     \hline
-    NFT-LF-2 & NFR-4\\
+    NFT-LF-2 & NFR-3, NFR-17, NFR-23\\
     \hline
-    NFT-UT-1 & NFR-6, NFR-7\\
+    NFT-LF-3 & NFR-2, NFR-4, NFR-17, NFR-19\\
     \hline
-    NFT-UT-2 & NFR-10\\
+    NFT-UT-1 & NFR-5, NFR-6, NFR-7, NFR-17\\
     \hline
-    NFT-PF-2 & NFR-12\\
+    NFT-UT-2 & NFR-8, NFR-17\\
+    \hline
+    NFT-PF-1 & NFR-10, NFR-11, NFR-17\\
+    \hline
+    NFT-PF-2 & NFR-9, NFR-17\\
+    
     \hline
 \end{tabular}}
 \end{table}
@@ -459,6 +489,12 @@ The following tables illustrates the traceability between functional  tests and 
     \hline
     FT-RT-9 & M1, M5\\
     \hline
+    FT-RT-9.1 & M1, M5\\
+    \hline
+    FT-RT-10 & M1, M5, M6\\
+    \hline
+    FT-RT-10.1 & M1, M5, M6\\
+    \hline 
 \end{tabular}
 \quad
   \begin{tabular}{|c|c|} 
@@ -466,12 +502,6 @@ The following tables illustrates the traceability between functional  tests and 
      \textbf{Test Case ID} & \textbf{Related Module(s)}\\ 
     \hline 
     \hline 
-    FT-RT-9.1 & M1, M5\\
-    \hline
-    FT-RT-10 & M1, M5, M6\\
-    \hline
-    FT-RT-10.1 & M1, M5, M6\\
-    \hline
     FT-RT-10.2 & M1, M5, M6\\
     \hline
     FT-RT-11 & M1, M9\\
@@ -484,10 +514,20 @@ The following tables illustrates the traceability between functional  tests and 
     \hline
     FT-RT-13 & M1, M9\\
     \hline
-    FT-RT-14 & M1, M3, M8\\
+    FT-RT-14 & M1, M10, M11, M12, M13\\
     \hline 
-    FT-RT-15 & M1, M7\\
+    FT-RT-15 & M1, M11\\
     \hline
+    FT-RT-15.1 & M1, M11\\
+    \hline 
+    FT-RT-16 & M1, M11, M12, M13\\
+    \hline
+    FT-RT-17 & M1, M9, M11, M12, M13\\
+    \hline 
+    FT-RT-18 & M1, M3, M8\\
+    \hline 
+    FT-RT-19 & M1, M7\\
+    \hline 
 \end{tabular}}
 \end{table}
 

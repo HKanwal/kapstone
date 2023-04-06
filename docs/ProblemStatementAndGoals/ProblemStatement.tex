@@ -23,6 +23,7 @@
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
 Sept. 26th, 2022  & All Members & Initial document creation. \\
+April 2nd, 2023 & All members & Improved goals. Rev 1.\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -33,11 +34,19 @@ Sept. 26th, 2022  & All Members & Initial document creation. \\
 
 \section{Problem Statement}
 
+\wss{You should check your problem statement with the
+\href{https://github.com/smiths/capTemplate/blob/main/docs/Checklists/ProbState-Checklist.pdf}
+{problem statement checklist}.}
+\wss{You can change the section headings, as long as you include the required information.}
+
 \subsection{Problem and Importance of the Problem}
 
 Both vehicle owners and auto service professionals alike encounter many challenges when attempting to coordinate with each other. Many vehicle owners struggle to find a reliable auto service professional. Due to a lack of transparency and the frequency of receiving inaccurate estimates, prospective vehicle owners are afraid of getting overcharged. In addition, booking an appointment is often difficult because shop owners cannot provide accurate estimates on availability and how long it might take to service a car. All of these challenges together become a major deterrent for seeking help from auto service professionals, hurting both customers and businesses in the process.
 
 \subsection{Inputs and Outputs}
+
+\wss{Characterize the problem in terms of ``high level'' inputs and outputs.  
+Use abstraction so that you can avoid details.}
 
 For extra clarity, the inputs and outputs have been divided into two sections between the two audiences this platform will cater to, shop owners and vehicle owners. These inputs and outputs are outlined in Table \ref{tab:inputsOutputs}.
 
@@ -87,14 +96,14 @@ Main stakeholders:
 \section{Goals}
 
 We created goals to highlight the main selling features of the product. These goals are outlined in Table \ref{tab:goals}.
-
+\renewcommand{\arraystretch}{1.8}%
 \begin{center}
     \begin{longtable}{ | p{3cm} | p{4cm} | p{4.5cm} |}
     \caption{Goals}
     \label{tab:goals}
     \\ \hline
     \textbf{Goal} & \textbf{Description} & \textbf{Reasoning} \\ \hline
-    Multi-platform & 
+    High Accessibility & 
     The product should be able to run on different web browsers and mobile operating systems. &  
     \begin{itemize}[noitemsep,nolistsep,leftmargin=*]
         \item A product that is compatible with different devices and browsers maximizes the number of users that can access the product.
@@ -102,11 +111,19 @@ We created goals to highlight the main selling features of the product. These go
     \end{itemize}
 \\ \hline
 
-    Easy to use & 
+    User Friendly & 
     The UI should be easy to use to allow users of all backgrounds to easily understand the app and navigate their way around the app.  &  
     \begin{itemize}[noitemsep,nolistsep,leftmargin=*]
         \item For the product to reach a mass audience, it is important for it to be intuitive and easy to use.
         \item This can be verified by surveying a sample group of users to see how easily they can perform certain actions in the app.
+    \end{itemize}
+\\ \hline
+
+Increased Convenience & 
+    The product should be an all-in-one solution for users allowing all car service requesting needs to be met on one app and should decrease total amount of time spent shopping for car service shops by at least 25\% &  
+    \begin{itemize}[noitemsep,nolistsep,leftmargin=*]
+        \item Reducing the time it takes to perform these actions proves that the app is necessary and an efficient way of solving the initial problem
+        \item This can be verified by studying the average time it takes a group of users to book an appointment for a service on the app versus the time it takes to search on google for repair shops, receive quotes and book an appointment.
     \end{itemize}
 \\ \hline
 
@@ -118,11 +135,11 @@ We created goals to highlight the main selling features of the product. These go
     \end{itemize}
 \\ \hline
 
-    Efficient & 
-    The product should be efficient enough to work on older devices.  &  
+    Collaborative & 
+    The product should allow customers, shop owners and employees to easily communicate with each other about quotes, appointments, and services &  
     \begin{itemize}[noitemsep,nolistsep,leftmargin=*]
-        \item A software that runs efficiently will enable people with older devices to use the app.
-        \item This can be verified testing the app on older/low-end devices.
+        \item To allow easier access to shop owners and technicians for customers than other solutions such as google, individual shop pages, etc.
+        \item This can be verified by surveying users to see if they can easily communicate on the app.
     \end{itemize}
 \\ \hline
 
@@ -151,7 +168,7 @@ We created stretch goals to highlight some features that are not necessary for t
     The users will not have to reload the app to get information on any schedule changes.
 \\ \hline
 
-    Accessibility features & 
+    Further accessibility features & 
     The product should have accessibility options (e.g., screen reader).  &  
     A product with accessibility features will enable people with disabilities to use the product.
 \\ \hline

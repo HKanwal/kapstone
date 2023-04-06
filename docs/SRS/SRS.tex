@@ -145,6 +145,10 @@
 
 \tableofcontents
 
+\listoftables %if appropriate
+
+\listoffigures
+
 ~\newpage
 
 \section*{Revision History}
@@ -154,6 +158,8 @@
 \midrule
 5 October 2022 & 1.0 & First iteration of SRS\\
 1 March 2023 & 1.1 & Additional functional requirements added prior to testing\\
+28 March 2023 & 1.1 & Added list of tables and figures\\
+1 April 2023 & 1.1 & Additional functional requirements added. Rev 1.\\
 \bottomrule
 \end{tabularx}
 \\\\
@@ -419,23 +425,23 @@ Precondition: User is not a shop owner\\
 Success Postcondition: User account is no longer visible\\
 Functional Requirement(s): FR\ref{R_DeleteAccount}
 
-\item[UC\refstepcounter{ucnum}\theucnum \label{UC_ResetPassword}. ]
-Name: Reset Password\\
-Trigger: User attempts to reset password\\
-Precondition: User creates account\\
-Main Success Scenario:
-\begin{enumerate}
-    \item User enters contact information
-    \item System authenticates that user info exists in records
-    \item System allows user to reset password
-\end{enumerate}
-Undesired Event Handling:
-\begin{enumerate}
-    \item System unable to authenticate user
-    \item User repeats Step 1 until authentication succeeds
-\end{enumerate}
-Success Postcondition: User successfully resets password\\
-Functional Requirement(s): FR\ref{R_RestPassword}
+% \item[UC\refstepcounter{ucnum}\theucnum \label{UC_ResetPassword}. ]
+% Name: Reset Password\\
+% Trigger: User attempts to reset password\\
+% Precondition: User creates account\\
+% Main Success Scenario:
+% \begin{enumerate}
+%     \item User enters contact information
+%     \item System authenticates that user info exists in records
+%     \item System allows user to reset password
+% \end{enumerate}
+% Undesired Event Handling:
+% \begin{enumerate}
+%     \item System unable to authenticate user
+%     \item User repeats Step 1 until authentication succeeds
+% \end{enumerate}
+% Success Postcondition: User successfully resets password\\
+% Functional Requirement(s): FR\ref{R_RestPassword}
 
 \item[UC\refstepcounter{ucnum}\theucnum \label{UC_CustomerBooksAppointment}. ]
 Name: Customer Books Appointment\\
@@ -475,10 +481,23 @@ Main Success Scenario:
     \item Shop owner searches for upcoming work order, quote, or appointment
     \item Shop owner views appointment
     \item Shop owner cancels appointment
-    \item System automatically deletes work order
 \end{enumerate}
 Success Postcondition: Shop successfully cancels appointment\\
-Functional Requirement(s): FR\ref{R_OwnerAppointment}, FR\ref{R_ViewQuotes}, FR\ref{R_ViewWorkOrder}, FR\ref{R_AutoDeleteWorkOrder}
+Functional Requirement(s): FR\ref{R_OwnerAppointment}, FR\ref{R_ViewQuotes}, FR\ref{R_ViewWorkOrder}
+
+\item[UC\refstepcounter{ucnum}\theucnum \label{UC_ShopOwnerBookAppointment}. ]
+Name: Shop Cancels Appointment\\
+Trigger: Shop owner attempts to cancel appointment\\
+Precondition: Customer or shop books appointment\\
+Main Success Scenario:
+\begin{enumerate}
+    \item Customer requests shop owner to create appointment
+    \item Shop owner creates new appointment
+    \item Shop owner picks date for appointment
+    \item System automatically creates work order
+\end{enumerate}
+Success Postcondition: Shop successfully creates appointment\\
+Functional Requirement(s): FR\ref{R_OwnerAppointment}, FR\ref{R_AutoCreateWorkOrder}
 
 \item[UC\refstepcounter{ucnum}\theucnum \label{UC_AssignWorkOrder}. ]
 Name: Assign Work Order\\
@@ -542,16 +561,16 @@ Use Case: UC\ref{UC_DeleteAccount}
 \item[FR\refstepcounter{reqnum}\thereqnum \label{R_Login}.] The system will allow shop owners and employees to login by entering a username and password.\\
 Use Case: UC\ref{UC_Login}
 
-\item[FR\refstepcounter{reqnum}\thereqnum \label{R_RestPassword}.] The system will allow shop owners and employees to reset their password.\\
-Use Case: UC\ref{UC_ResetPassword}
-
+% \item[FR\refstepcounter{reqnum}\thereqnum \label{R_RestPassword}.] The system will allow shop owners and employees to reset their password.\\
+% Use Case: UC\ref{UC_ResetPassword}
+\addtocounter{reqnum}{1}
 \item[FR\refstepcounter{reqnum}\thereqnum \label{R_CreateQuote}.] The system will allow shop owners to create quotes.\\
 Use Case: UC\ref{UC_CustomerBooksAppointment}
 
 \item[FR\refstepcounter{reqnum}\thereqnum \label{R_SendQuote}.] The system will allow shop owners and employees to send quotes to customers.\\
 Use Case: UC\ref{UC_CustomerBooksAppointment}
 
-\item[FR\refstepcounter{reqnum}\thereqnum \label{R_OwnerAppointment}.] The system will allow shop owners to accept, reject, and assign appointments.\\
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_OwnerAppointment}.] The system will allow shop owners to create appointments for customers.\\
 Use Case: UC\ref{UC_CancelAppointment}
 
 \item[FR\refstepcounter{reqnum}\thereqnum \label{R_EditEmployee}.] The system will allow shop owners to add, remove, and view all employees.\\
@@ -569,17 +588,18 @@ Use Case: UC\ref{UC_SendWorkOrder}
 \item[FR\refstepcounter{reqnum}\thereqnum \label{R_EditShopProfile}.] The system will allow shop owners to edit their shop profile.\\
 Use Case: UC\ref{UC_EditShopProfile}
 
-\item[FR\refstepcounter{reqnum}\thereqnum \label{R_EmployeeAppointment}.] The system will allow shop employees to accept and view appointments.\\
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_EmployeeAppointment}.] The system will allow shop owner and employees to accept and view appointments.\\
 Use Case: UC\ref{UC_CustomerBooksAppointment}
 
-\item[FR\refstepcounter{reqnum}\thereqnum \label{R_SetShopAvailability}.] The system will allow shop employees to set shop availability.\\
+\item[FR\refstepcounter{reqnum}\thereqnum \label{R_SetShopAvailability}.] The system will allow shop owner to set shop availability.\\
 Use Case: UC\ref{UC_SetShopAvailability}
 
 \item[FR\refstepcounter{reqnum}\thereqnum \label{R_ViewShop}.] The system will allow any user to view shop profiles.\\
 Use Case: UC\ref{UC_CustomerBooksAppointment}
 
-\item[FR\refstepcounter{reqnum}\thereqnum \label{R_ReworkRequest}.] The system will allow customers to submit rework requests.
+% \item[FR\refstepcounter{reqnum}\thereqnum \label{R_ReworkRequest}.] The system will allow customers to submit rework requests.
 
+\addtocounter{reqnum}{1}
 \item[FR\refstepcounter{reqnum}\thereqnum \label{R_ViewQuotes}.] The system will allow shop owners and employees to view, search for, and filter quotes.\\
 Use Case: UC\ref{UC_CancelAppointment}
 
@@ -587,9 +607,9 @@ Use Case: UC\ref{UC_CancelAppointment}
 Use Case: UC\ref{UC_CancelAppointment}
 
 \item[FR\refstepcounter{reqnum}\thereqnum \label{R_CustomerCommunication}.] The system will allow shop owners and employees to call and chat with customers.
-
-\item[FR\refstepcounter{reqnum}\thereqnum \label{R_AutoDeleteWorkOrder}.] The system will automatically delete a work order if the appointment is cancelled.\\
-Use Case: UC\ref{UC_CancelAppointment}
+\addtocounter{reqnum}{1}
+% \item[FR\refstepcounter{reqnum}\thereqnum \label{R_AutoDeleteWorkOrder}.] The system will automatically delete a work order if the appointment is cancelled.\\
+% Use Case: UC\ref{UC_CancelAppointment}
 
 \item[FR\refstepcounter{reqnum}\thereqnum \label{R_AutoCreateWorkOrder}.] The system will automatically create a work order if an appointment is created.\\
 Use Case: UC\ref{UC_CustomerBooksAppointment}
@@ -621,7 +641,7 @@ Note: These functional requirements were derived from a Confluence board \hyperr
 
 \subsection{Formalized Requirements}
 
-The following Parnas table, \hyperref[tab:formal]{Table 2}, will formalize the utilization of the system between customers and shop owners/employees, one of the most important parts of the system. It will use the following variables to represent interactions, with abbreviations as neccesary:
+The following Parnas table, \hyperref[tab:formal]{Table 2}, will formalize the utilization of the system between customers and shop owners/employees, one of the most important parts of the system. It will use the following variables to represent interactions, with abbreviations as necessary:
 
 \begin{itemize}
     \item Stimulus:
@@ -670,15 +690,15 @@ In this section, the functional requirements have been divided into batches of w
   \toprule
   \textbf{Batch} & \textbf{Description} & \textbf{Functional Requirements} & \textbf{Dates}\\
   \midrule
-  1 & Shop Owner Account Creation and Shop Enrolment & FR\ref{R_EnrollShop}, FR\ref{R_CreateOwnerAccount}, FR\ref{R_Login}, FR\ref{R_RestPassword} & Oct. 24, 2022\\
+  1 & Shop Owner Account Creation and Shop Enrolment & FR\ref{R_EnrollShop}, FR\ref{R_CreateOwnerAccount}, FR\ref{R_Login} & Oct. 24, 2022\\
   \hline
-  2 & Basic Customer Services & FR\ref{R_CreateQuote}, FR\ref{R_SendQuote}, FR\ref{R_OwnerAppointment}, FR\ref{R_CreateWorkOrder}, FR\ref{R_SendWorkOrder}, FR\ref{R_EmployeeAppointment}, FR\ref{R_SetShopAvailability}, FR\ref{R_ViewShop}, FR\ref{R_ViewQuotes}, FR\ref{R_ViewWorkOrder}, FR\ref{R_CustomerCommunication}, FR\ref{R_AutoDeleteWorkOrder}, FR\ref{R_AutoCreateWorkOrder}, FR\ref{R_BookAppointment}, FR\ref{R_SubmitQuoteRequests}, FR\ref{R_SearchShop} & Nov. 21, 2022\\
+  2 & Basic Customer Services & FR\ref{R_CreateQuote}, FR\ref{R_SendQuote}, FR\ref{R_OwnerAppointment}, FR\ref{R_CreateWorkOrder}, FR\ref{R_SendWorkOrder}, FR\ref{R_EmployeeAppointment}, FR\ref{R_SetShopAvailability}, FR\ref{R_ViewShop}, FR\ref{R_ViewQuotes}, FR\ref{R_ViewWorkOrder}, FR\ref{R_CustomerCommunication}, FR\ref{R_AutoCreateWorkOrder}, FR\ref{R_BookAppointment}, FR\ref{R_SubmitQuoteRequests}, FR\ref{R_SearchShop} & Nov. 21, 2022\\
   \hline
   3 & Employee Account Creation & FR\ref{R_InviteEmployee}, FR\ref{R_CreateEmployeeAccount} & Jan. 5, 2023 \\
   \hline
   4 & Shop Owner Capabilities & FR\ref{R_EditEmployee}, FR\ref{R_ViewEmployee}, FR\ref{R_AssignWorkOrder} & Feb. 7, 2023\\
   \hline
-  5 & Finishing Touches & FR\ref{R_SeeAllUsers}, FR\ref{R_EditAccount}, FR\ref{R_DeleteAccount}, FR\ref{R_EditShopProfile}, FR\ref{R_ReworkRequest} & Mar. 20, 2023\\
+  5 & Finishing Touches & FR\ref{R_SeeAllUsers}, FR\ref{R_EditAccount}, FR\ref{R_DeleteAccount}, FR\ref{R_EditShopProfile} & Mar. 20, 2023\\
   \bottomrule
   \end{tabular}
   
@@ -690,25 +710,26 @@ In this section, the functional requirements have been divided into batches of w
 \subsection{Look and Feel Requirements}
 \subsubsection{Appearance Requirements}
 \begin{enumerate}[label = NFR-\arabic*, left=\parindent, series=nfr]
-    \item The product shall be visually appealing.
+    \item The product shall have a modern and clean design that has a consistent color palette, and adheres to Material Design principles.
     \newline \textbf{Rationale}: To attract new shop owners and customers to sign up, it is important that the product appears visually appealing. 
-    \newline \textbf{Fit Criterion}: Without any external prompt, 90\% of a sample group of representative users shall start using the product within a few minutes of their encounter.
+    \newline \textbf{Fit Criterion}: The design of the product shall be evaluated by at least 20 users, who will be asked to rate the design on a scale of 1 to 5 based on its modernity, cleanliness, and consistency of the color palette. The average score shall be at least 4 out of 5.
     
-    \item The product shall have a consistent appearance on all of the devices.
+    \item The product shall have a consistent appearance on all of the devices, including desktops, tablets, and mobile phones.
     \newline \textbf{Rationale}: It is important for the product to have a consistent appearance so that users can use their experience with the product on other devices. 
-    \newline \textbf{Fit Criterion}: 95\% of a sample group of users shall agree that the product looks identical in appearance on different devices.
+    \newline \textbf{Fit Criterion}: The product shall also be evaluated by at least 15 users who will be asked to rate the consistency of the product's appearance across devices on a scale of 1 to 5. The average score shall be at least 4 out of 5.
 
-    \item The product shall allow the users to customize the appearance of the product.
-    \newline \textbf{Rationale}: Since everyone has a difference taste, it is important for the product to offer customization options so that users can have a more personalized experience. 
-    \newline \textbf{Fit Criterion}: The supervisor shall certify that the product is customizable.
+    % \item The product shall allow the users to customize the appearance of the product by offering them options to change the theme, typography, and layout of the user interface.
+    % \newline \textbf{Rationale}: Since everyone has a difference taste, it is important for the product to offer customization options so that users can have a more personalized experience. 
+    % \newline \textbf{Fit Criterion}: 90\% of a sample group of users shall agree that the customization options are easy to use and are intuitive.
 \end{enumerate}
 
 \subsubsection{Style Requirements}
 \begin{enumerate}[nfr]
-    \item The product shall feel professional and trustworthy.
+    \item The product shall incorporate design elements that convey professionalism and trustworthiness.
     \newline \textbf{Rationale}: It is essential that the product appear professional and trustworthy in order to build up the trust of the users.
-    \newline \textbf{Fit Criterion}: 85\% of a representative sample of users shall agree that the product feels professional and trustworthy, 
-    \item The font and theme used shall be consistent throughout the app.
+    \newline \textbf{Fit Criterion}: 85\% of a representative sample of users shall agree that the product feels professional and trustworthy.
+
+    \item The font and theme used in the app shall be consistent throughout all screens and user interfaces.
     \newline \textbf{Rationale}: It is important that the components adhere to the same fonts and styles to ensure that they complement one another.
     \newline \textbf{Fit Criterion}: 90\% of a representative sample of users shall not be able to discern any variations in font and theme of any of the elements of the product.
 \end{enumerate}
@@ -725,11 +746,12 @@ In this section, the functional requirements have been divided into batches of w
 \end{enumerate}
 
 \subsubsection{Personalization and Internationalization Requirements}
-\begin{enumerate}[nfr]
-    \item The product shall automatically save user preferences.
-    \newline \textbf{Rationale}: Users should be able to exit the web app and return later or on a different device with the same settings applied. This saves them time from making modifications everytime they launch the web app.
-    \newline \textbf{Fit Criterion}: The settings applied by a user shall automatically apply on other devices at least 90\% of the times. 
-\end{enumerate}
+% \begin{enumerate}[nfr]
+%     \item The product shall automatically save user preferences, such as font size, and the colour theme.
+%     \newline \textbf{Rationale}: Users should be able to exit the web app and return later or on a different device with the same settings applied. This saves them time from making modifications everytime they launch the web app.
+%     \newline \textbf{Fit Criterion}: The product shall be tested with at least 15 users who will be asked to set their preferences and then verify that the preferences have been saved and synchronized to other devices correctly. The success rate of this process shall be at least 95\%.
+% \end{enumerate}
+N/A
 
 \subsubsection{Learning Requirements}
 \begin{enumerate}[nfr]
@@ -756,9 +778,9 @@ In this section, the functional requirements have been divided into batches of w
     \newline \textbf{Rationale}: A website with long loading times can lose the trust of its users.
     \newline \textbf{Fit Criterion}: When navigating between different pages, the product shall take less than 2 seconds 95\% of times, and less than 4 seconds rest of the times. 
 
-    \item The product's response times shall be quick enough to prevent the disruption of the user's train of thought.
+    \item The product's response times shall be quick enough to prevent the disruption of the user's train of thought. This should typically be no more than 2 seconds. 
     \newline \textbf{Rationale}: Users will not be able to use the product's services efficiently if the response time is slow.
-    \newline \textbf{Fit Criterion}: A survey of a group of users shall indicate that 90\% of the users found the response times to be fast.
+    \newline \textbf{Fit Criterion}: An analysis of the user logs shall indicate that the app responds in less than 2 seconds for 95\% of times.
 \end{enumerate}
 
 \subsubsection{Safety-Critical Requirements}
@@ -857,9 +879,9 @@ N/A
     \newline \textbf{Rationale}: A product that complies with data protection laws is more trusted by the users.
     \newline \textbf{Fit Criterion}: A security firm shall certify that all data protection laws are being followed.
     
-    \item Users shall be notified before storing cookies on their devices.
-    \newline \textbf{Rationale}: To comply with the privacy laws, it is necessary to alert users before storing cookies on their computer.
-    \newline \textbf{Fit Criterion}: A survey shall indicate that at least 99\% of the users received a prompt to allow cookies to be stored on their devices when they first accessed the product.
+    % \item Users shall be notified before storing cookies on their devices.
+    % \newline \textbf{Rationale}: To comply with the privacy laws, it is necessary to alert users before storing cookies on their computer.
+    % \newline \textbf{Fit Criterion}: A survey shall indicate that at least 99\% of the users received a prompt to allow cookies to be stored on their devices when they first accessed the product.
 \end{enumerate}
 
 \subsubsection{Audit Requirements}
